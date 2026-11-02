@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #06080d;
+    --bg-ambient-1: rgba(99, 102, 241, 0.08);
+    --bg-ambient-2: rgba(6, 182, 212, 0.06);
+    --bg-ambient-3: rgba(168, 85, 247, 0.05);
+
+    /* Liquid Glass Material Design Tokens (Dark Default) */
+    --glass-ultra-bg: rgba(255, 255, 255, 0.04);
+    --glass-thin-bg: rgba(18, 24, 38, 0.55);
+    --glass-regular-bg: rgba(15, 21, 33, 0.72);
+    --glass-opaque-bg: rgba(12, 17, 27, 0.88);
+
+    --glass-border-specular: rgba(255, 255, 255, 0.14);
+    --glass-border-subtle: rgba(255, 255, 255, 0.07);
+    --glass-border-glow: rgba(99, 102, 241, 0.35);
+
+    --glass-shadow-soft: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+    --glass-shadow-floating: 0 16px 48px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+  }
+
+  .light {
+    --bg-base: #f8fafc;
+    --bg-ambient-1: rgba(99, 102, 241, 0.04);
+    --bg-ambient-2: rgba(6, 182, 212, 0.03);
+    --bg-ambient-3: rgba(245, 158, 11, 0.03);
+
+    --glass-ultra-bg: rgba(255, 255, 255, 0.65);
+    --glass-thin-bg: rgba(255, 255, 255, 0.75);
+    --glass-regular-bg: rgba(255, 255, 255, 0.85);
+    --glass-opaque-bg: rgba(255, 255, 255, 0.95);
+
+    --glass-border-specular: rgba(255, 255, 255, 0.85);
+    --glass-border-subtle: rgba(0, 0, 0, 0.08);
+    --glass-border-glow: rgba(99, 102, 241, 0.25);
+
+    --glass-shadow-soft: 0 8px 24px -4px rgba(0, 0, 0, 0.06);
+    --glass-shadow-floating: 0 16px 40px -10px rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #94a3b8;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+/* Ambient Liquid Glass Backdrop Lighting */
+.apple-liquid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--bg-base);
+  background-image: 
+    radial-gradient(at 10% 15%, var(--bg-ambient-1) 0px, transparent 55%),
+    radial-gradient(at 85% 10%, var(--bg-ambient-2) 0px, transparent 50%),
+    radial-gradient(at 50% 85%, var(--bg-ambient-3) 0px, transparent 60%);
+  transition: background-color 0.4s ease;
+}
+
+/* Liquid Glass Material Levels */
+
+/* Level 1: Ultra-Thin Glass (Floating Navigation, Pills, Badges) */
+.glass-ultra {
+  background: var(--glass-ultra-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border-subtle);
+  box-shadow: inset 0 1px 0.5px 0 var(--glass-border-specular);
+}
+
+/* Level 2: Thin Glass (Floating Sidebar, Toolbars) */
+.glass-thin {
+  background: var(--glass-thin-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border-subtle);
+  box-shadow: var(--glass-shadow-floating);
+}
+
+/* Level 3: Regular Glass (Floating Panels, Sheets, Modals, Popovers) */
+.glass-panel {
+  background: var(--glass-regular-bg);
+  backdrop-filter: blur(28px) saturate(165%);
+  -webkit-backdrop-filter: blur(28px) saturate(165%);
+  border: 1px solid var(--glass-border-subtle);
+  box-shadow: var(--glass-shadow-floating);
+}
+
+/* Level 4: Opaque / Content Glass (Cards, Dense Information, Data Tables) */
+.glass-card {
+  background: var(--glass-opaque-bg);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--glass-border-subtle);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.35), inset 0 1px 0 0 var(--glass-border-specular);
+  border-radius: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1.5px);
+  box-shadow: 0 14px 32px -6px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 var(--glass-border-specular);
+}
+
+.light .glass-card:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 14px 32px -6px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Fallback for arc-card class for backward compatibility */
+.arc-card {
+  background: var(--glass-opaque-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border-subtle);
+  box-shadow: var(--glass-shadow-soft), inset 0 1px 0 0 var(--glass-border-specular);
+  border-radius: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.arc-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Apple Liquid Interactive Touch & Click Spring */
+.apple-press {
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.16s ease;
+}
+
+.apple-press:active {
+  transform: scale(0.975);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-press,
+  .glass-card,
+  .arc-card {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* Apple Vision Specular Highlighting */
+.specular-border {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+}
+
+/* Apple Segmented Control Pill Style */
+.segmented-control {
+  background: rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 0.25rem;
+}
+
+.light .segmented-control {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Custom Apple Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
+  backdrop-filter: blur(4px);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.48);
+}
+
+/* Apple Style Custom Checkbox */
+.custom-checkbox {
+  appearance: none;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0.45rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.light .custom-checkbox {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.custom-checkbox:hover {
+  border-color: #6366f1;
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.custom-checkbox:checked {
+  background-color: #6366f1;
+  border-color: #6366f1;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.45);
+}
+
+.custom-checkbox:checked::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  transform: scale(1);
+  background-color: white;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
