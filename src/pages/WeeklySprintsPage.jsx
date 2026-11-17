@@ -150,42 +150,56 @@ const SPRINTS_METADATA = [
   },
   {
     week: 11,
-    title: 'Sprint 11: Database Persistence, JPA & Transactions',
-    daysRange: [72, 78],
+    title: 'Sprint 11: Spring MVC, DTOs & Aspect-Oriented Programming',
+    daysRange: [71, 78],
     phase: 'Phase 2: Spring Boot',
     objectives: [
-      'Spring JDBC vs Hibernate ORM first-level cache and dirty checking',
-      'JPA entity relationships (@OneToMany, @ManyToMany), cascading, and N+1 prevention',
-      'Spring Data JPA custom JPQL queries, pagination, and sorting',
-      'Spring Transactions: ACID compliance, @Transactional propagation, and isolation'
+      'Servlets, Embedded Tomcat, and DispatcherServlet request flow',
+      'DTO Pattern and Jakarta Bean Validation guards',
+      'Global exception handling via @RestControllerAdvice and RFC 7807',
+      'Filters vs Interceptors and Spring AOP cross-cutting proxies'
     ],
-    codingGoals: 'Design normalized database schemas and implement transactional rollback strategies'
+    codingGoals: 'Implement custom AOP execution logging annotations and validated DTO payloads'
   },
   {
     week: 12,
-    title: 'Sprint 12: Production Security, JWT & OAuth2',
+    title: 'Sprint 12: Database Persistence, JDBC, Hibernate & JPA',
     daysRange: [79, 85],
-    phase: 'Phase 3: Security & Microservices',
+    phase: 'Phase 2: Spring Boot',
+    objectives: [
+      'Spring AOP Pointcuts and Proxy types in production',
+      'Core JDBC vs Spring JdbcTemplate implementation',
+      'Hibernate ORM first-level cache and dirty checking',
+      'JPA entity relationships (@OneToMany, @ManyToMany), cascading, and N+1 prevention'
+    ],
+    codingGoals: 'Design normalized database schemas and implement transactional persistence'
+  },
+  {
+    week: 13,
+    title: 'Sprint 13: Spring Data JPA, Transactions & Isolation Levels',
+    daysRange: [86, 91],
+    phase: 'Phase 2: Spring Boot',
+    objectives: [
+      'Master Spring Data JPA: custom JPQL queries, pagination, and sorting',
+      'Spring Transactions: ACID compliance, @Transactional commit & rollback',
+      '@Transactional Propagation: REQUIRED vs REQUIRES_NEW in nested service calls',
+      'Isolation Levels: READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE and dirty read prevention'
+    ],
+    codingGoals: 'Implement robust transaction boundaries and evaluate propagation failure recovery'
+  },
+  {
+    week: 14,
+    title: 'Sprint 14: Production Security, JWT, OAuth2 & Testing Graduation',
+    daysRange: [92, 97],
+    phase: 'Phase 3: Security & Testing',
     objectives: [
       'Spring Security architecture, SecurityFilterChain, and UserDetailsService',
       'Database authentication with BCrypt password hashing',
       'Stateless JWT authentication filters and Refresh Token rotation',
-      'OAuth 2.0 / Google Social Login with PKCE'
+      'OAuth 2.0 / Google Social Login with PKCE',
+      'Spring Boot #40 Capstone: Testing Spring Boot Applications with JUnit 5, Mockito & MockMvc'
     ],
-    codingGoals: 'Secure all REST endpoints with role-based access control and stateless JWT tokens'
-  },
-  {
-    week: 13,
-    title: 'Sprint 13: Testing, API Gateway Capstone & Graduation',
-    daysRange: [86, 90],
-    phase: 'Phase 3: Security & Microservices',
-    objectives: [
-      'Testing Spring Boot: JUnit 5, Mockito, and MockMvc integration tests',
-      'Build "GateKeeper": Production API Gateway with Spring Cloud Gateway',
-      'Distributed rate limiting using Redis token-bucket algorithms',
-      'Asynchronous audit event streaming to Apache Kafka broker'
-    ],
-    codingGoals: 'Deploy complete Capstone API Gateway with Docker Compose, pass all tests, celebrate Winter Arc!'
+    codingGoals: 'Write comprehensive unit and integration tests with Mockito and MockMvc, passing all assertions to graduate!'
   }
 ];
 

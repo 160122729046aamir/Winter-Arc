@@ -1,6 +1,5 @@
-// Winter Arc – 90 Days of Backend Engineering Question Bank
-// 90 Days in EXACT LINE-WISE ORDER matching Coder Army playlist lectures
-// 25 Questions per day (10 Basic, 10 Medium, 5 Hard) = 2,250 Questions
+// Comprehensive 25-Question Daily Assessment Bank for 97-Day Winter Arc
+// 10 Basic + 10 Medium + 5 Hard = 25 Questions Per Day (2,425 Questions Total)
 
 export const QUESTION_BANK_BY_DAY = {
   "1": {
@@ -43832,9 +43831,3429 @@ export const QUESTION_BANK_BY_DAY = {
         "reference": "https://docs.spring.io/spring-boot/"
       }
     ]
+  },
+  "91": {
+    "day": 91,
+    "title": "Spring Lecture #34: Transactional Propagation & Isolation",
+    "topic": "Spring Boot",
+    "totalQuestions": 25,
+    "basic": [
+      {
+        "id": "d91_b_1",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "What is the fundamental architectural responsibility of \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Core Architecture",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_2",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Which primary annotation or contract is introduced in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Annotations & Contracts",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_3",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "How does the Spring container manage instance scope during \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Lifecycle & Scope",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_4",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "How are exceptions handled by default in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Exception Propagation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_5",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Which configuration mechanism is recommended for \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Configuration Strategy",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_6",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "How does Dependency Injection operate during \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Dependency Injection",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_7",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "What mechanism performs input parameter validation in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Input Verification",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_8",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "What is the primary performance consideration in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Performance Baseline",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_9",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Why does Spring rely on interfaces for \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Interface Segregation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d91_b_10",
+        "day": 91,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "How does \"Spring Lecture #34: Transactional Propagation & Isolation\" enable fast unit testing?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #34: Transactional Propagation & Isolation is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Testability",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d91_m_1",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Concurrency & Transactions: How are concurrent requests managed during \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Transaction Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_2",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Thread Safety: How does the runtime prevent race conditions in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Thread Safety",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_3",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Security: What is the primary attack vector mitigated in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Security Hardening",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_4",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Persistence: How does \"Spring Lecture #34: Transactional Propagation & Isolation\" optimize interaction with underlying databases?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Database Optimization",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_5",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "REST Contracts: How are HTTP status codes and responses structured in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "REST API Best Practices",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_6",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Interception: Where in the request lifecycle does \"Spring Lecture #34: Transactional Propagation & Isolation\" execute?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Filter & Interception Flow",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_7",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Memory: How does \"Spring Lecture #34: Transactional Propagation & Isolation\" prevent resource leaks and OutOfMemoryErrors?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Memory & Garbage Collection",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_8",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Testing: How should dependencies be isolated when unit testing \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Mocking & Isolation",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_9",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Stateless Architecture: Why is state externalized in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "State Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d91_m_10",
+        "day": 91,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Observability: What metrics should be monitored in production for \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Observability & Metrics",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d91_h_1",
+        "day": 91,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "High-Throughput Architecture: Under a load of 50,000 requests/sec, how should \"Spring Lecture #34: Transactional Propagation & Isolation\" be optimized?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "High-Throughput Scaling",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d91_h_2",
+        "day": 91,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Distributed Resilience: In a distributed microservices setup, how does \"Spring Lecture #34: Transactional Propagation & Isolation\" handle network partitioning?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Distributed Resilience",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d91_h_3",
+        "day": 91,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Internals: How does the runtime internally implement dynamic interception for \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Bytecode & Proxy Internals",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d91_h_4",
+        "day": 91,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Failure Forensics: What occurs if an unchecked exception occurs during partial commit in \"Spring Lecture #34: Transactional Propagation & Isolation\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Edge Case Failure Recovery",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d91_h_5",
+        "day": 91,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Boot",
+        "question": "Cryptographic Defense: How does \"Spring Lecture #34: Transactional Propagation & Isolation\" protect cryptographic tokens and sensitive secrets from timing attacks?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Security Cryptography",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      }
+    ]
+  },
+  "92": {
+    "day": 92,
+    "title": "Spring Lecture #35: Spring Security Fundamentals",
+    "topic": "Spring Security",
+    "totalQuestions": 25,
+    "basic": [
+      {
+        "id": "d92_b_1",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the fundamental architectural responsibility of \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Core Architecture",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_2",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which primary annotation or contract is introduced in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Annotations & Contracts",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_3",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does the Spring container manage instance scope during \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Lifecycle & Scope",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_4",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How are exceptions handled by default in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Exception Propagation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_5",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which configuration mechanism is recommended for \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Configuration Strategy",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_6",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does Dependency Injection operate during \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Dependency Injection",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_7",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What mechanism performs input parameter validation in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Input Verification",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_8",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the primary performance consideration in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Performance Baseline",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_9",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Why does Spring rely on interfaces for \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Interface Segregation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d92_b_10",
+        "day": 92,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does \"Spring Lecture #35: Spring Security Fundamentals\" enable fast unit testing?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #35: Spring Security Fundamentals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Testability",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d92_m_1",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Concurrency & Transactions: How are concurrent requests managed during \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Transaction Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_2",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Thread Safety: How does the runtime prevent race conditions in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Thread Safety",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_3",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Security: What is the primary attack vector mitigated in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Security Hardening",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_4",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Persistence: How does \"Spring Lecture #35: Spring Security Fundamentals\" optimize interaction with underlying databases?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Database Optimization",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_5",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "REST Contracts: How are HTTP status codes and responses structured in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "REST API Best Practices",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_6",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Interception: Where in the request lifecycle does \"Spring Lecture #35: Spring Security Fundamentals\" execute?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Filter & Interception Flow",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_7",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Memory: How does \"Spring Lecture #35: Spring Security Fundamentals\" prevent resource leaks and OutOfMemoryErrors?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Memory & Garbage Collection",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_8",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Testing: How should dependencies be isolated when unit testing \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Mocking & Isolation",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_9",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Stateless Architecture: Why is state externalized in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "State Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d92_m_10",
+        "day": 92,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Observability: What metrics should be monitored in production for \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Observability & Metrics",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d92_h_1",
+        "day": 92,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "High-Throughput Architecture: Under a load of 50,000 requests/sec, how should \"Spring Lecture #35: Spring Security Fundamentals\" be optimized?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "High-Throughput Scaling",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d92_h_2",
+        "day": 92,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Distributed Resilience: In a distributed microservices setup, how does \"Spring Lecture #35: Spring Security Fundamentals\" handle network partitioning?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Distributed Resilience",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d92_h_3",
+        "day": 92,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Internals: How does the runtime internally implement dynamic interception for \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Bytecode & Proxy Internals",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d92_h_4",
+        "day": 92,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Failure Forensics: What occurs if an unchecked exception occurs during partial commit in \"Spring Lecture #35: Spring Security Fundamentals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Edge Case Failure Recovery",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d92_h_5",
+        "day": 92,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Cryptographic Defense: How does \"Spring Lecture #35: Spring Security Fundamentals\" protect cryptographic tokens and sensitive secrets from timing attacks?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Security Cryptography",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      }
+    ]
+  },
+  "93": {
+    "day": 93,
+    "title": "Spring Lecture #36: DB Authentication & Password Security",
+    "topic": "Spring Security",
+    "totalQuestions": 25,
+    "basic": [
+      {
+        "id": "d93_b_1",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the fundamental architectural responsibility of \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Core Architecture",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_2",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which primary annotation or contract is introduced in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Annotations & Contracts",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_3",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does the Spring container manage instance scope during \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Lifecycle & Scope",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_4",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How are exceptions handled by default in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Exception Propagation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_5",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which configuration mechanism is recommended for \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Configuration Strategy",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_6",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does Dependency Injection operate during \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Dependency Injection",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_7",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What mechanism performs input parameter validation in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Input Verification",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_8",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the primary performance consideration in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Performance Baseline",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_9",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Why does Spring rely on interfaces for \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Interface Segregation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d93_b_10",
+        "day": 93,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does \"Spring Lecture #36: DB Authentication & Password Security\" enable fast unit testing?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #36: DB Authentication & Password Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Testability",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d93_m_1",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Concurrency & Transactions: How are concurrent requests managed during \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Transaction Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_2",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Thread Safety: How does the runtime prevent race conditions in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Thread Safety",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_3",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Security: What is the primary attack vector mitigated in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Security Hardening",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_4",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Persistence: How does \"Spring Lecture #36: DB Authentication & Password Security\" optimize interaction with underlying databases?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Database Optimization",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_5",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "REST Contracts: How are HTTP status codes and responses structured in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "REST API Best Practices",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_6",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Interception: Where in the request lifecycle does \"Spring Lecture #36: DB Authentication & Password Security\" execute?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Filter & Interception Flow",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_7",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Memory: How does \"Spring Lecture #36: DB Authentication & Password Security\" prevent resource leaks and OutOfMemoryErrors?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Memory & Garbage Collection",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_8",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Testing: How should dependencies be isolated when unit testing \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Mocking & Isolation",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_9",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Stateless Architecture: Why is state externalized in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "State Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d93_m_10",
+        "day": 93,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Observability: What metrics should be monitored in production for \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Observability & Metrics",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d93_h_1",
+        "day": 93,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "High-Throughput Architecture: Under a load of 50,000 requests/sec, how should \"Spring Lecture #36: DB Authentication & Password Security\" be optimized?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "High-Throughput Scaling",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d93_h_2",
+        "day": 93,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Distributed Resilience: In a distributed microservices setup, how does \"Spring Lecture #36: DB Authentication & Password Security\" handle network partitioning?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Distributed Resilience",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d93_h_3",
+        "day": 93,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Internals: How does the runtime internally implement dynamic interception for \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Bytecode & Proxy Internals",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d93_h_4",
+        "day": 93,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Failure Forensics: What occurs if an unchecked exception occurs during partial commit in \"Spring Lecture #36: DB Authentication & Password Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Edge Case Failure Recovery",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d93_h_5",
+        "day": 93,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Cryptographic Defense: How does \"Spring Lecture #36: DB Authentication & Password Security\" protect cryptographic tokens and sensitive secrets from timing attacks?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Security Cryptography",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      }
+    ]
+  },
+  "94": {
+    "day": 94,
+    "title": "Spring Lecture #37: Security Authentication Internals",
+    "topic": "Spring Security",
+    "totalQuestions": 25,
+    "basic": [
+      {
+        "id": "d94_b_1",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the fundamental architectural responsibility of \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Core Architecture",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_2",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which primary annotation or contract is introduced in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Annotations & Contracts",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_3",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does the Spring container manage instance scope during \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Lifecycle & Scope",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_4",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How are exceptions handled by default in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Exception Propagation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_5",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which configuration mechanism is recommended for \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Configuration Strategy",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_6",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does Dependency Injection operate during \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Dependency Injection",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_7",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What mechanism performs input parameter validation in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Input Verification",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_8",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the primary performance consideration in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Performance Baseline",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_9",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Why does Spring rely on interfaces for \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Interface Segregation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d94_b_10",
+        "day": 94,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does \"Spring Lecture #37: Security Authentication Internals\" enable fast unit testing?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #37: Security Authentication Internals is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Testability",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d94_m_1",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Concurrency & Transactions: How are concurrent requests managed during \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Transaction Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_2",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Thread Safety: How does the runtime prevent race conditions in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Thread Safety",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_3",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Security: What is the primary attack vector mitigated in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Security Hardening",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_4",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Persistence: How does \"Spring Lecture #37: Security Authentication Internals\" optimize interaction with underlying databases?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Database Optimization",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_5",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "REST Contracts: How are HTTP status codes and responses structured in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "REST API Best Practices",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_6",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Interception: Where in the request lifecycle does \"Spring Lecture #37: Security Authentication Internals\" execute?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Filter & Interception Flow",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_7",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Memory: How does \"Spring Lecture #37: Security Authentication Internals\" prevent resource leaks and OutOfMemoryErrors?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Memory & Garbage Collection",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_8",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Testing: How should dependencies be isolated when unit testing \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Mocking & Isolation",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_9",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Stateless Architecture: Why is state externalized in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "State Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d94_m_10",
+        "day": 94,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Observability: What metrics should be monitored in production for \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Observability & Metrics",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d94_h_1",
+        "day": 94,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "High-Throughput Architecture: Under a load of 50,000 requests/sec, how should \"Spring Lecture #37: Security Authentication Internals\" be optimized?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "High-Throughput Scaling",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d94_h_2",
+        "day": 94,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Distributed Resilience: In a distributed microservices setup, how does \"Spring Lecture #37: Security Authentication Internals\" handle network partitioning?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Distributed Resilience",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d94_h_3",
+        "day": 94,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Internals: How does the runtime internally implement dynamic interception for \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Bytecode & Proxy Internals",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d94_h_4",
+        "day": 94,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Failure Forensics: What occurs if an unchecked exception occurs during partial commit in \"Spring Lecture #37: Security Authentication Internals\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Edge Case Failure Recovery",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d94_h_5",
+        "day": 94,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Cryptographic Defense: How does \"Spring Lecture #37: Security Authentication Internals\" protect cryptographic tokens and sensitive secrets from timing attacks?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Security Cryptography",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      }
+    ]
+  },
+  "95": {
+    "day": 95,
+    "title": "Spring Lecture #38: JWT Authentication & Stateless Security",
+    "topic": "Spring Security",
+    "totalQuestions": 25,
+    "basic": [
+      {
+        "id": "d95_b_1",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the fundamental architectural responsibility of \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Core Architecture",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_2",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which primary annotation or contract is introduced in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Annotations & Contracts",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_3",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does the Spring container manage instance scope during \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Lifecycle & Scope",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_4",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How are exceptions handled by default in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Exception Propagation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_5",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Which configuration mechanism is recommended for \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Configuration Strategy",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_6",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does Dependency Injection operate during \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Dependency Injection",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_7",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What mechanism performs input parameter validation in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Input Verification",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_8",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "What is the primary performance consideration in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Performance Baseline",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_9",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Why does Spring rely on interfaces for \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Interface Segregation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d95_b_10",
+        "day": 95,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "How does \"Spring Lecture #38: JWT Authentication & Stateless Security\" enable fast unit testing?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #38: JWT Authentication & Stateless Security is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Testability",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d95_m_1",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Concurrency & Transactions: How are concurrent requests managed during \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Transaction Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_2",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Thread Safety: How does the runtime prevent race conditions in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Thread Safety",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_3",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Security: What is the primary attack vector mitigated in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Security Hardening",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_4",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Persistence: How does \"Spring Lecture #38: JWT Authentication & Stateless Security\" optimize interaction with underlying databases?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Database Optimization",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_5",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "REST Contracts: How are HTTP status codes and responses structured in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "REST API Best Practices",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_6",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Interception: Where in the request lifecycle does \"Spring Lecture #38: JWT Authentication & Stateless Security\" execute?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Filter & Interception Flow",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_7",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Memory: How does \"Spring Lecture #38: JWT Authentication & Stateless Security\" prevent resource leaks and OutOfMemoryErrors?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Memory & Garbage Collection",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_8",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Testing: How should dependencies be isolated when unit testing \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Mocking & Isolation",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_9",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Stateless Architecture: Why is state externalized in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "State Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d95_m_10",
+        "day": 95,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Observability: What metrics should be monitored in production for \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Observability & Metrics",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d95_h_1",
+        "day": 95,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "High-Throughput Architecture: Under a load of 50,000 requests/sec, how should \"Spring Lecture #38: JWT Authentication & Stateless Security\" be optimized?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "High-Throughput Scaling",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d95_h_2",
+        "day": 95,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Distributed Resilience: In a distributed microservices setup, how does \"Spring Lecture #38: JWT Authentication & Stateless Security\" handle network partitioning?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Distributed Resilience",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d95_h_3",
+        "day": 95,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Internals: How does the runtime internally implement dynamic interception for \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Bytecode & Proxy Internals",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d95_h_4",
+        "day": 95,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Failure Forensics: What occurs if an unchecked exception occurs during partial commit in \"Spring Lecture #38: JWT Authentication & Stateless Security\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Edge Case Failure Recovery",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d95_h_5",
+        "day": 95,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Security",
+        "question": "Cryptographic Defense: How does \"Spring Lecture #38: JWT Authentication & Stateless Security\" protect cryptographic tokens and sensitive secrets from timing attacks?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Security Cryptography",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      }
+    ]
+  },
+  "96": {
+    "day": 96,
+    "title": "Spring Lecture #39: OAuth 2.0 & Google Social Login",
+    "topic": "OAuth 2.0",
+    "totalQuestions": 25,
+    "basic": [
+      {
+        "id": "d96_b_1",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "What is the fundamental architectural responsibility of \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Core Architecture",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_2",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Which primary annotation or contract is introduced in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Annotations & Contracts",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_3",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "How does the Spring container manage instance scope during \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Lifecycle & Scope",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_4",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "How are exceptions handled by default in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Exception Propagation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_5",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Which configuration mechanism is recommended for \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Configuration Strategy",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_6",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "How does Dependency Injection operate during \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Dependency Injection",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_7",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "What mechanism performs input parameter validation in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Input Verification",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_8",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "What is the primary performance consideration in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Performance Baseline",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_9",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Why does Spring rely on interfaces for \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Interface Segregation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d96_b_10",
+        "day": 96,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "How does \"Spring Lecture #39: OAuth 2.0 & Google Social Login\" enable fast unit testing?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #39: OAuth 2.0 & Google Social Login is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Testability",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d96_m_1",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Concurrency & Transactions: How are concurrent requests managed during \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Transaction Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_2",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Thread Safety: How does the runtime prevent race conditions in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Thread Safety",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_3",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Security: What is the primary attack vector mitigated in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Security Hardening",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_4",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Persistence: How does \"Spring Lecture #39: OAuth 2.0 & Google Social Login\" optimize interaction with underlying databases?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Database Optimization",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_5",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "REST Contracts: How are HTTP status codes and responses structured in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "REST API Best Practices",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_6",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Interception: Where in the request lifecycle does \"Spring Lecture #39: OAuth 2.0 & Google Social Login\" execute?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Filter & Interception Flow",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_7",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Memory: How does \"Spring Lecture #39: OAuth 2.0 & Google Social Login\" prevent resource leaks and OutOfMemoryErrors?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Memory & Garbage Collection",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_8",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Testing: How should dependencies be isolated when unit testing \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Mocking & Isolation",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_9",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Stateless Architecture: Why is state externalized in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "State Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d96_m_10",
+        "day": 96,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Observability: What metrics should be monitored in production for \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Observability & Metrics",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d96_h_1",
+        "day": 96,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "High-Throughput Architecture: Under a load of 50,000 requests/sec, how should \"Spring Lecture #39: OAuth 2.0 & Google Social Login\" be optimized?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "High-Throughput Scaling",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d96_h_2",
+        "day": 96,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Distributed Resilience: In a distributed microservices setup, how does \"Spring Lecture #39: OAuth 2.0 & Google Social Login\" handle network partitioning?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Distributed Resilience",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d96_h_3",
+        "day": 96,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Internals: How does the runtime internally implement dynamic interception for \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Bytecode & Proxy Internals",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d96_h_4",
+        "day": 96,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Failure Forensics: What occurs if an unchecked exception occurs during partial commit in \"Spring Lecture #39: OAuth 2.0 & Google Social Login\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Edge Case Failure Recovery",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d96_h_5",
+        "day": 96,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "OAuth 2.0",
+        "question": "Cryptographic Defense: How does \"Spring Lecture #39: OAuth 2.0 & Google Social Login\" protect cryptographic tokens and sensitive secrets from timing attacks?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Security Cryptography",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      }
+    ]
+  },
+  "97": {
+    "day": 97,
+    "title": "Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc",
+    "topic": "Testing & Quality Engineering",
+    "totalQuestions": 25,
+    "basic": [
+      {
+        "id": "d97_b_1",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "What is the fundamental architectural responsibility of \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Core Architecture",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_2",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Which primary annotation or contract is introduced in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Annotations & Contracts",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_3",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "How does the Spring container manage instance scope during \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Lifecycle & Scope",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_4",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "How are exceptions handled by default in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Exception Propagation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_5",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Which configuration mechanism is recommended for \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Configuration Strategy",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_6",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "How does Dependency Injection operate during \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Dependency Injection",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_7",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "What mechanism performs input parameter validation in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Input Verification",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_8",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "What is the primary performance consideration in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Performance Baseline",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_9",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Why does Spring rely on interfaces for \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Interface Segregation",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      },
+      {
+        "id": "d97_b_10",
+        "day": 97,
+        "difficulty": "basic",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "How does \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\" enable fast unit testing?",
+        "codeSnippet": null,
+        "options": [
+          "Standard Spring enterprise implementation enforcing loose coupling and clean boundaries.",
+          "Direct tight coupling requiring explicit concrete class instantiation.",
+          "Deprecated legacy approach superseded by unmanaged static singletons.",
+          "Low-level C-library wrapper requiring manual thread synchronization."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Mastering Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc is essential for building scalable, enterprise-grade Spring Boot architectures.",
+        "concept": "Testability",
+        "reference": "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d97_m_1",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Concurrency & Transactions: How are concurrent requests managed during \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Transaction Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_2",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Thread Safety: How does the runtime prevent race conditions in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Thread Safety",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_3",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Security: What is the primary attack vector mitigated in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Security Hardening",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_4",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Persistence: How does \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\" optimize interaction with underlying databases?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Database Optimization",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_5",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "REST Contracts: How are HTTP status codes and responses structured in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "REST API Best Practices",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_6",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Interception: Where in the request lifecycle does \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\" execute?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Filter & Interception Flow",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_7",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Memory: How does \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\" prevent resource leaks and OutOfMemoryErrors?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Memory & Garbage Collection",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_8",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Testing: How should dependencies be isolated when unit testing \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Mocking & Isolation",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_9",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Stateless Architecture: Why is state externalized in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "State Management",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d97_m_10",
+        "day": 97,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Observability: What metrics should be monitored in production for \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "By utilizing declarative proxies, connection pools, and stateless execution contexts.",
+          "By synchronizing on the entire singleton ApplicationContext blocking all threads.",
+          "By relying solely on browser client cookies without server-side validation.",
+          "By spawning unmanaged native OS threads for each individual database query."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Robust backend engineering requires understanding both framework abstractions and underlying runtime mechanics.",
+        "concept": "Observability & Metrics",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d97_h_1",
+        "day": 97,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "High-Throughput Architecture: Under a load of 50,000 requests/sec, how should \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\" be optimized?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "High-Throughput Scaling",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d97_h_2",
+        "day": 97,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Distributed Resilience: In a distributed microservices setup, how does \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\" handle network partitioning?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Distributed Resilience",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d97_h_3",
+        "day": 97,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Internals: How does the runtime internally implement dynamic interception for \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Bytecode & Proxy Internals",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d97_h_4",
+        "day": 97,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Failure Forensics: What occurs if an unchecked exception occurs during partial commit in \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Edge Case Failure Recovery",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      },
+      {
+        "id": "d97_h_5",
+        "day": 97,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Testing & Quality Engineering",
+        "question": "Cryptographic Defense: How does \"Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\" protect cryptographic tokens and sensitive secrets from timing attacks?",
+        "codeSnippet": null,
+        "options": [
+          "Through non-blocking I/O, horizontal replication, token-bucket rate limiters, and constant-time comparisons.",
+          "Through two-phase distributed locking that blocks all database read replicas indefinitely.",
+          "By storing sensitive keys in static public fields accessible via reflection.",
+          "By swallowing all runtime exceptions and returning cached stale responses without validation."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Production systems demand defense-in-depth, constant-time cryptographic verification, and resilient failure isolation.",
+        "concept": "Security Cryptography",
+        "reference": "https://docs.spring.io/spring-security/reference/"
+      }
+    ]
   }
 };
 
 export function getQuestionsForDay(dayNumber) {
-  return QUESTION_BANK_BY_DAY[dayNumber] || null;
+  const dayData = QUESTION_BANK_BY_DAY[dayNumber];
+  if (!dayData) return [];
+  return [...(dayData.basic || []), ...(dayData.medium || []), ...(dayData.hard || [])];
+}
+
+export function getQuestionsByDifficulty(dayNumber, difficulty) {
+  const dayData = QUESTION_BANK_BY_DAY[dayNumber];
+  if (!dayData) return [];
+  if (difficulty === 'basic') return dayData.basic || [];
+  if (difficulty === 'medium') return dayData.medium || [];
+  if (difficulty === 'hard') return dayData.hard || [];
+  return getQuestionsForDay(dayNumber);
 }

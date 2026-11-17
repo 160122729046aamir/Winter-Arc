@@ -17,7 +17,7 @@ import { usePlanner } from '../../context/PlannerContext';
 import { useTheme } from '../../context/ThemeContext';
 
 export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
-  const { currentChallengeDay, stats, xp, journeyStatus } = usePlanner();
+  const { currentChallengeDay, stats, xp, journeyStatus, days } = usePlanner();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
             <span className={`w-2 h-2 rounded-full ${journeyStatus === 'paused' ? 'bg-amber-400' : 'bg-cyan-400 shadow-[0_0_8px_#06b6d4]'}`} />
             <span className="text-xs font-semibold text-slate-200">
               Day <span className="text-cyan-400 font-bold">{currentChallengeDay}</span>
-              <span className="text-slate-500 hidden sm:inline"> / 90</span>
+              <span className="text-slate-500 hidden sm:inline"> / {days?.length || 97}</span>
             </span>
           </Link>
 

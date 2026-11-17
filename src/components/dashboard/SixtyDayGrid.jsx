@@ -16,13 +16,13 @@ export default function SixtyDayGrid() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-slate-100">90-Day Arc Grid</h2>
+            <h2 className="text-lg font-bold text-slate-100">{days.length || 97}-Day Arc Grid</h2>
             <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
               Interactive
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            Visual map of your 90-day backend mastery journey. Click any day to view or edit tasks.
+            Visual map of your {days.length || 97}-day backend mastery journey. Click any day to view or edit tasks.
           </p>
         </div>
 

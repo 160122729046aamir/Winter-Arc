@@ -69,7 +69,7 @@ const buildInitialState = () => {
     recentCelebration: null,
     settings: {
       startDate: startDate,
-      challengeDuration: 90,
+      challengeDuration: 97,
       dailyTargetMinutes: 120,
       preferredStudyDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       recoveryModeEnabled: true,
@@ -137,7 +137,7 @@ export function PlannerProvider({ children }) {
   const currentChallengeDay = useMemo(() => {
     return calculateCurrentChallengeDay(
       state.settings.startDate,
-      state.settings.challengeDuration || 90,
+      state.settings.challengeDuration || 97,
       state.totalPausedDays || 0,
       state.journeyStatus === 'paused',
       state.frozenChallengeDay,
@@ -234,7 +234,7 @@ export function PlannerProvider({ children }) {
       const today = getTodayDateString();
       const currentDay = calculateCurrentChallengeDay(
         prev.settings.startDate,
-        prev.settings.challengeDuration || 90,
+        prev.settings.challengeDuration || 97,
         prev.totalPausedDays || 0,
         false,
         null,

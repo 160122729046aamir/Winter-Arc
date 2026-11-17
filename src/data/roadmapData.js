@@ -1,7 +1,5 @@
-// Winter Arc – 90 Days of Backend Engineering Roadmap
-// 90 Days, 13 Weeks, Exactly 1 Single YouTube Video Per Day in STRICT LINE-WISE ORDER
-// Days 1–57: Core Java (Videos 1 to 57 in exact sequence)
-// Days 58–90: Spring Boot (Videos 1 to 33 in exact sequence)
+// 97-Day Winter Arc: Complete Core Java (Lectures #1 to #57) & Spring Boot (Lectures #1 to #40)
+// Exactly 1 video per day, in strict numerical sequence up to Testing with JUnit 5 & Mockito
 
 export const INITIAL_ROADMAP_DAYS = [
   {
@@ -3509,6 +3507,279 @@ export const INITIAL_ROADMAP_DAYS = [
       "Spring Bean lifecycle and container internals",
       "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 91,
+    "phase": "Phase 2: Spring Boot Mastery",
+    "phaseId": "phase-2",
+    "week": 13,
+    "title": "Spring Lecture #34: Transactional Propagation & Isolation",
+    "topic": "Spring Boot",
+    "playlistName": "Spring Framework & Spring Boot – Coder Army",
+    "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+    "targetMinutes": 90,
+    "videos": [
+      {
+        "id": "E_Sb48BFoF0",
+        "title": "Spring @Transactional Propagation & Isolation Levels Explained | Spring Boot Full Course #34",
+        "duration": "1:00:44",
+        "durationSeconds": 3644,
+        "thumbnail": "https://i.ytimg.com/vi/E_Sb48BFoF0/hqdefault.jpg",
+        "url": "https://www.youtube.com/watch?v=E_Sb48BFoF0&list=PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "index": 34,
+        "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "playlistName": "Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #34: \"Spring @Transactional Propagation & Isolation Levels Explained\"",
+      "Implement code comparing Propagation.REQUIRED vs Propagation.REQUIRES_NEW in nested service calls",
+      "Simulate Dirty Reads and Non-Repeatable Reads to test Isolation.READ_COMMITTED and REPEATABLE_READ",
+      "Test transaction rollback behavior on checked exceptions vs RuntimeException"
+    ],
+    "revision": [
+      "Propagation behaviors: REQUIRED, REQUIRES_NEW, MANDATORY, SUPPORTS, NOT_SUPPORTED, NEVER, NESTED",
+      "Isolation levels: READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE",
+      "Phantom reads vs Dirty reads vs Lost Updates",
+      "Spring proxy self-invocation transaction pitfalls"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 92,
+    "phase": "Phase 3: Production Security & Testing",
+    "phaseId": "phase-3",
+    "week": 14,
+    "title": "Spring Lecture #35: Spring Security Fundamentals",
+    "topic": "Spring Security",
+    "playlistName": "Spring Framework & Spring Boot – Coder Army",
+    "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+    "targetMinutes": 110,
+    "videos": [
+      {
+        "id": "KVJuG95JSpM",
+        "title": "Spring Security | Authentication, Authorization & SecurityContext | Spring Boot Full Course #35",
+        "duration": "1:19:52",
+        "durationSeconds": 4792,
+        "thumbnail": "https://i.ytimg.com/vi/KVJuG95JSpM/hqdefault.jpg",
+        "url": "https://www.youtube.com/watch?v=KVJuG95JSpM&list=PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "index": 35,
+        "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "playlistName": "Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #35: \"Spring Security | Authentication, Authorization & SecurityContext\"",
+      "Configure SecurityFilterChain bean disabling CSRF for REST APIs and defining requestMatchers",
+      "Inspect SecurityContextHolder and Authentication principal during an authenticated request",
+      "Implement in-memory authentication using UserDetailsService with InMemoryUserDetailsManager"
+    ],
+    "revision": [
+      "Spring Security Filter Chain architecture & DelegatingFilterProxy",
+      "Authentication vs Authorization contracts",
+      "SecurityContextHolder strategy (ThreadLocal)",
+      "SecurityFilterChain bean declaration in Spring Boot 3.x"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 93,
+    "phase": "Phase 3: Production Security & Testing",
+    "phaseId": "phase-3",
+    "week": 14,
+    "title": "Spring Lecture #36: DB Authentication & Password Security",
+    "topic": "Spring Security",
+    "playlistName": "Spring Framework & Spring Boot – Coder Army",
+    "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+    "targetMinutes": 115,
+    "videos": [
+      {
+        "id": "iF8KMT51QtY",
+        "title": "Spring Security DB Authentication & Password Security | Spring Boot Full Course #36",
+        "duration": "1:26:23",
+        "durationSeconds": 5183,
+        "thumbnail": "https://i.ytimg.com/vi/iF8KMT51QtY/hqdefault.jpg",
+        "url": "https://www.youtube.com/watch?v=iF8KMT51QtY&list=PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "index": 36,
+        "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "playlistName": "Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #36: \"Spring Security DB Authentication & Password Security\"",
+      "Create User entity in MySQL with email, hashed password, and roles/authorities",
+      "Implement custom UserDetailsService loading UserDetails from UserRepository",
+      "Configure BCryptPasswordEncoder with recommended salt rounds and verify password hashing"
+    ],
+    "revision": [
+      "BCrypt hashing algorithm, salt generation, and slow hash defense against brute-force",
+      "UserDetails interface methods: getAuthorities(), isAccountNonExpired(), isEnabled()",
+      "DaoAuthenticationProvider and UserDetailsService workflow",
+      "Roles (\"ROLE_ADMIN\") vs Granular Authorities (\"READ_PRIVILEGE\")"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 94,
+    "phase": "Phase 3: Production Security & Testing",
+    "phaseId": "phase-3",
+    "week": 14,
+    "title": "Spring Lecture #37: Security Authentication Internals",
+    "topic": "Spring Security",
+    "playlistName": "Spring Framework & Spring Boot – Coder Army",
+    "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+    "targetMinutes": 120,
+    "videos": [
+      {
+        "id": "0LLpt3OZ03g",
+        "title": "Spring Security Authentication Internals | Complete Login Flow | Spring Boot Full Course #37",
+        "duration": "1:32:51",
+        "durationSeconds": 5571,
+        "thumbnail": "https://i.ytimg.com/vi/0LLpt3OZ03g/hqdefault.jpg",
+        "url": "https://www.youtube.com/watch?v=0LLpt3OZ03g&list=PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "index": 37,
+        "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "playlistName": "Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #37: \"Spring Security Authentication Internals | Complete Login Flow\"",
+      "Trace request flow through UsernamePasswordAuthenticationFilter to ProviderManager",
+      "Examine AuthenticationManager authenticate() throwing BadCredentialsException",
+      "Debug SecurityContextRepository session persistence mechanics"
+    ],
+    "revision": [
+      "ProviderManager iterating over registered AuthenticationProvider instances",
+      "UsernamePasswordAuthenticationToken unauthenticated vs authenticated states",
+      "SecurityContextPersistenceFilter / SecurityContextHolderFilter difference",
+      "AuthenticationEntryPoint and AccessDeniedHandler customizations"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 95,
+    "phase": "Phase 3: Production Security & Testing",
+    "phaseId": "phase-3",
+    "week": 14,
+    "title": "Spring Lecture #38: JWT Authentication & Stateless Security",
+    "topic": "Spring Security",
+    "playlistName": "Spring Framework & Spring Boot – Coder Army",
+    "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+    "targetMinutes": 110,
+    "videos": [
+      {
+        "id": "pUWp1EuVnGs",
+        "title": "Spring JWT Authentication | JWT Internals & Stateless Security | Spring Boot Full Course #38",
+        "duration": "1:22:21",
+        "durationSeconds": 4941,
+        "thumbnail": "https://i.ytimg.com/vi/pUWp1EuVnGs/hqdefault.jpg",
+        "url": "https://www.youtube.com/watch?v=pUWp1EuVnGs&list=PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "index": 38,
+        "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "playlistName": "Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #38: \"Spring JWT Authentication | JWT Internals & Stateless Security\"",
+      "Implement JwtService generating tokens using jjwt library with HMAC-SHA256 signature",
+      "Create JwtAuthenticationFilter extending OncePerRequestFilter to extract Bearer token",
+      "Configure SessionCreationPolicy.STATELESS in SecurityFilterChain"
+    ],
+    "revision": [
+      "JWT Anatomy: Header (algorithm), Payload (claims: sub, exp, iat), Signature",
+      "Stateless session management vs JSESSIONID cookie state",
+      "Token validation: cryptographic signature verification and expiration check",
+      "Refresh Token rotation strategy for production microservices"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 96,
+    "phase": "Phase 3: Production Security & Testing",
+    "phaseId": "phase-3",
+    "week": 14,
+    "title": "Spring Lecture #39: OAuth 2.0 & Google Social Login",
+    "topic": "OAuth 2.0",
+    "playlistName": "Spring Framework & Spring Boot – Coder Army",
+    "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+    "targetMinutes": 115,
+    "videos": [
+      {
+        "id": "t9kRN4wMVk0",
+        "title": "OAuth 2.0 Masterclass | Google Login with Spring Boot, OIDC & PKCE | Spring Boot Full Course #39",
+        "duration": "1:27:08",
+        "durationSeconds": 5228,
+        "thumbnail": "https://i.ytimg.com/vi/t9kRN4wMVk0/hqdefault.jpg",
+        "url": "https://www.youtube.com/watch?v=t9kRN4wMVk0&list=PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "index": 39,
+        "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "playlistName": "Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #39: \"OAuth 2.0 Masterclass | Google Login with Spring Boot, OIDC & PKCE\"",
+      "Set up Google Cloud OAuth 2.0 Client credentials (client-id & client-secret)",
+      "Configure spring-boot-starter-oauth2-client with oauth2Login() in SecurityFilterChain",
+      "Extract user profile details from @AuthenticationPrincipal OAuth2User"
+    ],
+    "revision": [
+      "OAuth 2.0 Roles: Resource Owner, Client, Authorization Server, Resource Server",
+      "Authorization Code Grant with PKCE (Proof Key for Code Exchange)",
+      "OpenID Connect (OIDC) ID Token vs OAuth Access Token",
+      "Custom OAuth2UserService for auto-registering third-party users in DB"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 97,
+    "phase": "Phase 3: Production Security & Testing",
+    "phaseId": "phase-3",
+    "week": 14,
+    "title": "Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc",
+    "topic": "Testing & Quality Engineering",
+    "playlistName": "Spring Framework & Spring Boot – Coder Army",
+    "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+    "targetMinutes": 120,
+    "videos": [
+      {
+        "id": "8MAjlB7g6uI",
+        "title": "Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc | Spring Boot Full Course #40",
+        "duration": "1:22:11",
+        "durationSeconds": 4931,
+        "thumbnail": "https://i.ytimg.com/vi/8MAjlB7g6uI/hqdefault.jpg",
+        "url": "https://www.youtube.com/watch?v=8MAjlB7g6uI&list=PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "index": 40,
+        "playlistId": "PLQEaRBV9gAFs8r_e9x3kS_4tvdLFFp_o4",
+        "playlistName": "Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #40: \"Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc\"",
+      "Write unit tests for Service layer using Mockito (@Mock, @InjectMocks, when().thenReturn(), verify())",
+      "Write web slice integration tests for REST Controllers using @WebMvcTest and MockMvc (perform, andExpect)",
+      "Write full context integration test with @SpringBootTest and TestEntityManager or in-memory DB"
+    ],
+    "revision": [
+      "JUnit 5 Jupiter architecture (@Test, @BeforeEach, @AfterEach, @ParameterizedTest, Assertions)",
+      "Mockito stubbing vs spying: mock() vs spy(), doThrow(), ArgumentCaptor",
+      "Slice testing with @WebMvcTest vs full integration with @SpringBootTest",
+      "MockMvc assertions: status().isOk(), jsonPath(\"$.name\").value(\"Product\"), content().string()"
     ],
     "notes": "",
     "completed": false,

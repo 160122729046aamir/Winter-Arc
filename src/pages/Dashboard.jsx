@@ -86,7 +86,7 @@ export default function Dashboard() {
             Welcome back, <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">{settings.userName || 'Backend Engineer'}</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            You are on <strong className="text-slate-200">Day {currentChallengeDay} of {days.length || 90}</strong>. Complete your lectures, coding problems, and 25 daily quiz questions.
+            You are on <strong className="text-slate-200">Day {currentChallengeDay} of {days.length || 97}</strong>. Complete your lectures, coding problems, and 25 daily quiz questions.
           </p>
         </div>
 
@@ -140,7 +140,7 @@ export default function Dashboard() {
         <StatCard
           title="Overall Arc Progress"
           value={`${stats.overallCompletionPercent}%`}
-          subtext={`${stats.completedDaysCount} of ${days.length || 90} days completed`}
+          subtext={`${stats.completedDaysCount} of ${days.length || 97} days completed`}
           icon={TrendingUp}
           color="indigo"
           badge={`Day ${currentChallengeDay}`}
@@ -194,11 +194,11 @@ export default function Dashboard() {
                 Question Accuracy
               </h3>
               <span className="text-xs font-mono font-bold text-cyan-400">
-                {stats.completedQuizzesCount} / {days.length || 90} Quizzes Done
+                {stats.completedQuizzesCount} / {days.length || 97} Quizzes Done
               </span>
             </div>
             <p className="text-xs text-slate-400 mb-4">
-              Real-time accuracy across all 2,250 questions (25/day) categorized by difficulty:
+              Real-time accuracy across all 2,425 questions (25/day) categorized by difficulty:
             </p>
 
             <div className="space-y-3.5">
@@ -387,7 +387,7 @@ export default function Dashboard() {
 
               {upcomingDays.length === 0 && (
                 <p className="text-xs text-slate-500 py-4 text-center">
-                  You are approaching the end of your 90-Day Arc! Check Day 90 for graduation.
+                  You are approaching the end of your {days.length || 97}-Day Arc! Check Day {days.length || 97} for graduation.
                 </p>
               )}
             </div>

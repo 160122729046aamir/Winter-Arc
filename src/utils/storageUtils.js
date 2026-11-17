@@ -55,7 +55,7 @@ export function loadStoredState(defaultState) {
         ...defaultState.settings,
         ...(parsed.settings || {}),
         startDate: startDate,
-        challengeDuration: 90
+        challengeDuration: 97
       }
     };
   } catch (err) {
@@ -74,7 +74,7 @@ export function saveStateToStorage(state) {
 
 export function exportStateAsJSON(state) {
   const exportData = {
-    appName: 'Winter Arc - 90 Days of Backend Engineering',
+    appName: 'Winter Arc - 97 Days of Backend Engineering',
     version: '2.0.0',
     exportedAt: new Date().toISOString(),
     state
