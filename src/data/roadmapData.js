@@ -1,6 +1,7 @@
 // Winter Arc – 90 Days of Backend Engineering Roadmap
-// 90 Days, 13 Weeks, Exactly 1 Single YouTube Video Per Day
-// Generated from authentic Coder Army Java & Spring Boot playlists
+// 90 Days, 13 Weeks, Exactly 1 Single YouTube Video Per Day in STRICT LINE-WISE ORDER
+// Days 1–57: Core Java (Videos 1 to 57 in exact sequence)
+// Days 58–90: Spring Boot (Videos 1 to 33 in exact sequence)
 
 export const INITIAL_ROADMAP_DAYS = [
   {
@@ -8,7 +9,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 1,
-    "title": "JAVA Full Course",
+    "title": "Lecture #1: JAVA Full Course",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -27,16 +28,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #1: \"JAVA Full Course\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #1: \"JAVA Full Course | Introduction to JAVA | Java Full Course for Beginners in 2026\"",
+      "Implement the practical code examples demonstrated in Lecture #1",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #1",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "JAVA Full Course fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -47,7 +48,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 1,
-    "title": "Write Your First JAVA Program",
+    "title": "Lecture #2: Write Your First JAVA Program",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -66,16 +67,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #2: \"Write Your First JAVA Program\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #2: \"Write Your First JAVA Program | JVM, JDK & JRE Explained | JSE vs JEE vs JME | JAVA Full Course #2\"",
+      "Implement the practical code examples demonstrated in Lecture #2",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #2",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Write Your First JAVA Program fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -86,7 +87,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 1,
-    "title": "Java Variables & Data Types Explained",
+    "title": "Lecture #3: Java Variables & Data Types Explained",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -105,16 +106,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #3: \"Java Variables & Data Types Explained\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #3: \"Java Variables & Data Types Explained | Identifiers, Literals, Keywords | JAVA Full Course #3\"",
+      "Implement the practical code examples demonstrated in Lecture #3",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #3",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Variables & Data Types Explained fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -125,7 +126,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 1,
-    "title": "How Java Stores Negative & Floating Point Numbers",
+    "title": "Lecture #4: How Java Stores Negative & Floating Point Numbers",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -144,16 +145,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #4: \"How Java Stores Negative & Floating Point Numbers\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #4: \"How Java Stores Negative & Floating Point Numbers | Java Full Course #4\"",
+      "Implement the practical code examples demonstrated in Lecture #4",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #4",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "How Java Stores Negative & Floating Point Numbers fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -164,7 +165,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 1,
-    "title": "Java Type Conversions & Type Promotions Explained",
+    "title": "Lecture #5: Java Type Conversions & Type Promotions Explained",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -183,16 +184,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #5: \"Java Type Conversions & Type Promotions Explained\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #5: \"Java Type Conversions & Type Promotions Explained | Casting in Java | Java Full Course #5\"",
+      "Implement the practical code examples demonstrated in Lecture #5",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #5",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Type Conversions & Type Promotions Explained fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -203,7 +204,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 1,
-    "title": "Java Operators",
+    "title": "Lecture #6: Java Operators",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -222,16 +223,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #6: \"Java Operators\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #6: \"Java Operators | Arithmetic + Unary + Logical + Bitwise + Assignment Operators | Java Full Course #6\"",
+      "Implement the practical code examples demonstrated in Lecture #6",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #6",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Operators fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -242,7 +243,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 1,
-    "title": "Java Conditional Statements",
+    "title": "Lecture #7: Java Conditional Statements",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -261,16 +262,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #7: \"Java Conditional Statements\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #7: \"Java Conditional Statements | If, If-Else, If-Else-If Ladder, Switch Explained | Full Java Course #7\"",
+      "Implement the practical code examples demonstrated in Lecture #7",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #7",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Conditional Statements fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -281,7 +282,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 2,
-    "title": "Java Loops & Jump Statements",
+    "title": "Lecture #8: Java Loops & Jump Statements",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -300,16 +301,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #8: \"Java Loops & Jump Statements\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #8: \"Java Loops & Jump Statements | for, while, do-while, break, continue Explained | Java Full Course #8\"",
+      "Implement the practical code examples demonstrated in Lecture #8",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #8",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Loops & Jump Statements fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -320,7 +321,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 2,
-    "title": "Introduction to Arrays",
+    "title": "Lecture #9: Introduction to Arrays",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -339,16 +340,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #9: \"Introduction to Arrays\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #9: \"Introduction to Arrays | Declaration, Initialization, Traversal | String Intro | Java Full Course #9\"",
+      "Implement the practical code examples demonstrated in Lecture #9",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #9",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Introduction to Arrays fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -359,7 +360,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 2,
-    "title": "How Arrays work in Java",
+    "title": "Lecture #10: How Arrays work in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -378,16 +379,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #10: \"How Arrays work in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #10: \"How Arrays work in Java | Heap, Contiguous Storage, Random Access | Java Full Course #10\"",
+      "Implement the practical code examples demonstrated in Lecture #10",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #10",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "How Arrays work in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -398,7 +399,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 2,
-    "title": "Java Functions Deep Dive",
+    "title": "Lecture #11: Java Functions Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -417,16 +418,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #11: \"Java Functions Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #11: \"Java Functions Deep Dive | Recursion | Method Overloading | Java Full Course #11\"",
+      "Implement the practical code examples demonstrated in Lecture #11",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #11",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Functions Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -437,7 +438,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 2,
-    "title": "Object Oriented Programming  in Java",
+    "title": "Lecture #12: Object Oriented Programming  in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -456,16 +457,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #12: \"Object Oriented Programming  in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #12: \"Object Oriented Programming  in Java | Classes, Objects, new Keyword | Java Full Course #12\"",
+      "Implement the practical code examples demonstrated in Lecture #12",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #12",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Object Oriented Programming  in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -476,7 +477,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 2,
-    "title": "Constructors in Java",
+    "title": "Lecture #13: Constructors in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -495,16 +496,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #13: \"Constructors in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #13: \"Constructors in Java | Constructor Chaining, Overloading & this | Java Full Course #13\"",
+      "Implement the practical code examples demonstrated in Lecture #13",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #13",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Constructors in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -515,7 +516,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 2,
-    "title": "Objects Deep Dive",
+    "title": "Lecture #14: Objects Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -534,16 +535,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #14: \"Objects Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #14: \"Objects Deep Dive | Size, Call by Value vs Reference | Shallow vs Deep Copy | Java Full Course #14\"",
+      "Implement the practical code examples demonstrated in Lecture #14",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #14",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Objects Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -554,7 +555,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 3,
-    "title": "Static & Final in Java",
+    "title": "Lecture #15: Static & Final in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -573,16 +574,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #15: \"Static & Final in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #15: \"Static & Final in Java | Static Methods, Blocks & String[] args | Java Full Course #15\"",
+      "Implement the practical code examples demonstrated in Lecture #15",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #15",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Static & Final in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -593,7 +594,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 3,
-    "title": "Encapsulation & Inheritance in Java",
+    "title": "Lecture #16: Encapsulation & Inheritance in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -612,16 +613,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #16: \"Encapsulation & Inheritance in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #16: \"Encapsulation & Inheritance in Java | Java Packages & Super Keyword | Java Full Course #16\"",
+      "Implement the practical code examples demonstrated in Lecture #16",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #16",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Encapsulation & Inheritance in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -632,7 +633,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 3,
-    "title": "Abstraction & Polymorphism in Depth",
+    "title": "Lecture #17: Abstraction & Polymorphism in Depth",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -651,16 +652,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #17: \"Abstraction & Polymorphism in Depth\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #17: \"Abstraction & Polymorphism in Depth | Abstract Class vs Interfaces | Java Full Course #17\"",
+      "Implement the practical code examples demonstrated in Lecture #17",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #17",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Abstraction & Polymorphism in Depth fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -671,7 +672,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 3,
-    "title": "AutoBoxing, Abstract classes & POJOs",
+    "title": "Lecture #18: AutoBoxing, Abstract classes & POJOs",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -690,16 +691,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #18: \"AutoBoxing, Abstract classes & POJOs\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #18: \"AutoBoxing, Abstract classes & POJOs | Why only one public class in java file | Java Full Course #18\"",
+      "Implement the practical code examples demonstrated in Lecture #18",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #18",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "AutoBoxing, Abstract classes & POJOs fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -710,7 +711,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 3,
-    "title": "Java Nested Classes",
+    "title": "Lecture #19: Java Nested Classes",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -729,16 +730,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #19: \"Java Nested Classes\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #19: \"Java Nested Classes | Static Nested, Inner, Local & Anonymous Classes | Java Full Course #19\"",
+      "Implement the practical code examples demonstrated in Lecture #19",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #19",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Nested Classes fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -749,7 +750,7 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 3,
-    "title": "Java I/O Deep Dive",
+    "title": "Lecture #20: Java I/O Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -768,16 +769,16 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #20: \"Java I/O Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #20: \"Java I/O Deep Dive | InputStreams, System.in, Scanner vs BufferedReader | Java Full Course #20\"",
+      "Implement the practical code examples demonstrated in Lecture #20",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #20",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java I/O Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
@@ -788,7 +789,46 @@ export const INITIAL_ROADMAP_DAYS = [
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 3,
-    "title": "Most Important Class in Java",
+    "title": "Lecture #21: Immutable Classes in Java",
+    "topic": "Core Java",
+    "playlistName": "Java Beginner to Advanced – Coder Army",
+    "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+    "targetMinutes": 65,
+    "videos": [
+      {
+        "id": "vgQVz5OdFws",
+        "title": "Immutable Classes in Java | How to Create Immutable Objects | Java Full Course #21",
+        "duration": "35:04",
+        "durationSeconds": 2104,
+        "thumbnail": "https://i.ytimg.com/vi/vgQVz5OdFws/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBSxCFY-zhCvtRaiY6z54fyuKQNyQ",
+        "url": "https://www.youtube.com/watch?v=vgQVz5OdFws&list=PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "index": 21,
+        "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "playlistName": "Core Java"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #21: \"Immutable Classes in Java | How to Create Immutable Objects | Java Full Course #21\"",
+      "Implement the practical code examples demonstrated in Lecture #21",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #21",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
+    ],
+    "revision": [
+      "Immutable Classes in Java fundamentals",
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 22,
+    "phase": "Phase 1: Core Java Mastery",
+    "phaseId": "phase-1",
+    "week": 4,
+    "title": "Lecture #22: Most Important Class in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -807,27 +847,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #22: \"Most Important Class in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #22: \"Most Important Class in Java | Object Class (equals, hashCode, toString) | Java Full Course #22\"",
+      "Implement the practical code examples demonstrated in Lecture #22",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #22",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Most Important Class in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 22,
+    "day": 23,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 4,
-    "title": "Java Enums",
+    "title": "Lecture #23: Java Enums",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -846,27 +886,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #23: \"Java Enums\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #23: \"Java Enums | Why Not Use int/String for Constants? | Java Full Course #23\"",
+      "Implement the practical code examples demonstrated in Lecture #23",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #23",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Enums fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 23,
+    "day": 24,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 4,
-    "title": "Java Interfaces Deep Dive",
+    "title": "Lecture #24: Java Interfaces Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -885,27 +925,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #24: \"Java Interfaces Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #24: \"Java Interfaces Deep Dive | Default Methods, Functional, Marker Interfaces | Java Full Course #24\"",
+      "Implement the practical code examples demonstrated in Lecture #24",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #24",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Interfaces Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 24,
+    "day": 25,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 4,
-    "title": "Java Strings",
+    "title": "Lecture #25: Java Strings",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -924,27 +964,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #25: \"Java Strings\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #25: \"Java Strings | String Pool, Immutability, Internals | Java Full Course #25\"",
+      "Implement the practical code examples demonstrated in Lecture #25",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #25",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Strings fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 25,
+    "day": 26,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 4,
-    "title": "Java Strings Part 2",
+    "title": "Lecture #26: Java Strings Part 2",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -963,27 +1003,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #26: \"Java Strings Part 2\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #26: \"Java Strings Part 2 | All String Methods + StringBuilder vs StringBuffer | Java Full Course #26\"",
+      "Implement the practical code examples demonstrated in Lecture #26",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #26",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Strings Part 2 fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 26,
+    "day": 27,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 4,
-    "title": "Java Generics Deep Dive",
+    "title": "Lecture #27: Java Generics Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1002,27 +1042,66 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #27: \"Java Generics Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #27: \"Java Generics Deep Dive | Bounded Types using extends | Java Full Course #27\"",
+      "Implement the practical code examples demonstrated in Lecture #27",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #27",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Generics Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 27,
+    "day": 28,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 4,
-    "title": "Java Collection Framework Explained",
+    "title": "Lecture #28: Wildcards in Generics",
+    "topic": "Core Java",
+    "playlistName": "Java Beginner to Advanced – Coder Army",
+    "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+    "targetMinutes": 112,
+    "videos": [
+      {
+        "id": "Opb2q2WSyes",
+        "title": "Wildcards in Generics | ?, ? extends, ? super  | Java Full Course #28",
+        "duration": "1:22:24",
+        "durationSeconds": 4944,
+        "thumbnail": "https://i.ytimg.com/vi/Opb2q2WSyes/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDoco2YNDQWduWlm2U6hN-3_RaHJQ",
+        "url": "https://www.youtube.com/watch?v=Opb2q2WSyes&list=PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "index": 28,
+        "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "playlistName": "Core Java"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #28: \"Wildcards in Generics | ?, ? extends, ? super  | Java Full Course #28\"",
+      "Implement the practical code examples demonstrated in Lecture #28",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #28",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
+    ],
+    "revision": [
+      "Wildcards in Generics fundamentals",
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 29,
+    "phase": "Phase 1: Core Java Mastery",
+    "phaseId": "phase-1",
+    "week": 5,
+    "title": "Lecture #29: Java Collection Framework Explained",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1041,27 +1120,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #29: \"Java Collection Framework Explained\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #29: \"Java Collection Framework Explained | Data Structures + Complete Hierarchy | Java Full Course #29\"",
+      "Implement the practical code examples demonstrated in Lecture #29",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #29",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Collection Framework Explained fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 28,
+    "day": 30,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 4,
-    "title": "Iterable Interface in Java",
+    "week": 5,
+    "title": "Lecture #30: Iterable Interface in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1080,27 +1159,66 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #30: \"Iterable Interface in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #30: \"Iterable Interface in Java | Why Iterator Exists? | For-Each Loop | Java Full Course #30\"",
+      "Implement the practical code examples demonstrated in Lecture #30",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #30",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Iterable Interface in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 29,
+    "day": 31,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 5,
-    "title": "Java List Interface Deep Dive",
+    "title": "Lecture #31: Java Collection Interface Deep Dive",
+    "topic": "Core Java",
+    "playlistName": "Java Beginner to Advanced – Coder Army",
+    "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+    "targetMinutes": 59,
+    "videos": [
+      {
+        "id": "cazzzwdLAkQ",
+        "title": "Java Collection Interface Deep Dive | Methods & Internals | Java Full Course #31",
+        "duration": "29:15",
+        "durationSeconds": 1755,
+        "thumbnail": "https://i.ytimg.com/vi/cazzzwdLAkQ/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBykodg0ABRspyrq8QiUwqbjVZreA",
+        "url": "https://www.youtube.com/watch?v=cazzzwdLAkQ&list=PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "index": 31,
+        "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "playlistName": "Core Java"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #31: \"Java Collection Interface Deep Dive | Methods & Internals | Java Full Course #31\"",
+      "Implement the practical code examples demonstrated in Lecture #31",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #31",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
+    ],
+    "revision": [
+      "Java Collection Interface Deep Dive fundamentals",
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 32,
+    "phase": "Phase 1: Core Java Mastery",
+    "phaseId": "phase-1",
+    "week": 5,
+    "title": "Lecture #32: Java List Interface Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1119,27 +1237,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #32: \"Java List Interface Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #32: \"Java List Interface Deep Dive | ArrayList, LinkedList, Vector, Stack | Java Full Course #32\"",
+      "Implement the practical code examples demonstrated in Lecture #32",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #32",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java List Interface Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 30,
+    "day": 33,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 5,
-    "title": "Set & Map Interface in Java",
+    "title": "Lecture #33: Set & Map Interface in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1158,27 +1276,66 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #33: \"Set & Map Interface in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #33: \"Set & Map Interface in Java | Internal Working of HashMap, HashSet & TreeMap | Java Full Course #33\"",
+      "Implement the practical code examples demonstrated in Lecture #33",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #33",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Set & Map Interface in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 31,
+    "day": 34,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 5,
-    "title": "Java Queue Interface Deep Dive",
+    "title": "Lecture #34: Set & Map Methods Explained",
+    "topic": "Core Java",
+    "playlistName": "Java Beginner to Advanced – Coder Army",
+    "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+    "targetMinutes": 101,
+    "videos": [
+      {
+        "id": "b1Uj_2MPBwA",
+        "title": "Set & Map Methods Explained | EnumMaps, IdentityHashMaps & More | Java Full Course #34",
+        "duration": "1:11:20",
+        "durationSeconds": 4280,
+        "thumbnail": "https://i.ytimg.com/vi/b1Uj_2MPBwA/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB40xaIrkFyGLEdTScBmpdP8qZq9g",
+        "url": "https://www.youtube.com/watch?v=b1Uj_2MPBwA&list=PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "index": 34,
+        "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "playlistName": "Core Java"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #34: \"Set & Map Methods Explained | EnumMaps, IdentityHashMaps & More | Java Full Course #34\"",
+      "Implement the practical code examples demonstrated in Lecture #34",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #34",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
+    ],
+    "revision": [
+      "Set & Map Methods Explained fundamentals",
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 35,
+    "phase": "Phase 1: Core Java Mastery",
+    "phaseId": "phase-1",
+    "week": 5,
+    "title": "Lecture #35: Java Queue Interface Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1197,27 +1354,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #35: \"Java Queue Interface Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #35: \"Java Queue Interface Deep Dive | PriorityQueue & Heap Explained | Java Full Course #35\"",
+      "Implement the practical code examples demonstrated in Lecture #35",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #35",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Queue Interface Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 32,
+    "day": 36,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 5,
-    "title": "Comparable Interface in Java",
+    "week": 6,
+    "title": "Lecture #36: Comparable Interface in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1236,27 +1393,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #36: \"Comparable Interface in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #36: \"Comparable Interface in Java | Collections class | Comparing Objects | Java Full Course #36\"",
+      "Implement the practical code examples demonstrated in Lecture #36",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #36",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Comparable Interface in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 33,
+    "day": 37,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 5,
-    "title": "Java Lambdas & Functional Interfaces",
+    "week": 6,
+    "title": "Lecture #37: Java Lambdas & Functional Interfaces",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1275,27 +1432,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #37: \"Java Lambdas & Functional Interfaces\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #37: \"Java Lambdas & Functional Interfaces | Comparator Interface | Java Full Course #37\"",
+      "Implement the practical code examples demonstrated in Lecture #37",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #37",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Lambdas & Functional Interfaces fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 34,
+    "day": 38,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 5,
-    "title": "Lambdas & Functional Interface Deep Dive",
+    "week": 6,
+    "title": "Lecture #38: Lambdas & Functional Interface Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1314,27 +1471,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #38: \"Lambdas & Functional Interface Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #38: \"Lambdas & Functional Interface Deep Dive | Method References & Composition | Java Full Course #38\"",
+      "Implement the practical code examples demonstrated in Lecture #38",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #38",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Lambdas & Functional Interface Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 35,
+    "day": 39,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 5,
-    "title": "Introduction to Java Streams",
+    "week": 6,
+    "title": "Lecture #39: Introduction to Java Streams",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1353,27 +1510,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #39: \"Introduction to Java Streams\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #39: \"Introduction to Java Streams | Creation & Architecture | Java Full Course #39\"",
+      "Implement the practical code examples demonstrated in Lecture #39",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #39",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Introduction to Java Streams fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 36,
+    "day": 40,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 6,
-    "title": "Java Stream Methods Deep Dive",
+    "title": "Lecture #40: Java Stream Methods Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1392,27 +1549,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #40: \"Java Stream Methods Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #40: \"Java Stream Methods Deep Dive | All Intermediate & Terminal Operations | Java Full Course #40\"",
+      "Implement the practical code examples demonstrated in Lecture #40",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #40",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Stream Methods Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 37,
+    "day": 41,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 6,
-    "title": "Java Optional Explained from Scratch",
+    "title": "Lecture #41: Java Optional Explained from Scratch",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1431,27 +1588,66 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #41: \"Java Optional Explained from Scratch\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #41: \"Java Optional Explained from Scratch | All Methods + Streams Integration | Java Full Course #41\"",
+      "Implement the practical code examples demonstrated in Lecture #41",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #41",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Optional Explained from Scratch fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 38,
+    "day": 42,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 6,
-    "title": "Java Exception Handling from Scratch",
+    "title": "Lecture #42: Parallel Streams in Java Explained",
+    "topic": "Core Java",
+    "playlistName": "Java Beginner to Advanced – Coder Army",
+    "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+    "targetMinutes": 73,
+    "videos": [
+      {
+        "id": "zrtVQ1ev_0w",
+        "title": "Parallel Streams in Java Explained | Primitive Optional Classes | Java Full Course #42",
+        "duration": "42:35",
+        "durationSeconds": 2555,
+        "thumbnail": "https://i.ytimg.com/vi/zrtVQ1ev_0w/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCNlR6R6d_tGBkvc1ln2N0Wq4pJyQ",
+        "url": "https://www.youtube.com/watch?v=zrtVQ1ev_0w&list=PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "index": 42,
+        "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "playlistName": "Core Java"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #42: \"Parallel Streams in Java Explained | Primitive Optional Classes | Java Full Course #42\"",
+      "Implement the practical code examples demonstrated in Lecture #42",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #42",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
+    ],
+    "revision": [
+      "Parallel Streams in Java Explained fundamentals",
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 43,
+    "phase": "Phase 1: Core Java Mastery",
+    "phaseId": "phase-1",
+    "week": 7,
+    "title": "Lecture #43: Java Exception Handling from Scratch",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1470,27 +1666,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #43: \"Java Exception Handling from Scratch\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #43: \"Java Exception Handling from Scratch | Exceptions vs Errors | Java Full Course #43\"",
+      "Implement the practical code examples demonstrated in Lecture #43",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #43",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Exception Handling from Scratch fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 39,
+    "day": 44,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 6,
-    "title": "Exception Hierarchy Deep Dive",
+    "week": 7,
+    "title": "Lecture #44: Exception Hierarchy Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1509,27 +1705,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #44: \"Exception Hierarchy Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #44: \"Exception Hierarchy Deep Dive | throw vs throws | Custom Exceptions | Java Full Course #44\"",
+      "Implement the practical code examples demonstrated in Lecture #44",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #44",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Exception Hierarchy Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 40,
+    "day": 45,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 6,
-    "title": "Java Memory Management Explained in Depth",
+    "week": 7,
+    "title": "Lecture #45: Java Memory Management Explained in Depth",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1548,27 +1744,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #45: \"Java Memory Management Explained in Depth\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #45: \"Java Memory Management Explained in Depth | Stack, Heap, Method Area & PC | Java Full Course #45\"",
+      "Implement the practical code examples demonstrated in Lecture #45",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #45",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Memory Management Explained in Depth fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 41,
+    "day": 46,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 6,
-    "title": "Java Heap Memory Deep Dive",
+    "week": 7,
+    "title": "Lecture #46: Java Heap Memory Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1587,27 +1783,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #46: \"Java Heap Memory Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #46: \"Java Heap Memory Deep Dive | Garbage Collection Algorithms Explained | Java Full Course #46\"",
+      "Implement the practical code examples demonstrated in Lecture #46",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #46",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Heap Memory Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 42,
+    "day": 47,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 6,
-    "title": "Introduction to Multithreading in Java",
+    "week": 7,
+    "title": "Lecture #47: Introduction to Multithreading in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1626,27 +1822,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #47: \"Introduction to Multithreading in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #47: \"Introduction to Multithreading in Java | Process vs Thread  | Java Full Course #47\"",
+      "Implement the practical code examples demonstrated in Lecture #47",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #47",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Introduction to Multithreading in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 43,
+    "day": 48,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 7,
-    "title": "Java Thread Creation & Lifecycle Explained from Scratch",
+    "title": "Lecture #48: Java Thread Creation & Lifecycle Explained from Scratch",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1665,27 +1861,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #48: \"Java Thread Creation & Lifecycle Explained from Scratch\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #48: \"Java Thread Creation & Lifecycle Explained from Scratch | Java Full Course #48\"",
+      "Implement the practical code examples demonstrated in Lecture #48",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #48",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Thread Creation & Lifecycle Explained from Scratch fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 44,
+    "day": 49,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 7,
-    "title": "Thread Methods",
+    "title": "Lecture #49: Thread Methods",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1704,27 +1900,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #49: \"Thread Methods\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #49: \"Thread Methods | sleep, join, yield, interrupt, isAlive, priority & more | Java Full Course #49\"",
+      "Implement the practical code examples demonstrated in Lecture #49",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #49",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Thread Methods fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 45,
+    "day": 50,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 7,
-    "title": "Problems in Multithreading",
+    "week": 8,
+    "title": "Lecture #50: Problems in Multithreading",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1743,27 +1939,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #50: \"Problems in Multithreading\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #50: \"Problems in Multithreading | Race Condition, Visibility, Ordering Explained | Java Full Course #50\"",
+      "Implement the practical code examples demonstrated in Lecture #50",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #50",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Problems in Multithreading fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 46,
+    "day": 51,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 7,
-    "title": "Monitor Locks in Java",
+    "week": 8,
+    "title": "Lecture #51: Monitor Locks in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1782,27 +1978,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #51: \"Monitor Locks in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #51: \"Monitor Locks in Java | Synchronized Keyword, Static Sync & Custom Locks | Java Full Course #51\"",
+      "Implement the practical code examples demonstrated in Lecture #51",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #51",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Monitor Locks in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 47,
+    "day": 52,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 7,
-    "title": "Inter Thread Communication in Java",
+    "week": 8,
+    "title": "Lecture #52: Inter Thread Communication in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1821,27 +2017,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #52: \"Inter Thread Communication in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #52: \"Inter Thread Communication in Java | wait(), notify(), notifyAll() Deep Dive | Java Full Course #52\"",
+      "Implement the practical code examples demonstrated in Lecture #52",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #52",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Inter Thread Communication in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 48,
+    "day": 53,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 7,
-    "title": "Java Locks",
+    "week": 8,
+    "title": "Lecture #53: Java Locks",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1860,27 +2056,27 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #53: \"Java Locks\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #53: \"Java Locks | ReentrantLock, ReadWriteLock, StampedLock, Semaphore & Condition | Java Full Course #53\"",
+      "Implement the practical code examples demonstrated in Lecture #53",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #53",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Java Locks fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 49,
+    "day": 54,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
-    "week": 7,
-    "title": "Lock-Free Concurrency in Java",
+    "week": 8,
+    "title": "Lecture #54: Lock-Free Concurrency in Java",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1899,27 +2095,66 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #54: \"Lock-Free Concurrency in Java\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #54: \"Lock-Free Concurrency in Java | AtomicVariables & CAS Explained | Java Full Course #54\"",
+      "Implement the practical code examples demonstrated in Lecture #54",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #54",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Lock-Free Concurrency in Java fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 50,
+    "day": 55,
     "phase": "Phase 1: Core Java Mastery",
     "phaseId": "phase-1",
     "week": 8,
-    "title": "Executor Framework Deep Dive",
+    "title": "Lecture #55: Lock-Free Concurrency in Java - 2",
+    "topic": "Core Java",
+    "playlistName": "Java Beginner to Advanced – Coder Army",
+    "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+    "targetMinutes": 61,
+    "videos": [
+      {
+        "id": "2nBJPpERul4",
+        "title": "Lock-Free Concurrency in Java - 2 | CAS Retry, Compare-and-Swap & ABA Problem | Java Full Course #55",
+        "duration": "31:29",
+        "durationSeconds": 1889,
+        "thumbnail": "https://i.ytimg.com/vi/2nBJPpERul4/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD57CrlNUcGmIsOPMYC8P7MuNUPQg",
+        "url": "https://www.youtube.com/watch?v=2nBJPpERul4&list=PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "index": 55,
+        "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "playlistName": "Core Java"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #55: \"Lock-Free Concurrency in Java - 2 | CAS Retry, Compare-and-Swap & ABA Problem | Java Full Course #55\"",
+      "Implement the practical code examples demonstrated in Lecture #55",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #55",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
+    ],
+    "revision": [
+      "Lock-Free Concurrency in Java - 2 fundamentals",
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 56,
+    "phase": "Phase 1: Core Java Mastery",
+    "phaseId": "phase-1",
+    "week": 8,
+    "title": "Lecture #56: Executor Framework Deep Dive",
     "topic": "Core Java",
     "playlistName": "Java Beginner to Advanced – Coder Army",
     "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
@@ -1938,27 +2173,66 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch YouTube Lecture #56: \"Executor Framework Deep Dive\" thoroughly",
-      "Implement the practical code examples demonstrated in the lecture",
-      "Write unit tests or edge-case predictions for the core concepts taught",
-      "Document key insights and internal JVM/runtime mechanics in personal notes"
+      "Watch YouTube Video #56: \"Executor Framework Deep Dive | ThreadPool, Future & Callable | Java Full Course #56\"",
+      "Implement the practical code examples demonstrated in Lecture #56",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #56",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
     ],
     "revision": [
       "Executor Framework Deep Dive fundamentals",
-      "Syntax, execution model and memory implications",
-      "Common pitfalls, bugs, and edge cases",
-      "Technical interview questions related to this topic"
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
     ],
     "notes": "",
     "completed": false,
     "customTasks": []
   },
   {
-    "day": 51,
+    "day": 57,
+    "phase": "Phase 1: Core Java Mastery",
+    "phaseId": "phase-1",
+    "week": 9,
+    "title": "Lecture #57: CompletableFuture, Fork-Join Pool, ThreadLocal & Virtual Threads",
+    "topic": "Core Java",
+    "playlistName": "Java Beginner to Advanced – Coder Army",
+    "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+    "targetMinutes": 112,
+    "videos": [
+      {
+        "id": "FGN225TiXaE",
+        "title": "CompletableFuture, Fork-Join Pool, ThreadLocal & Virtual Threads | Java Full Course #57",
+        "duration": "1:22:18",
+        "durationSeconds": 4938,
+        "thumbnail": "https://i.ytimg.com/vi/FGN225TiXaE/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAXCQHmA9-GRWGshhwenoYLNcvq6A",
+        "url": "https://www.youtube.com/watch?v=FGN225TiXaE&list=PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "index": 57,
+        "playlistId": "PLQEaRBV9gAFsR15tNo2QLF9d2qc-c018p",
+        "playlistName": "Core Java"
+      }
+    ],
+    "exercises": [
+      "Watch YouTube Video #57: \"CompletableFuture, Fork-Join Pool, ThreadLocal & Virtual Threads | Java Full Course #57\"",
+      "Implement the practical code examples demonstrated in Lecture #57",
+      "Write unit tests or edge-case predictions for the concepts in Lecture #57",
+      "Review core JVM execution flow and note key takeaways in your revision notes"
+    ],
+    "revision": [
+      "CompletableFuture, Fork-Join Pool, ThreadLocal & Virtual Threads fundamentals",
+      "Memory and syntax mechanics",
+      "Common edge cases and pitfall resolution",
+      "Technical interview questions related to this lecture"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 58,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 8,
-    "title": "Spring Boot & Spring Framework Full Course",
+    "week": 9,
+    "title": "Spring Lecture #1: Spring Boot & Spring Framework Full Course",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -1977,15 +2251,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #1: \"Spring Boot & Spring Framework Full Course\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #1: \"Spring Boot & Spring Framework Full Course | Spring Boot Full Course #1\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot & Spring Framework Full Course core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -1993,11 +2267,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 52,
+    "day": 59,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 8,
-    "title": "Build Your First Spring Boot Application",
+    "week": 9,
+    "title": "Spring Lecture #2: Build Your First Spring Boot Application",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2016,15 +2290,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #2: \"Build Your First Spring Boot Application\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #2: \"Build Your First Spring Boot Application | REST API | Spring Boot Full Course #2\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Build Your First Spring Boot Application core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2032,11 +2306,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 53,
+    "day": 60,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 8,
-    "title": "Master Apache Maven in one video",
+    "week": 9,
+    "title": "Spring Lecture #3: Master Apache Maven in one video",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2055,15 +2329,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #3: \"Master Apache Maven in one video\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #3: \"Master Apache Maven in one video | POM, Dependencies & Lifecycle | Spring Boot Full Course #3\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Master Apache Maven in one video core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2071,11 +2345,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 54,
+    "day": 61,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 8,
-    "title": "Dependency Injection & IoC Explained",
+    "week": 9,
+    "title": "Spring Lecture #4: Dependency Injection & IoC Explained",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2094,15 +2368,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #4: \"Dependency Injection & IoC Explained\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #4: \"Dependency Injection & IoC Explained | Loose Coupling in Spring | Spring Boot Full Course #4\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Dependency Injection & IoC Explained core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2110,11 +2384,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 55,
+    "day": 62,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 8,
-    "title": "Spring IOC Container",
+    "week": 9,
+    "title": "Spring Lecture #5: Spring IOC Container",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2133,15 +2407,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #5: \"Spring IOC Container\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #5: \"Spring IOC Container | Beans, @Component, @Autowired & @Bean | Spring Boot Full Course #5\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring IOC Container core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2149,11 +2423,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 56,
+    "day": 63,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 8,
-    "title": "Circular Dependency in Spring",
+    "week": 9,
+    "title": "Spring Lecture #6: Circular Dependency in Spring",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2172,15 +2446,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #6: \"Circular Dependency in Spring\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #6: \"Circular Dependency in Spring | Bean Scope, Lazy & Eager Beans | Spring Boot Full Course #6\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Circular Dependency in Spring core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2188,11 +2462,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 57,
+    "day": 64,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 9,
-    "title": "Bean Lifecycle Explained",
+    "week": 10,
+    "title": "Spring Lecture #7: Bean Lifecycle Explained",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2211,15 +2485,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #7: \"Bean Lifecycle Explained\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #7: \"Bean Lifecycle Explained | @PostConstruct, @PreDestroy, Scopes & @Lazy | Spring Boot Full Course #7\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Bean Lifecycle Explained core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2227,11 +2501,50 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 58,
+    "day": 65,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 9,
-    "title": "Spring Boot Core",
+    "week": 10,
+    "title": "Spring Lecture #8: Spring XML Configuration Explained",
+    "topic": "Spring Framework & Spring Boot",
+    "playlistName": "Spring Framework Full Course – Coder Army",
+    "playlistId": "PLEYgx5hMdopw",
+    "targetMinutes": 117,
+    "videos": [
+      {
+        "id": "HqBh9hV7rik",
+        "title": "Spring XML Configuration Explained | Beans, DI, Scopes & Lifecycle | Spring Boot Full Course #8",
+        "duration": "1:11:54",
+        "durationSeconds": 4314,
+        "thumbnail": "https://i.ytimg.com/vi/HqBh9hV7rik/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBuN6QMipwYVIWWEb2EEIGRkKZzDw",
+        "url": "https://www.youtube.com/watch?v=HqBh9hV7rik&list=PLEYgx5hMdopw",
+        "index": 8,
+        "playlistId": "PLEYgx5hMdopw",
+        "playlistName": "Spring Framework / Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch Spring Boot Video #8: \"Spring XML Configuration Explained | Beans, DI, Scopes & Lifecycle | Spring Boot Full Course #8\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
+      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
+      "Solve the 25 daily quiz questions to test architecture mastery"
+    ],
+    "revision": [
+      "Spring XML Configuration Explained core architecture",
+      "Spring Bean lifecycle and container internals",
+      "Enterprise design patterns and best practices",
+      "Common interview questions and debugging techniques"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 66,
+    "phase": "Phase 2: Spring Boot & Web Architecture",
+    "phaseId": "phase-2",
+    "week": 10,
+    "title": "Spring Lecture #9: Spring Boot Core",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2250,15 +2563,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #9: \"Spring Boot Core\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #9: \"Spring Boot Core | @SpringBootApplication, Auto Configurations | Spring Boot full course #9\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot Core core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2266,11 +2579,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 59,
+    "day": 67,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 9,
-    "title": "Spring Boot application properties, @Value & Runner Interface",
+    "week": 10,
+    "title": "Spring Lecture #10: Spring Boot application properties, @Value & Runner Interface",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2289,15 +2602,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #10: \"Spring Boot application properties, @Value & Runner Interface\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #10: \"Spring Boot application properties, @Value & Runner Interface | Spring Boot Full Course #10\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot application properties, @Value & Runner Interface core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2305,11 +2618,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 60,
+    "day": 68,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 9,
-    "title": "Spring Boot CRUD Project from Scratch",
+    "week": 10,
+    "title": "Spring Lecture #11: Spring Boot CRUD Project from Scratch",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2328,15 +2641,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #11: \"Spring Boot CRUD Project from Scratch\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #11: \"Spring Boot CRUD Project from Scratch | Create API & Architecture | Spring Boot Full Course #11\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot CRUD Project from Scratch core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2344,11 +2657,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 61,
+    "day": 69,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 9,
-    "title": "Spring Boot CRUD Project with MySQL",
+    "week": 10,
+    "title": "Spring Lecture #12: Spring Boot CRUD Project with MySQL",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2367,15 +2680,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #12: \"Spring Boot CRUD Project with MySQL\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #12: \"Spring Boot CRUD Project with MySQL | Spring JPA Methods | Spring Boot Full Course #12\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot CRUD Project with MySQL core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2383,11 +2696,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 62,
+    "day": 70,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 9,
-    "title": "Spring Boot CRUD Project with Soft Delete",
+    "week": 10,
+    "title": "Spring Lecture #13: Spring Boot CRUD Project with Soft Delete",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2406,15 +2719,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #13: \"Spring Boot CRUD Project with Soft Delete\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #13: \"Spring Boot CRUD Project with Soft Delete | Spring JPA custom Methods | Spring Boot Full Course #13\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot CRUD Project with Soft Delete core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2422,11 +2735,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 63,
+    "day": 71,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 9,
-    "title": "How Java Web Apps Actually Work",
+    "week": 11,
+    "title": "Spring Lecture #14: How Java Web Apps Actually Work",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2445,15 +2758,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #14: \"How Java Web Apps Actually Work\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #14: \"How Java Web Apps Actually Work | Servlets, Tomcat & WAR Files | Spring Boot Full Course #14\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "How Java Web Apps Actually Work core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2461,11 +2774,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 64,
+    "day": 72,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 10,
-    "title": "Spring MVC Architecture",
+    "week": 11,
+    "title": "Spring Lecture #15: Spring MVC Architecture",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2484,15 +2797,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #15: \"Spring MVC Architecture\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #15: \"Spring MVC Architecture | DispatcherServlet, HandlerMapping & JSP Flow | Spring Boot Full Course #15\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring MVC Architecture core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2500,11 +2813,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 65,
+    "day": 73,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 10,
-    "title": "DTOs & Validations in Spring Boot",
+    "week": 11,
+    "title": "Spring Lecture #16: DTOs & Validations in Spring Boot",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2523,15 +2836,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #16: \"DTOs & Validations in Spring Boot\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #16: \"DTOs & Validations in Spring Boot | Make Your REST API Professional | Spring Boot Full Course #16\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "DTOs & Validations in Spring Boot core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2539,11 +2852,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 66,
+    "day": 74,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 10,
-    "title": "Spring Boot Exception Handling: Make Your APIs Professional",
+    "week": 11,
+    "title": "Spring Lecture #17: Spring Boot Exception Handling: Make Your APIs Professional",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2562,15 +2875,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #17: \"Spring Boot Exception Handling: Make Your APIs Professional\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #17: \"Spring Boot Exception Handling: Make Your APIs Professional | Spring Boot Full Course #17\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot Exception Handling: Make Your APIs Professional core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2578,11 +2891,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 67,
+    "day": 75,
     "phase": "Phase 2: Spring Boot & Web Architecture",
     "phaseId": "phase-2",
-    "week": 10,
-    "title": "Spring Boot Profiles & YAML Explained",
+    "week": 11,
+    "title": "Spring Lecture #18: Spring Boot Profiles & YAML Explained",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2601,15 +2914,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #18: \"Spring Boot Profiles & YAML Explained\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #18: \"Spring Boot Profiles & YAML Explained | Dev vs Prod Configuration | Spring Boot Full Course #18\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot Profiles & YAML Explained core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2617,11 +2930,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 68,
-    "phase": "Phase 2: Spring Boot & Web Architecture",
-    "phaseId": "phase-2",
-    "week": 10,
-    "title": "Spring Boot Filters",
+    "day": 76,
+    "phase": "Phase 3: Security & Enterprise Persistence",
+    "phaseId": "phase-3",
+    "week": 11,
+    "title": "Spring Lecture #19: Spring Boot Filters",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2640,15 +2953,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #19: \"Spring Boot Filters\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #19: \"Spring Boot Filters | FilterChain, Logging, Auth & Request Flow | Spring Boot Full Course #19\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot Filters core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2656,11 +2969,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 69,
-    "phase": "Phase 2: Spring Boot & Web Architecture",
-    "phaseId": "phase-2",
-    "week": 10,
-    "title": "Spring Boot Filters",
+    "day": 77,
+    "phase": "Phase 3: Security & Enterprise Persistence",
+    "phaseId": "phase-3",
+    "week": 11,
+    "title": "Spring Lecture #20: Spring Boot Filters",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2679,15 +2992,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #20: \"Spring Boot Filters\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #20: \"Spring Boot Filters | Modify Requests, Response, Headers & Bodies | Spring Boot Full Course #20\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot Filters core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2695,11 +3008,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 70,
-    "phase": "Phase 2: Spring Boot & Web Architecture",
-    "phaseId": "phase-2",
-    "week": 10,
-    "title": "Spring Boot Interceptors",
+    "day": 78,
+    "phase": "Phase 3: Security & Enterprise Persistence",
+    "phaseId": "phase-3",
+    "week": 12,
+    "title": "Spring Lecture #21: Spring Boot Interceptors",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2718,15 +3031,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #21: \"Spring Boot Interceptors\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #21: \"Spring Boot Interceptors | preHandle, postHandle & afterCompletion | Spring Boot Full Course #21\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Boot Interceptors core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2734,11 +3047,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 71,
-    "phase": "Phase 2: Spring Boot & Web Architecture",
-    "phaseId": "phase-2",
-    "week": 11,
-    "title": "Spring AOP",
+    "day": 79,
+    "phase": "Phase 3: Security & Enterprise Persistence",
+    "phaseId": "phase-3",
+    "week": 12,
+    "title": "Spring Lecture #22: Spring AOP",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2757,15 +3070,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #22: \"Spring AOP\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #22: \"Spring AOP | Cross-Cutting Concerns & Proxies | Spring Boot Full Course #22\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring AOP core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2773,11 +3086,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 72,
-    "phase": "Phase 2: Spring Boot & Web Architecture",
-    "phaseId": "phase-2",
-    "week": 11,
-    "title": "Spring AOP Advice Types Explained",
+    "day": 80,
+    "phase": "Phase 3: Security & Enterprise Persistence",
+    "phaseId": "phase-3",
+    "week": 12,
+    "title": "Spring Lecture #23: Spring AOP Advice Types Explained",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2796,15 +3109,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #23: \"Spring AOP Advice Types Explained\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #23: \"Spring AOP Advice Types Explained | @Before, @After, @Around | Spring Boot Full Course #23\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring AOP Advice Types Explained core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2812,11 +3125,50 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 73,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 81,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 11,
-    "title": "Custom Annotations in Spring AOP",
+    "week": 12,
+    "title": "Spring Lecture #24: Spring AOP Pointcuts & Types of Proxies",
+    "topic": "Spring Framework & Spring Boot",
+    "playlistName": "Spring Framework Full Course – Coder Army",
+    "playlistId": "PLEYgx5hMdopw",
+    "targetMinutes": 125,
+    "videos": [
+      {
+        "id": "Kf2V2QYikVY",
+        "title": "Spring AOP Pointcuts & Types of Proxies | Spring Boot Full Course #24",
+        "duration": "1:19:35",
+        "durationSeconds": 4775,
+        "thumbnail": "https://i.ytimg.com/vi/Kf2V2QYikVY/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAz4vaNyi5oGwrifPTAZjzu3ni-Iw",
+        "url": "https://www.youtube.com/watch?v=Kf2V2QYikVY&list=PLEYgx5hMdopw",
+        "index": 24,
+        "playlistId": "PLEYgx5hMdopw",
+        "playlistName": "Spring Framework / Spring Boot"
+      }
+    ],
+    "exercises": [
+      "Watch Spring Boot Video #24: \"Spring AOP Pointcuts & Types of Proxies | Spring Boot Full Course #24\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
+      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
+      "Solve the 25 daily quiz questions to test architecture mastery"
+    ],
+    "revision": [
+      "Spring AOP Pointcuts & Types of Proxies core architecture",
+      "Spring Bean lifecycle and container internals",
+      "Enterprise design patterns and best practices",
+      "Common interview questions and debugging techniques"
+    ],
+    "notes": "",
+    "completed": false,
+    "customTasks": []
+  },
+  {
+    "day": 82,
+    "phase": "Phase 3: Security & Enterprise Persistence",
+    "phaseId": "phase-3",
+    "week": 12,
+    "title": "Spring Lecture #25: Custom Annotations in Spring AOP",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2835,15 +3187,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #25: \"Custom Annotations in Spring AOP\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #25: \"Custom Annotations in Spring AOP | @annotation Binding & Proxies | Spring Boot Full Course #25\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Custom Annotations in Spring AOP core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2851,11 +3203,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 74,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 83,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 11,
-    "title": "JDBC in Java from Scratch",
+    "week": 12,
+    "title": "Spring Lecture #26: JDBC in Java from Scratch",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2874,15 +3226,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #26: \"JDBC in Java from Scratch\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #26: \"JDBC in Java from Scratch | CRUD Operation with JDBC & MySQL | Spring Boot Full Course #26\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "JDBC in Java from Scratch core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2890,11 +3242,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 75,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 84,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 11,
-    "title": "Spring JDBC Complete Tutorial",
+    "week": 12,
+    "title": "Spring Lecture #27: Spring JDBC Complete Tutorial",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2913,15 +3265,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #27: \"Spring JDBC Complete Tutorial\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #27: \"Spring JDBC Complete Tutorial | JdbcTemplate, DataSource, HikariCP | Spring Boot Full Course #27\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring JDBC Complete Tutorial core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2929,11 +3281,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 76,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 85,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 11,
-    "title": "Hibernate Fundamentals with Spring Boot",
+    "week": 13,
+    "title": "Spring Lecture #28: Hibernate Fundamentals with Spring Boot",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2952,15 +3304,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #28: \"Hibernate Fundamentals with Spring Boot\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #28: \"Hibernate Fundamentals with Spring Boot | CRUD & Entity Mapping | Spring Boot Full Course #28\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Hibernate Fundamentals with Spring Boot core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -2968,11 +3320,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 77,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 86,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 11,
-    "title": "Hibernate Internals",
+    "week": 13,
+    "title": "Spring Lecture #29: Hibernate Internals",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -2991,15 +3343,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #29: \"Hibernate Internals\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #29: \"Hibernate Internals | Persistence Context, L1 Cache & Transactions | Spring Boot Full Course #29\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Hibernate Internals core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -3007,11 +3359,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 78,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 87,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 12,
-    "title": "JPA Relationships",
+    "week": 13,
+    "title": "Spring Lecture #30: JPA Relationships",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -3030,15 +3382,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #30: \"JPA Relationships\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #30: \"JPA Relationships | @OneToMany, @ManyToOne, @OneToOne & @ManyToMany | Spring Boot Full Course #30\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "JPA Relationships core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -3046,11 +3398,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 79,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 88,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 12,
-    "title": "JPA Cascading, Lazy Loading & N+1 Problem",
+    "week": 13,
+    "title": "Spring Lecture #31: JPA Cascading, Lazy Loading & N+1 Problem",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -3069,15 +3421,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #31: \"JPA Cascading, Lazy Loading & N+1 Problem\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #31: \"JPA Cascading, Lazy Loading & N+1 Problem | EntityGraph in Spring Boot | Spring Boot Full Course #31\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "JPA Cascading, Lazy Loading & N+1 Problem core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -3085,11 +3437,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 80,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 89,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 12,
-    "title": "Master Spring Data JPA in one video",
+    "week": 13,
+    "title": "Spring Lecture #32: Master Spring Data JPA in one video",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -3108,15 +3460,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #32: \"Master Spring Data JPA in one video\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #32: \"Master Spring Data JPA in one video | JpaRepository, JPQL, Pagination | Spring Boot Full Course #32\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Master Spring Data JPA in one video core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",
@@ -3124,11 +3476,11 @@ export const INITIAL_ROADMAP_DAYS = [
     "customTasks": []
   },
   {
-    "day": 81,
-    "phase": "Phase 3: Security, Microservices & Capstone",
+    "day": 90,
+    "phase": "Phase 3: Security & Enterprise Persistence",
     "phaseId": "phase-3",
-    "week": 12,
-    "title": "Spring Transactions",
+    "week": 13,
+    "title": "Spring Lecture #33: Spring Transactions",
     "topic": "Spring Framework & Spring Boot",
     "playlistName": "Spring Framework Full Course – Coder Army",
     "playlistId": "PLEYgx5hMdopw",
@@ -3147,366 +3499,15 @@ export const INITIAL_ROADMAP_DAYS = [
       }
     ],
     "exercises": [
-      "Watch Spring Boot Lecture #33: \"Spring Transactions\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
+      "Watch Spring Boot Video #33: \"Spring Transactions | ACID, @Transactional, Commit & Rollback | Spring Boot Full Course #33\"",
+      "Implement the project code in IntelliJ IDEA / VS Code",
       "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
+      "Solve the 25 daily quiz questions to test architecture mastery"
     ],
     "revision": [
       "Spring Transactions core architecture",
       "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 82,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 12,
-    "title": "Spring @Transactional Propagation & Isolation Levels Explained",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 106,
-    "videos": [
-      {
-        "id": "E_Sb48BFoF0",
-        "title": "Spring @Transactional Propagation & Isolation Levels Explained | Spring Boot Full Course #34",
-        "duration": "1:00:44",
-        "durationSeconds": 3644,
-        "thumbnail": "https://i.ytimg.com/vi/E_Sb48BFoF0/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD0Vu5Bck4-wpjVMBVxyQk4v9PWrQ",
-        "url": "https://www.youtube.com/watch?v=E_Sb48BFoF0&list=PLEYgx5hMdopw",
-        "index": 34,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #34: \"Spring @Transactional Propagation & Isolation Levels Explained\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Spring @Transactional Propagation & Isolation Levels Explained core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 83,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 12,
-    "title": "Spring Security",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 125,
-    "videos": [
-      {
-        "id": "KVJuG95JSpM",
-        "title": "Spring Security | Authentication, Authorization & SecurityContext | Spring Boot Full Course #35",
-        "duration": "1:19:52",
-        "durationSeconds": 4792,
-        "thumbnail": "https://i.ytimg.com/vi/KVJuG95JSpM/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC-rNt82hgipq9wbCjxby1w-WH58A",
-        "url": "https://www.youtube.com/watch?v=KVJuG95JSpM&list=PLEYgx5hMdopw",
-        "index": 35,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #35: \"Spring Security\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Spring Security core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 84,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 12,
-    "title": "Spring Security DB Authentication & Password Security",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 131,
-    "videos": [
-      {
-        "id": "iF8KMT51QtY",
-        "title": "Spring Security DB Authentication & Password Security | Spring Boot Full Course #36",
-        "duration": "1:26:23",
-        "durationSeconds": 5183,
-        "thumbnail": "https://i.ytimg.com/vi/iF8KMT51QtY/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB9VZ_wpO9mmN10bcFW4HjaDVlNSg",
-        "url": "https://www.youtube.com/watch?v=iF8KMT51QtY&list=PLEYgx5hMdopw",
-        "index": 36,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #36: \"Spring Security DB Authentication & Password Security\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Spring Security DB Authentication & Password Security core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 85,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 13,
-    "title": "Spring Security Authentication Internals",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 138,
-    "videos": [
-      {
-        "id": "0LLpt3OZ03g",
-        "title": "Spring Security Authentication Internals | Complete Login Flow | Spring Boot Full Course #37",
-        "duration": "1:32:51",
-        "durationSeconds": 5571,
-        "thumbnail": "https://i.ytimg.com/vi/0LLpt3OZ03g/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAe4TSwQ83_Joe_nKenjBpogN8w7g",
-        "url": "https://www.youtube.com/watch?v=0LLpt3OZ03g&list=PLEYgx5hMdopw",
-        "index": 37,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #37: \"Spring Security Authentication Internals\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Spring Security Authentication Internals core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 86,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 13,
-    "title": "Spring JWT Authentication",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 127,
-    "videos": [
-      {
-        "id": "pUWp1EuVnGs",
-        "title": "Spring JWT Authentication | JWT Internals & Stateless Security | Spring Boot Full Course #38",
-        "duration": "1:22:21",
-        "durationSeconds": 4941,
-        "thumbnail": "https://i.ytimg.com/vi/pUWp1EuVnGs/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCTj1jPe9NZHcDVxpwQ9hhuu6bRRQ",
-        "url": "https://www.youtube.com/watch?v=pUWp1EuVnGs&list=PLEYgx5hMdopw",
-        "index": 38,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #38: \"Spring JWT Authentication\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Spring JWT Authentication core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 87,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 13,
-    "title": "OAuth 2.0 Masterclass",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 132,
-    "videos": [
-      {
-        "id": "t9kRN4wMVk0",
-        "title": "OAuth 2.0 Masterclass | Google Login with Spring Boot, OIDC & PKCE | Spring Boot Full Course #39",
-        "duration": "1:27:08",
-        "durationSeconds": 5228,
-        "thumbnail": "https://i.ytimg.com/vi/t9kRN4wMVk0/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDAhgqmWQvoKrqXP760R3VxAN9t_A",
-        "url": "https://www.youtube.com/watch?v=t9kRN4wMVk0&list=PLEYgx5hMdopw",
-        "index": 39,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #39: \"OAuth 2.0 Masterclass\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "OAuth 2.0 Masterclass core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 88,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 13,
-    "title": "Testing Spring Boot Applications",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 127,
-    "videos": [
-      {
-        "id": "8MAjlB7g6uI",
-        "title": "Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc | Spring Boot Full Course #40",
-        "duration": "1:22:11",
-        "durationSeconds": 4931,
-        "thumbnail": "https://i.ytimg.com/vi/8MAjlB7g6uI/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDWrdt81TjgJyvoysQH2hrsDrJXng",
-        "url": "https://www.youtube.com/watch?v=8MAjlB7g6uI&list=PLEYgx5hMdopw",
-        "index": 40,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #40: \"Testing Spring Boot Applications\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Testing Spring Boot Applications core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 89,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 13,
-    "title": "Building a Production-Grade API Gateway with Spring Boot",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 139,
-    "videos": [
-      {
-        "id": "-Wv5uCu2PIg",
-        "title": "Building a Production-Grade API Gateway with Spring Boot | Microservices, Kafka & Redis | #1",
-        "duration": "1:34:24",
-        "durationSeconds": 5664,
-        "thumbnail": "https://i.ytimg.com/vi/-Wv5uCu2PIg/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCBBwSIjcTzqkg0HOkyfXJ6xqRI9A",
-        "url": "https://www.youtube.com/watch?v=-Wv5uCu2PIg&list=PLEYgx5hMdopw",
-        "index": 41,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #41: \"Building a Production-Grade API Gateway with Spring Boot\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Building a Production-Grade API Gateway with Spring Boot core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
-      "Common interview questions and debugging techniques"
-    ],
-    "notes": "",
-    "completed": false,
-    "customTasks": []
-  },
-  {
-    "day": 90,
-    "phase": "Phase 3: Security, Microservices & Capstone",
-    "phaseId": "phase-3",
-    "week": 13,
-    "title": "Building a Production-Grade API Gateway in Spring Boot",
-    "topic": "Spring Framework & Spring Boot",
-    "playlistName": "Spring Framework Full Course – Coder Army",
-    "playlistId": "PLEYgx5hMdopw",
-    "targetMinutes": 114,
-    "videos": [
-      {
-        "id": "ZxCcYHL96x8",
-        "title": "Building a Production-Grade API Gateway in Spring Boot | GateKeeper Project | #2",
-        "duration": "1:09:01",
-        "durationSeconds": 4141,
-        "thumbnail": "https://i.ytimg.com/vi/ZxCcYHL96x8/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDyTYRrJBi4B8galhTKnElSamn7fA",
-        "url": "https://www.youtube.com/watch?v=ZxCcYHL96x8&list=PLEYgx5hMdopw",
-        "index": 42,
-        "playlistId": "PLEYgx5hMdopw",
-        "playlistName": "Spring Framework / Spring Boot"
-      }
-    ],
-    "exercises": [
-      "Watch Spring Boot Lecture #42: \"Building a Production-Grade API Gateway in Spring Boot\"",
-      "Build and run the project code in IntelliJ IDEA / VS Code",
-      "Verify API endpoints via Postman or cURL and inspect logs/status codes",
-      "Complete the 25 daily quiz questions to reinforce architecture mastery"
-    ],
-    "revision": [
-      "Building a Production-Grade API Gateway in Spring Boot core architecture",
-      "Spring Bean lifecycle and container internals",
-      "Production configuration and enterprise best practices",
+      "Enterprise design patterns and best practices",
       "Common interview questions and debugging techniques"
     ],
     "notes": "",

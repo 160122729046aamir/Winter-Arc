@@ -26,7 +26,8 @@ export default function TodayTaskCard() {
     toggleCustomTask,
     markDayComplete,
     markDayIncomplete,
-    skipAndMoveToNextDay
+    skipAndMoveToNextDay,
+    moveDayToToday
   } = usePlanner();
   const navigate = useNavigate();
 

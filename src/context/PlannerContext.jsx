@@ -892,6 +892,44 @@ export function PlannerProvider({ children }) {
     });
   }, []);
 
+  // MOVE DAY TO TODAY: Sets targetDayNumber as Today, and reschedules all subsequent days line-wise
+  const moveDayToToday = useCallback((targetDayNumber) => {
+    setState(prev => {
+      const today = getTodayDateString();
+      const targetDay = prev.days.find(d => d.day === targetDayNumber);
+      if (!targetDay) return prev;
+
+      // 1. Shift all days line-wise so targetDayNumber is scheduled on today, and subsequent days are consecutive:
+      const updatedDays = prev.days.map(d => {
+        const offset = d.day - targetDayNumber;
+        return {
+          ...d,
+          date: addDaysToDate(today, offset),
+          notes: d.day === targetDayNumber
+            ? (d.notes ? d.notes + '\n' : '') + `[Rescheduled: Moved to Today on ${today}]`
+            : d.notes
+        };
+      });
+
+      // 2. Set startDate so calculateCurrentChallengeDay resolves directly to targetDayNumber today
+      const newStartDate = addDaysToDate(today, -(targetDayNumber - 1));
+
+      return {
+        ...prev,
+        totalPausedDays: 0,
+        totalSkippedDays: 0,
+        journeyStatus: 'active',
+        pausedAt: null,
+        frozenChallengeDay: null,
+        settings: {
+          ...prev.settings,
+          startDate: newStartDate
+        },
+        days: updatedDays
+      };
+    });
+  }, []);
+
   // Playlist additions/edits
   const addCustomVideoToPlaylist = useCallback((playlistKey, videoObj) => {
     setState(prev => {
@@ -1228,6 +1266,7 @@ export function PlannerProvider({ children }) {
     moveMissedTasksToDay,
     rescheduleScheduleFromDay,
     skipAndMoveToNextDay,
+    moveDayToToday,
     addCustomVideoToPlaylist,
     editVideoInPlaylist,
     deleteVideoFromPlaylist,

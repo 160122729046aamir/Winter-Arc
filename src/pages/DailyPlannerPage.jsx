@@ -44,7 +44,8 @@ export default function DailyPlannerPage() {
     markDayComplete,
     markDayIncomplete,
     moveMissedTasksToDay,
-    skipAndMoveToNextDay
+    skipAndMoveToNextDay,
+    moveDayToToday
   } = usePlanner();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -186,6 +187,22 @@ export default function DailyPlannerPage() {
 
           {/* Action Buttons: Pause Journey, Move Day & Day Completion */}
           <div className="flex flex-wrap items-center gap-2.5 self-end md:self-auto">
+            {/* Move to Today button */}
+            {!isToday && (
+              <button
+                onClick={() => {
+                  if (window.confirm(`Set Day ${currentDay.day} (${currentDay.title}) as TODAY? All subsequent lectures will be automatically shifted day-by-day.`)) {
+                    moveDayToToday(currentDay.day);
+                  }
+                }}
+                className="px-3 py-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+                title={`Reschedule so Day ${currentDay.day} is Today, and all future lectures are shifted accordingly`}
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Move to Today</span>
+              </button>
+            )}
+
             {/* Skip / Move to Tomorrow button */}
             {!currentDay.completed && (
               <button

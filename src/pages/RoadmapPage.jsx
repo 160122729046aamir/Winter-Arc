@@ -11,14 +11,15 @@ import {
   ArrowRight,
   Sparkles,
   Layers,
-  CheckSquare
+  CheckSquare,
+  RotateCcw
 } from 'lucide-react';
 import { usePlanner } from '../context/PlannerContext';
 import { formatDate, formatMinutesHuman } from '../utils/dateUtils';
 import ProgressBar from '../components/common/ProgressBar';
 
 export default function RoadmapPage() {
-  const { days, currentChallengeDay, markDayComplete, markDayIncomplete } = usePlanner();
+  const { days, currentChallengeDay, markDayComplete, markDayIncomplete, moveDayToToday } = usePlanner();
   const navigate = useNavigate();
 
   const [phaseFilter, setPhaseFilter] = useState('all');
@@ -253,7 +254,23 @@ export default function RoadmapPage() {
                 </div>
 
                 {/* Right side: Actions */}
-                <div className="flex items-center gap-2.5 self-end md:self-center flex-shrink-0">
+                <div className="flex flex-wrap items-center gap-2 self-end md:self-center flex-shrink-0">
+                  {/* Move to Today Option */}
+                  {!isToday && (
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`Set Day ${dayItem.day} (${dayItem.title}) as TODAY? All subsequent lectures will be automatically shifted day-by-day.`)) {
+                          moveDayToToday(dayItem.day);
+                        }
+                      }}
+                      title="Move this lecture to Today and reschedule subsequent days"
+                      className="px-2.5 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-semibold flex items-center gap-1 transition-colors"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>Move to Today</span>
+                    </button>
+                  )}
+
                   {isCompleted ? (
                     <button
                       onClick={() => markDayIncomplete(dayItem.day)}
