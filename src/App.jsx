@@ -65,7 +65,7 @@ function AppLayout() {
           {/* Liquid Glass Footer */}
           <footer className="border-t border-white/[0.06] glass-ultra py-4 px-6 text-center text-xs text-slate-500 font-mono mt-auto">
             <p>
-              Winter Arc – 60 Days of Backend Engineering • Apple Liquid Glass Edition
+              Winter Arc – 90 Days of Backend Engineering • Apple Liquid Glass Edition
             </p>
           </footer>
         </main>

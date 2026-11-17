@@ -7,10 +7,38 @@ export function loadStoredState(defaultState) {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultState;
     const parsed = JSON.parse(raw);
+
+    // Ensure 90 days are properly loaded / migrated if previous storage had fewer days
+    let mergedDays = defaultState.days;
+    if (parsed.days && Array.isArray(parsed.days) && parsed.days.length === defaultState.days.length) {
+      mergedDays = parsed.days;
+    } else if (parsed.days && Array.isArray(parsed.days)) {
+      // Migrate saved progress for days that were completed
+      const savedMap = {};
+      parsed.days.forEach(d => { savedMap[d.day] = d; });
+      mergedDays = defaultState.days.map(d => {
+        const saved = savedMap[d.day];
+        if (saved) {
+          return {
+            ...d,
+            checkedVideos: saved.checkedVideos || {},
+            checkedExercises: saved.checkedExercises || {},
+            checkedRevision: saved.checkedRevision || {},
+            customTasks: saved.customTasks || [],
+            completed: saved.completed || false,
+            completedAt: saved.completedAt || null,
+            notes: saved.notes || ''
+          };
+        }
+        return d;
+      });
+    }
+
     return {
       ...defaultState,
       ...parsed,
-      settings: { ...defaultState.settings, ...(parsed.settings || {}) }
+      days: mergedDays,
+      settings: { ...defaultState.settings, ...(parsed.settings || {}), challengeDuration: 90 }
     };
   } catch (err) {
     console.error('Failed to load stored state from LocalStorage:', err);

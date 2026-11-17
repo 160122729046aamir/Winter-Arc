@@ -22,7 +22,7 @@ import ProgressBar from './ProgressBar';
 
 const NAVIGATION_ITEMS = [
   { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { name: 'My 60-Day Plan', path: '/plan', icon: Map },
+  { name: 'My 90-Day Plan', path: '/plan', icon: Map },
   { name: 'Daily Planner', path: '/daily-planner', icon: CalendarCheck, highlight: true },
   { name: 'Weekly Sprints', path: '/sprints', icon: Target },
   { name: 'System Projects', path: '/projects', icon: Server, badge: 'Full Code' },
@@ -64,7 +64,7 @@ export default function Sidebar({ isOpen, onClose }) {
             </div>
             <ProgressBar value={stats.overallCompletionPercent} size="sm" color="cyan" />
             <div className="flex justify-between items-center text-[11px] text-slate-400 mt-2 font-mono">
-              <span>{stats.completedDaysCount} / 60 days</span>
+              <span>{stats.completedDaysCount} / {stats?.totalDays || 90} days</span>
               <span className="text-indigo-400 font-medium">Day {currentChallengeDay}</span>
             </div>
           </div>

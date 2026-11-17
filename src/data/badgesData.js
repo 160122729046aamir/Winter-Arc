@@ -65,11 +65,11 @@ export const BADGES_CATALOG = [
   {
     id: 'winter_arc_legend',
     name: 'Winter Arc Legend',
-    description: 'Completed all 60 days of Backend Engineering challenge!',
+    description: 'Completed all 90 days of Backend Engineering challenge!',
     icon: 'Crown',
     category: 'Ultimate',
-    xpReward: 1500,
-    requirement: { type: 'days_completed', count: 60 }
+    xpReward: 2000,
+    requirement: { type: 'days_completed', count: 90 }
   },
   {
     id: 'streak_3',

@@ -19,121 +19,172 @@ import ProgressBar from '../components/common/ProgressBar';
 const SPRINTS_METADATA = [
   {
     week: 1,
-    title: 'Sprint 1: Java Fundamentals & OOP Genesis',
+    title: 'Sprint 1: Java Foundations & Language Syntax',
     daysRange: [1, 7],
     phase: 'Phase 1: Core Java',
     objectives: [
-      'Master JVM internal architecture, JDK vs JRE, and byte-code execution',
+      'Master JVM internal architecture, JDK vs JRE, and bytecode execution flow',
       'Understand 2s complement, memory representations, and data type casting rules',
-      'Build solid foundation in control flow, loops, and array memory allocation',
-      'Implement first custom classes, constructors, and method overloading'
+      'Build solid foundation in operators, conditional statements, and loops',
+      'Complete 1 single video and 25 questions each day'
     ],
-    codingGoals: 'Write 10+ algorithms manipulating arrays, matrices, and recursion'
+    codingGoals: 'Write 10+ algorithms manipulating types, bits, conditionals, and loops'
   },
   {
     week: 2,
-    title: 'Sprint 2: Deep OOP, Generics & Strings',
+    title: 'Sprint 2: Array Structures & OOP Genesis',
     daysRange: [8, 14],
     phase: 'Phase 1: Core Java',
     objectives: [
-      'Implement strict encapsulation, inheritance hierarchy, and dynamic method dispatch',
-      'Deconstruct Object class: equals() & hashCode() contract and immutability',
-      'Master Java Enums, Interfaces (default/static methods), and String Constant Pool',
-      'Apply Generics with type bounds and PECS wildcard principle'
+      'Arrays in memory (contiguous allocation, heap, bounds checking)',
+      'Functions, recursion, and stack frame execution',
+      'Object Oriented Programming: Classes, Objects, heap references',
+      'Constructors, this keyword, and shallow vs deep object cloning'
     ],
-    codingGoals: 'Build custom immutable classes, generic stacks, and string manipulation programs'
+    codingGoals: 'Build custom immutable classes, matrix traversals, and recursive algorithms'
   },
   {
     week: 3,
-    title: 'Sprint 3: Collections Hierarchy & Stream API',
+    title: 'Sprint 3: Advanced OOP, Polymorphism & Abstraction',
     daysRange: [15, 21],
     phase: 'Phase 1: Core Java',
     objectives: [
-      'Understand Java Collection Framework hierarchy, Iterable, and fail-fast iterators',
-      'Internal mechanics of HashMap (Red-Black treeify threshold), HashSet, and TreeMap',
-      'PriorityQueue, Comparable vs Comparator chaining',
-      'Master Lambdas, Functional Interfaces, and Stream API (intermediate & terminal operations)'
+      'static & final keywords, ClassLoader loading sequences',
+      'Strict encapsulation, package structure, and inheritance hierarchy',
+      'Abstract classes vs Interfaces, dynamic method dispatch',
+      'AutoBoxing, POJOs, and nested/anonymous inner classes'
     ],
-    codingGoals: 'Implement custom data structures and complex multi-level stream groupings'
+    codingGoals: 'Model real-world enterprise domain hierarchies with interfaces and abstractions'
   },
   {
     week: 4,
-    title: 'Sprint 4: Memory Management, Concurrency & Loom',
-    daysRange: [22, 25],
+    title: 'Sprint 4: Java I/O, Strings & Generics Mastery',
+    daysRange: [22, 28],
     phase: 'Phase 1: Core Java',
     objectives: [
-      'Map JVM runtime memory areas: Stack, Heap, Metaspace, and Garbage Collectors (G1, ZGC)',
-      'Thread lifecycle, intrinsic monitor locks, synchronized, and Producer-Consumer pattern',
-      'Advanced concurrency: volatile, AtomicInteger, deadlock avoidance, and ExecutorService',
-      'Java 21+ Virtual Threads (Project Loom) and CompletableFuture async pipelines'
+      'Java I/O: Scanner, BufferedReader, and System streams',
+      'Object class contract: equals() & hashCode() consistency and Enums',
+      'String Constant Pool, Immutability, StringBuilder vs StringBuffer',
+      'Generics: Type Erasure, Bounded Types, and PECS wildcard principle'
     ],
-    codingGoals: 'Build high-throughput multithreaded simulations and non-blocking pipelines'
+    codingGoals: 'Implement custom generic data structures and high-performance string processors'
   },
   {
     week: 5,
-    title: 'Sprint 5: Spring Ecosystem, Maven & IoC',
-    daysRange: [26, 32],
-    phase: 'Phase 2: Spring Boot',
+    title: 'Sprint 5: Collections Framework & Data Structures',
+    daysRange: [29, 35],
+    phase: 'Phase 1: Core Java',
     objectives: [
-      'Deconstruct enterprise Java evolution, Inversion of Control, and loose coupling',
-      'Master Apache Maven lifecycle, POM, dependencies, and plugins',
-      'Spring IoC container: @Component, @Service, @Autowired, and explicit @Bean methods',
-      'Bean scopes (Singleton vs Prototype), Bean lifecycle callbacks, and circular dependency fixes'
+      'Collection Framework hierarchy, Iterable, and Iterator contracts',
+      'List implementations: ArrayList vs LinkedList, internal resizing',
+      'HashMap internals: hash collisions, buckets, and Red-Black treeification',
+      'Set implementations (HashSet, TreeSet) and PriorityQueue heaps'
     ],
-    codingGoals: 'Bootstrap first Spring Boot applications and test loose coupling via interfaces'
+    codingGoals: 'Benchmark collection lookups and implement custom object sorting algorithms'
   },
   {
     week: 6,
-    title: 'Sprint 6: Core Boot Internals, Servlets & CRUD',
-    daysRange: [33, 39],
-    phase: 'Phase 2: Spring Boot',
+    title: 'Sprint 6: Functional Java & Stream API',
+    daysRange: [36, 42],
+    phase: 'Phase 1: Core Java',
     objectives: [
-      'Spring Boot Auto-configuration internals and conditional annotations',
-      'Type-safe configurations with @ConfigurationProperties and runner interfaces',
-      'Layered CRUD architecture (Controller -> Service -> Repository)',
-      'How web servers work: Embedded Tomcat, Servlets, and HTTP request pipeline'
+      'Comparable vs Comparator chaining and lambda expressions',
+      'Functional Interfaces, Method References, and composition',
+      'Java Stream API: lazy evaluation, intermediate vs terminal operations',
+      'Java Optional handling and Parallel Streams concurrency considerations'
     ],
-    codingGoals: 'Build end-to-end CRUD REST API connected to MySQL with soft-delete capabilities'
+    codingGoals: 'Construct complex multi-stage stream pipelines, collectors, and grouping operations'
   },
   {
     week: 7,
-    title: 'Sprint 7: Spring MVC, DTOs & Aspect-Oriented Programming',
-    daysRange: [40, 46],
-    phase: 'Phase 2: Spring Boot',
+    title: 'Sprint 7: Memory Management, GC & Multithreading',
+    daysRange: [43, 50],
+    phase: 'Phase 1: Core Java',
     objectives: [
-      'DispatcherServlet request flow and HttpMessageConverters (Jackson)',
-      'Data Transfer Objects (DTO) and Jakarta Bean Validation guards',
-      'Global exception handling with @RestControllerAdvice and RFC 7807 error formats',
-      'Filters vs Interceptors, and Spring AOP cross-cutting concerns (execution benchmarks)'
+      'Exception hierarchy: checked vs unchecked and custom domain exceptions',
+      'JVM Memory model: Stack, Heap, Metaspace, and Garbage Collection algorithms',
+      'Multithreading fundamentals: Process vs Thread, Thread lifecycle',
+      'Monitor locks, synchronized keyword, wait()/notify(), and atomic CAS variables'
     ],
-    codingGoals: 'Create custom AOP logging annotations and production-grade validation error responses'
+    codingGoals: 'Simulate Producer-Consumer threads and analyze thread dumps for race conditions'
   },
   {
     week: 8,
-    title: 'Sprint 8: Database Mastery, JPA & Spring Security',
-    daysRange: [47, 53],
+    title: 'Sprint 8: Spring Ecosystem, Maven & IoC Container',
+    daysRange: [51, 57],
     phase: 'Phase 2: Spring Boot',
     objectives: [
-      'Spring JdbcTemplate vs Hibernate ORM first-level cache and dirty checking',
-      'JPA entity relationships (@OneToMany, @ManyToMany), cascading, and solving N+1 problem',
-      'Spring Data JPA custom JPQL queries, pagination, and sorting',
-      'Spring Transactions (@Transactional propagation and isolation levels)',
-      'Spring Security architecture, SecurityFilterChain, and database authentication'
+      'Spring Framework architecture, Inversion of Control, and loose coupling',
+      'Build first Spring Boot application and master Apache Maven lifecycle',
+      'Spring IoC container: @Component, @Service, @Autowired, and explicit @Bean methods',
+      'Bean scopes (Singleton vs Prototype) and resolving circular dependencies'
     ],
-    codingGoals: 'Model complex relational database schemas and secure endpoints with BCrypt'
+    codingGoals: 'Bootstrap production Spring Boot services and test IoC dependency injection'
   },
   {
     week: 9,
-    title: 'Sprint 9: JWT, Capstone Gateway & Graduation',
-    daysRange: [54, 60],
-    phase: 'Phase 2 & Phase 3',
+    title: 'Sprint 9: Core Boot, Configuration & Layered CRUD',
+    daysRange: [58, 64],
+    phase: 'Phase 2: Spring Boot',
     objectives: [
-      'Stateless JWT authentication filter and OAuth 2.0 / Google Social Login',
-      'Testing Spring Boot: JUnit 5, Mockito, and MockMvc integration tests',
-      'Build GateKeeper: Production-Grade API Gateway with Microservices, Kafka & Redis',
-      'Comprehensive Java & Spring Boot revision and Top 50 technical interview prep'
+      'Spring Boot Auto-configuration internals and @SpringBootApplication',
+      'Externalized configuration: application.properties, @Value, and profiles',
+      'Layered REST architecture (Controller -> Service -> Repository)',
+      'MySQL database integration and soft-delete entity management'
     ],
-    codingGoals: 'Deploy full capstone project, pass technical interview assessment, celebrate Winter Arc!'
+    codingGoals: 'Build full enterprise CRUD REST service with MySQL and soft-delete mechanics'
+  },
+  {
+    week: 10,
+    title: 'Sprint 10: Spring MVC, DTOs & Aspect-Oriented Programming',
+    daysRange: [65, 71],
+    phase: 'Phase 2: Spring Boot',
+    objectives: [
+      'Servlets, Embedded Tomcat, and DispatcherServlet request flow',
+      'DTO Pattern and Jakarta Bean Validation guards',
+      'Global exception handling via @RestControllerAdvice and RFC 7807',
+      'Filters vs Interceptors and Spring AOP cross-cutting proxies'
+    ],
+    codingGoals: 'Implement custom AOP execution logging annotations and validated DTO payloads'
+  },
+  {
+    week: 11,
+    title: 'Sprint 11: Database Persistence, JPA & Transactions',
+    daysRange: [72, 78],
+    phase: 'Phase 2: Spring Boot',
+    objectives: [
+      'Spring JDBC vs Hibernate ORM first-level cache and dirty checking',
+      'JPA entity relationships (@OneToMany, @ManyToMany), cascading, and N+1 prevention',
+      'Spring Data JPA custom JPQL queries, pagination, and sorting',
+      'Spring Transactions: ACID compliance, @Transactional propagation, and isolation'
+    ],
+    codingGoals: 'Design normalized database schemas and implement transactional rollback strategies'
+  },
+  {
+    week: 12,
+    title: 'Sprint 12: Production Security, JWT & OAuth2',
+    daysRange: [79, 85],
+    phase: 'Phase 3: Security & Microservices',
+    objectives: [
+      'Spring Security architecture, SecurityFilterChain, and UserDetailsService',
+      'Database authentication with BCrypt password hashing',
+      'Stateless JWT authentication filters and Refresh Token rotation',
+      'OAuth 2.0 / Google Social Login with PKCE'
+    ],
+    codingGoals: 'Secure all REST endpoints with role-based access control and stateless JWT tokens'
+  },
+  {
+    week: 13,
+    title: 'Sprint 13: Testing, API Gateway Capstone & Graduation',
+    daysRange: [86, 90],
+    phase: 'Phase 3: Security & Microservices',
+    objectives: [
+      'Testing Spring Boot: JUnit 5, Mockito, and MockMvc integration tests',
+      'Build "GateKeeper": Production API Gateway with Spring Cloud Gateway',
+      'Distributed rate limiting using Redis token-bucket algorithms',
+      'Asynchronous audit event streaming to Apache Kafka broker'
+    ],
+    codingGoals: 'Deploy complete Capstone API Gateway with Docker Compose, pass all tests, celebrate Winter Arc!'
   }
 ];
 
@@ -170,7 +221,7 @@ export default function WeeklySprintsPage() {
           Weekly Sprints & Objectives
         </h1>
         <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-          The 60-day challenge decomposed into 9 high-impact weekly sprints with concrete deliverables and retrospectives.
+          The 90-day challenge decomposed into 13 high-impact weekly sprints with 1 YouTube video per day and weekly retrospectives.
         </p>
       </div>
 

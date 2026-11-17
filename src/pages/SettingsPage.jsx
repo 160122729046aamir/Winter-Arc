@@ -44,7 +44,7 @@ export default function SettingsPage() {
   const [formData, setFormData] = useState({
     userName: settings.userName || 'Backend Engineer',
     startDate: settings.startDate || new Date().toISOString().slice(0, 10),
-    challengeDuration: settings.challengeDuration || 60,
+    challengeDuration: settings.challengeDuration || 90,
     dailyTargetMinutes: settings.dailyTargetMinutes || 120,
     preferredStudyDays: settings.preferredStudyDays || DAYS_OF_WEEK,
     recoveryModeEnabled: settings.recoveryModeEnabled !== false,
@@ -212,7 +212,7 @@ export default function SettingsPage() {
                 className="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
               />
               <p className="text-[11px] text-slate-500 mt-1">
-                Changing this recalculates scheduled dates for all 60 days.
+                Changing this recalculates scheduled dates for all 90 days.
               </p>
             </div>
 
@@ -229,7 +229,7 @@ export default function SettingsPage() {
                 className="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
               />
               <p className="text-[11px] text-slate-500 mt-1">
-                Standard Winter Arc: 60 days.
+                Standard Winter Arc: 90 days (1 video/day).
               </p>
             </div>
           </div>
@@ -403,7 +403,7 @@ export default function SettingsPage() {
       >
         <div className="space-y-4">
           <p className="text-xs text-slate-300 leading-relaxed">
-            Are you sure you want to reset your 60-Day Winter Arc progress? This will reset your streaks, study logs, quiz submissions, completed tasks, and badges.
+            Are you sure you want to reset your 90-Day Winter Arc progress? This will reset your streaks, study logs, quiz submissions, completed tasks, and badges.
           </p>
           <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
             <button

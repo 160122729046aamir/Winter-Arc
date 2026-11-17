@@ -43,10 +43,10 @@ export function getDaysDifference(startDateStr, endDateStr) {
   return Math.floor(diffTime / (1000 * 60 * 60 * 24));
 }
 
-// Calculate which day of the 60-day challenge corresponds to today with pause support
+// Calculate which day of the 90-day challenge corresponds to today with pause support
 export function calculateCurrentChallengeDay(
   startDateStr,
-  totalDays = 60,
+  totalDays = 90,
   totalPausedDays = 0,
   isPaused = false,
   frozenDay = null

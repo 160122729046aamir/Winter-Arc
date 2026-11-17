@@ -58,12 +58,13 @@ const buildInitialState = () => {
     pauseHistory: [], // [ { id, pauseDate, resumeDate, durationDays, reason } ]
     // Daily Question Bank Quiz State
     quizState: {}, // { [dayNumber]: { answers: { [qId]: { selectedOption, isCorrect, submittedAt } }, bookmarked: [qId], markedForReview: [qId], status: 'not_started' | 'in_progress' | 'completed', score: 0, completedAt: null } }
+    totalSkippedDays: 0,
     xp: 0,
     unlockedBadges: [],
     recentCelebration: null,
     settings: {
       startDate: today,
-      challengeDuration: 60,
+      challengeDuration: 90,
       dailyTargetMinutes: 120,
       preferredStudyDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       recoveryModeEnabled: true,
@@ -84,11 +85,51 @@ export function PlannerProvider({ children }) {
     saveStateToStorage(state);
   }, [state]);
 
+  // Automatic rollover: If an uncompleted day was scheduled before today, roll it over to today automatically
+  useEffect(() => {
+    const today = getTodayDateString();
+    if (state.journeyStatus === 'paused') return;
+
+    // Find the earliest unfinished day
+    const firstUnfinished = (state.days || []).find(d => !d.completed);
+    if (!firstUnfinished || !firstUnfinished.date) return;
+
+    // Check if its scheduled date is earlier than today
+    const daysBehind = getDaysDifference(firstUnfinished.date, today);
+    if (daysBehind > 0) {
+      setState(prev => {
+        // Shift firstUnfinished and all subsequent days forward so firstUnfinished aligns with today
+        const updatedDays = (prev.days || []).map(d => {
+          if (d.day >= firstUnfinished.day) {
+            return {
+              ...d,
+              date: addDaysToDate(d.date, daysBehind),
+              notes: d.day === firstUnfinished.day
+                ? (d.notes ? d.notes + '\n' : '') + `[Schedule Rollover: Rescheduled to ${today} because day was skipped]`
+                : d.notes
+            };
+          }
+          return d;
+        });
+
+        const newTotalPaused = (prev.totalPausedDays || 0) + daysBehind;
+        const newTotalSkipped = (prev.totalSkippedDays || 0) + daysBehind;
+
+        return {
+          ...prev,
+          totalPausedDays: newTotalPaused,
+          totalSkippedDays: newTotalSkipped,
+          days: updatedDays
+        };
+      });
+    }
+  }, [state.days, state.journeyStatus]);
+
   // Current challenge day based on start date, paused days, and paused status
   const currentChallengeDay = useMemo(() => {
     return calculateCurrentChallengeDay(
       state.settings.startDate,
-      state.settings.challengeDuration || 60,
+      state.settings.challengeDuration || 90,
       state.totalPausedDays || 0,
       state.journeyStatus === 'paused',
       state.frozenChallengeDay
@@ -184,7 +225,7 @@ export function PlannerProvider({ children }) {
       const today = getTodayDateString();
       const currentDay = calculateCurrentChallengeDay(
         prev.settings.startDate,
-        prev.settings.challengeDuration || 60,
+        prev.settings.challengeDuration || 90,
         prev.totalPausedDays || 0,
         false
       );
@@ -810,6 +851,47 @@ export function PlannerProvider({ children }) {
     });
   }, []);
 
+  // Explicit Skip / Move day to next day (Rest Day / Rollover)
+  const skipAndMoveToNextDay = useCallback((dayNumber, reason = 'Planned Rest Day') => {
+    setState(prev => {
+      const today = getTodayDateString();
+      const targetDay = prev.days.find(d => d.day === dayNumber);
+      if (!targetDay) return prev;
+
+      // Shift this day and all subsequent days forward by 1 calendar day
+      const updatedDays = prev.days.map(d => {
+        if (d.day >= dayNumber) {
+          return {
+            ...d,
+            date: addDaysToDate(d.date, 1),
+            notes: d.day === dayNumber
+              ? (d.notes ? d.notes + '\n' : '') + `[Schedule Rollover: Shifted to next day (${reason}) on ${today}]`
+              : d.notes
+          };
+        }
+        return d;
+      });
+
+      // Increase paused/skipped counter by 1 so currentChallengeDay anchors on dayNumber
+      const newTotalPaused = (prev.totalPausedDays || 0) + 1;
+      const newTotalSkipped = (prev.totalSkippedDays || 0) + 1;
+
+      // Preserve streak by treating rest day as frozen
+      const preservedStreak = {
+        ...prev.streak,
+        lastActiveDate: addDaysToDate(today, -1)
+      };
+
+      return {
+        ...prev,
+        totalPausedDays: newTotalPaused,
+        totalSkippedDays: newTotalSkipped,
+        days: updatedDays,
+        streak: preservedStreak
+      };
+    });
+  }, []);
+
   // Playlist additions/edits
   const addCustomVideoToPlaylist = useCallback((playlistKey, videoObj) => {
     setState(prev => {
@@ -1145,6 +1227,7 @@ export function PlannerProvider({ children }) {
     logStudyTime,
     moveMissedTasksToDay,
     rescheduleScheduleFromDay,
+    skipAndMoveToNextDay,
     addCustomVideoToPlaylist,
     editVideoInPlaylist,
     deleteVideoFromPlaylist,

@@ -19,10 +19,11 @@ export default defineConfig({
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-charts': ['recharts'],
           'vendor-icons': ['lucide-react'],
-          'vendor-confetti': ['canvas-confetti']
+          'vendor-confetti': ['canvas-confetti'],
+          'data-questions': ['./src/data/questionBankData.js']
         }
       }
     },
-    chunkSizeWarningLimit: 1200
+    chunkSizeWarningLimit: 2000
   }
 });

@@ -16,13 +16,13 @@ export default function SixtyDayGrid() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-slate-100">60-Day Arc Grid</h2>
+            <h2 className="text-lg font-bold text-slate-100">90-Day Arc Grid</h2>
             <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
               Interactive
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            Visual map of your backend mastery journey. Click any day to view or edit tasks.
+            Visual map of your 90-day backend mastery journey. Click any day to view or edit tasks.
           </p>
         </div>
 
@@ -47,8 +47,8 @@ export default function SixtyDayGrid() {
         </div>
       </div>
 
-      {/* Grid of 60 Days: Responsive 6 to 12 columns */}
-      <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-2 sm:gap-2.5">
+      {/* Grid of 90 Days: Responsive 6 to 15 columns */}
+      <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-15 gap-2 sm:gap-2.5">
         {days.map((d) => {
           const isToday = d.day === currentChallengeDay;
           const isCompleted = d.completed;
@@ -63,8 +63,8 @@ export default function SixtyDayGrid() {
             boxClass = 'bg-amber-500/10 border-amber-500/40 text-amber-300 hover:border-amber-400';
           }
 
-          // Phase divider indicators for Day 1, Day 26, Day 56
-          const isPhaseStart = d.day === 1 || d.day === 26 || d.day === 56;
+          // Phase divider indicators for Day 1, Day 51, Day 73
+          const isPhaseStart = d.day === 1 || d.day === 51 || d.day === 73;
 
           return (
             <button

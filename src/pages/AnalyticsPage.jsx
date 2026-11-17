@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
   // 1. Daily Study Time & Planned vs Actual for last 14 days or current days
   const dailyStudyData = useMemo(() => {
     const start = Math.max(1, currentChallengeDay - 7);
-    const end = Math.min(60, start + 13);
+    const end = Math.min(days.length || 90, start + 13);
     const windowDays = days.filter((d) => d.day >= start && d.day <= end);
 
     return windowDays.map((d) => {
@@ -156,7 +156,7 @@ export default function AnalyticsPage() {
         <StatCard
           title="Overall Arc Mastery"
           value={`${stats.overallCompletionPercent}%`}
-          subtext={`${stats.completedDaysCount} of 60 days finished`}
+          subtext={`${stats.completedDaysCount} of ${days.length || 90} days finished`}
           icon={TrendingUp}
           color="indigo"
         />
@@ -189,7 +189,7 @@ export default function AnalyticsPage() {
           <div>
             <h3 className="text-sm font-bold text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
               <Calendar className="w-4 h-4 text-cyan-400" />
-              60-Day Journey Timeline & Schedule Control
+              90-Day Journey Timeline & Schedule Control
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
               Tracks active learning days vs calendar days elapsed and pause cycles

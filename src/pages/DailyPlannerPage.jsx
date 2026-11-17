@@ -43,7 +43,8 @@ export default function DailyPlannerPage() {
     updateDayNotes,
     markDayComplete,
     markDayIncomplete,
-    moveMissedTasksToDay
+    moveMissedTasksToDay,
+    skipAndMoveToNextDay
   } = usePlanner();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,7 +52,8 @@ export default function DailyPlannerPage() {
 
   // Selected Day: URL query param ?day=X or currentChallengeDay
   const paramDay = parseInt(searchParams.get('day'), 10);
-  const activeDayNumber = !isNaN(paramDay) && paramDay >= 1 && paramDay <= 60
+  const totalDaysCount = days.length || 90;
+  const activeDayNumber = !isNaN(paramDay) && paramDay >= 1 && paramDay <= totalDaysCount
     ? paramDay
     : currentChallengeDay;
 
@@ -85,7 +87,7 @@ export default function DailyPlannerPage() {
   };
 
   const handleNextDay = () => {
-    if (activeDayNumber < 60) {
+    if (activeDayNumber < totalDaysCount) {
       setSearchParams({ day: (activeDayNumber + 1).toString() });
     }
   };
@@ -175,21 +177,37 @@ export default function DailyPlannerPage() {
 
             <button
               onClick={handleNextDay}
-              disabled={activeDayNumber >= 60}
+              disabled={activeDayNumber >= totalDaysCount}
               className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Action Buttons: Pause Journey & Day Completion */}
-          <div className="flex flex-wrap items-center gap-3 self-end md:self-auto">
+          {/* Action Buttons: Pause Journey, Move Day & Day Completion */}
+          <div className="flex flex-wrap items-center gap-2.5 self-end md:self-auto">
+            {/* Skip / Move to Tomorrow button */}
+            {!currentDay.completed && (
+              <button
+                onClick={() => {
+                  if (window.confirm(`Skip Day ${currentDay.day} and move it to tomorrow? Upcoming days will shift forward so you don't miss any video.`)) {
+                    skipAndMoveToNextDay(currentDay.day, 'Skipped & Moved Forward');
+                  }
+                }}
+                className="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 text-cyan-300 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+                title="Skip this day and automatically move it to tomorrow"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Move to Tomorrow</span>
+              </button>
+            )}
+
             {/* Pause Journey Button */}
             {journeyStatus === 'active' ? (
               <button
                 onClick={() => setIsPauseModalOpen(true)}
                 className="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors"
-                title="Pause your 60-day challenge safely"
+                title="Pause your 90-day challenge safely"
               >
                 <PauseCircle className="w-4 h-4 text-amber-400" />
                 <span>Pause Arc</span>

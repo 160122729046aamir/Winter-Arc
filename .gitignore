@@ -32,4 +32,6 @@ dist-ssr
 
 # Antigravity artifacts & cache
 .gemini
+scratch
+
 

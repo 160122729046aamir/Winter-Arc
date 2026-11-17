@@ -48,7 +48,7 @@ export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
                 </span>
               </div>
               <p className="text-[10px] text-slate-400 hidden md:block tracking-tight">
-                60 Days of Backend Engineering
+                90 Days of Backend Engineering
               </p>
             </div>
           </Link>
@@ -75,7 +75,7 @@ export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
             <span className={`w-2 h-2 rounded-full ${journeyStatus === 'paused' ? 'bg-amber-400' : 'bg-cyan-400 shadow-[0_0_8px_#06b6d4]'}`} />
             <span className="text-xs font-semibold text-slate-200">
               Day <span className="text-cyan-400 font-bold">{currentChallengeDay}</span>
-              <span className="text-slate-500 hidden sm:inline"> / 60</span>
+              <span className="text-slate-500 hidden sm:inline"> / 90</span>
             </span>
           </Link>
 

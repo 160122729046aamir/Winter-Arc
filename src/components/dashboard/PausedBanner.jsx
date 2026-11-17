@@ -46,7 +46,7 @@ export default function PausedBanner() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1 text-xs font-mono">
             <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
               <span className="text-slate-400 block text-[10px] uppercase">Current Progress</span>
-              <span className="font-bold text-slate-200">Day {currentChallengeDay} of 60</span>
+              <span className="font-bold text-slate-200">Day {currentChallengeDay} of 90</span>
             </div>
 
             <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
@@ -56,7 +56,7 @@ export default function PausedBanner() {
 
             <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
               <span className="text-slate-400 block text-[10px] uppercase">Remaining Days</span>
-              <span className="font-bold text-cyan-400">{60 - stats.completedDaysCount} days</span>
+              <span className="font-bold text-cyan-400">{90 - stats.completedDaysCount} days</span>
             </div>
 
             <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">

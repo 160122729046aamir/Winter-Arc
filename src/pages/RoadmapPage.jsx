@@ -67,16 +67,16 @@ export default function RoadmapPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
-            My 60-Day Backend Roadmap
+            My 90-Day Backend Roadmap
           </h1>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            Structured daily curriculum mapped directly to Coder Army's 57 Core Java and 45 Spring Boot master lectures.
+            Structured daily curriculum with exactly 1 YouTube video and 25 topic questions per day across 90 focused days.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
-            Showing <strong className="text-cyan-400">{filteredDays.length}</strong> of 60 Days ({filteredPercent}% Done)
+            Showing <strong className="text-cyan-400">{filteredDays.length}</strong> of {days.length || 90} Days ({filteredPercent}% Done)
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function RoadmapPage() {
                   : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
               }`}
             >
-              Phase 1: Core Java (Days 1–25)
+              Phase 1: Core Java (Days 1–50)
             </button>
             <button
               onClick={() => setPhaseFilter('phase-2')}
@@ -126,7 +126,7 @@ export default function RoadmapPage() {
                   : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
               }`}
             >
-              Phase 2: Spring Boot (Days 26–55)
+              Phase 2: Spring Boot (Days 51–72)
             </button>
             <button
               onClick={() => setPhaseFilter('phase-3')}
@@ -136,7 +136,7 @@ export default function RoadmapPage() {
                   : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
               }`}
             >
-              Phase 3: Revision & Capstone (56–60)
+              Phase 3: Security & Capstone (Days 73–90)
             </button>
           </div>
         </div>
