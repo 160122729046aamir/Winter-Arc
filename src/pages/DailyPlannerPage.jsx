@@ -22,7 +22,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { usePlanner } from '../context/PlannerContext';
-import { formatDate, formatMinutesHuman } from '../utils/dateUtils';
+import { formatDate, formatDateWithDay, formatMinutesHuman } from '../utils/dateUtils';
 import ProgressBar from '../components/common/ProgressBar';
 import Modal from '../components/common/Modal';
 import PauseModal from '../components/common/PauseModal';
@@ -125,6 +125,7 @@ export default function DailyPlannerPage() {
   const completionPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   const isToday = currentDay.day === currentChallengeDay;
+  const isTomorrow = currentDay.day === currentChallengeDay + 1;
   const isMissed = currentDay.day < currentChallengeDay && !currentDay.completed && !currentDay.recovered && journeyStatus !== 'paused';
 
   // Day Quiz status
@@ -165,6 +166,11 @@ export default function DailyPlannerPage() {
                     Today
                   </span>
                 )}
+                {isTomorrow && !currentDay.completed && (
+                  <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                    Tomorrow
+                  </span>
+                )}
                 {currentDay.completed && (
                   <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                     Day Completed
@@ -172,7 +178,7 @@ export default function DailyPlannerPage() {
                 )}
               </div>
               <p className="text-xs text-slate-400 mt-1 font-mono">
-                {formatDate(currentDay.date)} • {currentDay.phase}
+                {formatDateWithDay(currentDay.date)} • {currentDay.phase}
               </p>
             </div>
 

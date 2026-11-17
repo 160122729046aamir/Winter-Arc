@@ -70,7 +70,7 @@ export default function SixtyDayGrid() {
             <button
               key={d.day}
               onClick={() => handleDayClick(d.day)}
-              title={`Day ${d.day}: ${d.title} (${isCompleted ? 'Completed' : isToday ? 'Today' : isMissed ? 'Missed' : 'Upcoming'})`}
+              title={`Day ${d.day}: ${d.title} • ${d.date} (${isCompleted ? 'Completed' : isToday ? 'Today' : isMissed ? 'Missed' : 'Upcoming'})`}
               className={`relative aspect-square rounded-lg border text-center flex flex-col items-center justify-center p-1 font-mono transition-all duration-150 group cursor-pointer ${boxClass}`}
             >
               {isPhaseStart && (

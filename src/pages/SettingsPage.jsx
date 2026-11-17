@@ -212,7 +212,7 @@ export default function SettingsPage() {
                 className="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
               />
               <p className="text-[11px] text-slate-500 mt-1">
-                Changing this recalculates scheduled dates for all 90 days.
+                Recalculates scheduled dates for all 90 days (Sundays excluded as rest days).
               </p>
             </div>
 

@@ -13,7 +13,7 @@ import {
   CheckSquare
 } from 'lucide-react';
 import { usePlanner } from '../../context/PlannerContext';
-import { formatDate, formatMinutesHuman } from '../../utils/dateUtils';
+import { formatDate, formatDateWithDay, formatMinutesHuman } from '../../utils/dateUtils';
 import ProgressBar from '../common/ProgressBar';
 
 export default function TodayTaskCard() {
@@ -57,8 +57,8 @@ export default function TodayTaskCard() {
               <span className="px-2.5 py-0.5 text-xs font-bold rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono">
                 DAY {todayDay.day} OF {days.length || 90}
               </span>
-              <span className="text-xs text-slate-400">
-                {formatDate(todayDay.date)}
+              <span className="text-xs text-slate-400 font-mono">
+                {formatDateWithDay(todayDay.date)}
               </span>
             </div>
             <h3 className="text-lg font-bold text-slate-100">

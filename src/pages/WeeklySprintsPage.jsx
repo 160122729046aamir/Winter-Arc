@@ -14,6 +14,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 import { usePlanner } from '../context/PlannerContext';
+import { formatShortDate, formatDate } from '../utils/dateUtils';
 import ProgressBar from '../components/common/ProgressBar';
 
 const SPRINTS_METADATA = [
@@ -274,6 +275,14 @@ export default function WeeklySprintsPage() {
                       <span className="text-[11px] font-bold font-mono text-cyan-400">
                         Days {startDay}–{endDay}
                       </span>
+                      {sprintDays.length > 0 && sprintDays[0]?.date && (
+                        <>
+                          <span className="text-xs text-slate-500">•</span>
+                          <span className="text-xs text-slate-400 font-mono">
+                            {formatShortDate(sprintDays[0].date)} – {formatDate(sprintDays[sprintDays.length - 1].date)}
+                          </span>
+                        </>
+                      )}
                       <span className="text-xs text-slate-500">•</span>
                       <span className="text-xs text-slate-400 font-medium">{sprint.phase}</span>
                       {isCurrentSprint && (

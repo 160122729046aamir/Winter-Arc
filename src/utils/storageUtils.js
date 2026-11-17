@@ -1,6 +1,8 @@
 // LocalStorage manager with JSON export/import support
+import { addStudyDays } from './dateUtils';
 
 const STORAGE_KEY = 'winter_arc_60_days_state_v1';
+export const FIXED_CHALLENGE_START_DATE = '2026-11-17';
 
 export function loadStoredState(defaultState) {
   try {
@@ -8,37 +10,53 @@ export function loadStoredState(defaultState) {
     if (!raw) return defaultState;
     const parsed = JSON.parse(raw);
 
-    // Ensure 90 days are properly loaded / migrated if previous storage had fewer days
-    let mergedDays = defaultState.days;
-    if (parsed.days && Array.isArray(parsed.days) && parsed.days.length === defaultState.days.length) {
-      mergedDays = parsed.days;
-    } else if (parsed.days && Array.isArray(parsed.days)) {
-      // Migrate saved progress for days that were completed
-      const savedMap = {};
+    const startDate = FIXED_CHALLENGE_START_DATE;
+
+    // Migrate saved progress for all days, but ensure dates strictly follow line-wise
+    // sequence starting from 17-11-2026 with Sundays excluded
+    const savedMap = {};
+    if (parsed.days && Array.isArray(parsed.days)) {
       parsed.days.forEach(d => { savedMap[d.day] = d; });
-      mergedDays = defaultState.days.map(d => {
-        const saved = savedMap[d.day];
-        if (saved) {
-          return {
-            ...d,
-            checkedVideos: saved.checkedVideos || {},
-            checkedExercises: saved.checkedExercises || {},
-            checkedRevision: saved.checkedRevision || {},
-            customTasks: saved.customTasks || [],
-            completed: saved.completed || false,
-            completedAt: saved.completedAt || null,
-            notes: saved.notes || ''
-          };
-        }
-        return d;
-      });
     }
+
+    const mergedDays = defaultState.days.map((d, idx) => {
+      const saved = savedMap[d.day];
+      const correctDate = addStudyDays(startDate, idx, true);
+      if (saved) {
+        return {
+          ...d,
+          date: correctDate,
+          checkedVideos: saved.checkedVideos || {},
+          checkedExercises: saved.checkedExercises || {},
+          checkedRevision: saved.checkedRevision || {},
+          customTasks: saved.customTasks || [],
+          completed: saved.completed || false,
+          completedAt: saved.completedAt || null,
+          loggedStudyMinutes: saved.loggedStudyMinutes || 0,
+          notes: saved.notes || ''
+        };
+      }
+      return {
+        ...d,
+        date: correctDate
+      };
+    });
 
     return {
       ...defaultState,
       ...parsed,
       days: mergedDays,
-      settings: { ...defaultState.settings, ...(parsed.settings || {}), challengeDuration: 90 }
+      totalPausedDays: 0,
+      totalSkippedDays: 0,
+      journeyStatus: 'active',
+      pausedAt: null,
+      frozenChallengeDay: null,
+      settings: {
+        ...defaultState.settings,
+        ...(parsed.settings || {}),
+        startDate: startDate,
+        challengeDuration: 90
+      }
     };
   } catch (err) {
     console.error('Failed to load stored state from LocalStorage:', err);
@@ -56,37 +74,29 @@ export function saveStateToStorage(state) {
 
 export function exportStateAsJSON(state) {
   const exportData = {
-    appName: 'Winter Arc - 60 Days of Backend Engineering',
-    version: '1.0.0',
+    appName: 'Winter Arc - 90 Days of Backend Engineering',
+    version: '2.0.0',
     exportedAt: new Date().toISOString(),
-    data: state
+    state
   };
-
-  const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
-    JSON.stringify(exportData, null, 2)
-  )}`;
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute('href', jsonString);
-  downloadAnchor.setAttribute(
-    'download',
-    `winter-arc-backup-${new Date().toISOString().slice(0, 10)}.json`
-  );
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  downloadAnchor.remove();
+  const jsonStr = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `winter-arc-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 export function parseAndValidateImportJSON(jsonText) {
   try {
-    const parsed = JSON.parse(jsonText);
-    const stateData = parsed.data || parsed;
-
-    if (!stateData.days || !Array.isArray(stateData.days)) {
-      throw new Error('Invalid backup file: "days" array is missing.');
+    const data = JSON.parse(jsonText);
+    if (!data.state || !Array.isArray(data.state.days)) {
+      throw new Error('Invalid backup file format: missing state or days array');
     }
-    return { success: true, data: stateData };
+    return { success: true, state: data.state };
   } catch (err) {
     return { success: false, error: err.message };
   }
 }
-

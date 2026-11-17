@@ -7,8 +7,12 @@ import { QUESTION_BANK_BY_DAY } from '../data/questionBankData';
 import {
   calculateCurrentChallengeDay,
   getTodayDateString,
+  getTomorrowDateString,
   addDaysToDate,
-  getDaysDifference
+  addStudyDays,
+  getDaysDifference,
+  getStudyDaysDifference,
+  formatDateWithDay
 } from '../utils/dateUtils';
 import {
   XP_VALUES,
@@ -20,18 +24,19 @@ import {
   loadStoredState,
   saveStateToStorage,
   exportStateAsJSON,
-  parseAndValidateImportJSON
+  parseAndValidateImportJSON,
+  FIXED_CHALLENGE_START_DATE
 } from '../utils/storageUtils';
 
 const PlannerContext = createContext();
 
 // Default initial state
 const buildInitialState = () => {
-  const today = getTodayDateString();
+  const startDate = FIXED_CHALLENGE_START_DATE;
   return {
     days: INITIAL_ROADMAP_DAYS.map((day, idx) => ({
       ...day,
-      date: addDaysToDate(today, idx),
+      date: addStudyDays(startDate, idx, true),
       checkedVideos: {}, // { [videoId]: true }
       checkedExercises: {}, // { [index]: true }
       checkedRevision: {}, // { [index]: true }
@@ -63,10 +68,10 @@ const buildInitialState = () => {
     unlockedBadges: [],
     recentCelebration: null,
     settings: {
-      startDate: today,
+      startDate: startDate,
       challengeDuration: 90,
       dailyTargetMinutes: 120,
-      preferredStudyDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      preferredStudyDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       recoveryModeEnabled: true,
       isQuizMandatoryForDayCompletion: false,
       userName: 'Backend Engineer'
@@ -86,6 +91,7 @@ export function PlannerProvider({ children }) {
   }, [state]);
 
   // Automatic rollover: If an uncompleted day was scheduled before today, roll it over to today automatically
+  // All days reschedule strictly line-wise excluding Sundays
   useEffect(() => {
     const today = getTodayDateString();
     if (state.journeyStatus === 'paused') return;
@@ -94,16 +100,18 @@ export function PlannerProvider({ children }) {
     const firstUnfinished = (state.days || []).find(d => !d.completed);
     if (!firstUnfinished || !firstUnfinished.date) return;
 
-    // Check if its scheduled date is earlier than today
-    const daysBehind = getDaysDifference(firstUnfinished.date, today);
-    if (daysBehind > 0) {
+    // Check if its scheduled date is earlier than today in study days
+    const studyDaysBehind = getStudyDaysDifference(firstUnfinished.date, today, true);
+    if (studyDaysBehind > 0) {
       setState(prev => {
         // Shift firstUnfinished and all subsequent days forward so firstUnfinished aligns with today
+        // and subsequent days continue line-wise without Sunday gaps
         const updatedDays = (prev.days || []).map(d => {
           if (d.day >= firstUnfinished.day) {
+            const studyOffset = d.day - firstUnfinished.day;
             return {
               ...d,
-              date: addDaysToDate(d.date, daysBehind),
+              date: addStudyDays(today, studyOffset, true),
               notes: d.day === firstUnfinished.day
                 ? (d.notes ? d.notes + '\n' : '') + `[Schedule Rollover: Rescheduled to ${today} because day was skipped]`
                 : d.notes
@@ -112,8 +120,8 @@ export function PlannerProvider({ children }) {
           return d;
         });
 
-        const newTotalPaused = (prev.totalPausedDays || 0) + daysBehind;
-        const newTotalSkipped = (prev.totalSkippedDays || 0) + daysBehind;
+        const newTotalPaused = (prev.totalPausedDays || 0) + studyDaysBehind;
+        const newTotalSkipped = (prev.totalSkippedDays || 0) + studyDaysBehind;
 
         return {
           ...prev,
@@ -125,14 +133,15 @@ export function PlannerProvider({ children }) {
     }
   }, [state.days, state.journeyStatus]);
 
-  // Current challenge day based on start date, paused days, and paused status
+  // Current challenge day based on start date, paused days, and paused status (excluding Sundays)
   const currentChallengeDay = useMemo(() => {
     return calculateCurrentChallengeDay(
       state.settings.startDate,
       state.settings.challengeDuration || 90,
       state.totalPausedDays || 0,
       state.journeyStatus === 'paused',
-      state.frozenChallengeDay
+      state.frozenChallengeDay,
+      true // excludeSundays
     );
   }, [
     state.settings.startDate,
@@ -227,7 +236,9 @@ export function PlannerProvider({ children }) {
         prev.settings.startDate,
         prev.settings.challengeDuration || 90,
         prev.totalPausedDays || 0,
-        false
+        false,
+        null,
+        true
       );
 
       return {
@@ -839,7 +850,7 @@ export function PlannerProvider({ children }) {
           const dayOffset = d.day - startDayNumber;
           return {
             ...d,
-            date: addDaysToDate(today, dayOffset)
+            date: addStudyDays(today, dayOffset, true)
           };
         }
         return d;
@@ -851,21 +862,21 @@ export function PlannerProvider({ children }) {
     });
   }, []);
 
-  // Explicit Skip / Move day to next day (Rest Day / Rollover)
+  // Explicit Skip / Move day to next day (Rest Day / Rollover - skips Sundays)
   const skipAndMoveToNextDay = useCallback((dayNumber, reason = 'Planned Rest Day') => {
     setState(prev => {
       const today = getTodayDateString();
       const targetDay = prev.days.find(d => d.day === dayNumber);
       if (!targetDay) return prev;
 
-      // Shift this day and all subsequent days forward by 1 calendar day
+      // Shift this day and all subsequent days forward by 1 study day (skipping Sundays)
       const updatedDays = prev.days.map(d => {
         if (d.day >= dayNumber) {
           return {
             ...d,
-            date: addDaysToDate(d.date, 1),
+            date: addStudyDays(d.date, 1, true),
             notes: d.day === dayNumber
-              ? (d.notes ? d.notes + '\n' : '') + `[Schedule Rollover: Shifted to next day (${reason}) on ${today}]`
+              ? (d.notes ? d.notes + '\n' : '') + `[Schedule Rollover: Shifted to next study day (${reason}) on ${today}]`
               : d.notes
           };
         }
@@ -892,19 +903,19 @@ export function PlannerProvider({ children }) {
     });
   }, []);
 
-  // MOVE DAY TO TODAY: Sets targetDayNumber as Today, and reschedules all subsequent days line-wise
+  // MOVE DAY TO TODAY: Sets targetDayNumber as Today, and reschedules all subsequent days line-wise (skipping Sundays)
   const moveDayToToday = useCallback((targetDayNumber) => {
     setState(prev => {
       const today = getTodayDateString();
       const targetDay = prev.days.find(d => d.day === targetDayNumber);
       if (!targetDay) return prev;
 
-      // 1. Shift all days line-wise so targetDayNumber is scheduled on today, and subsequent days are consecutive:
+      // 1. Shift all days line-wise so targetDayNumber is scheduled on today, and subsequent days are consecutive study days:
       const updatedDays = prev.days.map(d => {
         const offset = d.day - targetDayNumber;
         return {
           ...d,
-          date: addDaysToDate(today, offset),
+          date: addStudyDays(today, offset, true),
           notes: d.day === targetDayNumber
             ? (d.notes ? d.notes + '\n' : '') + `[Rescheduled: Moved to Today on ${today}]`
             : d.notes
@@ -912,7 +923,7 @@ export function PlannerProvider({ children }) {
       });
 
       // 2. Set startDate so calculateCurrentChallengeDay resolves directly to targetDayNumber today
-      const newStartDate = addDaysToDate(today, -(targetDayNumber - 1));
+      const newStartDate = addStudyDays(today, -(targetDayNumber - 1), true);
 
       return {
         ...prev,
@@ -921,11 +932,11 @@ export function PlannerProvider({ children }) {
         journeyStatus: 'active',
         pausedAt: null,
         frozenChallengeDay: null,
+        days: updatedDays,
         settings: {
           ...prev.settings,
           startDate: newStartDate
-        },
-        days: updatedDays
+        }
       };
     });
   }, []);
@@ -1009,7 +1020,7 @@ export function PlannerProvider({ children }) {
       if (newSettings.startDate && newSettings.startDate !== prev.settings.startDate) {
         updatedDays = prev.days.map((d, idx) => ({
           ...d,
-          date: addDaysToDate(newSettings.startDate, idx)
+          date: addStudyDays(newSettings.startDate, idx, true)
         }));
       }
       return {

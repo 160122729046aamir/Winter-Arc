@@ -15,7 +15,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { usePlanner } from '../context/PlannerContext';
-import { formatDate, formatMinutesHuman } from '../utils/dateUtils';
+import { formatDate, formatDateWithDay, formatMinutesHuman } from '../utils/dateUtils';
 import ProgressBar from '../components/common/ProgressBar';
 
 export default function RoadmapPage() {
@@ -165,6 +165,7 @@ export default function RoadmapPage() {
       <div className="space-y-3">
         {filteredDays.map((dayItem) => {
           const isToday = dayItem.day === currentChallengeDay;
+          const isTomorrow = dayItem.day === currentChallengeDay + 1;
           const isCompleted = dayItem.completed;
           const isMissed = dayItem.day < currentChallengeDay && !dayItem.completed && !dayItem.recovered;
 
@@ -179,6 +180,7 @@ export default function RoadmapPage() {
 
           let borderClass = 'border-slate-800 hover:border-slate-700';
           if (isToday) borderClass = 'border-cyan-400/80 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40';
+          if (isTomorrow && !isCompleted) borderClass = 'border-indigo-500/50 shadow-[0_0_12px_rgba(99,102,241,0.1)]';
           if (isCompleted) borderClass = 'border-emerald-500/40 bg-emerald-950/5';
           if (isMissed) borderClass = 'border-amber-500/40 bg-amber-950/5';
 
@@ -196,6 +198,8 @@ export default function RoadmapPage() {
                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                         : isToday
                         ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 ring-2 ring-cyan-400/40'
+                        : isTomorrow
+                        ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40'
                         : isMissed
                         ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                         : 'bg-slate-900 text-slate-300 border border-slate-800'
@@ -210,12 +214,17 @@ export default function RoadmapPage() {
                       <span className="text-[10px] font-bold font-mono uppercase px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
                         {dayItem.phaseId === 'phase-1' ? 'Core Java' : dayItem.phaseId === 'phase-2' ? 'Spring Boot' : 'Capstone'}
                       </span>
-                      <span className="text-xs text-slate-500 font-mono">
-                        {formatDate(dayItem.date)}
+                      <span className="text-xs text-slate-400 font-mono font-medium">
+                        {formatDateWithDay(dayItem.date)}
                       </span>
                       {isToday && (
                         <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 animate-pulse">
                           Active Today
+                        </span>
+                      )}
+                      {isTomorrow && !isCompleted && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                          Tomorrow
                         </span>
                       )}
                       {isCompleted && (

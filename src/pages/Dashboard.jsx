@@ -27,7 +27,7 @@ import QuickActionBanner from '../components/dashboard/QuickActionBanner';
 import PausedBanner from '../components/dashboard/PausedBanner';
 import PauseModal from '../components/common/PauseModal';
 import ProgressBar from '../components/common/ProgressBar';
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, formatDateWithDay } from '../utils/dateUtils';
 
 export default function Dashboard() {
   const {
@@ -77,8 +77,8 @@ export default function Dashboard() {
               Status: {journeyStatus === 'paused' ? 'Paused' : journeyStatus === 'completed' ? 'Graduated' : 'Active Arc'}
             </span>
 
-            <span className="text-xs text-slate-400">
-              {formatDate(new Date().toISOString())}
+            <span className="text-xs text-slate-400 font-mono">
+              {formatDateWithDay(new Date().toISOString().slice(0, 10))}
             </span>
           </div>
 
@@ -350,30 +350,40 @@ export default function Dashboard() {
             </div>
 
             <div className="space-y-3">
-              {upcomingDays.map((upDay) => (
-                <div
-                  key={upDay.day}
-                  onClick={() => navigate(`/daily-planner?day=${upDay.day}`)}
-                  className="p-3 rounded-lg bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 cursor-pointer transition-all"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-slate-300 font-mono">
-                      Day {upDay.day}
-                    </span>
-                    <span className="text-[11px] text-slate-500">
-                      {formatDate(upDay.date)}
-                    </span>
+              {upcomingDays.map((upDay) => {
+                const isTomorrow = upDay.day === currentChallengeDay + 1;
+                return (
+                  <div
+                    key={upDay.day}
+                    onClick={() => navigate(`/daily-planner?day=${upDay.day}`)}
+                    className="p-3 rounded-lg bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 cursor-pointer transition-all"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-300 font-mono">
+                          Day {upDay.day}
+                        </span>
+                        {isTomorrow && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                            Tomorrow
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[11px] text-slate-400 font-mono">
+                        {formatDateWithDay(upDay.date)}
+                      </span>
+                    </div>
+                    <h4 className="text-xs font-semibold text-slate-200 truncate">
+                      {upDay.title}
+                    </h4>
+                    <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-2 font-mono">
+                      <span>{upDay.videos?.length || 0} video</span>
+                      <span>•</span>
+                      <span>25 questions quiz</span>
+                    </div>
                   </div>
-                  <h4 className="text-xs font-semibold text-slate-200 truncate">
-                    {upDay.title}
-                  </h4>
-                  <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-2 font-mono">
-                    <span>{upDay.videos?.length || 0} videos</span>
-                    <span>•</span>
-                    <span>25 questions quiz</span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
 
               {upcomingDays.length === 0 && (
                 <p className="text-xs text-slate-500 py-4 text-center">
