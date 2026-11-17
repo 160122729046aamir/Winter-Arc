@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
   LayoutDashboard,
   Map,
@@ -75,7 +76,7 @@ export default function Sidebar({ isOpen, onClose }) {
             </span>
           </div>
 
-          <nav className="space-y-1">
+          <nav className="space-y-1 isolate">
             {NAVIGATION_ITEMS.map((item) => {
               const Icon = item.icon;
               return (
@@ -84,15 +85,31 @@ export default function Sidebar({ isOpen, onClose }) {
                   to={item.path}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold apple-press transition-all ${
+                    `group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold apple-press transition-colors duration-200 ${
                       isActive
-                        ? 'bg-white/[0.12] text-white border border-white/20 shadow-sm shadow-black/20 font-bold backdrop-blur-md'
-                        : 'text-slate-400 hover:text-slate-100 hover:bg-white/[0.06] border border-transparent'
+                        ? 'text-white font-bold'
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-white/[0.05]'
                     }`
                   }
                 >
+                  {({ isActive }) => (
+                  <>
+                  {isActive && (
+                    <motion.span
+                      layoutId="sidebar-active-pill"
+                      className="absolute inset-0 -z-10 rounded-xl bg-white/[0.11] border border-white/20 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md"
+                      transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.8 }}
+                    />
+                  )}
+                  {isActive && (
+                    <motion.span
+                      layoutId="sidebar-active-bar"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-full bg-gradient-to-b from-cyan-300 to-indigo-400 shadow-[0_0_10px_#22d3ee]"
+                      transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.8 }}
+                    />
+                  )}
                   <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4 flex-shrink-0" />
+                    <Icon className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ease-spring ${isActive ? 'text-cyan-300 scale-110' : 'group-hover:scale-110'}`} />
                     <span>{item.name}</span>
                   </div>
 
@@ -106,6 +123,8 @@ export default function Sidebar({ isOpen, onClose }) {
                       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#06b6d4]" />
                     )}
                   </div>
+                  </>
+                  )}
                 </NavLink>
               );
             })}

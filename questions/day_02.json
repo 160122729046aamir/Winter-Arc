@@ -1,0 +1,499 @@
+{
+  "day": 2,
+  "title": "Lecture #2: Write Your First JAVA Program",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "JDK vs JRE vs JVM architectural distinction",
+    "Java source file structure and class naming conventions",
+    "public static void main(String[] args) method signature breakdown",
+    "System.out.println() vs System.out.print() console I/O",
+    "Compilation with javac and execution with java CLI",
+    "Bytecode verification and ClassLoader subsystem",
+    "Syntax errors vs Runtime errors in initial setup",
+    "Environment setup and PATH / JAVA_HOME configuration"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d2_e_1",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'JDK vs JRE vs JVM architectural distinction' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for jdk vs jre vs jvm architectural distinction.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'JDK vs JRE vs JVM architectural distinction' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "JDK vs JRE vs JVM architectural distinction",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_2",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Java source file structure and class naming conventions' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for java source file structure and class naming conventions.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'Java source file structure and class naming conventions' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Java source file structure and class naming conventions",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_3",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'public static void main(String[] args) method signature breakdown' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for public static void main(string[] args) method signature breakdown.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'public static void main(String[] args) method signature breakdown' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "public static void main(String[] args) method signature breakdown",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_4",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'System.out.println() vs System.out.print() console I/O' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for system.out.println() vs system.out.print() console i/o.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'System.out.println() vs System.out.print() console I/O' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "System.out.println() vs System.out.print() console I/O",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_5",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Compilation with javac and execution with java CLI' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for compilation with javac and execution with java cli.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'Compilation with javac and execution with java CLI' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Compilation with javac and execution with java CLI",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_6",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Bytecode verification and ClassLoader subsystem' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for bytecode verification and classloader subsystem.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'Bytecode verification and ClassLoader subsystem' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Bytecode verification and ClassLoader subsystem",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_7",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Syntax errors vs Runtime errors in initial setup' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for syntax errors vs runtime errors in initial setup.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'Syntax errors vs Runtime errors in initial setup' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Syntax errors vs Runtime errors in initial setup",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_8",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Environment setup and PATH / JAVA_HOME configuration' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for environment setup and path / java_home configuration.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'Environment setup and PATH / JAVA_HOME configuration' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Environment setup and PATH / JAVA_HOME configuration",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_9",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'JDK vs JRE vs JVM architectural distinction' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for jdk vs jre vs jvm architectural distinction.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'JDK vs JRE vs JVM architectural distinction' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "JDK vs JRE vs JVM architectural distinction",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_e_10",
+        "day": 2,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Java source file structure and class naming conventions' as explained in Lecture #2?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for java source file structure and class naming conventions.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #2: Write Your First JAVA Program, 'Java source file structure and class naming conventions' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Java source file structure and class naming conventions",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d2_m_1",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'public static void main(String[] args) method signature breakdown' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'public static void main(String[] args) method signature breakdown' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "public static void main(String[] args) method signature breakdown",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_2",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'System.out.println() vs System.out.print() console I/O' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'System.out.println() vs System.out.print() console I/O' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "System.out.println() vs System.out.print() console I/O",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_3",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Compilation with javac and execution with java CLI' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Compilation with javac and execution with java CLI' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Compilation with javac and execution with java CLI",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_4",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Bytecode verification and ClassLoader subsystem' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Bytecode verification and ClassLoader subsystem' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Bytecode verification and ClassLoader subsystem",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_5",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Syntax errors vs Runtime errors in initial setup' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Syntax errors vs Runtime errors in initial setup' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Syntax errors vs Runtime errors in initial setup",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_6",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Environment setup and PATH / JAVA_HOME configuration' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Environment setup and PATH / JAVA_HOME configuration' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Environment setup and PATH / JAVA_HOME configuration",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_7",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'JDK vs JRE vs JVM architectural distinction' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'JDK vs JRE vs JVM architectural distinction' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "JDK vs JRE vs JVM architectural distinction",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_8",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Java source file structure and class naming conventions' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Java source file structure and class naming conventions' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Java source file structure and class naming conventions",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_9",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'public static void main(String[] args) method signature breakdown' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'public static void main(String[] args) method signature breakdown' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "public static void main(String[] args) method signature breakdown",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_m_10",
+        "day": 2,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'System.out.println() vs System.out.print() console I/O' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'System.out.println() vs System.out.print() console I/O' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "System.out.println() vs System.out.print() console I/O",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d2_h_1",
+        "day": 2,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Compilation with javac and execution with java CLI'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Compilation with javac and execution with java CLI'.",
+        "concept": "Compilation with javac and execution with java CLI",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_h_2",
+        "day": 2,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Bytecode verification and ClassLoader subsystem'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Bytecode verification and ClassLoader subsystem'.",
+        "concept": "Bytecode verification and ClassLoader subsystem",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_h_3",
+        "day": 2,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Syntax errors vs Runtime errors in initial setup'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Syntax errors vs Runtime errors in initial setup'.",
+        "concept": "Syntax errors vs Runtime errors in initial setup",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_h_4",
+        "day": 2,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Environment setup and PATH / JAVA_HOME configuration'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Environment setup and PATH / JAVA_HOME configuration'.",
+        "concept": "Environment setup and PATH / JAVA_HOME configuration",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      },
+      {
+        "id": "d2_h_5",
+        "day": 2,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'JDK vs JRE vs JVM architectural distinction'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'JDK vs JRE vs JVM architectural distinction'.",
+        "concept": "JDK vs JRE vs JVM architectural distinction",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/application/index.html"
+      }
+    ]
+  }
+}

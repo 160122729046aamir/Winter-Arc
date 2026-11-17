@@ -237,3 +237,378 @@
   background-color: white;
   clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
+
+/* ===================================================================
+   Liquid Glass Motion Layer
+   =================================================================== */
+
+/* Aurora blobs drifting behind the glass (transform-only for 60fps) */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+.aurora-blob.b1 {
+  width: 46vw; height: 46vw; top: -12vw; left: -10vw;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.55), transparent 65%);
+  animation: auroraDrift1 26s ease-in-out infinite alternate;
+}
+.aurora-blob.b2 {
+  width: 40vw; height: 40vw; top: -6vw; right: -12vw;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.45), transparent 65%);
+  animation: auroraDrift2 32s ease-in-out infinite alternate;
+}
+.aurora-blob.b3 {
+  width: 52vw; height: 52vw; bottom: -22vw; left: 22vw;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.4), transparent 65%);
+  animation: auroraDrift3 38s ease-in-out infinite alternate;
+}
+.aurora-blob.b4 {
+  width: 28vw; height: 28vw; top: 40vh; right: 8vw;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.28), transparent 65%);
+  animation: auroraDrift1 30s ease-in-out infinite alternate-reverse;
+}
+
+.light .aurora-blob { opacity: 0.28; }
+
+/* Fine grain so large blurs don't band */
+.aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes auroraDrift1 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(8vw, 6vh, 0) scale(1.12); }
+  100% { transform: translate3d(-4vw, 12vh, 0) scale(0.95); }
+}
+@keyframes auroraDrift2 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-10vw, 10vh, 0) scale(1.08); }
+  100% { transform: translate3d(-4vw, -4vh, 0) scale(1.15); }
+}
+@keyframes auroraDrift3 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-12vw, -8vh, 0) scale(1.1); }
+  100% { transform: translate3d(10vw, -2vh, 0) scale(0.92); }
+}
+
+/* Specular spotlight that follows the pointer across glass cards.
+   --mx / --my are set by the pointer tracker in main.jsx. */
+.glass-card,
+.arc-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.glass-card::before,
+.arc-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(255, 255, 255, 0.075),
+    transparent 45%
+  );
+}
+
+.glass-card::after,
+.arc-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(165, 180, 252, 0.55),
+    transparent 60%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+.glass-card:hover::before,
+.arc-card:hover::before,
+.glass-card:hover::after,
+.arc-card:hover::after {
+  opacity: 1;
+}
+
+.light .glass-card::before,
+.light .arc-card::before {
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(99, 102, 241, 0.06), transparent 45%);
+}
+
+/* Staggered entrance for the top-level blocks of every page */
+/* .page-stagger wraps the page root; its children are the page's sections.
+   Fixed overlays (modals) are excluded so their positioning is never disturbed. */
+.page-stagger > * > *:not(.fixed) {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.page-stagger > * > *:nth-child(1) { animation-delay: 0.03s; }
+.page-stagger > * > *:nth-child(2) { animation-delay: 0.08s; }
+.page-stagger > * > *:nth-child(3) { animation-delay: 0.13s; }
+.page-stagger > * > *:nth-child(4) { animation-delay: 0.18s; }
+.page-stagger > * > *:nth-child(5) { animation-delay: 0.23s; }
+.page-stagger > * > *:nth-child(6) { animation-delay: 0.28s; }
+.page-stagger > * > *:nth-child(n + 7) { animation-delay: 0.33s; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Shimmering text for headings / brand */
+.text-shimmer {
+  background: linear-gradient(110deg, #e2e8f0 35%, #a5b4fc 50%, #e2e8f0 65%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: textShimmer 5s linear infinite;
+}
+.light .text-shimmer {
+  background-image: linear-gradient(110deg, #0f172a 35%, #6366f1 50%, #0f172a 65%);
+}
+
+@keyframes textShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Smooth focus ring everywhere */
+:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, 0.7);
+  outline-offset: 2px;
+  border-radius: 0.6rem;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.45);
+  color: #fff;
+}
+
+/* ===================================================================
+   SweetAlert2 — Liquid Glass Theme
+   =================================================================== */
+
+.swal2-container.glass-swal-container {
+  z-index: 10000;
+}
+
+.swal2-container.swal2-backdrop-show,
+.swal2-container.glass-swal-backdrop-show {
+  background: rgba(3, 6, 12, 0.45) !important;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  animation: swalBackdropIn 0.3s ease both;
+}
+.light .swal2-container.swal2-backdrop-show,
+.light .swal2-container.glass-swal-backdrop-show {
+  background: rgba(15, 23, 42, 0.18) !important;
+}
+.swal2-container.glass-swal-backdrop-hide {
+  animation: swalBackdropOut 0.22s ease both;
+}
+
+.swal2-popup.glass-swal-popup {
+  width: min(26rem, calc(100vw - 2rem));
+  padding: 1.75rem 1.5rem 1.4rem;
+  border-radius: 1.6rem;
+  color: var(--text-primary);
+  background: linear-gradient(160deg, rgba(30, 38, 58, 0.78), rgba(14, 19, 31, 0.82));
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.75),
+    0 0 0 0.5px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+  font-family: inherit;
+}
+.light .swal2-popup.glass-swal-popup {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(246, 248, 252, 0.8));
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 30px 70px -20px rgba(15, 23, 42, 0.28), inset 0 1px 0 0 #fff;
+}
+
+.glass-swal-show { animation: swalPopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.glass-swal-hide { animation: swalPopOut 0.2s cubic-bezier(0.4, 0, 1, 1) both; }
+
+.swal2-title.glass-swal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  padding: 0.6rem 0.5rem 0;
+}
+
+.swal2-html-container.glass-swal-html {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0.6rem 0.5rem 0;
+}
+
+.swal2-popup.glass-swal-popup .swal2-icon {
+  margin: 0.4rem auto 0.2rem;
+  transform: scale(0.78);
+  border-width: 3px;
+}
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-question { border-color: rgba(129, 140, 248, 0.6); color: #a5b4fc; }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-warning { border-color: rgba(251, 191, 36, 0.6); color: #fbbf24; }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-info { border-color: rgba(34, 211, 238, 0.6); color: #22d3ee; }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-success { border-color: rgba(52, 211, 153, 0.55); color: #34d399; }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-success [class^='swal2-success-line'] { background-color: #34d399; }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-success .swal2-success-ring { border-color: rgba(52, 211, 153, 0.3); }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-success [class^='swal2-success-circular-line'],
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-success .swal2-success-fix { background: transparent !important; }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-error { border-color: rgba(251, 113, 133, 0.6); }
+.swal2-popup.glass-swal-popup .swal2-icon.swal2-error [class^='swal2-x-mark-line'] { background-color: #fb7185; }
+
+.swal2-actions.glass-swal-actions {
+  width: 100%;
+  gap: 0.6rem;
+  margin-top: 1.35rem;
+  flex-wrap: nowrap;
+}
+
+.glass-swal-btn {
+  flex: 1;
+  margin: 0 !important;
+  padding: 0.7rem 1rem;
+  border-radius: 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease, filter 0.2s ease;
+}
+.glass-swal-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.glass-swal-btn:active { transform: scale(0.96); }
+.glass-swal-btn:focus-visible { outline: 2px solid rgba(165, 180, 252, 0.8); outline-offset: 2px; }
+
+.glass-swal-btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1, #4f46e5 55%, #0891b2);
+  border: 1px solid rgba(165, 180, 252, 0.35);
+  box-shadow: 0 10px 24px -8px rgba(99, 102, 241, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.glass-swal-btn-danger {
+  color: #fff;
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  border: 1px solid rgba(253, 164, 175, 0.35);
+  box-shadow: 0 10px 24px -8px rgba(244, 63, 94, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.glass-swal-btn-secondary {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.light .glass-swal-btn-secondary {
+  background: rgba(15, 23, 42, 0.05);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+.swal2-input.glass-swal-input {
+  width: auto;
+  margin: 1rem 0.5rem 0;
+  height: 2.75rem;
+  border-radius: 0.9rem;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+  font-size: 0.95rem;
+  text-align: center;
+}
+.light .swal2-input.glass-swal-input { background: rgba(15, 23, 42, 0.04); border-color: rgba(15, 23, 42, 0.12); }
+.swal2-input.glass-swal-input:focus {
+  border-color: rgba(129, 140, 248, 0.8);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+.swal2-validation-message.glass-swal-validation {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fda4af;
+  border-radius: 0.75rem;
+  margin: 0.75rem 0.5rem 0;
+  font-size: 0.78rem;
+}
+
+/* Toasts */
+.swal2-popup.swal2-toast.glass-swal-toast {
+  padding: 0.7rem 0.95rem;
+  border-radius: 1.1rem;
+  color: var(--text-primary);
+  background: rgba(22, 29, 45, 0.72);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+.light .swal2-popup.swal2-toast.glass-swal-toast {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 18px 40px -14px rgba(15, 23, 42, 0.25), inset 0 1px 0 #fff;
+}
+.glass-swal-toast-title { font-size: 0.82rem !important; font-weight: 650 !important; color: var(--text-primary) !important; }
+.glass-swal-toast-html { font-size: 0.75rem !important; color: var(--text-secondary) !important; }
+.glass-swal-toast-progress { background: linear-gradient(90deg, #6366f1, #22d3ee) !important; height: 2px !important; }
+.swal2-container.swal2-top-end { top: 4.75rem !important; }
+
+.glass-swal-toast-show { animation: toastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.glass-swal-toast-hide { animation: toastOut 0.25s ease both; }
+
+@keyframes swalPopIn {
+  0% { opacity: 0; transform: scale(0.86) translateY(14px); filter: blur(6px); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes swalPopOut {
+  to { opacity: 0; transform: scale(0.94); filter: blur(4px); }
+}
+@keyframes swalBackdropIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes swalBackdropOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes toastIn {
+  0% { opacity: 0; transform: translateX(24px) scale(0.92); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(24px) scale(0.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob,
+  .page-stagger > * > *,
+  .text-shimmer,
+  .glass-swal-show,
+  .glass-swal-toast-show {
+    animation: none !important;
+  }
+}

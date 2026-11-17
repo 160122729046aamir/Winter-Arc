@@ -1,0 +1,499 @@
+{
+  "day": 7,
+  "title": "Lecture #7: Java Conditional Statements",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "if, if-else, and if-else-if ladder decision branches",
+    "Nested conditional expressions and boolean logic reduction",
+    "Dangling-else ambiguity and curly brace best practices",
+    "switch-case statement syntax and fall-through behavior",
+    "break keyword in switch blocks and default clause placement",
+    "Permitted data types in switch (byte, short, int, char, String, Enum)",
+    "Enhanced switch expressions (arrow syntax -> and yield keyword)",
+    "Exhaustiveness checking in modern pattern matching switch"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d7_e_1",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'if, if-else, and if-else-if ladder decision branches' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for if, if-else, and if-else-if ladder decision branches.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'if, if-else, and if-else-if ladder decision branches' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "if, if-else, and if-else-if ladder decision branches",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_2",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Nested conditional expressions and boolean logic reduction' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for nested conditional expressions and boolean logic reduction.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'Nested conditional expressions and boolean logic reduction' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Nested conditional expressions and boolean logic reduction",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_3",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Dangling-else ambiguity and curly brace best practices' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for dangling-else ambiguity and curly brace best practices.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'Dangling-else ambiguity and curly brace best practices' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Dangling-else ambiguity and curly brace best practices",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_4",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'switch-case statement syntax and fall-through behavior' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for switch-case statement syntax and fall-through behavior.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'switch-case statement syntax and fall-through behavior' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "switch-case statement syntax and fall-through behavior",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_5",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'break keyword in switch blocks and default clause placement' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for break keyword in switch blocks and default clause placement.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'break keyword in switch blocks and default clause placement' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "break keyword in switch blocks and default clause placement",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_6",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Permitted data types in switch (byte, short, int, char, String, Enum)' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for permitted data types in switch (byte, short, int, char, string, enum).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'Permitted data types in switch (byte, short, int, char, String, Enum)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Permitted data types in switch (byte, short, int, char, String, Enum)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_7",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Enhanced switch expressions (arrow syntax -> and yield keyword)' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for enhanced switch expressions (arrow syntax -> and yield keyword).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'Enhanced switch expressions (arrow syntax -> and yield keyword)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Enhanced switch expressions (arrow syntax -> and yield keyword)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_8",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Exhaustiveness checking in modern pattern matching switch' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for exhaustiveness checking in modern pattern matching switch.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'Exhaustiveness checking in modern pattern matching switch' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Exhaustiveness checking in modern pattern matching switch",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_9",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'if, if-else, and if-else-if ladder decision branches' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for if, if-else, and if-else-if ladder decision branches.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'if, if-else, and if-else-if ladder decision branches' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "if, if-else, and if-else-if ladder decision branches",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_e_10",
+        "day": 7,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Nested conditional expressions and boolean logic reduction' as explained in Lecture #7?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for nested conditional expressions and boolean logic reduction.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #7: Java Conditional Statements, 'Nested conditional expressions and boolean logic reduction' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Nested conditional expressions and boolean logic reduction",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d7_m_1",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Dangling-else ambiguity and curly brace best practices' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Dangling-else ambiguity and curly brace best practices' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Dangling-else ambiguity and curly brace best practices",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_2",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'switch-case statement syntax and fall-through behavior' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'switch-case statement syntax and fall-through behavior' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "switch-case statement syntax and fall-through behavior",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_3",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'break keyword in switch blocks and default clause placement' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'break keyword in switch blocks and default clause placement' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "break keyword in switch blocks and default clause placement",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_4",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Permitted data types in switch (byte, short, int, char, String, Enum)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Permitted data types in switch (byte, short, int, char, String, Enum)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Permitted data types in switch (byte, short, int, char, String, Enum)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_5",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Enhanced switch expressions (arrow syntax -> and yield keyword)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Enhanced switch expressions (arrow syntax -> and yield keyword)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Enhanced switch expressions (arrow syntax -> and yield keyword)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_6",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Exhaustiveness checking in modern pattern matching switch' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Exhaustiveness checking in modern pattern matching switch' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Exhaustiveness checking in modern pattern matching switch",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_7",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'if, if-else, and if-else-if ladder decision branches' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'if, if-else, and if-else-if ladder decision branches' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "if, if-else, and if-else-if ladder decision branches",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_8",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Nested conditional expressions and boolean logic reduction' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Nested conditional expressions and boolean logic reduction' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Nested conditional expressions and boolean logic reduction",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_9",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Dangling-else ambiguity and curly brace best practices' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Dangling-else ambiguity and curly brace best practices' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Dangling-else ambiguity and curly brace best practices",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_m_10",
+        "day": 7,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'switch-case statement syntax and fall-through behavior' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'switch-case statement syntax and fall-through behavior' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "switch-case statement syntax and fall-through behavior",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d7_h_1",
+        "day": 7,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'break keyword in switch blocks and default clause placement'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'break keyword in switch blocks and default clause placement'.",
+        "concept": "break keyword in switch blocks and default clause placement",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_h_2",
+        "day": 7,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Permitted data types in switch (byte, short, int, char, String, Enum)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Permitted data types in switch (byte, short, int, char, String, Enum)'.",
+        "concept": "Permitted data types in switch (byte, short, int, char, String, Enum)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_h_3",
+        "day": 7,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Enhanced switch expressions (arrow syntax -> and yield keyword)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Enhanced switch expressions (arrow syntax -> and yield keyword)'.",
+        "concept": "Enhanced switch expressions (arrow syntax -> and yield keyword)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_h_4",
+        "day": 7,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Exhaustiveness checking in modern pattern matching switch'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Exhaustiveness checking in modern pattern matching switch'.",
+        "concept": "Exhaustiveness checking in modern pattern matching switch",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      },
+      {
+        "id": "d7_h_5",
+        "day": 7,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'if, if-else, and if-else-if ladder decision branches'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'if, if-else, and if-else-if ladder decision branches'.",
+        "concept": "if, if-else, and if-else-if ladder decision branches",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+      }
+    ]
+  }
+}

@@ -17,6 +17,7 @@ import {
 import { usePlanner } from '../context/PlannerContext';
 import { formatDate, formatDateWithDay, formatMinutesHuman } from '../utils/dateUtils';
 import ProgressBar from '../components/common/ProgressBar';
+import { confirmAction, toast } from '../utils/alerts';
 
 export default function RoadmapPage() {
   const { days, currentChallengeDay, markDayComplete, markDayIncomplete, moveDayToToday } = usePlanner();
@@ -267,9 +268,15 @@ export default function RoadmapPage() {
                   {/* Move to Today Option */}
                   {!isToday && (
                     <button
-                      onClick={() => {
-                        if (window.confirm(`Set Day ${dayItem.day} (${dayItem.title}) as TODAY? All subsequent lectures will be automatically shifted day-by-day.`)) {
+                      onClick={async () => {
+                        const ok = await confirmAction({
+                          title: `Set Day ${dayItem.day} as today?`,
+                          text: `${dayItem.title} becomes today's lecture. Later lectures shift day by day.`,
+                          confirmText: 'Move to Today',
+                        });
+                        if (ok) {
                           moveDayToToday(dayItem.day);
+                          toast(`Day ${dayItem.day} is now today`);
                         }
                       }}
                       title="Move this lecture to Today and reschedule subsequent days"

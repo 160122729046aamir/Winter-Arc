@@ -1,0 +1,499 @@
+{
+  "day": 1,
+  "title": "Lecture #1: JAVA Full Course",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "High-level programming languages vs Machine code",
+    "Role of Compilers and Assemblers",
+    "CPU architecture and Instruction Sets (x86, ARM)",
+    "Why C/C++ is platform-dependent",
+    "Operating System interaction (Windows vs macOS vs Linux)",
+    "Java's Write Once, Run Anywhere (WORA) philosophy",
+    "Source code (.java) to Bytecode (.class) compilation",
+    "Virtual Machine abstraction layer and native execution"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d1_e_1",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'High-level programming languages vs Machine code' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for high-level programming languages vs machine code.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'High-level programming languages vs Machine code' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "High-level programming languages vs Machine code",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_2",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Role of Compilers and Assemblers' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for role of compilers and assemblers.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'Role of Compilers and Assemblers' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Role of Compilers and Assemblers",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_3",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'CPU architecture and Instruction Sets (x86, ARM)' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for cpu architecture and instruction sets (x86, arm).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'CPU architecture and Instruction Sets (x86, ARM)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "CPU architecture and Instruction Sets (x86, ARM)",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_4",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Why C/C++ is platform-dependent' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for why c/c++ is platform-dependent.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'Why C/C++ is platform-dependent' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Why C/C++ is platform-dependent",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_5",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Operating System interaction (Windows vs macOS vs Linux)' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for operating system interaction (windows vs macos vs linux).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'Operating System interaction (Windows vs macOS vs Linux)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Operating System interaction (Windows vs macOS vs Linux)",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_6",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Java's Write Once, Run Anywhere (WORA) philosophy' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for java's write once, run anywhere (wora) philosophy.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'Java's Write Once, Run Anywhere (WORA) philosophy' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Java's Write Once, Run Anywhere (WORA) philosophy",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_7",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Source code (.java) to Bytecode (.class) compilation' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for source code (.java) to bytecode (.class) compilation.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'Source code (.java) to Bytecode (.class) compilation' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Source code (.java) to Bytecode (.class) compilation",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_8",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Virtual Machine abstraction layer and native execution' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for virtual machine abstraction layer and native execution.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'Virtual Machine abstraction layer and native execution' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Virtual Machine abstraction layer and native execution",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_9",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'High-level programming languages vs Machine code' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for high-level programming languages vs machine code.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'High-level programming languages vs Machine code' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "High-level programming languages vs Machine code",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_e_10",
+        "day": 1,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Role of Compilers and Assemblers' as explained in Lecture #1?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for role of compilers and assemblers.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #1: JAVA Full Course, 'Role of Compilers and Assemblers' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Role of Compilers and Assemblers",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d1_m_1",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'CPU architecture and Instruction Sets (x86, ARM)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'CPU architecture and Instruction Sets (x86, ARM)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "CPU architecture and Instruction Sets (x86, ARM)",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_2",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Why C/C++ is platform-dependent' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Why C/C++ is platform-dependent' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Why C/C++ is platform-dependent",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_3",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Operating System interaction (Windows vs macOS vs Linux)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Operating System interaction (Windows vs macOS vs Linux)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Operating System interaction (Windows vs macOS vs Linux)",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_4",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Java's Write Once, Run Anywhere (WORA) philosophy' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Java's Write Once, Run Anywhere (WORA) philosophy' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Java's Write Once, Run Anywhere (WORA) philosophy",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_5",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Source code (.java) to Bytecode (.class) compilation' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Source code (.java) to Bytecode (.class) compilation' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Source code (.java) to Bytecode (.class) compilation",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_6",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Virtual Machine abstraction layer and native execution' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Virtual Machine abstraction layer and native execution' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Virtual Machine abstraction layer and native execution",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_7",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'High-level programming languages vs Machine code' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'High-level programming languages vs Machine code' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "High-level programming languages vs Machine code",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_8",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Role of Compilers and Assemblers' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Role of Compilers and Assemblers' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Role of Compilers and Assemblers",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_9",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'CPU architecture and Instruction Sets (x86, ARM)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'CPU architecture and Instruction Sets (x86, ARM)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "CPU architecture and Instruction Sets (x86, ARM)",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_m_10",
+        "day": 1,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Why C/C++ is platform-dependent' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Why C/C++ is platform-dependent' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Why C/C++ is platform-dependent",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d1_h_1",
+        "day": 1,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Operating System interaction (Windows vs macOS vs Linux)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Operating System interaction (Windows vs macOS vs Linux)'.",
+        "concept": "Operating System interaction (Windows vs macOS vs Linux)",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_h_2",
+        "day": 1,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Java's Write Once, Run Anywhere (WORA) philosophy'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Java's Write Once, Run Anywhere (WORA) philosophy'.",
+        "concept": "Java's Write Once, Run Anywhere (WORA) philosophy",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_h_3",
+        "day": 1,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Source code (.java) to Bytecode (.class) compilation'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Source code (.java) to Bytecode (.class) compilation'.",
+        "concept": "Source code (.java) to Bytecode (.class) compilation",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_h_4",
+        "day": 1,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Virtual Machine abstraction layer and native execution'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Virtual Machine abstraction layer and native execution'.",
+        "concept": "Virtual Machine abstraction layer and native execution",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      },
+      {
+        "id": "d1_h_5",
+        "day": 1,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'High-level programming languages vs Machine code'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'High-level programming languages vs Machine code'.",
+        "concept": "High-level programming languages vs Machine code",
+        "reference": "https://docs.oracle.com/javase/tutorial/getStarted/intro/index.html"
+      }
+    ]
+  }
+}

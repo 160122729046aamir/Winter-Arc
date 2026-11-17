@@ -35,12 +35,12 @@ export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
           </button>
 
           <Link to="/" className="flex items-center gap-2.5 group apple-press">
-            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-cyan-400 shadow-[0_0_24px_rgba(99,102,241,0.45)] border border-white/20 group-hover:scale-105 transition-transform duration-200">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-cyan-400 shadow-[0_0_24px_rgba(99,102,241,0.45)] border border-white/20 group-hover:scale-110 group-hover:rotate-[-6deg] transition-transform duration-300 ease-spring">
               <Code2 className="w-5 h-5 text-white" strokeWidth={2.5} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm sm:text-base tracking-wider bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent font-sans">
+                <span className="font-extrabold text-sm sm:text-base tracking-wider text-shimmer font-sans">
                   WINTER ARC
                 </span>
                 <span className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider glass-ultra border border-indigo-400/30 text-indigo-300 rounded-md">

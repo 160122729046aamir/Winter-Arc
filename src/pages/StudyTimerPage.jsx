@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { usePlanner } from '../context/PlannerContext';
 import { formatTimeSeconds, formatMinutesHuman, formatDate } from '../utils/dateUtils';
+import { promptNumber, toast } from '../utils/alerts';
 
 const PRESETS = [
   { name: 'Pomodoro', minutes: 25, mode: 'focus', icon: Brain },
@@ -108,10 +109,16 @@ export default function StudyTimerPage() {
     setTimeLeft(preset.minutes * 60);
   };
 
-  const handleManualLog = () => {
-    const mins = prompt('Enter completed study minutes to log manually:', '45');
-    const parsed = parseInt(mins, 10);
-    if (!isNaN(parsed) && parsed > 0) {
+  const handleManualLog = async () => {
+    const parsed = await promptNumber({
+      title: 'Log study time',
+      text: 'How many minutes did you study?',
+      defaultValue: '45',
+      placeholder: 'Minutes',
+      confirmText: 'Log Minutes',
+    });
+    if (parsed) {
+      toast(`Logged ${parsed} minutes`);
       logStudyTime(
         selectedDayNumber,
         parsed,

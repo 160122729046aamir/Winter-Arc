@@ -1,0 +1,499 @@
+{
+  "day": 10,
+  "title": "Lecture #10: How Arrays work in Java",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "Array objects living on the Java Heap",
+    "Array reference variables living on the Stack",
+    "Contiguous memory layout and cache locality benefits",
+    "Multidimensional arrays as arrays of arrays",
+    "Jagged / ragged arrays with non-uniform row lengths",
+    "Enhanced for-each loop traversal over arrays",
+    "Shallow copying with arr.clone() and System.arraycopy()",
+    "Array parameters in methods: pass-by-value of reference"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d10_e_1",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Array objects living on the Java Heap' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for array objects living on the java heap.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Array objects living on the Java Heap' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Array objects living on the Java Heap",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_2",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Array reference variables living on the Stack' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for array reference variables living on the stack.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Array reference variables living on the Stack' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Array reference variables living on the Stack",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_3",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Contiguous memory layout and cache locality benefits' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for contiguous memory layout and cache locality benefits.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Contiguous memory layout and cache locality benefits' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Contiguous memory layout and cache locality benefits",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_4",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Multidimensional arrays as arrays of arrays' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for multidimensional arrays as arrays of arrays.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Multidimensional arrays as arrays of arrays' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Multidimensional arrays as arrays of arrays",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_5",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Jagged / ragged arrays with non-uniform row lengths' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for jagged / ragged arrays with non-uniform row lengths.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Jagged / ragged arrays with non-uniform row lengths' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Jagged / ragged arrays with non-uniform row lengths",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_6",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Enhanced for-each loop traversal over arrays' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for enhanced for-each loop traversal over arrays.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Enhanced for-each loop traversal over arrays' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Enhanced for-each loop traversal over arrays",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_7",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Shallow copying with arr.clone() and System.arraycopy()' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for shallow copying with arr.clone() and system.arraycopy().",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Shallow copying with arr.clone() and System.arraycopy()' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Shallow copying with arr.clone() and System.arraycopy()",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_8",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Array parameters in methods: pass-by-value of reference' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for array parameters in methods: pass-by-value of reference.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Array parameters in methods: pass-by-value of reference' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Array parameters in methods: pass-by-value of reference",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_9",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Array objects living on the Java Heap' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for array objects living on the java heap.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Array objects living on the Java Heap' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Array objects living on the Java Heap",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_e_10",
+        "day": 10,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Array reference variables living on the Stack' as explained in Lecture #10?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for array reference variables living on the stack.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #10: How Arrays work in Java, 'Array reference variables living on the Stack' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Array reference variables living on the Stack",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d10_m_1",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Contiguous memory layout and cache locality benefits' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Contiguous memory layout and cache locality benefits' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Contiguous memory layout and cache locality benefits",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_2",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Multidimensional arrays as arrays of arrays' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Multidimensional arrays as arrays of arrays' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Multidimensional arrays as arrays of arrays",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_3",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Jagged / ragged arrays with non-uniform row lengths' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Jagged / ragged arrays with non-uniform row lengths' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Jagged / ragged arrays with non-uniform row lengths",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_4",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Enhanced for-each loop traversal over arrays' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Enhanced for-each loop traversal over arrays' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Enhanced for-each loop traversal over arrays",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_5",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Shallow copying with arr.clone() and System.arraycopy()' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Shallow copying with arr.clone() and System.arraycopy()' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Shallow copying with arr.clone() and System.arraycopy()",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_6",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Array parameters in methods: pass-by-value of reference' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Array parameters in methods: pass-by-value of reference' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Array parameters in methods: pass-by-value of reference",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_7",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Array objects living on the Java Heap' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Array objects living on the Java Heap' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Array objects living on the Java Heap",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_8",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Array reference variables living on the Stack' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Array reference variables living on the Stack' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Array reference variables living on the Stack",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_9",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Contiguous memory layout and cache locality benefits' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Contiguous memory layout and cache locality benefits' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Contiguous memory layout and cache locality benefits",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_m_10",
+        "day": 10,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Multidimensional arrays as arrays of arrays' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Multidimensional arrays as arrays of arrays' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Multidimensional arrays as arrays of arrays",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d10_h_1",
+        "day": 10,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Jagged / ragged arrays with non-uniform row lengths'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Jagged / ragged arrays with non-uniform row lengths'.",
+        "concept": "Jagged / ragged arrays with non-uniform row lengths",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_h_2",
+        "day": 10,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Enhanced for-each loop traversal over arrays'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Enhanced for-each loop traversal over arrays'.",
+        "concept": "Enhanced for-each loop traversal over arrays",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_h_3",
+        "day": 10,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Shallow copying with arr.clone() and System.arraycopy()'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Shallow copying with arr.clone() and System.arraycopy()'.",
+        "concept": "Shallow copying with arr.clone() and System.arraycopy()",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_h_4",
+        "day": 10,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Array parameters in methods: pass-by-value of reference'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Array parameters in methods: pass-by-value of reference'.",
+        "concept": "Array parameters in methods: pass-by-value of reference",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      },
+      {
+        "id": "d10_h_5",
+        "day": 10,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Array objects living on the Java Heap'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Array objects living on the Java Heap'.",
+        "concept": "Array objects living on the Java Heap",
+        "reference": "https://www.baeldung.com/java-arrays-guide"
+      }
+    ]
+  }
+}

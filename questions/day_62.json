@@ -1,0 +1,499 @@
+{
+  "day": 62,
+  "title": "Spring Lecture #5: Spring IOC Container",
+  "topic": "Spring Framework & Spring Boot",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "Core architecture of Spring IOC Container",
+    "Syntax and declaration rules for Spring IOC Container",
+    "Memory and execution lifecycle of Spring IOC Container",
+    "Exception handling and defensive coding in Spring IOC Container",
+    "Edge case handling and validation for Spring IOC Container",
+    "Design patterns and best practices in Spring IOC Container",
+    "Thread-safety and concurrency considerations in Spring IOC Container",
+    "Performance optimization and testing of Spring IOC Container"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d62_e_1",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Core architecture of Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for core architecture of spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Core architecture of Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Core architecture of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_2",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Syntax and declaration rules for Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Syntax and declaration rules for Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Syntax and declaration rules for Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_3",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Memory and execution lifecycle of Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for memory and execution lifecycle of spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Memory and execution lifecycle of Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Memory and execution lifecycle of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_4",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Exception handling and defensive coding in Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for exception handling and defensive coding in spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Exception handling and defensive coding in Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Exception handling and defensive coding in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_5",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Edge case handling and validation for Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for edge case handling and validation for spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Edge case handling and validation for Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Edge case handling and validation for Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_6",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Design patterns and best practices in Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for design patterns and best practices in spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Design patterns and best practices in Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Design patterns and best practices in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_7",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Thread-safety and concurrency considerations in Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for thread-safety and concurrency considerations in spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Thread-safety and concurrency considerations in Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Thread-safety and concurrency considerations in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_8",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Performance optimization and testing of Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for performance optimization and testing of spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Performance optimization and testing of Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Performance optimization and testing of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_9",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Core architecture of Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for core architecture of spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Core architecture of Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Core architecture of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_e_10",
+        "day": 62,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Syntax and declaration rules for Spring IOC Container' as explained in Lecture #62?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for spring ioc container.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #5: Spring IOC Container, 'Syntax and declaration rules for Spring IOC Container' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Syntax and declaration rules for Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d62_m_1",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Memory and execution lifecycle of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_2",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Exception handling and defensive coding in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_3",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Edge case handling and validation for Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Edge case handling and validation for Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Edge case handling and validation for Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_4",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Design patterns and best practices in Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Design patterns and best practices in Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Design patterns and best practices in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_5",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Thread-safety and concurrency considerations in Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Thread-safety and concurrency considerations in Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Thread-safety and concurrency considerations in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_6",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Performance optimization and testing of Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Performance optimization and testing of Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Performance optimization and testing of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_7",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Core architecture of Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Core architecture of Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Core architecture of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_8",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Syntax and declaration rules for Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Syntax and declaration rules for Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Syntax and declaration rules for Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_9",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Memory and execution lifecycle of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_m_10",
+        "day": 62,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Spring IOC Container' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Spring IOC Container' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Exception handling and defensive coding in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d62_h_1",
+        "day": 62,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Edge case handling and validation for Spring IOC Container'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Edge case handling and validation for Spring IOC Container'.",
+        "concept": "Edge case handling and validation for Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_h_2",
+        "day": 62,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Design patterns and best practices in Spring IOC Container'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Design patterns and best practices in Spring IOC Container'.",
+        "concept": "Design patterns and best practices in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_h_3",
+        "day": 62,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Thread-safety and concurrency considerations in Spring IOC Container'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Thread-safety and concurrency considerations in Spring IOC Container'.",
+        "concept": "Thread-safety and concurrency considerations in Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_h_4",
+        "day": 62,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Performance optimization and testing of Spring IOC Container'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Performance optimization and testing of Spring IOC Container'.",
+        "concept": "Performance optimization and testing of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d62_h_5",
+        "day": 62,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Core architecture of Spring IOC Container'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Core architecture of Spring IOC Container'.",
+        "concept": "Core architecture of Spring IOC Container",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ]
+  }
+}

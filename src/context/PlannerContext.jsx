@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import confetti from 'canvas-confetti';
+import { showError, showSuccess, toast } from '../utils/alerts';
 import { INITIAL_ROADMAP_DAYS } from '../data/roadmapData';
 import { PLAYLISTS_DATA } from '../data/playlistsData';
 import { BADGES_CATALOG } from '../data/badgesData';
@@ -191,6 +192,7 @@ export function PlannerProvider({ children }) {
 
   // Trigger confetti burst
   const triggerCelebration = useCallback((title, message) => {
+    if (title) toast(title, { text: message || '', icon: 'success' });
     try {
       confetti({
         particleCount: 80,
@@ -1044,12 +1046,12 @@ export function PlannerProvider({ children }) {
   const importBackup = useCallback((jsonString) => {
     const res = parseAndValidateImportJSON(jsonString);
     if (!res.success) {
-      alert(`Import failed: ${res.error}`);
+      showError('Import failed', res.error);
       return false;
     }
     setState(res.data);
     saveStateToStorage(res.data);
-    alert('Progress restored successfully from backup!');
+    showSuccess('Backup restored', 'Your progress was restored from the backup file.');
     return true;
   }, []);
 

@@ -20,6 +20,7 @@ import {
 import { usePlanner } from '../../context/PlannerContext';
 import { QUESTION_BANK_BY_DAY } from '../../data/questionBankData';
 import ProgressBar from '../common/ProgressBar';
+import { confirmAction, toast } from '../../utils/alerts';
 
 export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
   const {
@@ -150,12 +151,20 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
     setFilterMode('all');
   };
 
-  const handleReset = () => {
-    if (confirm(`Reset all quiz answers for Day ${dayNumber}?`)) {
+  const handleReset = async () => {
+    const ok = await confirmAction({
+      title: `Reset Day ${dayNumber} quiz?`,
+      text: 'All your answers for this day will be cleared.',
+      confirmText: 'Reset Quiz',
+      icon: 'warning',
+      danger: true,
+    });
+    if (ok) {
       resetDayQuiz(dayNumber);
       setSelectedOption(null);
       setIsAnswerSubmitted(false);
       setCurrentQuestionIndex(0);
+      toast('Quiz reset');
     }
   };
 

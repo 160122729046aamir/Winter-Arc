@@ -21,6 +21,7 @@ import { useTheme } from '../context/ThemeContext';
 import Modal from '../components/common/Modal';
 import PauseModal from '../components/common/PauseModal';
 import { formatDate } from '../utils/dateUtils';
+import { showSuccess } from '../utils/alerts';
 
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -91,7 +92,7 @@ export default function SettingsPage() {
   const handleConfirmReset = () => {
     resetAllProgress();
     setIsResetModalOpen(false);
-    alert('All progress has been reset to Day 1.');
+    showSuccess('Progress reset', 'All progress has been reset to Day 1.');
   };
 
   const handleResume = () => {

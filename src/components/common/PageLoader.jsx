@@ -1,17 +1,23 @@
 import React from 'react';
 
+// Glass skeleton that mirrors a typical page layout while a route chunk loads.
 export default function PageLoader() {
+  const block = 'rounded-2xl glass-ultra relative overflow-hidden';
+  const sheen =
+    'absolute inset-0 bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.07)_50%,transparent_70%)] bg-[length:200%_100%] animate-shimmer';
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] p-8 space-y-4 animate-fadeIn">
-      {/* Apple-style spinning indicator */}
-      <div className="relative w-10 h-10 flex items-center justify-center">
-        <div className="absolute inset-0 rounded-full border-2 border-indigo-500/20" />
-        <div className="w-10 h-10 rounded-full border-2 border-transparent border-t-cyan-400 border-r-indigo-500 animate-spin" />
+    <div className="space-y-6 animate-fadeIn" aria-busy="true" aria-label="Loading view">
+      <div className={`${block} h-28`}><div className={sheen} /></div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className={`${block} h-24`}><div className={sheen} /></div>
+        ))}
       </div>
-      <p className="text-xs font-mono text-slate-400 tracking-wider uppercase">
-        Loading view...
-      </p>
+      <div className="grid lg:grid-cols-3 gap-4">
+        <div className={`${block} h-64 lg:col-span-2`}><div className={sheen} /></div>
+        <div className={`${block} h-64`}><div className={sheen} /></div>
+      </div>
     </div>
   );
 }
-

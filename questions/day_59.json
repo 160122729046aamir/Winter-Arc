@@ -1,0 +1,499 @@
+{
+  "day": 59,
+  "title": "Spring Lecture #2: Build Your First Spring Boot Application",
+  "topic": "Spring Framework & Spring Boot",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "Core architecture of Build Your First Spring Boot Application",
+    "Syntax and declaration rules for Build Your First Spring Boot Application",
+    "Memory and execution lifecycle of Build Your First Spring Boot Application",
+    "Exception handling and defensive coding in Build Your First Spring Boot Application",
+    "Edge case handling and validation for Build Your First Spring Boot Application",
+    "Design patterns and best practices in Build Your First Spring Boot Application",
+    "Thread-safety and concurrency considerations in Build Your First Spring Boot Application",
+    "Performance optimization and testing of Build Your First Spring Boot Application"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d59_e_1",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Core architecture of Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for core architecture of build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Core architecture of Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Core architecture of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_2",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Syntax and declaration rules for Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Syntax and declaration rules for Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Syntax and declaration rules for Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_3",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Memory and execution lifecycle of Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for memory and execution lifecycle of build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Memory and execution lifecycle of Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Memory and execution lifecycle of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_4",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Exception handling and defensive coding in Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for exception handling and defensive coding in build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Exception handling and defensive coding in Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Exception handling and defensive coding in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_5",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Edge case handling and validation for Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for edge case handling and validation for build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Edge case handling and validation for Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Edge case handling and validation for Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_6",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Design patterns and best practices in Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for design patterns and best practices in build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Design patterns and best practices in Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Design patterns and best practices in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_7",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Thread-safety and concurrency considerations in Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for thread-safety and concurrency considerations in build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Thread-safety and concurrency considerations in Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Thread-safety and concurrency considerations in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_8",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Performance optimization and testing of Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for performance optimization and testing of build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Performance optimization and testing of Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Performance optimization and testing of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_9",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Core architecture of Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for core architecture of build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Core architecture of Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Core architecture of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_e_10",
+        "day": 59,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Which statement accurately describes 'Syntax and declaration rules for Build Your First Spring Boot Application' as explained in Lecture #59?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for build your first spring boot application.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Spring Lecture #2: Build Your First Spring Boot Application, 'Syntax and declaration rules for Build Your First Spring Boot Application' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Syntax and declaration rules for Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d59_m_1",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Memory and execution lifecycle of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_2",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Exception handling and defensive coding in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_3",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Edge case handling and validation for Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Edge case handling and validation for Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Edge case handling and validation for Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_4",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Design patterns and best practices in Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Design patterns and best practices in Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Design patterns and best practices in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_5",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Thread-safety and concurrency considerations in Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Thread-safety and concurrency considerations in Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Thread-safety and concurrency considerations in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_6",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Performance optimization and testing of Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Performance optimization and testing of Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Performance optimization and testing of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_7",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Core architecture of Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Core architecture of Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Core architecture of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_8",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Syntax and declaration rules for Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Syntax and declaration rules for Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Syntax and declaration rules for Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_9",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Memory and execution lifecycle of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_m_10",
+        "day": 59,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Build Your First Spring Boot Application' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Build Your First Spring Boot Application' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Exception handling and defensive coding in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d59_h_1",
+        "day": 59,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Edge case handling and validation for Build Your First Spring Boot Application'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Edge case handling and validation for Build Your First Spring Boot Application'.",
+        "concept": "Edge case handling and validation for Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_h_2",
+        "day": 59,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Design patterns and best practices in Build Your First Spring Boot Application'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Design patterns and best practices in Build Your First Spring Boot Application'.",
+        "concept": "Design patterns and best practices in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_h_3",
+        "day": 59,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Thread-safety and concurrency considerations in Build Your First Spring Boot Application'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Thread-safety and concurrency considerations in Build Your First Spring Boot Application'.",
+        "concept": "Thread-safety and concurrency considerations in Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_h_4",
+        "day": 59,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Performance optimization and testing of Build Your First Spring Boot Application'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Performance optimization and testing of Build Your First Spring Boot Application'.",
+        "concept": "Performance optimization and testing of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      },
+      {
+        "id": "d59_h_5",
+        "day": 59,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Spring Framework & Spring Boot",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Core architecture of Build Your First Spring Boot Application'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Core architecture of Build Your First Spring Boot Application'.",
+        "concept": "Core architecture of Build Your First Spring Boot Application",
+        "reference": "https://docs.spring.io/spring-framework/reference/"
+      }
+    ]
+  }
+}

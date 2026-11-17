@@ -1,0 +1,499 @@
+{
+  "day": 6,
+  "title": "Lecture #6: Java Operators",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "Arithmetic operators (+, -, *, /, %) and integer division truncation",
+    "Unary prefix vs postfix increment/decrement (++x vs x++)",
+    "Relational comparison operators (==, !=, <, >, <=, >=)",
+    "Logical operators (&&, ||, !) and short-circuit evaluation rules",
+    "Bitwise operators (&, |, ^, ~) and mask manipulations",
+    "Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)",
+    "Ternary conditional operator (? :) semantics and type deduction",
+    "Operator precedence and associativity order"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d6_e_1",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Arithmetic operators (+, -, *, /, %) and integer division truncation' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for arithmetic operators (+, -, *, /, %) and integer division truncation.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Arithmetic operators (+, -, *, /, %) and integer division truncation' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Arithmetic operators (+, -, *, /, %) and integer division truncation",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_2",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Unary prefix vs postfix increment/decrement (++x vs x++)' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for unary prefix vs postfix increment/decrement (++x vs x++).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Unary prefix vs postfix increment/decrement (++x vs x++)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Unary prefix vs postfix increment/decrement (++x vs x++)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_3",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Relational comparison operators (==, !=, <, >, <=, >=)' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for relational comparison operators (==, !=, <, >, <=, >=).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Relational comparison operators (==, !=, <, >, <=, >=)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Relational comparison operators (==, !=, <, >, <=, >=)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_4",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Logical operators (&&, ||, !) and short-circuit evaluation rules' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for logical operators (&&, ||, !) and short-circuit evaluation rules.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Logical operators (&&, ||, !) and short-circuit evaluation rules' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Logical operators (&&, ||, !) and short-circuit evaluation rules",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_5",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Bitwise operators (&, |, ^, ~) and mask manipulations' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for bitwise operators (&, |, ^, ~) and mask manipulations.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Bitwise operators (&, |, ^, ~) and mask manipulations' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Bitwise operators (&, |, ^, ~) and mask manipulations",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_6",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_7",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Ternary conditional operator (? :) semantics and type deduction' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for ternary conditional operator (? :) semantics and type deduction.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Ternary conditional operator (? :) semantics and type deduction' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Ternary conditional operator (? :) semantics and type deduction",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_8",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Operator precedence and associativity order' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for operator precedence and associativity order.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Operator precedence and associativity order' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Operator precedence and associativity order",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_9",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Arithmetic operators (+, -, *, /, %) and integer division truncation' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for arithmetic operators (+, -, *, /, %) and integer division truncation.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Arithmetic operators (+, -, *, /, %) and integer division truncation' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Arithmetic operators (+, -, *, /, %) and integer division truncation",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_e_10",
+        "day": 6,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Unary prefix vs postfix increment/decrement (++x vs x++)' as explained in Lecture #6?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for unary prefix vs postfix increment/decrement (++x vs x++).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #6: Java Operators, 'Unary prefix vs postfix increment/decrement (++x vs x++)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Unary prefix vs postfix increment/decrement (++x vs x++)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d6_m_1",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Relational comparison operators (==, !=, <, >, <=, >=)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Relational comparison operators (==, !=, <, >, <=, >=)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Relational comparison operators (==, !=, <, >, <=, >=)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_2",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Logical operators (&&, ||, !) and short-circuit evaluation rules' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Logical operators (&&, ||, !) and short-circuit evaluation rules' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Logical operators (&&, ||, !) and short-circuit evaluation rules",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_3",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Bitwise operators (&, |, ^, ~) and mask manipulations' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Bitwise operators (&, |, ^, ~) and mask manipulations' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Bitwise operators (&, |, ^, ~) and mask manipulations",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_4",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_5",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Ternary conditional operator (? :) semantics and type deduction' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Ternary conditional operator (? :) semantics and type deduction' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Ternary conditional operator (? :) semantics and type deduction",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_6",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Operator precedence and associativity order' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Operator precedence and associativity order' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Operator precedence and associativity order",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_7",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Arithmetic operators (+, -, *, /, %) and integer division truncation' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Arithmetic operators (+, -, *, /, %) and integer division truncation' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Arithmetic operators (+, -, *, /, %) and integer division truncation",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_8",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Unary prefix vs postfix increment/decrement (++x vs x++)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Unary prefix vs postfix increment/decrement (++x vs x++)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Unary prefix vs postfix increment/decrement (++x vs x++)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_9",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Relational comparison operators (==, !=, <, >, <=, >=)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Relational comparison operators (==, !=, <, >, <=, >=)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Relational comparison operators (==, !=, <, >, <=, >=)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_m_10",
+        "day": 6,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Logical operators (&&, ||, !) and short-circuit evaluation rules' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Logical operators (&&, ||, !) and short-circuit evaluation rules' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Logical operators (&&, ||, !) and short-circuit evaluation rules",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d6_h_1",
+        "day": 6,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Bitwise operators (&, |, ^, ~) and mask manipulations'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Bitwise operators (&, |, ^, ~) and mask manipulations'.",
+        "concept": "Bitwise operators (&, |, ^, ~) and mask manipulations",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_h_2",
+        "day": 6,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)'.",
+        "concept": "Shift operators: left shift (<<), arithmetic right shift (>>), logical right shift (>>>)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_h_3",
+        "day": 6,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Ternary conditional operator (? :) semantics and type deduction'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Ternary conditional operator (? :) semantics and type deduction'.",
+        "concept": "Ternary conditional operator (? :) semantics and type deduction",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_h_4",
+        "day": 6,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Operator precedence and associativity order'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Operator precedence and associativity order'.",
+        "concept": "Operator precedence and associativity order",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      },
+      {
+        "id": "d6_h_5",
+        "day": 6,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Arithmetic operators (+, -, *, /, %) and integer division truncation'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Arithmetic operators (+, -, *, /, %) and integer division truncation'.",
+        "concept": "Arithmetic operators (+, -, *, /, %) and integer division truncation",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+      }
+    ]
+  }
+}

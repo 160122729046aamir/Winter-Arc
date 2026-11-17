@@ -1,5 +1,6 @@
 import React, { useState, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { ThemeProvider } from './context/ThemeContext';
 import { PlannerProvider } from './context/PlannerContext';
 import Navbar from './components/common/Navbar';
@@ -20,6 +21,54 @@ const NotesRevisionPage = lazy(() => import('./pages/NotesRevisionPage'));
 const AchievementsPage = lazy(() => import('./pages/AchievementsPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
+// Opacity + small lift only. No filter, and transform resolves to `none` when settled,
+// so `fixed` modals inside pages keep the viewport as their containing block.
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  enter: {
+    opacity: 1, y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+  },
+  exit: {
+    opacity: 0, y: -6,
+    transition: { duration: 0.16, ease: [0.4, 0, 1, 1] },
+  },
+};
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+        className="page-stagger"
+      >
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/plan" element={<RoadmapPage />} />
+            <Route path="/daily-planner" element={<DailyPlannerPage />} />
+            <Route path="/sprints" element={<WeeklySprintsPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/playlists" element={<PlaylistsPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/timer" element={<StudyTimerPage />} />
+            <Route path="/notes" element={<NotesRevisionPage />} />
+            <Route path="/achievements" element={<AchievementsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 function AppLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -27,6 +76,12 @@ function AppLayout() {
     <div className="min-h-screen text-slate-100 flex flex-col font-sans transition-colors duration-300 relative">
       {/* Ambient Apple Liquid Glass Multi-Glow Background */}
       <div className="apple-liquid-bg" />
+      <div className="aurora" aria-hidden="true">
+        <div className="aurora-blob b1" />
+        <div className="aurora-blob b2" />
+        <div className="aurora-blob b3" />
+        <div className="aurora-blob b4" />
+      </div>
 
       {/* Floating Vision-style Top Navigation */}
       <Navbar
@@ -44,22 +99,7 @@ function AppLayout() {
         {/* Main Content Area */}
         <main className="flex-1 lg:pl-72 min-w-0 flex flex-col justify-between transition-all duration-300">
           <div className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/plan" element={<RoadmapPage />} />
-                <Route path="/daily-planner" element={<DailyPlannerPage />} />
-                <Route path="/sprints" element={<WeeklySprintsPage />} />
-                <Route path="/projects" element={<ProjectsPage />} />
-                <Route path="/playlists" element={<PlaylistsPage />} />
-                <Route path="/analytics" element={<AnalyticsPage />} />
-                <Route path="/timer" element={<StudyTimerPage />} />
-                <Route path="/notes" element={<NotesRevisionPage />} />
-                <Route path="/achievements" element={<AchievementsPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Suspense>
+            <AnimatedRoutes />
           </div>
 
           {/* Liquid Glass Footer */}
@@ -80,7 +120,9 @@ export default function App() {
       <ThemeProvider>
         <PlannerProvider>
           <BrowserRouter>
-            <AppLayout />
+            <MotionConfig reducedMotion="user">
+              <AppLayout />
+            </MotionConfig>
           </BrowserRouter>
         </PlannerProvider>
       </ThemeProvider>

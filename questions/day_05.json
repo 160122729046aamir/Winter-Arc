@@ -1,0 +1,499 @@
+{
+  "day": 5,
+  "title": "Lecture #5: Java Type Conversions & Type Promotions Explained",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "Widening (implicit) conversions: byte -> short -> int -> long -> float -> double",
+    "Narrowing (explicit) conversions and data truncation risk",
+    "Automatic type promotion in arithmetic expressions",
+    "Promotion of byte and short operands to int during evaluation",
+    "Floating-point to integer casting (truncation towards zero)",
+    "char to int ASCII/Unicode code point conversions",
+    "Compound assignment operator behavior (+= carries implicit cast)",
+    "Compile-time type safety guards"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d5_e_1",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for widening (implicit) conversions: byte -> short -> int -> long -> float -> double.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Widening (implicit) conversions: byte -> short -> int -> long -> float -> double",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_2",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Narrowing (explicit) conversions and data truncation risk' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for narrowing (explicit) conversions and data truncation risk.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Narrowing (explicit) conversions and data truncation risk' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Narrowing (explicit) conversions and data truncation risk",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_3",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Automatic type promotion in arithmetic expressions' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for automatic type promotion in arithmetic expressions.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Automatic type promotion in arithmetic expressions' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Automatic type promotion in arithmetic expressions",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_4",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Promotion of byte and short operands to int during evaluation' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for promotion of byte and short operands to int during evaluation.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Promotion of byte and short operands to int during evaluation' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Promotion of byte and short operands to int during evaluation",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_5",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Floating-point to integer casting (truncation towards zero)' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for floating-point to integer casting (truncation towards zero).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Floating-point to integer casting (truncation towards zero)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Floating-point to integer casting (truncation towards zero)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_6",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'char to int ASCII/Unicode code point conversions' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for char to int ascii/unicode code point conversions.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'char to int ASCII/Unicode code point conversions' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "char to int ASCII/Unicode code point conversions",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_7",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Compound assignment operator behavior (+= carries implicit cast)' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for compound assignment operator behavior (+= carries implicit cast).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Compound assignment operator behavior (+= carries implicit cast)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Compound assignment operator behavior (+= carries implicit cast)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_8",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Compile-time type safety guards' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for compile-time type safety guards.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Compile-time type safety guards' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Compile-time type safety guards",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_9",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for widening (implicit) conversions: byte -> short -> int -> long -> float -> double.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Widening (implicit) conversions: byte -> short -> int -> long -> float -> double",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_e_10",
+        "day": 5,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Narrowing (explicit) conversions and data truncation risk' as explained in Lecture #5?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for narrowing (explicit) conversions and data truncation risk.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #5: Java Type Conversions & Type Promotions Explained, 'Narrowing (explicit) conversions and data truncation risk' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Narrowing (explicit) conversions and data truncation risk",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d5_m_1",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Automatic type promotion in arithmetic expressions' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Automatic type promotion in arithmetic expressions' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Automatic type promotion in arithmetic expressions",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_2",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Promotion of byte and short operands to int during evaluation' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Promotion of byte and short operands to int during evaluation' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Promotion of byte and short operands to int during evaluation",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_3",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Floating-point to integer casting (truncation towards zero)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Floating-point to integer casting (truncation towards zero)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Floating-point to integer casting (truncation towards zero)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_4",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'char to int ASCII/Unicode code point conversions' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'char to int ASCII/Unicode code point conversions' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "char to int ASCII/Unicode code point conversions",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_5",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Compound assignment operator behavior (+= carries implicit cast)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Compound assignment operator behavior (+= carries implicit cast)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Compound assignment operator behavior (+= carries implicit cast)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_6",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Compile-time type safety guards' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Compile-time type safety guards' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Compile-time type safety guards",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_7",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Widening (implicit) conversions: byte -> short -> int -> long -> float -> double",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_8",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Narrowing (explicit) conversions and data truncation risk' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Narrowing (explicit) conversions and data truncation risk' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Narrowing (explicit) conversions and data truncation risk",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_9",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Automatic type promotion in arithmetic expressions' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Automatic type promotion in arithmetic expressions' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Automatic type promotion in arithmetic expressions",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_m_10",
+        "day": 5,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Promotion of byte and short operands to int during evaluation' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Promotion of byte and short operands to int during evaluation' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Promotion of byte and short operands to int during evaluation",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d5_h_1",
+        "day": 5,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Floating-point to integer casting (truncation towards zero)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Floating-point to integer casting (truncation towards zero)'.",
+        "concept": "Floating-point to integer casting (truncation towards zero)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_h_2",
+        "day": 5,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'char to int ASCII/Unicode code point conversions'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'char to int ASCII/Unicode code point conversions'.",
+        "concept": "char to int ASCII/Unicode code point conversions",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_h_3",
+        "day": 5,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Compound assignment operator behavior (+= carries implicit cast)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Compound assignment operator behavior (+= carries implicit cast)'.",
+        "concept": "Compound assignment operator behavior (+= carries implicit cast)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_h_4",
+        "day": 5,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Compile-time type safety guards'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Compile-time type safety guards'.",
+        "concept": "Compile-time type safety guards",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      },
+      {
+        "id": "d5_h_5",
+        "day": 5,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Widening (implicit) conversions: byte -> short -> int -> long -> float -> double'.",
+        "concept": "Widening (implicit) conversions: byte -> short -> int -> long -> float -> double",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-5.html"
+      }
+    ]
+  }
+}

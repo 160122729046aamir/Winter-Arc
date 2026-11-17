@@ -27,6 +27,7 @@ import ProgressBar from '../components/common/ProgressBar';
 import Modal from '../components/common/Modal';
 import PauseModal from '../components/common/PauseModal';
 import DailyQuizWidget from '../components/quiz/DailyQuizWidget';
+import { confirmAction, toast } from '../utils/alerts';
 
 export default function DailyPlannerPage() {
   const {
@@ -196,9 +197,15 @@ export default function DailyPlannerPage() {
             {/* Move to Today button */}
             {!isToday && (
               <button
-                onClick={() => {
-                  if (window.confirm(`Set Day ${currentDay.day} (${currentDay.title}) as TODAY? All subsequent lectures will be automatically shifted day-by-day.`)) {
+                onClick={async () => {
+                  const ok = await confirmAction({
+                    title: `Set Day ${currentDay.day} as today?`,
+                    text: `${currentDay.title} becomes today's lecture. Later lectures shift day by day.`,
+                    confirmText: 'Move to Today',
+                  });
+                  if (ok) {
                     moveDayToToday(currentDay.day);
+                    toast(`Day ${currentDay.day} is now today`);
                   }
                 }}
                 className="px-3 py-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
@@ -212,9 +219,16 @@ export default function DailyPlannerPage() {
             {/* Skip / Move to Tomorrow button */}
             {!currentDay.completed && (
               <button
-                onClick={() => {
-                  if (window.confirm(`Skip Day ${currentDay.day} and move it to tomorrow? Upcoming days will shift forward so you don't miss any video.`)) {
+                onClick={async () => {
+                  const ok = await confirmAction({
+                    title: `Skip Day ${currentDay.day}?`,
+                    text: "It moves to tomorrow and upcoming days shift forward, so you don't miss any video.",
+                    confirmText: 'Move to Tomorrow',
+                    icon: 'warning',
+                  });
+                  if (ok) {
                     skipAndMoveToNextDay(currentDay.day, 'Skipped & Moved Forward');
+                    toast(`Day ${currentDay.day} moved to tomorrow`, { icon: 'info' });
                   }
                 }}
                 className="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 text-cyan-300 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"

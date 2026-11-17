@@ -1,0 +1,499 @@
+{
+  "day": 4,
+  "title": "Lecture #4: How Java Stores Negative & Floating Point Numbers",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "2's Complement representation of signed integers",
+    "Why 2's Complement is used over 1's complement or sign-magnitude",
+    "Bit-level negation (invert bits and add 1)",
+    "Integer ranges: -2^(n-1) to 2^(n-1)-1",
+    "Integer overflow and underflow wrapping semantics",
+    "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
+    "Floating point representation limitations and precision issues",
+    "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d4_e_1",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes '2's Complement representation of signed integers' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for 2's complement representation of signed integers.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, '2's Complement representation of signed integers' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "2's Complement representation of signed integers",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_2",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Why 2's Complement is used over 1's complement or sign-magnitude' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for why 2's complement is used over 1's complement or sign-magnitude.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Why 2's Complement is used over 1's complement or sign-magnitude' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Why 2's Complement is used over 1's complement or sign-magnitude",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_3",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Bit-level negation (invert bits and add 1)' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for bit-level negation (invert bits and add 1).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Bit-level negation (invert bits and add 1)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Bit-level negation (invert bits and add 1)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_4",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Integer ranges: -2^(n-1) to 2^(n-1)-1' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for integer ranges: -2^(n-1) to 2^(n-1)-1.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Integer ranges: -2^(n-1) to 2^(n-1)-1' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Integer ranges: -2^(n-1) to 2^(n-1)-1",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_5",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Integer overflow and underflow wrapping semantics' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for integer overflow and underflow wrapping semantics.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Integer overflow and underflow wrapping semantics' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Integer overflow and underflow wrapping semantics",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_6",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for ieee 754 floating-point standard (sign, exponent, mantissa).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_7",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Floating point representation limitations and precision issues' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for floating point representation limitations and precision issues.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Floating point representation limitations and precision issues' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Floating point representation limitations and precision issues",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_8",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for why 0.1 + 0.2 != 0.3 in ieee 754 and when to use bigdecimal.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_9",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes '2's Complement representation of signed integers' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for 2's complement representation of signed integers.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, '2's Complement representation of signed integers' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "2's Complement representation of signed integers",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_e_10",
+        "day": 4,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Why 2's Complement is used over 1's complement or sign-magnitude' as explained in Lecture #4?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for why 2's complement is used over 1's complement or sign-magnitude.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Why 2's Complement is used over 1's complement or sign-magnitude' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Why 2's Complement is used over 1's complement or sign-magnitude",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d4_m_1",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Bit-level negation (invert bits and add 1)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Bit-level negation (invert bits and add 1)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Bit-level negation (invert bits and add 1)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_2",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Integer ranges: -2^(n-1) to 2^(n-1)-1' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Integer ranges: -2^(n-1) to 2^(n-1)-1' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Integer ranges: -2^(n-1) to 2^(n-1)-1",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_3",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Integer overflow and underflow wrapping semantics' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Integer overflow and underflow wrapping semantics' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Integer overflow and underflow wrapping semantics",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_4",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_5",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Floating point representation limitations and precision issues' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Floating point representation limitations and precision issues' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Floating point representation limitations and precision issues",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_6",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_7",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during '2's Complement representation of signed integers' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of '2's Complement representation of signed integers' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "2's Complement representation of signed integers",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_8",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Why 2's Complement is used over 1's complement or sign-magnitude' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Why 2's Complement is used over 1's complement or sign-magnitude' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Why 2's Complement is used over 1's complement or sign-magnitude",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_9",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Bit-level negation (invert bits and add 1)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Bit-level negation (invert bits and add 1)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Bit-level negation (invert bits and add 1)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_m_10",
+        "day": 4,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Integer ranges: -2^(n-1) to 2^(n-1)-1' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Integer ranges: -2^(n-1) to 2^(n-1)-1' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Integer ranges: -2^(n-1) to 2^(n-1)-1",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d4_h_1",
+        "day": 4,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Integer overflow and underflow wrapping semantics'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Integer overflow and underflow wrapping semantics'.",
+        "concept": "Integer overflow and underflow wrapping semantics",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_h_2",
+        "day": 4,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)'.",
+        "concept": "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_h_3",
+        "day": 4,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Floating point representation limitations and precision issues'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Floating point representation limitations and precision issues'.",
+        "concept": "Floating point representation limitations and precision issues",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_h_4",
+        "day": 4,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal'.",
+        "concept": "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      },
+      {
+        "id": "d4_h_5",
+        "day": 4,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with '2's Complement representation of signed integers'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for '2's Complement representation of signed integers'.",
+        "concept": "2's Complement representation of signed integers",
+        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+      }
+    ]
+  }
+}

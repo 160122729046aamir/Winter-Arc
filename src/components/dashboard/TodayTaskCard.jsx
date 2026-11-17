@@ -15,6 +15,7 @@ import {
 import { usePlanner } from '../../context/PlannerContext';
 import { formatDate, formatDateWithDay, formatMinutesHuman } from '../../utils/dateUtils';
 import ProgressBar from '../common/ProgressBar';
+import { confirmAction, toast } from '../../utils/alerts';
 
 export default function TodayTaskCard() {
   const {
@@ -206,9 +207,16 @@ export default function TodayTaskCard() {
                 <CheckSquare className="w-4 h-4" /> Complete Day
               </button>
               <button
-                onClick={() => {
-                  if (window.confirm(`Skip Day ${todayDay.day} and move it to tomorrow? Your schedule will shift forward.`)) {
+                onClick={async () => {
+                  const ok = await confirmAction({
+                    title: `Skip Day ${todayDay.day}?`,
+                    text: 'It moves to tomorrow and your schedule shifts forward.',
+                    confirmText: 'Move to Tomorrow',
+                    icon: 'warning',
+                  });
+                  if (ok) {
                     skipAndMoveToNextDay(todayDay.day, 'Skipped from Dashboard');
+                    toast(`Day ${todayDay.day} moved to tomorrow`, { icon: 'info' });
                   }
                 }}
                 className="w-full sm:w-auto px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 text-cyan-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"

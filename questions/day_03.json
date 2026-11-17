@@ -1,0 +1,499 @@
+{
+  "day": 3,
+  "title": "Lecture #3: Java Variables & Data Types Explained",
+  "topic": "Core Java",
+  "totalQuestions": 25,
+  "topicsCovered": [
+    "Primitive types: byte (1B), short (2B), int (4B), long (8B)",
+    "Floating point primitives: float (4B), double (8B)",
+    "char (2-byte Unicode UTF-16) and boolean (1-bit logical value)",
+    "Variable declaration, initialization, and assignment rules",
+    "Identifiers: legal characters, case sensitivity, camelCase style",
+    "Literals: integer (decimal, hex, binary), float, char, string",
+    "Java reserved keywords and forbidden identifier names",
+    "Memory footprint of primitive variables on the stack"
+  ],
+  "questions": {
+    "easy": [
+      {
+        "id": "d3_e_1",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Primitive types: byte (1B), short (2B), int (4B), long (8B)' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for primitive types: byte (1b), short (2b), int (4b), long (8b).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Primitive types: byte (1B), short (2B), int (4B), long (8B)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Primitive types: byte (1B), short (2B), int (4B), long (8B)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_2",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Floating point primitives: float (4B), double (8B)' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for floating point primitives: float (4b), double (8b).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Floating point primitives: float (4B), double (8B)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Floating point primitives: float (4B), double (8B)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_3",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'char (2-byte Unicode UTF-16) and boolean (1-bit logical value)' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for char (2-byte unicode utf-16) and boolean (1-bit logical value).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'char (2-byte Unicode UTF-16) and boolean (1-bit logical value)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "char (2-byte Unicode UTF-16) and boolean (1-bit logical value)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_4",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Variable declaration, initialization, and assignment rules' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for variable declaration, initialization, and assignment rules.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Variable declaration, initialization, and assignment rules' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Variable declaration, initialization, and assignment rules",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_5",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Identifiers: legal characters, case sensitivity, camelCase style' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for identifiers: legal characters, case sensitivity, camelcase style.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Identifiers: legal characters, case sensitivity, camelCase style' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Identifiers: legal characters, case sensitivity, camelCase style",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_6",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Literals: integer (decimal, hex, binary), float, char, string' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for literals: integer (decimal, hex, binary), float, char, string.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Literals: integer (decimal, hex, binary), float, char, string' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Literals: integer (decimal, hex, binary), float, char, string",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_7",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Java reserved keywords and forbidden identifier names' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for java reserved keywords and forbidden identifier names.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Java reserved keywords and forbidden identifier names' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Java reserved keywords and forbidden identifier names",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_8",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Memory footprint of primitive variables on the stack' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for memory footprint of primitive variables on the stack.",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Memory footprint of primitive variables on the stack' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Memory footprint of primitive variables on the stack",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_9",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Primitive types: byte (1B), short (2B), int (4B), long (8B)' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for primitive types: byte (1b), short (2b), int (4b), long (8b).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Primitive types: byte (1B), short (2B), int (4B), long (8B)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Primitive types: byte (1B), short (2B), int (4B), long (8B)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_e_10",
+        "day": 3,
+        "difficulty": "easy",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Which statement accurately describes 'Floating point primitives: float (4B), double (8B)' as explained in Lecture #3?",
+        "codeSnippet": null,
+        "options": [
+          "It is a core Java/Spring feature providing standard language guarantees for floating point primitives: float (4b), double (8b).",
+          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
+          "It operates solely by converting all instructions into unmanaged static global variables.",
+          "It is an optional third-party library that cannot run on standard JVM installations."
+        ],
+        "correctAnswer": 0,
+        "explanation": "In Lecture #3: Java Variables & Data Types Explained, 'Floating point primitives: float (4B), double (8B)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
+        "concept": "Floating point primitives: float (4B), double (8B)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      }
+    ],
+    "medium": [
+      {
+        "id": "d3_m_1",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'char (2-byte Unicode UTF-16) and boolean (1-bit logical value)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'char (2-byte Unicode UTF-16) and boolean (1-bit logical value)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "char (2-byte Unicode UTF-16) and boolean (1-bit logical value)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_2",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Variable declaration, initialization, and assignment rules' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Variable declaration, initialization, and assignment rules' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Variable declaration, initialization, and assignment rules",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_3",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Identifiers: legal characters, case sensitivity, camelCase style' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Identifiers: legal characters, case sensitivity, camelCase style' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Identifiers: legal characters, case sensitivity, camelCase style",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_4",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Literals: integer (decimal, hex, binary), float, char, string' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Literals: integer (decimal, hex, binary), float, char, string' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Literals: integer (decimal, hex, binary), float, char, string",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_5",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Java reserved keywords and forbidden identifier names' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Java reserved keywords and forbidden identifier names' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Java reserved keywords and forbidden identifier names",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_6",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Memory footprint of primitive variables on the stack' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Memory footprint of primitive variables on the stack' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Memory footprint of primitive variables on the stack",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_7",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Primitive types: byte (1B), short (2B), int (4B), long (8B)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Primitive types: byte (1B), short (2B), int (4B), long (8B)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Primitive types: byte (1B), short (2B), int (4B), long (8B)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_8",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Floating point primitives: float (4B), double (8B)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Floating point primitives: float (4B), double (8B)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Floating point primitives: float (4B), double (8B)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_9",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'char (2-byte Unicode UTF-16) and boolean (1-bit logical value)' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'char (2-byte Unicode UTF-16) and boolean (1-bit logical value)' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "char (2-byte Unicode UTF-16) and boolean (1-bit logical value)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_m_10",
+        "day": 3,
+        "difficulty": "medium",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "Under the hood, what occurs during 'Variable declaration, initialization, and assignment rules' in production backend execution?",
+        "codeSnippet": null,
+        "options": [
+          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
+          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
+          "All local variables are promoted to global system properties bypassing garbage collection.",
+          "The operation is silently converted into an asynchronous unmonitored background daemon."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Understanding the runtime internals of 'Variable declaration, initialization, and assignment rules' ensures high performance, proper memory utilization, and thread safety in backend services.",
+        "concept": "Variable declaration, initialization, and assignment rules",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      }
+    ],
+    "hard": [
+      {
+        "id": "d3_h_1",
+        "day": 3,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Identifiers: legal characters, case sensitivity, camelCase style'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Identifiers: legal characters, case sensitivity, camelCase style'.",
+        "concept": "Identifiers: legal characters, case sensitivity, camelCase style",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_h_2",
+        "day": 3,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Literals: integer (decimal, hex, binary), float, char, string'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Literals: integer (decimal, hex, binary), float, char, string'.",
+        "concept": "Literals: integer (decimal, hex, binary), float, char, string",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_h_3",
+        "day": 3,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Java reserved keywords and forbidden identifier names'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Java reserved keywords and forbidden identifier names'.",
+        "concept": "Java reserved keywords and forbidden identifier names",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_h_4",
+        "day": 3,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Memory footprint of primitive variables on the stack'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Memory footprint of primitive variables on the stack'.",
+        "concept": "Memory footprint of primitive variables on the stack",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      },
+      {
+        "id": "d3_h_5",
+        "day": 3,
+        "difficulty": "hard",
+        "type": "mcq",
+        "topic": "Core Java",
+        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Primitive types: byte (1B), short (2B), int (4B), long (8B)'?",
+        "codeSnippet": null,
+        "options": [
+          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
+          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
+          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
+          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+        ],
+        "correctAnswer": 0,
+        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Primitive types: byte (1B), short (2B), int (4B), long (8B)'.",
+        "concept": "Primitive types: byte (1B), short (2B), int (4B), long (8B)",
+        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+      }
+    ]
+  }
+}

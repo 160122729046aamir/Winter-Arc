@@ -15,6 +15,7 @@ import {
 import { usePlanner } from '../context/PlannerContext';
 import { TOP_INTERVIEW_QUESTIONS } from '../data/interviewQuestionsData';
 import { formatDate } from '../utils/dateUtils';
+import { confirmAction, toast } from '../utils/alerts';
 
 export default function NotesRevisionPage() {
   const { days, updateDayNotes } = usePlanner();
@@ -77,9 +78,17 @@ export default function NotesRevisionPage() {
     setSelectedDayToEdit(null);
   };
 
-  const handleDeleteNotes = (dayNumber) => {
-    if (confirm(`Clear personal notes for Day ${dayNumber}?`)) {
+  const handleDeleteNotes = async (dayNumber) => {
+    const ok = await confirmAction({
+      title: `Clear Day ${dayNumber} notes?`,
+      text: "Your personal notes for this day will be deleted. This can't be undone.",
+      confirmText: 'Clear Notes',
+      icon: 'warning',
+      danger: true,
+    });
+    if (ok) {
       updateDayNotes(dayNumber, '');
+      toast('Notes cleared');
     }
   };
 
