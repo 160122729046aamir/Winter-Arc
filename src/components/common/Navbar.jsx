@@ -15,11 +15,14 @@ import {
 } from 'lucide-react';
 import { usePlanner } from '../../context/PlannerContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useTimer, formatClock } from '../../context/TimerContext';
 
 export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
   const { currentChallengeDay, stats, xp, journeyStatus, days } = usePlanner();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const timer = useTimer();
+  const timerActive = timer.running || timer.elapsedSec > 0;
 
   return (
     <header className="sticky top-0 z-40 w-full glass-ultra border-b border-white/[0.08] transition-colors duration-300">
@@ -48,7 +51,7 @@ export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
                 </span>
               </div>
               <p className="text-[10px] text-slate-400 hidden md:block tracking-tight">
-                90 Days of Backend Engineering
+                {days?.length || 97} Days of Backend Engineering
               </p>
             </div>
           </Link>
@@ -102,10 +105,17 @@ export default function Navbar({ onMobileMenuToggle, isMobileMenuOpen }) {
           {/* Study Timer Glass Pill */}
           <button
             onClick={() => navigate('/timer')}
-            title="Open Pomodoro Study Timer"
-            className="p-2 rounded-xl glass-ultra text-slate-400 hover:text-slate-100 hover:bg-white/[0.08] transition-colors apple-press border border-white/10"
+            title={timerActive ? `${timer.presetName} ${timer.running ? 'running' : 'paused'} — open timer` : 'Open Pomodoro Study Timer'}
+            className={`flex items-center gap-1.5 p-2 rounded-xl glass-ultra hover:bg-white/[0.08] transition-colors apple-press border ${
+              timerActive
+                ? (timer.mode === 'focus' ? 'border-indigo-400/40 text-indigo-200' : 'border-emerald-400/40 text-emerald-200')
+                : 'border-white/10 text-slate-400 hover:text-slate-100'
+            }`}
           >
-            <Timer className="w-4 h-4" />
+            <Timer className={`w-4 h-4 ${timer.running ? 'animate-pulse' : ''}`} />
+            {timerActive && (
+              <span className="text-xs font-mono font-bold tabular-nums pr-0.5">{formatClock(timer.remainingSec)}</span>
+            )}
           </button>
 
           {/* Theme Toggle Glass Pill */}

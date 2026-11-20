@@ -1,0 +1,205 @@
+{
+  "day": 84,
+  "title": "Spring Lecture #27: Spring JDBC Complete Tutorial",
+  "sources": [
+    "notes/Notes.pdf (42 pages)",
+    "notes/Excalidraw-Notes.pdf (4 pages)",
+    "code/springJDBCDemo/pom.xml",
+    "code/springJDBCDemo/application.properties",
+    "code/springJDBCDemo/repository/StudentRepository.java",
+    "code/springJDBCDemo/repository/StudentRowMapper.java",
+    "code/springJDBCDemo/service/StudentService.java",
+    "code/springJDBCDemo/controller/StudentController.java"
+  ],
+  "topics": [
+    "DataSource & connection pooling",
+    "HikariCP configuration",
+    "JdbcTemplate update()",
+    "RowMapper & query()",
+    "queryForObject()",
+    "BeanPropertyRowMapper",
+    "Exception translation (DataAccessException)"
+  ],
+  "questions": [
+    {
+      "id": "d84_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "DataSource & connection pooling",
+      "question": "Which statement about `javax.sql.DataSource` is correct?",
+      "codeSnippet": null,
+      "options": [
+        "A `DataSource` is itself one open database connection that all repositories share",
+        "Every `DataSource` is a connection pool, so `getConnection()` never creates a new physical connection",
+        "`DataSource` is an interface for obtaining connections; an implementation such as `HikariDataSource` may back it with a pool, but another may open a new connection per call",
+        "`DataSource` is a Spring class that replaces JDBC, so `Connection` and `PreparedStatement` are no longer used"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`DataSource` is only a connection-provider abstraction (`getConnection()`). Pooling depends on the implementation: HikariCP's `HikariDataSource` pools connections, while a simple implementation may create a new physical connection each time. Spring JDBC still uses `Connection`, `PreparedStatement` and `ResultSet` internally.",
+      "source": "notes §3, §5",
+      "reference": null
+    },
+    {
+      "id": "d84_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "DataSource & connection pooling",
+      "question": "A teammate is worried: \"`JdbcTemplate` closes the connection after every query, so we pay the full TCP + authentication cost on every request.\" The app uses Spring Boot's default HikariCP `DataSource`. What actually happens on that `close()`?",
+      "codeSnippet": null,
+      "options": [
+        "The pool intercepts `close()` and returns the connection to the pool for reuse; the physical connection normally stays open",
+        "The physical connection is closed, and HikariCP reopens a new one in the background for the next request",
+        "`close()` is ignored entirely, so connections are never released and the pool eventually runs out",
+        "The connection is closed and the next query fails until the application is restarted"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With a pooled `DataSource`, the `Connection` handed out is a wrapper. Calling `close()` returns it to the pool, so later requests borrow an already-authenticated connection. The cost of creating physical connections is paid rarely, which is the main performance benefit of pooling.",
+      "source": "notes §4.2",
+      "reference": null
+    },
+    {
+      "id": "d84_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "queryForObject()",
+      "question": "With the lecture's code, a client calls `GET /api/student/999`, and no student has id 999. There is no `@ControllerAdvice`. What happens?",
+      "codeSnippet": "// StudentRepository\npublic Student getStudentById(Long id) {\n    String sql = \"\"\"\n            SELECT id, name, email, age FROM students\n            WHERE id = ?\n            \"\"\";\n    return jdbcTemplate.queryForObject(sql, rowMapper, id);\n}\n\n// StudentController\n@GetMapping(\"/{id}\")\npublic ResponseEntity<Student> getStudentById(@PathVariable Long id) {\n    Student student = studentService.getStudentById(id);\n    return ResponseEntity.ok(student);\n}",
+      "options": [
+        "200 OK with an empty body, because `queryForObject()` returns `null` when no row matches",
+        "`queryForObject()` throws `EmptyResultDataAccessException`, which is not handled, so the client gets a 500 error",
+        "404 Not Found, because Spring maps an empty query result to 404 automatically",
+        "200 OK with a `Student` whose fields are all null or 0"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`queryForObject()` expects exactly one row: zero rows throw `EmptyResultDataAccessException` (more than one throws `IncorrectResultSizeDataAccessException`). It never returns null for a missing row, and Spring does not turn that exception into a 404 by itself. The notes show catching only `EmptyResultDataAccessException` to return `Optional.empty()`, or using `query(...)` with `findFirst()`.",
+      "source": "notes §13; code: StudentRepository.getStudentById()",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/jdbc/core.html"
+    },
+    {
+      "id": "d84_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "RowMapper & query()",
+      "question": "The `students` table contains exactly 3 rows. What does this print?",
+      "codeSnippet": "RowMapper<Student> mapper = (rs, rowNum) -> {\n    System.out.print(rowNum + \" \");\n    Student s = new Student();\n    s.setName(rs.getString(\"name\"));\n    return s;\n};\n\nList<Student> students = jdbcTemplate.query(\"SELECT id, name FROM students\", mapper);\nSystem.out.println(\"| size=\" + students.size());",
+      "options": [
+        "1 2 3 | size=3",
+        "0 | size=3",
+        "3 | size=1",
+        "0 1 2 | size=3"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`JdbcTemplate.query()` iterates the `ResultSet` and calls the mapper once per row, passing a zero-based row number, so it prints 0, 1, 2. It collects the mapped objects into a list of size 3. The mapper converts only one row per call; Spring handles the iteration (and returns an empty list when there are no rows).",
+      "source": "notes §12.1-12.3",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/jdbc/core.html"
+    },
+    {
+      "id": "d84_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Exception translation (DataAccessException)",
+      "question": "A repository's `findById` wraps `queryForObject()` in `try { ... } catch (DataAccessException e) { return Optional.empty(); }`. During a MySQL outage, the API keeps answering \"Student not found\" instead of reporting an error. What is the right fix?",
+      "codeSnippet": null,
+      "options": [
+        "Catch only `EmptyResultDataAccessException` for the not-found case and let other `DataAccessException`s (such as `CannotGetJdbcConnectionException`) propagate",
+        "Catch `SQLException` instead, since `JdbcTemplate` rethrows the raw JDBC exception",
+        "Replace `Optional.empty()` with `null`, so callers can tell the difference",
+        "Increase `spring.datasource.hikari.connection-timeout` so the outage is never noticed"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`DataAccessException` is the root of Spring's whole data-access hierarchy. Catching it turns outages, bad SQL and constraint errors into a false 'not found'. Only `EmptyResultDataAccessException` means 'no row'. `JdbcTemplate` translates `SQLException` into unchecked `DataAccessException` subtypes, so catching `SQLException` would not even compile around it.",
+      "source": "notes §13.2, §18",
+      "reference": null
+    },
+    {
+      "id": "d84_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Exception translation (DataAccessException)",
+      "question": "The `students` table has `email ... UNIQUE`. `createStudent()` calls `jdbcTemplate.update(...)` with an email that already exists, and the method has no try/catch and no `throws` clause. Which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "It does not compile, because the `SQLException` from the driver must be caught or declared",
+        "`update()` returns 0 and no exception is thrown, because the row was simply not inserted",
+        "Spring translates the driver's `SQLException` into `DuplicateKeyException`, an unchecked `DataAccessException` subtype, which propagates to the caller",
+        "Spring catches the error, logs it, and returns -1 to signal a constraint violation"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`JdbcTemplate` catches the checked, vendor-specific `SQLException` and translates it into Spring's unchecked hierarchy. A unique-key violation becomes `DuplicateKeyException` (a kind of `DataIntegrityViolationException`). No try/catch is required, and the service can convert it into a domain exception like `EmailAlreadyExistsException`.",
+      "source": "notes §17-18",
+      "reference": null
+    },
+    {
+      "id": "d84_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "BeanPropertyRowMapper",
+      "question": "The table column was renamed from `name` to `full_name`. The `Student` class still has `setName(...)` (and `setId`, `setEmail`, `setAge`). What does the first student look like, assuming the row is `(1, 'Rohit Negi', 'rohit@gmail.com', 26)`?",
+      "codeSnippet": "RowMapper<Student> rowMapper = new BeanPropertyRowMapper<>(Student.class);\n\nList<Student> students = jdbcTemplate.query(\n        \"SELECT id, full_name, email, age FROM students\", rowMapper);\nSystem.out.println(students.get(0));",
+      "options": [
+        "Student{id=1, name='Rohit Negi', email='rohit@gmail.com', age=26}, because `full_name` is mapped to the closest property",
+        "Student{id=1, name='null', email='rohit@gmail.com', age=26}: `full_name` maps only to a `fullName` property, so `name` stays unpopulated",
+        "A `TypeMismatchException`, because the column count no longer matches the number of properties",
+        "An `IncorrectResultSizeDataAccessException`, because one column could not be mapped"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`BeanPropertyRowMapper` matches columns to setters by name, converting underscores to camelCase, so `full_name` would map to `setFullName`. `Student` has no such property, so the column is skipped and `name` stays null (`checkFullyPopulated` defaults to false, so there is no error). Aliasing the column (`full_name AS name`) or a custom `RowMapper` fixes it, which is the 'naming-convention dependence' limitation in the notes.",
+      "source": "notes §16; code: StudentRepository (BeanPropertyRowMapper)",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/BeanPropertyRowMapper.html"
+    },
+    {
+      "id": "d84_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "HikariCP configuration",
+      "question": "The service has `spring.datasource.hikari.maximum-pool-size=10` and `connection-timeout=30000`. A slow report query (about 60 s) is triggered by 50 users at once. Requests start failing after about 30 s with a connection error, and even simple endpoints hang. What is happening, and what is the sound response?",
+      "codeSnippet": null,
+      "options": [
+        "HikariCP opens extra connections beyond the maximum under load, and MySQL rejects them; setting `minimum-idle=50` fixes it",
+        "The `connection-timeout` closes running queries after 30 s; raising it to 600000 is the fix",
+        "Each request receives its own pool, so 50 pools of 10 overwhelm MySQL; use `DriverManager` instead",
+        "All 10 connections are held by slow queries, so other requests wait for a free connection and fail after the 30 s timeout (`CannotGetJdbcConnectionException`); fix the slow query or isolate it, and size the pool from load tests rather than just making it huge"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The pool never exceeds its maximum, so request 11 onwards waits for a returned connection. `connection-timeout` is the maximum wait to BORROW a connection; it does not limit query time. Once it expires, Spring reports `CannotGetJdbcConnectionException`. A much larger pool just moves the overload to the database, so the notes advise sizing from concurrency, query duration, DB capacity and load tests.",
+      "source": "notes §4.3-4.4, §7.3, §18.4",
+      "reference": null
+    },
+    {
+      "id": "d84_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "JdbcTemplate update()",
+      "question": "With the lecture's code, a client sends `PUT /api/student` with body `{\"name\":\"Rohit\",\"email\":\"rohit@gmail.com\",\"age\":26}` (no `id`). Student 8 exists. What happens?",
+      "codeSnippet": "// StudentService\npublic void updateStudent(Student student) {\n    studentRepository.updateStudent(student, student.getId());\n}\n\n// StudentRepository\npublic void updateStudent(Student student, Long id) {\n    String sql = \"\"\"\n                 UPDATE students\n                 SET name = ?, email = ?, age = ?\n                 WHERE id = ?\n                 \"\"\";\n    int rowAffected = jdbcTemplate.update(sql,\n            student.getName(), student.getEmail(), student.getAge(), id);\n    if (rowAffected == 1) System.out.println(\"Update operation successful\");\n    else System.out.println(\"Updation failed\");\n}\n\n// StudentController: calls studentService.updateStudent(student); return ResponseEntity.ok(\"DONE\");",
+      "options": [
+        "A `NullPointerException` in the service, because `getId()` returns null",
+        "Student 8 is updated, because MySQL treats `WHERE id = NULL` as matching the most recent row",
+        "`id` is bound as SQL NULL, `WHERE id = NULL` matches no row, so \"Updation failed\" is printed, yet the client still receives 200 \"DONE\"",
+        "Spring throws `EmptyResultDataAccessException`, because the UPDATE affected zero rows"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`getId()` returns a null `Long` (passing it on is not dereferencing, so there is no NPE), and `JdbcTemplate` binds it as NULL. In SQL, `id = NULL` is never true, so the update count is 0 and the repository prints \"Updation failed\". `update()` does not throw for zero rows, and the lecture's controller ignores the result, so the client still gets 200 \"DONE\". The row count should drive the HTTP response, for example a 404.",
+      "source": "code: StudentService.updateStudent(), StudentRepository.updateStudent(), StudentController",
+      "reference": null
+    },
+    {
+      "id": "d84_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "HikariCP configuration",
+      "question": "A team adds their own `@Bean public DataSource dataSource() { HikariDataSource ds = new HikariDataSource(); ds.setJdbcUrl(...); ds.setUsername(...); ds.setPassword(...); return ds; }`. Afterwards, `spring.datasource.hikari.maximum-pool-size=25` in `application.properties` seems to be ignored. Why?",
+      "codeSnippet": null,
+      "options": [
+        "When the application defines its own `DataSource` bean, Boot's datasource auto-configuration backs off, so the `spring.datasource.hikari.*` properties are not bound to this manually created instance",
+        "HikariCP ignores `maximum-pool-size` unless `minimum-idle` is set to the same value",
+        "`spring.datasource.hikari.*` properties apply only when `spring.datasource.driver-class-name` is set explicitly",
+        "Pool size can only be configured in `pom.xml`, not in `application.properties`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Spring Boot creates and configures the `DataSource` (binding `spring.datasource.*` and `spring.datasource.hikari.*`) only if none is defined. A user-defined bean makes the auto-configuration back off, so this hand-built `HikariDataSource` gets only the values set in code. Either rely on auto-configuration or bind the properties to your bean yourself (for example with `@ConfigurationProperties`).",
+      "source": "notes §7.3, §8",
+      "reference": null
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "day": 57,
+  "title": "Lecture #57: CompletableFuture, Fork-Join Pool, ThreadLocal & Virtual Threads",
+  "sources": [
+    "notes/Notes.pdf (53 pages)"
+  ],
+  "topics": [
+    "CompletableFuture chaining",
+    "CompletableFuture error handling",
+    "get() vs join()",
+    "Common pool & custom executors",
+    "ForkJoinPool & work stealing",
+    "ThreadLocal",
+    "Virtual threads"
+  ],
+  "questions": [
+    {
+      "id": "d57_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "CompletableFuture chaining",
+      "question": "In a `CompletableFuture` pipeline you need a stage that receives the previous stage's result, prints it, and produces no new value. Which method fits exactly?",
+      "codeSnippet": null,
+      "options": [
+        "`thenApply()`",
+        "`thenAccept()`",
+        "`thenRun()`",
+        "`thenCombine()`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`thenAccept()` takes a `Consumer<T>`: it receives the previous result and returns `CompletableFuture<Void>`. `thenRun()` is tempting because it also produces no value, but it does not receive the previous result at all. `thenApply()` is for transforming the value into a new one.",
+      "source": "notes p11-13",
+      "reference": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+    },
+    {
+      "id": "d57_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Virtual threads",
+      "question": "Which statement about virtual threads (Java 21+) is correct?",
+      "codeSnippet": null,
+      "options": [
+        "They run each task faster than a platform thread because the JVM schedules them",
+        "Each virtual thread is permanently bound to its own operating-system thread",
+        "They are best suited to CPU-heavy work such as video encoding or image rendering",
+        "They make waiting tasks cheap, but they do not add CPU capacity for calculations"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Virtual threads are lightweight threads scheduled by the JVM onto a small number of carrier platform threads; when one blocks on I/O it can unmount, freeing the carrier. They improve scalability (throughput) for blocking work, not raw speed, so CPU-bound work is still limited by the number of cores. They are not permanently bound to one OS thread - that describes platform threads.",
+      "source": "notes p37-40",
+      "reference": "https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html"
+    },
+    {
+      "id": "d57_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "CompletableFuture chaining",
+      "question": "What does this program print?",
+      "codeSnippet": "import java.util.concurrent.CompletableFuture;\n\npublic class Pipeline {\n    public static void main(String[] args) {\n        CompletableFuture<Integer> a = CompletableFuture.supplyAsync(() -> 10)\n                .thenApply(v -> v * 2);\n        CompletableFuture<Integer> b = CompletableFuture.supplyAsync(() -> 5);\n\n        CompletableFuture<String> c = a.thenCombine(b, (x, y) -> x - y)\n                .thenApply(v -> \"v=\" + v);\n\n        CompletableFuture<Void> d = c.thenAccept(s -> System.out.println(s));\n        System.out.println(d.join());\n    }\n}",
+      "options": [
+        "v=15\nnull",
+        "v=15\nv=15",
+        "v=5\nnull",
+        "null\nv=15"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`a` produces 10 * 2 = 20, `thenCombine` computes 20 - 5 = 15, and `thenApply` turns it into \"v=15\". `thenAccept` prints that string and its own stage is a `CompletableFuture<Void>`, so `d.join()` returns `null` only after the print has happened. It does not return the consumed string - consuming a value produces no new result.",
+      "source": "notes p11-16",
+      "reference": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+    },
+    {
+      "id": "d57_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "get() vs join()",
+      "question": "A teammate collects results with `futures.stream().map(f -> f.get()).toList()` and the code does not compile. What is the cleanest fix, and why?",
+      "codeSnippet": null,
+      "options": [
+        "Use `isDone()` instead, because it returns the value without blocking",
+        "Use `get(1, TimeUnit.SECONDS)`, because the timed version throws no checked exceptions",
+        "Use `join()`, because it waits the same way but wraps failures in the unchecked `CompletionException`",
+        "Use `thenRun()`, because it returns the result of the previous stage"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`get()` declares the checked `InterruptedException` and `ExecutionException`, which a `Function` lambda cannot throw, so it does not compile. `join()` also blocks until the result is ready but reports failure through the unchecked `CompletionException`. The timed `get` is worse, not better: it adds a checked `TimeoutException`, and `isDone()` only returns a boolean.",
+      "source": "notes p19-20",
+      "reference": "https://www.baeldung.com/java-completablefuture-join-vs-get"
+    },
+    {
+      "id": "d57_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "CompletableFuture error handling",
+      "question": "A `supplyAsync` stage throws an exception. It is followed only by `.whenComplete((r, ex) -> log(ex))`. What happens when you call `join()` on the stage returned by `whenComplete`?",
+      "codeSnippet": null,
+      "options": [
+        "It returns `null`, because `whenComplete` replaces the failure with an empty result",
+        "It throws a `CompletionException`, because `whenComplete` observes the failure but does not recover from it",
+        "It returns the value from the last successful stage before the failure",
+        "It blocks forever, because a failed stage never reaches a terminal state"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`whenComplete` is an observer: the stage it returns completes with the same result or exception as the original stage, so the failure still reaches `join()` as a `CompletionException`. To actually recover with a fallback value you need `exceptionally()` or `handle()`. A failed stage is a terminal state, so nothing blocks forever.",
+      "source": "notes p17-19",
+      "reference": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+    },
+    {
+      "id": "d57_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Common pool & custom executors",
+      "question": "A service calls `CompletableFuture.supplyAsync(() -> blockingDatabaseCall())` for every request, with no executor argument. Under load, unrelated parallel streams in the same JVM become very slow. What is the most likely cause and fix?",
+      "codeSnippet": null,
+      "options": [
+        "`supplyAsync` runs the call on the request thread; switch to `runAsync`",
+        "Parallel streams use a separate pool, so the slowdown must come from the database itself",
+        "Each `supplyAsync` call creates a new OS thread; cache the futures to reuse them",
+        "The blocking calls occupy workers of the shared `ForkJoinPool.commonPool()`; pass a dedicated executor (or use virtual threads)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Without an executor, async `CompletableFuture` methods normally run on `ForkJoinPool.commonPool()`, which is also used by parallel streams. Long blocking database calls tie up those few shared workers, starving other users of the pool. Supplying a dedicated, bounded I/O executor or a virtual-thread executor isolates the blocking work; parallel streams do not have their own pool by default.",
+      "source": "notes p11, 22, 31",
+      "reference": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+    },
+    {
+      "id": "d57_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "ThreadLocal",
+      "question": "A web app stores the current tenant in a `static ThreadLocal<String> TENANT` at the start of each task running on a fixed thread pool. Occasionally a request without a tenant header is processed with another customer's tenant. What fix addresses the root cause?",
+      "codeSnippet": null,
+      "options": [
+        "Call `TENANT.remove()` in a `finally` block after the task's work completes",
+        "Make `TENANT` an instance field instead of `static` so each task has its own copy",
+        "Declare `TENANT` as `volatile` so every thread sees the latest value",
+        "Replace `ThreadLocal` with a shared `String` field guarded by `synchronized`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Pool threads are reused, so a value set by an earlier task stays attached to that worker thread and the next task on the same thread can see stale data. Removing the value in `finally` guarantees cleanup even if the task throws. `volatile` or a shared synchronized field would make the problem worse by sharing one value across all threads instead of one per thread.",
+      "source": "notes p33-36",
+      "reference": "https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html"
+    },
+    {
+      "id": "d57_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "CompletableFuture error handling",
+      "question": "The supplier below always fails, and an `exceptionally` stage logs the class of the exception it receives. What is the output?",
+      "codeSnippet": "import java.util.concurrent.CompletableFuture;\n\npublic class Fallback {\n    static int fetchPrice() {\n        throw new RuntimeException(\"Service unavailable\");\n    }\n\n    public static void main(String[] args) {\n        CompletableFuture<Integer> price = CompletableFuture\n                .supplyAsync(() -> fetchPrice())\n                .exceptionally(ex -> {\n                    System.out.println(ex.getClass().getSimpleName());\n                    return 0;\n                });\n        System.out.println(price.join());\n    }\n}",
+      "options": [
+        "RuntimeException\n0",
+        "CompletionException\n0",
+        "ExecutionException\n0",
+        "CompletionException, then join() throws because the failure is rethrown"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When the supplier of `supplyAsync` throws, the future is completed exceptionally with the exception wrapped in a `CompletionException`, and that wrapper is what `exceptionally` receives (the original is available via `ex.getCause()`). The handler returns 0, so the failure is recovered and `join()` returns 0. `ExecutionException` is the wrapper used only by `get()`.",
+      "source": "notes p17, 19",
+      "reference": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+    },
+    {
+      "id": "d57_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "ForkJoinPool & work stealing",
+      "question": "This is the lecture's `SumTask` with a counter added and a 10-element array. What does it print?",
+      "codeSnippet": "import java.util.concurrent.ForkJoinPool;\nimport java.util.concurrent.RecursiveTask;\nimport java.util.concurrent.atomic.AtomicInteger;\n\nclass SumTask extends RecursiveTask<Integer> {\n    static final AtomicInteger DIRECT = new AtomicInteger();\n    private static final int THRESHOLD = 2;\n    private final int[] numbers;\n    private final int start, end;\n\n    SumTask(int[] numbers, int start, int end) {\n        this.numbers = numbers;\n        this.start = start;\n        this.end = end;\n    }\n\n    @Override\n    protected Integer compute() {\n        int length = end - start;\n        if (length <= THRESHOLD) {\n            DIRECT.incrementAndGet();\n            int sum = 0;\n            for (int i = start; i < end; i++) sum += numbers[i];\n            return sum;\n        }\n        int middle = start + length / 2;\n        SumTask left = new SumTask(numbers, start, middle);\n        SumTask right = new SumTask(numbers, middle, end);\n        left.fork();\n        int rightResult = right.compute();\n        int leftResult = left.join();\n        return leftResult + rightResult;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        int[] nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};\n        int total = new ForkJoinPool().invoke(new SumTask(nums, 0, nums.length));\n        System.out.println(total + \" \" + SumTask.DIRECT.get());\n    }\n}",
+      "options": [
+        "55 5",
+        "55 8",
+        "55 6",
+        "45 6"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The range [0,10) splits into [0,5) and [5,10). Each length-5 range splits at start+2 into a length-2 range (direct) and a length-3 range, which splits again into lengths 1 and 2 (both direct) - 3 direct computations per half, 6 in total. The split covers every index exactly once, so the sum is 1+...+10 = 55 regardless of which worker steals which subtask.",
+      "source": "notes p26-30",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/forkjoin.html"
+    },
+    {
+      "id": "d57_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Virtual threads",
+      "question": "A Java 21 service must process 100,000 queued jobs; each job mostly waits on a database whose connection pool has only 50 connections. A teammate proposes `Executors.newFixedThreadPool(50, Thread.ofVirtual().factory())` to \"pool virtual threads and limit load\". What is the recommended design?",
+      "codeSnippet": null,
+      "options": [
+        "Use `ForkJoinPool.commonPool()`, because work stealing balances the waiting jobs automatically",
+        "Keep the fixed pool of 50 virtual threads, because pooling avoids the cost of creating virtual threads",
+        "Start 100,000 virtual threads with no limit, because virtual threads remove resource limits",
+        "Use `newVirtualThreadPerTaskExecutor()` (one virtual thread per job) and guard the database call with a `Semaphore(50)`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Virtual threads are cheap, so the intended model is one new virtual thread per task, never a pool of them. The scarce resource is the database, so concurrency should be limited around that resource, e.g. with a `Semaphore` of 50 permits. Running with no limit ignores that threads are cheap but dependencies are not, and the common ForkJoin pool should not be filled with blocking work.",
+      "source": "notes p46-48",
+      "reference": "https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html"
+    }
+  ]
+}

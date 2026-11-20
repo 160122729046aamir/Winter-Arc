@@ -1,0 +1,199 @@
+{
+  "day": 30,
+  "title": "Lecture #30: Iterable Interface in Java",
+  "sources": [
+    "notes.pdf (6 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Iterable as root interface",
+    "Iterator: hasNext() / next()",
+    "Custom Iterable & for-each",
+    "Why the iterator is a separate object",
+    "Fail-fast iterators & ConcurrentModificationException"
+  ],
+  "questions": [
+    {
+      "id": "d30_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Iterable as root interface",
+      "question": "In the hierarchy `Object → ? → Collection → List/Queue/Set`, which interface sits directly above `Collection` and declares the `iterator()` method?",
+      "codeSnippet": null,
+      "options": [
+        "`Iterator`",
+        "`Map`",
+        "`Iterable`",
+        "`Comparable`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`Iterable` is the root interface representing any object whose elements can be traversed one by one; its key method is `Iterator<T> iterator()`, and `Collection` extends it. `Iterator` is a different interface — it is the object returned by `iterator()` and provides `hasNext()`/`next()`. Confusing the two names is the classic mistake.",
+      "source": "notes p1-p3",
+      "reference": null
+    },
+    {
+      "id": "d30_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Iterable as root interface",
+      "question": "Why can't a single loop like `for (int i = 0; i < c.size(); i++) c.get(i)` be used to traverse every kind of `Collection`?",
+      "codeSnippet": null,
+      "options": [
+        "Because not every collection is index-based — a Set or Queue has no `get(i)`, so Java needs a common index-free way to traverse: the Iterator",
+        "Because `size()` is only available on `List`, not on `Set` or `Queue`",
+        "Because index-based loops are slower than iterators for every collection, including ArrayList",
+        "Because `get(i)` throws an exception whenever the collection contains duplicates"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Only `List` offers index-based `get(i)`; sets, queues and stacks organise data differently (hashes, trees, LIFO/FIFO). `Iterable`/`Iterator` give every collection one uniform way to visit elements one by one. `size()` is declared in `Collection`, so it exists on all of them, and for an ArrayList an index loop is perfectly fast.",
+      "source": "notes p1-p2",
+      "reference": null
+    },
+    {
+      "id": "d30_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Custom Iterable & for-each",
+      "question": "You wrote a `NameContainer` class that wraps a `String[]`, and you want callers to write `for (String name : container) { ... }`. What must `NameContainer` do?",
+      "codeSnippet": null,
+      "options": [
+        "Extend `ArrayList<String>` so that it becomes index-based",
+        "Provide public `hasNext()` and `next()` methods directly on `NameContainer`",
+        "Override `toString()` so the loop can split the names",
+        "Implement `Iterable<String>` and return an `Iterator<String>` from its `iterator()` method"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The enhanced for loop works on arrays and on any `Iterable`; it calls `iterator()` and then uses `hasNext()`/`next()` on the returned object. That is exactly what Demo2's `NameContainer implements Iterable<String>` does with an anonymous Iterator. Putting `hasNext()`/`next()` on the container itself does not make it usable in a for-each loop.",
+      "source": "code: Demo2.java",
+      "reference": null
+    },
+    {
+      "id": "d30_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Iterator: hasNext() / next()",
+      "question": "`NameContainer` is the class from the lecture (its iterator returns `names[pos++]` and `hasNext()` is `pos < size`). What does this print?",
+      "codeSnippet": "String[] names = {\"Aditya\", \"Rohit\", \"Rohan\", \"Monu\"};\nNameContainer container = new NameContainer(names);\n\nIterator<String> it = container.iterator();\nwhile (it.hasNext()) {\n    it.next();\n    System.out.print(it.next() + \" \");\n}",
+      "options": [
+        "Aditya Rohit Rohan Monu",
+        "Rohit Monu",
+        "Aditya Rohan",
+        "Rohit Monu, followed by an ArrayIndexOutOfBoundsException"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Each `next()` returns the current element and advances `pos`, so every loop pass consumes two names but prints only the second: Rohit (pos becomes 2), then Monu (pos becomes 4). Now `hasNext()` is `4 < 4`, false, so the loop stops cleanly with no exception. With an odd number of names the second `next()` would run past the end, but here there are four.",
+      "source": "code: Demo2.java",
+      "reference": null
+    },
+    {
+      "id": "d30_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Custom Iterable & for-each",
+      "question": "When `for (String name : container) { System.out.println(name); }` runs on an `Iterable`, what does it actually do?",
+      "codeSnippet": null,
+      "options": [
+        "It calls `container.get(i)` for `i` from 0 to `size() - 1`",
+        "It copies the container into an array first and then loops over the array",
+        "It calls `container.iterator()` once, then repeatedly calls `hasNext()` and `next()` on that iterator",
+        "It calls `container.iterator()` before every element to fetch the next value"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The enhanced for loop over an Iterable is shorthand for obtaining one iterator and running `while (it.hasNext()) { name = it.next(); ... }`. That is why the commented-out while-loop in Demo2 and the for-each produce the same output. Calling `iterator()` before every element would restart at position 0 each time, and Iterables are not required to have `get(i)`.",
+      "source": "code: Demo2.java; notes p3",
+      "reference": null
+    },
+    {
+      "id": "d30_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Fail-fast iterators & ConcurrentModificationException",
+      "question": "You loop over an `ArrayList<Integer>` with an `Iterator` and call `list.remove(...)` inside the loop to drop even numbers. It throws `ConcurrentModificationException`. What is the correct fix while still using the iterator?",
+      "codeSnippet": null,
+      "options": [
+        "Catch `ConcurrentModificationException` inside the loop and continue",
+        "Call `it.remove()` instead of `list.remove(...)` right after `it.next()` returns the even number",
+        "Call `it.next()` once more after each `list.remove(...)` to resynchronise the cursor",
+        "Mark the loop body `synchronized` so the list cannot change during iteration"
+      ],
+      "correctAnswer": 1,
+      "explanation": "ArrayList's iterator is fail-fast: it remembers the list's modification count and throws when the list is structurally changed behind its back. `Iterator.remove()` removes the last returned element and updates the iterator's own bookkeeping, so iteration continues safely. `synchronized` is about threads — here the same thread modifies the list, so it changes nothing — and catching the exception leaves the iteration broken.",
+      "source": "code: Demo3.java",
+      "reference": "https://essential-books.onrender.com/essential/java/removing-elements-using-an-iterator-dd8c430076654e6c8f3ec64d6f3b9e66.html"
+    },
+    {
+      "id": "d30_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Iterator: hasNext() / next()",
+      "question": "The lecture lists methods of `Iterable` and of `Iterator`. Which of these is declared by `Iterable` (not by `Iterator`)?",
+      "codeSnippet": null,
+      "options": [
+        "`forEach(...)`",
+        "`hasNext()`",
+        "`forEachRemaining(...)`",
+        "`next()`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Iterable` declares `iterator()` plus the default methods `forEach(...)` and `spliterator()`. `Iterator` declares `hasNext()`, `next()`, the default `remove()` and the default `forEachRemaining(...)`. `forEachRemaining` is the tempting distractor because its name looks like `forEach`, but it lives on the Iterator and processes only the elements not yet visited.",
+      "source": "notes p5",
+      "reference": null
+    },
+    {
+      "id": "d30_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Why the iterator is a separate object",
+      "question": "This `MyArrayList` keeps the cursor inside the list itself instead of in a separate iterator object. What does the nested loop print?",
+      "codeSnippet": "class MyArrayList {\n    int[] arr = {10, 20, 30};\n    int size = 3;\n    private int pos = 0;\n\n    public boolean hasNext() { return pos < size; }\n    public int next() { return arr[pos++]; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        MyArrayList l = new MyArrayList();\n        while (l.hasNext()) {\n            int a = l.next();\n            while (l.hasNext()) {\n                int b = l.next();\n                System.out.println(a + \" \" + b);\n            }\n        }\n    }\n}",
+      "options": [
+        "All 9 pairs from \"10 10\" to \"30 30\"",
+        "\"10 20\", \"10 30\", \"20 30\"",
+        "\"10 20\" only",
+        "\"10 20\" and \"10 30\" only"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Both loops share the single `pos` field. The outer loop reads 10 (pos=1); the inner loop reads 20 and 30 (pos=3) printing \"10 20\" and \"10 30\"; then the outer `hasNext()` sees pos=3 and stops, so 20 and 30 never become `a`. Separate iterator objects (each `iterator()` call returning a fresh cursor) are exactly what fixes this — it is the separation-of-concerns point in the lecture.",
+      "source": "notes p6, p5",
+      "reference": null
+    },
+    {
+      "id": "d30_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Fail-fast iterators & ConcurrentModificationException",
+      "question": "What is the output of this code (from the lecture's Demo3)?",
+      "codeSnippet": "List<Integer> list = new ArrayList<>();\nlist.add(1);\nlist.add(2);\nlist.add(3);\nlist.add(4);\nlist.add(5);\n\nIterator<Integer> it = list.iterator();\nwhile (it.hasNext()) {\n    int value = it.next();\n    if (value == 3) {\n        list.remove(value);\n    }\n    System.out.println(value);\n}",
+      "options": [
+        "1, 2, 3 printed on separate lines, then `ConcurrentModificationException`",
+        "1, 2, 3, 4, 5 printed on separate lines",
+        "1, 2, 4, 5 printed on separate lines",
+        "1, 2, 3, 5 printed on separate lines"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`value` is an `int`, so `list.remove(value)` calls `remove(int index)` and removes the element at index 3 (the number 4), not the number 3. Either way the list was structurally modified outside the iterator: 3 is still printed, then `hasNext()` (cursor 3 vs size 4) is true and the next `next()` detects the changed modification count and throws `ConcurrentModificationException`. Options that print later elements ignore the fail-fast check.",
+      "source": "code: Demo3.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ConcurrentModificationException.html"
+    },
+    {
+      "id": "d30_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Fail-fast iterators & ConcurrentModificationException",
+      "question": "A teammate iterates `[1, 2, 3, 4]` (an `ArrayList<Integer>`) with an Iterator and calls `list.remove(Integer.valueOf(3))` when it sees 3. No exception occurs, so they claim modifying the list inside the loop is safe. What actually happened?",
+      "codeSnippet": null,
+      "options": [
+        "ArrayList iterators are not fail-fast, so modifications are always allowed",
+        "`remove(Object)` does not change the modification count, so the iterator cannot notice it",
+        "After the removal the size became 3, equal to the cursor, so `hasNext()` returned false and the loop ended early — 4 was never visited and the fail-fast check in `next()` never ran",
+        "The iterator automatically adjusted its cursor, so 4 was visited normally and the loop finished correctly"
+      ],
+      "correctAnswer": 2,
+      "explanation": "ArrayList's `hasNext()` only compares `cursor != size`; the modification check happens in `next()`. Removing the second-to-last element shrinks size to 3 while cursor is already 3, so the loop silently stops and element 4 is skipped. Fail-fast behaviour is best-effort, not a guarantee — the code is still wrong and should use `it.remove()`.",
+      "source": "code: Demo3.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ConcurrentModificationException.html"
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "day": 52,
+  "title": "Lecture #52: Inter Thread Communication in Java",
+  "sources": [
+    "notes/Notes.pdf (23 pages)",
+    "notes/slides.pdf (6 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Producer-consumer problem",
+    "Busy waiting",
+    "wait()",
+    "notify() vs notifyAll()",
+    "Monitor ownership rule",
+    "Spurious wakeups & guarded blocks"
+  ],
+  "questions": [
+    {
+      "id": "d52_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "wait()",
+      "question": "A thread calls `lock.wait()` inside `synchronized (lock) { ... }`. Which description is correct?",
+      "codeSnippet": null,
+      "options": [
+        "It keeps holding `lock` and sleeps for a fixed time slice",
+        "It releases every monitor it holds and ends its `run()` method",
+        "It releases `lock`'s monitor, enters `lock`'s waiting set, and must re-acquire `lock` before `wait()` returns",
+        "It hands `lock` directly to the thread that will call `notify()`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`wait()` does two connected things: it releases the monitor of the object it was called on, and it parks the thread in that object's waiting set. After being notified (or interrupted, or waking spuriously), the thread must re-acquire the same monitor before `wait()` returns. It releases only that one monitor, not every lock it holds.",
+      "source": "notes p5-7",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/guardmeth.html"
+    },
+    {
+      "id": "d52_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Monitor ownership rule",
+      "question": "What happens when this program runs?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) throws InterruptedException {\n        Object lock = new Object();\n        System.out.println(\"before\");\n        lock.wait();\n        System.out.println(\"after\");\n    }\n}",
+      "options": [
+        "It prints \"before\", then waits forever because nobody calls `notify()`",
+        "It prints \"before\", then throws `IllegalMonitorStateException` because main does not own `lock`'s monitor",
+        "It fails to compile because `wait()` can only be called on a `Thread`",
+        "It prints \"before\" and \"after\" because `wait()` returns immediately without a lock"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`wait()`, `notify()` and `notifyAll()` may be called only by a thread that owns the monitor of that same object, i.e. inside `synchronized (lock)`. Otherwise they throw `IllegalMonitorStateException` at runtime. The code compiles because `wait()` is declared in `Object`. It never waits forever, because the exception is thrown before any waiting happens.",
+      "source": "notes p7, p10",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()"
+    },
+    {
+      "id": "d52_q3",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Busy waiting",
+      "question": "In `Demo2`, `producer()` and `consumer()` are both `synchronized` on the same `Box`. Each one spins in a `while (flag == ...) { }` loop until the box is in the state it needs, and `flag` is `volatile`. The program usually freezes after a few lines. What is the core problem?",
+      "codeSnippet": null,
+      "options": [
+        "`volatile` stops `flag` from being updated inside synchronized methods",
+        "The spinning thread uses so much CPU that the other thread is never scheduled",
+        "`Boolean` must be compared with `equals()`, so the loops never see the change",
+        "The spinning thread holds the `Box` monitor, so the other thread can never enter to change `flag`; volatile gives visibility but does not release the lock"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Busy waiting inside a synchronized method keeps the monitor held while looping. The only thread that could change the condition needs that same monitor, so the condition never changes and the program freezes. `volatile` makes writes visible, but it does not pause the thread, release the lock or send a notification. That is why `wait()` and `notify()` are needed. CPU waste is a real cost of spinning, but it is not what causes the freeze.",
+      "source": "notes p3-4; code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/guardmeth.html"
+    },
+    {
+      "id": "d52_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "notify() vs notifyAll()",
+      "question": "Inside `synchronized (lock) { hasItem = true; lock.notify(); log(\"done\"); }`, when can the woken consumer continue past its `wait()` call?",
+      "codeSnippet": null,
+      "options": [
+        "Only after the notifying thread leaves the synchronized block and the consumer re-acquires `lock`",
+        "Immediately at `notify()`, because `notify()` passes the monitor to the woken thread",
+        "Immediately at `notify()`, running in parallel with `log(\"done\")`",
+        "Only after the notifying thread calls `wait()` itself"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`notify()` only makes one waiting thread eligible to compete for the monitor. It does not hand over the lock. The notifier keeps the lock until it leaves the synchronized region, so `log(\"done\")` runs first. Only then can the woken consumer re-acquire `lock` and return from `wait()`.",
+      "source": "notes p9-10",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()"
+    },
+    {
+      "id": "d52_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Spurious wakeups & guarded blocks",
+      "question": "One producer and TWO consumer threads share this `Box`. Sometimes a consumer returns an item that was already consumed. Which change fixes the bug?",
+      "codeSnippet": "class Box {\n    private int item;\n    private boolean hasItem = false;\n\n    synchronized void produce(int value) throws InterruptedException {\n        while (hasItem) wait();\n        item = value;\n        hasItem = true;\n        notifyAll();\n    }\n\n    synchronized int consume() throws InterruptedException {\n        if (!hasItem) {\n            wait();\n        }\n        hasItem = false;\n        notifyAll();\n        return item;\n    }\n}",
+      "options": [
+        "Replace `notifyAll()` with `notify()` in `consume()` so only one thread wakes",
+        "Make `item` and `hasItem` `volatile`",
+        "Change `if (!hasItem)` to `while (!hasItem)` so each consumer re-checks the condition after waking",
+        "Move `notifyAll()` in `produce()` to before `item = value;`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Suppose both consumers are waiting and `notifyAll()` wakes both. The first one takes the item and sets `hasItem` to false. The second one then returns from `wait()` and, with `if`, goes on without re-checking, returning the old item again. Spurious wakeups cause the same problem. Using `while` makes every woken thread re-check its guard. `volatile` adds nothing here, because all access is already synchronized.",
+      "source": "notes p18-20",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/guardmeth.html"
+    },
+    {
+      "id": "d52_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Monitor ownership rule",
+      "question": "In `class TaskQueue`, the consumer runs `synchronized (queueLock) { while (tasks.isEmpty()) queueLock.wait(); ... }`. The producer, in a synchronized instance method of `TaskQueue`, adds a task and calls `notifyAll()`. The consumer never wakes up. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`notifyAll()` only wakes threads that called `wait()` inside a synchronized method, not a synchronized block",
+        "The consumer waits in `queueLock`'s waiting set, but the producer notifies `this` (the `TaskQueue` object), which has a different waiting set",
+        "The consumer must call `wait(timeout)`, because untimed waits ignore notifications",
+        "`tasks.isEmpty()` is cached by the JVM, so the condition stays true forever"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Waiting sets belong to objects. The bare `notifyAll()` in a synchronized instance method means `this.notifyAll()`, so it signals the `TaskQueue`'s waiting set, not `queueLock`'s. Both sides must synchronize on, wait on and notify the same object, e.g. `queueLock.notifyAll()` inside `synchronized (queueLock)`. Untimed waits do respond to notifications on the correct object.",
+      "source": "notes p7-8, p16-17",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()"
+    },
+    {
+      "id": "d52_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Monitor ownership rule",
+      "question": "Why are `wait()`, `notify()` and `notifyAll()` declared in `Object` rather than in `Thread`?",
+      "codeSnippet": null,
+      "options": [
+        "Because every class extends `Thread` indirectly through `Object`",
+        "Because `Thread` is final, so new methods cannot be added to it",
+        "Because only `Object` methods are allowed to throw `InterruptedException`",
+        "Because a thread waits for a condition guarded by a particular object's monitor, and every object has its own monitor and waiting set"
+      ],
+      "correctAnswer": 3,
+      "explanation": "In Java, a thread does not wait on another thread. It waits on an object's monitor for a shared condition to change. Since any object can be a monitor and has its own waiting set, the methods that use it belong to `Object`. Classes do not extend `Thread` through `Object`, and `Thread` is not final.",
+      "source": "notes p16-17",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/guardmeth.html"
+    },
+    {
+      "id": "d52_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "notify() vs notifyAll()",
+      "question": "A one-slot `Box` uses correct `while` guards, but calls `notify()` instead of `notifyAll()`. It is shared by 2 producers and 2 consumers. Under load, all four threads sometimes end up waiting, even though the box is empty and producers have items ready. What explains this?",
+      "codeSnippet": null,
+      "options": [
+        "A consumer's `notify()` may wake the other consumer instead of a producer; it finds the box empty and waits again, so no thread is left to signal the producers",
+        "`notify()` wakes threads only in the order they started waiting, so producers are always last",
+        "The `while` guards cause the deadlock; switching to `if` would fix it",
+        "`notify()` releases the monitor too early, so the producers miss the signal"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Producers and consumers wait for different conditions in the same waiting set, and `notify()` picks an arbitrary thread to wake. If a consumer's signal reaches the other consumer, that consumer re-checks its guard, finds the box empty, and waits again. The producers are never woken, so every thread can end up waiting. `notifyAll()` lets every waiting thread re-check its own condition. The `while` guards are correct and are not the cause.",
+      "source": "notes p11-12",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()"
+    },
+    {
+      "id": "d52_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Producer-consumer problem",
+      "question": "One producer thread calls `box.produce(v)` for v = 1, 2, 3. One consumer thread calls `box.consume()` three times. Both threads are started together. Which output is guaranteed?",
+      "codeSnippet": "class Box {\n    private int item;\n    private boolean hasItem = false;\n\n    synchronized void produce(int value) throws InterruptedException {\n        while (hasItem) wait();\n        item = value;\n        hasItem = true;\n        System.out.println(\"P\" + item);\n        notifyAll();\n    }\n\n    synchronized void consume() throws InterruptedException {\n        while (!hasItem) wait();\n        System.out.println(\"C\" + item);\n        hasItem = false;\n        notifyAll();\n    }\n}",
+      "options": [
+        "The order depends on scheduling; for example P1 P2 P3 C1 C2 C3 is possible",
+        "C0 can be printed first if the consumer starts before the producer",
+        "P1 C1 P2 C2 P3 C3, in exactly this order, every run",
+        "P1 C1 P2 C2 P3 C3 usually, but P1 P2 C2 C3 … can occur after a spurious wakeup"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The producer cannot put a new item in while `hasItem` is true. The consumer cannot take an item while it is false. Each print happens inside the same synchronized method as the state change. That forces strict alternation starting with P1, whatever the scheduling. The `while` guards make spurious wakeups harmless, and the consumer cannot print before the first item exists.",
+      "source": "notes p12-15; code: Demo3.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/guardmeth.html"
+    },
+    {
+      "id": "d52_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "notify() vs notifyAll()",
+      "question": "Five threads are waiting on `lock`, and another thread calls `lock.notifyAll()` and then leaves its synchronized block. Which statement is accurate?",
+      "codeSnippet": null,
+      "options": [
+        "All five threads return from `wait()` at the same moment and run the guarded code in parallel",
+        "All five become eligible, but they re-acquire `lock` one at a time; each re-checks its guard, and any whose condition is still false calls `wait()` again",
+        "Only the thread that has waited longest is woken; the other four stay in the waiting set",
+        "All five are woken and skip their `while` checks, because `notifyAll()` guarantees the condition is now true"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`notifyAll()` moves every waiting thread out of the waiting set. Each one must still re-acquire the monitor before returning from `wait()`, so they continue one at a time. Each then re-checks its condition and waits again if the condition is still false. Being woken never proves the condition is true, which is why the `while` loop matters. Choosing the longest-waiting thread is not part of the contract, even for `notify()`.",
+      "source": "notes p11-12, p18-19",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()"
+    }
+  ]
+}

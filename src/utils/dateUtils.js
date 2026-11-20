@@ -67,32 +67,61 @@ export function addDaysToDate(dateStr, daysToAdd) {
   return `${year}-${month}-${day}`;
 }
 
+// ---------------------------------------------------------------------------
+// Study-day calendar. Rest weekdays come from Settings → Preferred Study Days
+// (default Mon–Sat, i.e. Sunday is the rest day). The `excludeSundays` flag on
+// the helpers below means "skip rest days" and is kept for API compatibility.
+// ---------------------------------------------------------------------------
+const WEEKDAY_INDEX = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+let REST_WEEKDAYS = new Set([0]);
+
+export function setStudyWeekdays(studyDayNames) {
+  const study = new Set(
+    (Array.isArray(studyDayNames) ? studyDayNames : [])
+      .map((n) => WEEKDAY_INDEX[n])
+      .filter((n) => n !== undefined)
+  );
+  // Never allow a calendar with zero study days.
+  if (study.size === 0) {
+    REST_WEEKDAYS = new Set();
+    return;
+  }
+  REST_WEEKDAYS = new Set([0, 1, 2, 3, 4, 5, 6].filter((n) => !study.has(n)));
+}
+
+const isRestWeekday = (date) => REST_WEEKDAYS.has(date.getDay());
+
+export function isStudyDate(dateStr) {
+  return !isRestWeekday(parseLocalDate(dateStr));
+}
+
 /**
- * Add study days excluding Sundays (Rest Day)
- * dayIndex = 0 returns the start date (or Monday if start date is a Sunday)
- * dayIndex = 1 returns the next study day (skips Sunday if encountered)
+ * Add study days, skipping rest weekdays.
+ * dayIndex = 0 returns the start date (rolled forward if it is a rest day)
+ * dayIndex = 1 returns the next study day, and so on (negative walks backwards).
  */
 export function addStudyDays(startDateStr, dayIndex, excludeSundays = true) {
   if (!startDateStr) return '';
   const cur = parseLocalDate(startDateStr);
 
-  // If initial start date lands on Sunday and Sundays are excluded, roll to Monday
-  if (excludeSundays && cur.getDay() === 0) {
-    cur.setDate(cur.getDate() + 1);
+  // If the start date is a rest day, roll forward to the next study day
+  if (excludeSundays) {
+    let guard = 0;
+    while (isRestWeekday(cur) && guard++ < 7) cur.setDate(cur.getDate() + 1);
   }
 
   if (dayIndex >= 0) {
     let counted = 0;
     while (counted < dayIndex) {
       cur.setDate(cur.getDate() + 1);
-      if (excludeSundays && cur.getDay() === 0) continue;
+      if (excludeSundays && isRestWeekday(cur)) continue;
       counted++;
     }
   } else {
     let counted = 0;
     while (counted > dayIndex) {
       cur.setDate(cur.getDate() - 1);
-      if (excludeSundays && cur.getDay() === 0) continue;
+      if (excludeSundays && isRestWeekday(cur)) continue;
       counted--;
     }
   }
@@ -123,7 +152,7 @@ export function getStudyDaysDifference(startDateStr, endDateStr, excludeSundays 
     const cur = new Date(start);
     while (cur.getTime() > end.getTime()) {
       cur.setDate(cur.getDate() - 1);
-      if (excludeSundays && cur.getDay() === 0) continue;
+      if (excludeSundays && isRestWeekday(cur)) continue;
       count--;
     }
     return count;
@@ -133,7 +162,7 @@ export function getStudyDaysDifference(startDateStr, endDateStr, excludeSundays 
   const cur = new Date(start);
   while (cur.getTime() < end.getTime()) {
     cur.setDate(cur.getDate() + 1);
-    if (excludeSundays && cur.getDay() === 0) continue;
+    if (excludeSundays && isRestWeekday(cur)) continue;
     count++;
   }
   return count;

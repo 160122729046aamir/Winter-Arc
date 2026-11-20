@@ -1,0 +1,202 @@
+{
+  "day": 22,
+  "title": "Lecture #22: Most Important Class in Java",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Object as the root class",
+    "getClass() and instanceof",
+    "toString()",
+    "equals() vs ==",
+    "hashCode() contract",
+    "equals() and hashCode() together",
+    "clone() and Cloneable",
+    "Comparing fields inside equals()",
+    "getClass() vs instanceof in equals()"
+  ],
+  "questions": [
+    {
+      "id": "d22_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Object as the root class",
+      "question": "Given `class Human { }` and `class Student extends Human { }`, which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`Student` still inherits `toString()`, `equals()` and `hashCode()` from `Object`, through `Human`",
+        "`Student` no longer inherits from `Object`, because it already extends `Human`",
+        "`Student` must write `extends Human, Object` to keep `Object`'s methods",
+        "Only classes with no `extends` clause get `Object`'s methods"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Every class in Java ultimately inherits from `java.lang.Object`. A class with no `extends` clause implicitly extends `Object`, so `Human` extends `Object` and `Student` reaches `Object` through `Human`. Java has single class inheritance, so `extends Human, Object` would not compile, and it is not needed.",
+      "source": "notes p1",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    },
+    {
+      "id": "d22_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "getClass() and instanceof",
+      "question": "What does this program print (one value per line)?",
+      "codeSnippet": "class Animal { }\n\nclass Dog extends Animal { }\n\npublic class Demo2 {\n    public static void main(String[] args) {\n        Animal a = new Animal();\n        Animal d = new Dog();\n\n        System.out.println(a.getClass().getName());\n        System.out.println(d.getClass().getName());\n        System.out.println(a instanceof Dog);\n        System.out.println(d instanceof Animal);\n    }\n}",
+      "options": [
+        "`Animal`, `Animal`, `false`, `true`",
+        "`Animal`, `Dog`, `true`, `true`",
+        "`Animal`, `Dog`, `false`, `true`",
+        "`Animal`, `Animal`, `false`, `false`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`getClass()` returns the runtime class of the object, not the declared type of the variable, so `d.getClass().getName()` is `Dog`. `instanceof` checks whether the object is an instance of the class or any subclass: a plain `Animal` is not a `Dog` (false), but a `Dog` is an `Animal` (true).",
+      "source": "code: Demo2.java; notes p3 (getClass)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    },
+    {
+      "id": "d22_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "toString()",
+      "question": "Your log line `System.out.println(\"Saved: \" + student);` prints something like `Saved: Student@1b6d3586` instead of the student's name and age. What is the right fix?",
+      "codeSnippet": null,
+      "options": [
+        "Call `student.hashCode()` instead, which returns the student's data as text",
+        "Cast the object: `(String) student`",
+        "Override `equals()` in `Student`, because printing uses `equals()` to find the fields",
+        "Override `public String toString()` in `Student` to return the fields you want"
+      ],
+      "correctAnswer": 3,
+      "explanation": "String concatenation and `println` call the object's `toString()`. `Object`'s default version returns `ClassName@hexHashCode`, which is what you see. Overriding `toString()` (as the lecture's `Student` does with `name + \" , \" + age`) gives a readable representation; casting a `Student` to `String` does not compile.",
+      "source": "notes p2; code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    },
+    {
+      "id": "d22_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "equals() vs ==",
+      "question": "Using the lecture's `Student` class shown below, what does `main` print?",
+      "codeSnippet": "import java.util.Objects;\n\nclass Student {\n    String name;\n    int age;\n\n    @Override\n    public String toString() {\n        return name + \" , \" + age;\n    }\n\n    @Override\n    public boolean equals(Object obj) {\n        if (this == obj) return true;\n        if (obj == null) return false;\n        if (obj.getClass() != this.getClass()) return false;\n        Student s = (Student) obj;\n        return this.name == s.name && this.age == s.age;\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(name, age);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student s1 = new Student();\n        s1.name = \"Aditya\";\n        s1.age = 28;\n\n        Student s2 = new Student();\n        s2.name = \"Aditya\";\n        s2.age = 28;\n\n        System.out.println(s1 == s2);\n        System.out.println(s1.equals(s2));\n        System.out.println(s1.hashCode() == s2.hashCode());\n        System.out.println(s1);\n    }\n}",
+      "options": [
+        "`false`, `true`, `true`, `Aditya , 28`",
+        "`true`, `true`, `true`, `Aditya , 28`",
+        "`false`, `true`, `false`, `Student@` followed by a hex code",
+        "`false`, `false`, `true`, `Aditya , 28`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`s1 == s2` compares references, and these are two different objects, so it is false. The overridden `equals()` compares name and age, which match, so it is true, and `Objects.hash(name, age)` gives equal hash codes for equal fields. `println(s1)` uses the overridden `toString()`, giving `Aditya , 28`.",
+      "source": "code: Demo.java; notes p2",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    },
+    {
+      "id": "d22_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "hashCode() contract",
+      "question": "Two `Student` objects return the same value from `hashCode()`. What can you conclude?",
+      "codeSnippet": null,
+      "options": [
+        "They are definitely equal according to `equals()`",
+        "They are the same object in memory",
+        "Nothing certain: equal objects must have equal hash codes, but unequal objects may also share a hash code",
+        "At least one of them has a broken `hashCode()` implementation"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The rule only works in one direction: if `a.equals(b)` is true, their hash codes must be equal. The reverse does not hold, as the notes show with \"Aditya\" and \"Rohit\" both drawn with hash 123; such collisions are legal. A shared hash code therefore says nothing definite about equality or identity.",
+      "source": "notes p3 (rule: if two objects are equal their hashCode must be equal, reverse may not be true)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    },
+    {
+      "id": "d22_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "equals() and hashCode() together",
+      "question": "A teammate overrides `equals()` in `Student` to compare name and age but does not override `hashCode()`. They add `s1` to a `HashSet`, then call `set.contains(s2)` where `s2` has the same name and age; it returns `false`. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`HashSet` never calls `equals()`; it only compares references with `==`",
+        "The set first uses `hashCode()` to locate the bucket; `Object`'s default hash codes for the two distinct objects differ, so `equals()` is never even tried on `s1`",
+        "`contains()` requires `Student` to implement `Comparable`",
+        "Overriding `equals()` automatically disables the default `hashCode()`, so the set throws away the lookup"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Hash-based collections (`HashSet`, `HashMap`, `Hashtable`) use `hashCode()` to pick a bucket and only then call `equals()` on entries in that bucket. With the default `Object.hashCode()`, two distinct objects practically always get different values, so the lookup goes to the wrong bucket. That is why the equal-objects-equal-hash-codes rule exists and both methods must be overridden together.",
+      "source": "notes p3 (HashSet, HashMap, Hashtable); code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    },
+    {
+      "id": "d22_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "clone() and Cloneable",
+      "question": "A class overrides `clone()` with `return super.clone();` but does NOT implement `Cloneable`. What happens when `clone()` is called on one of its objects?",
+      "codeSnippet": null,
+      "options": [
+        "It returns a deep copy, because `Cloneable` is only needed for shallow copies",
+        "It fails to compile, because `Cloneable` declares the `clone()` method that must be implemented",
+        "It returns `null`, since the class did not opt in to cloning",
+        "`Object.clone()` throws `CloneNotSupportedException` at runtime"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`Cloneable` is a marker interface: it is empty, and `Object.clone()` merely checks whether the object's class implements it. If not, it throws `CloneNotSupportedException`; if so, it returns a field-by-field (shallow) copy. Because the interface declares no methods, leaving it out is not a compile error.",
+      "source": "notes p4 (Cloneable as marker interface); code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Cloneable.html"
+    },
+    {
+      "id": "d22_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Comparing fields inside equals()",
+      "question": "The lecture's `equals()` compares names with `==`. What does this program print?",
+      "codeSnippet": "import java.util.Objects;\n\nclass Student {\n    String name;\n    int age;\n\n    @Override\n    public String toString() {\n        return name + \" , \" + age;\n    }\n\n    @Override\n    public boolean equals(Object obj) {\n        if (this == obj) return true;\n        if (obj == null) return false;\n        if (obj.getClass() != this.getClass()) return false;\n        Student s = (Student) obj;\n        return this.name == s.name && this.age == s.age;\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(name, age);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        String first = \"Adi\";\n\n        Student s1 = new Student();\n        s1.name = \"Aditya\";\n        s1.age = 28;\n\n        Student s2 = new Student();\n        s2.name = first + \"tya\";\n        s2.age = 28;\n\n        System.out.println(s1.equals(s2));\n        System.out.println(s1.hashCode() == s2.hashCode());\n    }\n}",
+      "options": [
+        "`true` then `true`",
+        "`false` then `true`",
+        "`false` then `false`",
+        "`true` then `false`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`first + \"tya\"` is computed at runtime (since `first` is not a constant), producing a new `String` object that is not the pooled literal `\"Aditya\"`. So `this.name == s.name` is false and `equals()` returns false, even though the texts match. `Objects.hash` uses `String.hashCode()`, which depends only on the characters, so the hash codes are equal; the fix is to compare with `Objects.equals(name, s.name)`.",
+      "source": "code: Demo.java (equals uses ==)",
+      "reference": "https://stackoverflow.com/questions/513832/how-do-i-compare-strings-in-java"
+    },
+    {
+      "id": "d22_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "clone() and Cloneable",
+      "question": "`Student implements Cloneable` and has an `int[] marks` field; its `clone()` just returns `super.clone()`. After `Student s3 = (Student) s1.clone(); s3.marks[0] = 50;`, `s1.marks[0]` is also 50. What explains this, and what is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "`clone()` returned the same object, so `s3 == s1`; implement `Cloneable` correctly to get a new object",
+        "Arrays are primitives, so they are shared automatically; declare `marks` as `final` to stop sharing",
+        "`Object.clone()` makes a shallow copy, so both objects reference the same array; override `clone()` to also copy the array (e.g. `copy.marks = marks.clone()`)",
+        "The JVM caches cloned arrays; call `System.gc()` before cloning"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`Object.clone()` creates a new `Student` (`s3 != s1`), but copies each field as if by assignment, so the reference `marks` points to the same array in both objects: a shallow copy. A deep copy requires overriding `clone()` to copy the mutable parts too. Arrays are objects, not primitives, and `final` only stops reassigning the field.",
+      "source": "notes p4 (clone: shallow copy; override for deep copy; arrays are objects)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    },
+    {
+      "id": "d22_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "getClass() vs instanceof in equals()",
+      "question": "The lecture's `equals()` rejects the argument when `obj.getClass() != this.getClass()`. Suppose `class Monitor extends Student` and a `Monitor` and a `Student` have the same name and age. What does this check imply?",
+      "codeSnippet": null,
+      "options": [
+        "They compare equal, because a `Monitor` is an instance of `Student`",
+        "They are never equal, because their runtime classes differ; this also keeps `equals()` symmetric between parent and child",
+        "`equals()` throws `ClassCastException` because the cast `(Student) obj` runs first",
+        "They compare equal only if `Monitor` also overrides `hashCode()`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`getClass()` returns the exact runtime class, so a `Monitor` and a `Student` are rejected before any field comparison, keeping the result the same whichever object you call it on. An `instanceof Student` check would accept a `Monitor` and could make `student.equals(monitor)` differ from `monitor.equals(student)` if `Monitor` overrides `equals()`. The class check runs before the cast, which is exactly what prevents a `ClassCastException`.",
+      "source": "code: Demo.java (equals with getClass check); code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html"
+    }
+  ]
+}

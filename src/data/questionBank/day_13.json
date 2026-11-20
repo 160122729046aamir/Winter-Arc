@@ -1,0 +1,200 @@
+{
+  "day": 13,
+  "title": "Lecture #13: Constructors in Java",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Rules of constructors",
+    "Default constructor",
+    "Default values of instance variables vs local variables",
+    "Parameterized constructor & overloading",
+    "this keyword",
+    "Constructor chaining with this(...)"
+  ],
+  "questions": [
+    {
+      "id": "d13_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Rules of constructors",
+      "question": "Which statement about constructors matches the rules listed in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "A constructor must be declared `void` because it returns nothing",
+        "A class can have only one constructor, so it cannot be overloaded",
+        "A constructor has the same name as the class, has no return type (not even void), and runs automatically when `new` creates the object",
+        "A constructor must be called manually, e.g. `s1.Student()`, right after `new`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The lecture's rules: same name as the class, no return type (not even void), automatically called during object creation, used to initialize the object, and can be overloaded. Writing `void Student()` would make it an ordinary method, not a constructor, which is why the 'must be void' option is a trap.",
+      "source": "notes p1",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html"
+    },
+    {
+      "id": "d13_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Default values of instance variables vs local variables",
+      "question": "No constructor assigns these fields. What does this print?",
+      "codeSnippet": "class Student {\n    String name;\n    int age;\n    double cgpa;\n    boolean active;\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        Student s1 = new Student();\n        System.out.println(s1.name + \" \" + s1.age + \" \" + s1.cgpa + \" \" + s1.active);\n    }\n}",
+      "options": [
+        "Compile error: the fields were never initialized",
+        "null 0 0.0 false",
+        " 0 0.0 false (empty name)",
+        "null 0 0 null"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Instance variables get default values when the object is created: integer types 0, floating types 0.0, boolean false and String (any reference) null, as written in Demo.java's comment. Only local variables have no defaults; fields compile fine. A double prints as 0.0, not 0, and the String default is null, not an empty string.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d13_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Default values of instance variables vs local variables",
+      "question": "After learning that `int age;` in `Student` defaults to 0, a teammate writes `int x;` followed by `System.out.println(x);` inside `main`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It prints 0, the same default that int fields get",
+        "It prints a random leftover value from memory",
+        "It compiles, but throws an exception at run time",
+        "Compile error: local variable `x` might not have been initialized"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Default values apply to instance variables, not to local variables; the commented-out lines in Demo.java point out that local variables have no default values. Reading an unassigned local is rejected at compile time. Java never exposes leftover memory garbage.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d13_q4",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Default constructor",
+      "question": "The lecture says \"constructor is mandatory\", yet the Day 12 `Student` class had no constructor and `new Student()` still worked. Why?",
+      "codeSnippet": null,
+      "options": [
+        "When a class declares no constructor, the compiler supplies a default no-argument constructor with an empty body",
+        "`new` can create objects without any constructor; constructors are optional extras",
+        "The JVM copies a constructor from the `main` method's class",
+        "Fields with default values act as the constructor"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Every object creation needs a constructor; if you write none, the compiler adds a default, empty no-arg constructor like `Student() { }`. That is why `new Student()` compiled before constructors were introduced. Default field values exist regardless and are not a constructor.",
+      "source": "notes p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html"
+    },
+    {
+      "id": "d13_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Default constructor",
+      "question": "`Student` declares only `Student(String n, int a, int rn, String c)`. Elsewhere a teammate's code has `Student s2 = new Student();` and the build breaks. What is the cause and the fix used in Demo2?",
+      "codeSnippet": null,
+      "options": [
+        "Fields lack default values; fix by initializing every field where it is declared",
+        "Once any constructor is written, the compiler no longer adds the default one; fix by explicitly writing `Student() { }`",
+        "`new Student()` must pass `null` for every parameter; fix by writing `new Student(null, 0, 0, null)` everywhere",
+        "The four-parameter constructor must be declared first; fix by moving it above the fields"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The compiler generates the default no-arg constructor only for a class with no constructors at all. Declaring a parameterized one removes it, so `new Student()` has no matching constructor. Demo2 solves this by also writing an explicit empty `Student() { }` (constructor overloading); declaration order is irrelevant.",
+      "source": "code: Demo2.java; notes p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html"
+    },
+    {
+      "id": "d13_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "this keyword",
+      "question": "What does this print?",
+      "codeSnippet": "class Student {\n    String name;\n    int age;\n\n    Student(String name, int age) {\n        name = name;\n        this.age = age;\n    }\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        Student s = new Student(\"Aditya\", 28);\n        System.out.println(s.name + \" \" + s.age);\n    }\n}",
+      "options": [
+        "Aditya 28",
+        "Compile error: a parameter cannot have the same name as a field",
+        "null 0",
+        "null 28"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Inside the constructor, the parameter `name` shadows the field, so `name = name;` just assigns the parameter to itself and the field keeps its default null. `this.age = age;` explicitly targets the current object's field, so age becomes 28. Same-named parameters are legal; `this.` is how you reach the field, as in the lecture's `this.name = name`.",
+      "source": "notes p3; code: Demo3.java",
+      "reference": null
+    },
+    {
+      "id": "d13_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "this keyword",
+      "question": "In `Student(String name, int age) { this.name = name; this.age = age; }`, what does `this` refer to?",
+      "codeSnippet": null,
+      "options": [
+        "The current object being created/used, so `this.name` is that object's field while plain `name` is the parameter",
+        "The `Student` class itself, so `this.name` is shared by all students",
+        "The most recently created Student object in the program",
+        "The constructor's parameter list, so `this.name` means the parameter"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`this` is a reference to the current object, the one being constructed (or the one a method was called on). It lets you tell the instance variable `this.name` apart from a parameter with the same name. It is not the class itself and not 'the last object created'.",
+      "source": "notes p3",
+      "reference": null
+    },
+    {
+      "id": "d13_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Rules of constructors",
+      "question": "A teammate wants to reset an existing object and writes `s1.Student(\"Rohit\", 30);` (or just `Student(\"Rohit\", 30);` inside a regular method). What does the lecture say about this?",
+      "codeSnippet": null,
+      "options": [
+        "It works and re-initializes `s1` in place with the new values",
+        "It works, but creates a second object that replaces `s1` automatically",
+        "It does not compile: a constructor cannot be called manually like a method; it runs via `new Student(...)` or via `this(...)` from another constructor",
+        "It compiles, but throws an exception at run time because `s1` already exists"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes mark calling a constructor manually as not allowed: `Student(...)` is only invoked through `new` during object creation, or chained with `this(...)` as the first step of another constructor. To change an existing object you assign its fields or call a method instead.",
+      "source": "notes p4",
+      "reference": null
+    },
+    {
+      "id": "d13_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Constructor chaining with this(...)",
+      "question": "Using the lecture's chained constructors (Demo3), what is the complete output?",
+      "codeSnippet": "class Student {\n    String name;\n    int age;\n    int rollNumber;\n    String college;\n\n    Student() {\n        this(\"Unknown\");\n        System.out.println(\"first\");\n    }\n    Student(String name) {\n        this(name, 0);\n        System.out.println(\"second\");\n    }\n    Student(String name, int age) {\n        this(name, age, 0);\n        System.out.println(\"third\");\n    }\n    Student(String name, int age, int rollNumber) {\n        this(name, age, rollNumber, \"Unknown\");\n        System.out.println(\"fourth\");\n    }\n    Student(String name, int age, int rollNumber, String college) {\n        this.name = name;\n        this.age = age;\n        this.rollNumber = rollNumber;\n        this.college = college;\n        System.out.println(\"fifth\");\n    }\n}\n\npublic class Demo3 {\n    public static void main(String[] args) {\n        Student s = new Student(\"Rohit\", 28);\n        System.out.println(s.rollNumber + \" \" + s.college);\n    }\n}",
+      "options": [
+        "third\nfourth\nfifth\n0 Unknown",
+        "fifth\nfourth\nthird\n0 Unknown",
+        "fifth\nfourth\nthird\nsecond\nfirst\n0 Unknown",
+        "fifth\nfourth\nthird\n0 null"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`new Student(\"Rohit\", 28)` enters the third constructor, whose first statement `this(...)` goes to the fourth, which goes to the fifth; each prints only after the call it chained to returns, so the order is fifth, fourth, third. The first and second constructors are never involved because the chain only moves toward more parameters. The fourth constructor passes \"Unknown\" as college and the third passes 0 as rollNumber.",
+      "source": "code: Demo3.java",
+      "reference": null
+    },
+    {
+      "id": "d13_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Constructor chaining with this(...)",
+      "question": "While refactoring the chain, a teammate ends up with `Student() { this(\"Unknown\"); }` and `Student(String name) { this(); }`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles, and `new Student()` stops after one round trip because Java detects the loop at run time",
+        "It compiles, but `new Student()` throws StackOverflowError at run time",
+        "It compiles, and `name` stays \"Unknown\" because the first call wins",
+        "Compile error: the constructors invoke each other through `this(...)` (recursive constructor invocation)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The Java compiler checks constructor chains and rejects any constructor that directly or indirectly invokes itself via `this(...)` ('recursive constructor invocation'). So unlike a recursive method missing a base case, this never reaches run time and never produces a StackOverflowError. A valid chain must end in a constructor that does not call `this(...)`, like Demo3's fifth constructor.",
+      "source": "code: Demo3.java; notes p3",
+      "reference": null
+    }
+  ]
+}

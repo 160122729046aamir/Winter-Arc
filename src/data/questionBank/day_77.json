@@ -1,0 +1,206 @@
+{
+  "day": 77,
+  "title": "Spring Lecture #20: Spring Boot Filters",
+  "sources": [
+    "notes/Notes.pdf (37 pages)",
+    "notes/Excalidraw-Notes.pdf (1 page)",
+    "code/filterDemo/filters/AuthenticationFilter.java",
+    "code/filterDemo/filters/DummyFilter.java",
+    "code/filterDemo/filters/RequestFilter.java",
+    "code/filterDemo/filters/ResponseBodyFilter.java",
+    "code/filterDemo/filters/ResponseHeaderFilter.java",
+    "code/filterDemo/filters/SpringDemoFilter.java",
+    "code/filterDemo/configuration/FilterConfig.java"
+  ],
+  "topics": [
+    "Modifying response headers & status",
+    "Short-circuiting the chain",
+    "ContentCachingResponseWrapper",
+    "Request body as a stream",
+    "Request wrappers",
+    "FilterRegistrationBean",
+    "OncePerRequestFilter & shouldNotFilter()"
+  ],
+  "questions": [
+    {
+      "id": "d77_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "ContentCachingResponseWrapper",
+      "question": "Why can't a Filter simply call something like `response.getBody()` after `chain.doFilter()` to read what the controller returned?",
+      "codeSnippet": null,
+      "options": [
+        "The body is available, but only through `response.getHeader(\"Body\")` after the response is committed",
+        "The body is stored in the request object, so the Filter must call `request.getAttribute(\"body\")` instead",
+        "`HttpServletResponse` is a destination that data is written into via `getWriter()`/`getOutputStream()`, not an object that keeps the full body for later reading",
+        "The body exists only inside the controller method's stack frame and is destroyed before the Filter resumes"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The controller (via Spring MVC) writes bytes into the response's writer/output stream and they move on towards the client; the plain response does not retain them as a readable body. To inspect or replace the body later you must pass a wrapper such as `ContentCachingResponseWrapper` down the chain. The body is not stored in request attributes or headers.",
+      "source": "notes p5-6",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/ContentCachingResponseWrapper.html"
+    },
+    {
+      "id": "d77_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Short-circuiting the chain",
+      "question": "This Filter (from the lecture code) is registered for all URLs. A client sends `POST /api/students` WITHOUT any `token` header. What happens?",
+      "codeSnippet": "public class AuthenticationFilter implements Filter {\n    @Override\n    public void doFilter(ServletRequest servletRequest,\n                         ServletResponse servletResponse,\n                         FilterChain filterChain) throws IOException, ServletException {\n        HttpServletRequest req = (HttpServletRequest) servletRequest;\n        HttpServletResponse res = (HttpServletResponse) servletResponse;\n        String token = req.getHeader(\"token\");\n        if (token == null || !token.equals(\"12345\")) {\n            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);\n            res.setContentType(\"application/json\");\n            res.getWriter().write(\"{\\\"message\\\" : \\\"Authentication is required\\\"}\");\n            return;\n        }\n        filterChain.doFilter(servletRequest, servletResponse);\n    }\n}",
+      "options": [
+        "The client gets 401 with the JSON message, and the controller is never invoked",
+        "A `NullPointerException` occurs at `token.equals(\"12345\")`, giving a 500 response",
+        "The client gets 401, but the controller still runs and its JSON is appended after the message",
+        "The 401 is ignored because the status can only be set by the controller, so the client gets 200"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`token == null` is true, so `||` short-circuits and `equals` is never called (no NPE). The Filter writes the 401 JSON response and returns without calling `filterChain.doFilter()`, so the request never reaches the DispatcherServlet or the controller. Returning without calling the chain means 'stop processing here'.",
+      "source": "code: AuthenticationFilter.java; notes p4",
+      "reference": null
+    },
+    {
+      "id": "d77_q3",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Request body as a stream",
+      "question": "A teammate adds a Filter that reads the whole JSON body with `request.getReader()` and logs it, then calls `chain.doFilter(request, response)`. Now every `@PostMapping` with `@RequestBody Student` fails with \"Required request body is missing\". What is the correct fix?",
+      "codeSnippet": null,
+      "options": [
+        "Switch the Filter from `getReader()` to `getInputStream()`, since that stream can be read independently of the reader",
+        "Call `reader.reset()` after logging so the stream goes back to position zero for Spring MVC",
+        "Move the Filter to a lower order so it runs after the DispatcherServlet has already parsed the body",
+        "Read the bytes once, cache them, and pass down a custom `HttpServletRequestWrapper` whose `getInputStream()`/`getReader()` return fresh streams over the cached bytes"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The body is a one-way network stream; once the Filter consumes it, nothing remains for Jackson. The standard fix is to cache the bytes and hand downstream code a wrapper that returns a new `ByteArrayInputStream` (starting at position 0) every time. `getReader()` and `getInputStream()` are two views of the same body, so switching between them does not help, and the container's reader cannot be rewound to replay network bytes.",
+      "source": "notes p16-21; code: RequestFilter.java",
+      "reference": "https://www.baeldung.com/spring-reading-httpservletrequest-multiple-times"
+    },
+    {
+      "id": "d77_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "ContentCachingResponseWrapper",
+      "question": "The controller returns `{\"name\":\"Aditya\"}` with status 200. What does the client receive with this Filter in place?",
+      "codeSnippet": "@Component\npublic class AuditFilter implements Filter {\n    @Override\n    public void doFilter(ServletRequest request, ServletResponse response,\n                         FilterChain chain) throws IOException, ServletException {\n        ContentCachingResponseWrapper wrapped =\n                new ContentCachingResponseWrapper((HttpServletResponse) response);\n        chain.doFilter(request, wrapped);\n        byte[] body = wrapped.getContentAsByteArray();\n        System.out.println(\"Response size: \" + body.length);\n    }\n}",
+      "options": [
+        "Status 200 with `{\"name\":\"Aditya\"}`, because the wrapper forwards writes to the real response as they happen",
+        "An empty body, because the bytes stay cached inside the wrapper and `copyBodyToResponse()` is never called",
+        "Status 500, because `getContentAsByteArray()` throws once the response has been committed",
+        "The body twice, because the controller writes to both the wrapper and the original response"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`ContentCachingResponseWrapper` caches everything written to its writer/output stream and does not forward it to the real response until `copyBodyToResponse()` is called. Omitting that call means the client gets no body (the log line still prints the size). This is why the notes call `copyBodyToResponse()` an essential final step.",
+      "source": "notes p9-10; code: ResponseBodyFilter.java",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/ContentCachingResponseWrapper.html"
+    },
+    {
+      "id": "d77_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "FilterRegistrationBean",
+      "question": "`RequestLoggingFilter` is annotated with `@Component`, and a `@Configuration` class also exposes a `FilterRegistrationBean` that calls `setFilter(new RequestLoggingFilter())` with `addUrlPatterns(\"/api/*\")`. Each `/api/students` request is logged twice. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`FilterRegistrationBean` always invokes its filter once for the request and once for the response",
+        "Spring Boot runs a Filter once per URL pattern, and `/api/*` counts as two patterns",
+        "Two separate registrations exist: the `@Component` bean (mapped broadly to `/*`) and the manual registration of a second instance",
+        "`@Component` filters are run once by the servlet container and again by the DispatcherServlet"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Spring Boot auto-registers a `Filter` bean (mapped to `/*`), and the `FilterRegistrationBean` registers another instance created with `new`. Both match `/api/students`, so the logic runs twice. Pick one strategy: drop `@Component` when you register the filter manually.",
+      "source": "notes p22-26",
+      "reference": "https://docs.spring.io/spring-boot/api/java/org/springframework/boot/web/servlet/FilterRegistrationBean.html"
+    },
+    {
+      "id": "d77_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "OncePerRequestFilter & shouldNotFilter()",
+      "question": "How does Spring's `OncePerRequestFilter` avoid running `doFilterInternal()` twice for the same request dispatch?",
+      "codeSnippet": null,
+      "options": [
+        "It stores an 'already filtered' request attribute and, if it is present, passes the request down the chain without calling `doFilterInternal()` again",
+        "It keeps a static `Set` of request URIs it has already processed and skips repeated URIs",
+        "It registers itself with order `Ordered.HIGHEST_PRECEDENCE`, which makes the container call it only once",
+        "It caches the request body, so a second invocation finds no data and returns immediately"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`OncePerRequestFilter.doFilter()` checks for a request attribute (the filter name plus `.FILTERED`). If the attribute is set it skips `doFilterInternal()`; otherwise it sets it and runs the logic. A URI-based static set would wrongly skip later, separate requests to the same URL, and ordering has nothing to do with how many times a filter runs.",
+      "source": "notes p30-31",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/filter/OncePerRequestFilter.html"
+    },
+    {
+      "id": "d77_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Short-circuiting the chain",
+      "question": "This filter is registered for all URLs. A client calls `GET /hello`. What is the bug?",
+      "codeSnippet": "public class DummyFilter implements Filter {\n    @Override\n    public void doFilter(ServletRequest servletRequest,\n                         ServletResponse servletResponse,\n                         FilterChain filterChain) throws IOException, ServletException {\n        HttpServletRequest req = (HttpServletRequest) servletRequest;\n        String uri = req.getRequestURI();\n\n        if (!uri.startsWith(\"/api/\")) {\n            filterChain.doFilter(servletRequest, servletResponse);\n        }\n\n        System.out.println(\"Dummy filter called\");\n        filterChain.doFilter(servletRequest, servletResponse);\n    }\n}",
+      "options": [
+        "It fails to compile, because the statement after the `if` block is unreachable",
+        "`/hello` is skipped completely: nothing is printed and the chain runs once, as intended",
+        "The `if` branch throws `IllegalStateException` immediately, so nothing is printed and `/hello` returns 500 before reaching the controller",
+        "Without a `return` in the `if` block, `/hello` is passed down the chain, then \"Dummy filter called\" is printed, and the chain is invoked a second time"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Because the `if` block does not `return`, execution falls through after the first `filterChain.doFilter()`. So the non-API request is processed downstream, the message is printed anyway, and the request is sent down the chain again (duplicate processing on an already-written response). The code compiles fine: a statement after an `if` is never unreachable. The fix is `filterChain.doFilter(...); return;`, as in the notes' `ApiFilter`.",
+      "source": "code: DummyFilter.java; notes p28",
+      "reference": null
+    },
+    {
+      "id": "d77_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "FilterRegistrationBean",
+      "question": "The lecture's `FilterConfig` registers `DummyFilter` like this, intending it to cover both `/api/students` and `/admin/users`. What actually happens?",
+      "codeSnippet": "@Bean\npublic FilterRegistrationBean<DummyFilter> getDummyFilterBean() {\n    FilterRegistrationBean<DummyFilter> registrationBean = new FilterRegistrationBean<>();\n    registrationBean.setFilter(new DummyFilter());\n    registrationBean.addUrlPatterns(\"/api/*, /admin/*\");\n    return registrationBean;\n}",
+      "options": [
+        "It works as intended, because Spring Boot splits the string on commas and trims each pattern",
+        "The whole string is treated as ONE URL pattern, so the filter matches neither `/api/students` nor `/admin/users`; the patterns must be passed as separate arguments",
+        "Only the first pattern `/api/*` is registered and the text after the comma is silently dropped",
+        "The application fails to start because `addUrlPatterns` accepts exactly one pattern per call"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`addUrlPatterns(String... urlPatterns)` is varargs: each argument is one pattern, and nothing splits on commas. The single string \"/api/*, /admin/*\" (space included) is one odd pattern that real request paths don't match. The correct call is `addUrlPatterns(\"/api/*\", \"/admin/*\")`, as shown in the notes.",
+      "source": "code: FilterConfig.java; notes p26",
+      "reference": "https://docs.spring.io/spring-boot/api/java/org/springframework/boot/web/servlet/FilterRegistrationBean.html"
+    },
+    {
+      "id": "d77_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Modifying response headers & status",
+      "question": "A Filter calls `httpResponse.setHeader(\"X-Processing-Time\", ...)` AFTER `chain.doFilter()`. For small responses the header sometimes appears, but for large JSON responses it is usually missing. What explains this?",
+      "codeSnippet": null,
+      "options": [
+        "Downstream code wrote and flushed enough data to commit the response, so status and headers were already sent; later header changes are ignored",
+        "`setHeader()` after `chain.doFilter()` replaces the body instead of adding a header when the body is large",
+        "Headers whose names start with `X-` are dropped by Tomcat once the body exceeds a fixed size",
+        "The header must be set with `addHeader()`, because `setHeader()` is ignored once the controller has returned"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When the output buffer fills or is flushed, the response becomes committed: the status line and headers go to the client first. After that, header changes have no effect (check with `isCommitted()`). Headers that must always be present should be set before `chain.doFilter()`. `addHeader()` vs `setHeader()` only decides between appending and replacing values; it does not affect commit timing.",
+      "source": "notes p2-3",
+      "reference": null
+    },
+    {
+      "id": "d77_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Request wrappers",
+      "question": "To force `page=2`, a Filter passes down a custom `HttpServletRequestWrapper` that overrides ONLY `getParameter(String name)`. The controller has `@RequestParam int page`, and for `GET /products?page=1` it still receives 1. What is the most likely reason?",
+      "codeSnippet": null,
+      "options": [
+        "Query parameters are parsed by Tomcat before any Filter runs, so no wrapper can ever change them",
+        "The wrapper must also call `super.setParameter(\"page\", \"2\")` in its constructor to persist the change",
+        "Spring MVC resolves request parameters through other methods such as `getParameterValues()`/`getParameterMap()`, which the wrapper did not override, so they still return the original value",
+        "`@RequestParam` reads directly from the URL string rather than from the request object"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Downstream components see only what the wrapper's overridden methods return. Spring's `@RequestParam` resolution uses `getParameterValues()`, and data binding uses the parameter map, so a wrapper must override `getParameter`, `getParameterValues`, `getParameterMap` and `getParameterNames` consistently. There is no `setParameter()` on the request, and wrappers do work. They just have to cover every access path.",
+      "source": "notes p12-14",
+      "reference": null
+    }
+  ]
+}

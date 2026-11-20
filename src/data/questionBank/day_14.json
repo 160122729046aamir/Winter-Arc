@@ -1,0 +1,199 @@
+{
+  "day": 14,
+  "title": "Lecture #14: Objects Deep Dive",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Object size (header + fields + padding)",
+    "Object header (mark word, class pointer)",
+    "Call by value with primitives",
+    "Passing object references",
+    "Copy constructor vs reference assignment",
+    "Shallow vs deep copy"
+  ],
+  "questions": [
+    {
+      "id": "d14_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Passing object references",
+      "question": "The lecture asks: is Java call by value or call by reference? What is the correct answer?",
+      "codeSnippet": null,
+      "options": [
+        "Call by value for primitives, call by reference for objects",
+        "Always call by reference, because objects live on the heap",
+        "Always call by value; for objects, the value copied into the parameter is the reference (address)",
+        "Call by reference only when the parameter is declared with the class type"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Java always copies the argument's value into the parameter. For an object variable, that value is a reference, so the method can modify the shared object but cannot make the caller's variable point somewhere else. The first option is the popular misconception: modifying an object through a copied reference only looks like call by reference.",
+      "source": "notes p4; code: Demo2.java",
+      "reference": "https://www.baeldung.com/java-pass-by-value-or-pass-by-reference"
+    },
+    {
+      "id": "d14_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Call by value with primitives",
+      "question": "What does the lecture's Demo.java print?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        int x = 4;\n        int y = 5;\n        System.out.println(x + \" , \" + y);\n        addTen(x, y);\n        System.out.println(x + \" , \" + y);\n    }\n\n    static void addTen(int x, int y) {\n        x = x + 10;\n        y = y + 10;\n    }\n}",
+      "options": [
+        "4 , 5\n4 , 5",
+        "4 , 5\n14 , 15",
+        "14 , 15\n14 , 15",
+        "Compile error: parameters `x`, `y` clash with `main`'s variables"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`addTen` receives copies of 4 and 5 in its own parameters `x` and `y`; adding 10 changes only those copies, which disappear when the method returns. Same names in different methods are separate local variables, so there is no clash and main's values stay 4 and 5.",
+      "source": "code: Demo.java; notes p3",
+      "reference": "https://www.baeldung.com/java-pass-by-value-or-pass-by-reference"
+    },
+    {
+      "id": "d14_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Object size (header + fields + padding)",
+      "question": "According to the lecture, which three parts add up to an object's size on the heap?",
+      "codeSnippet": null,
+      "options": [
+        "Class name + method code + stack frame",
+        "Reference variable + constructor + fields",
+        "Fields only; methods and metadata are stored elsewhere and add nothing",
+        "Object header (metadata) + the exact data of its fields + padding to a multiple of 8 bytes"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Object size = header size (mark word + class pointer) + exact field data + padding so that the total is a multiple of 8 bytes. Methods are not copied into each object, and the reference variable lives outside the object (e.g. on the stack). Ignoring header and padding underestimates the real size.",
+      "source": "notes p1-p2",
+      "reference": "https://www.baeldung.com/java-memory-layout"
+    },
+    {
+      "id": "d14_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Object size (header + fields + padding)",
+      "question": "For the lecture's `Student` (two String references + two ints) you computed 12 bytes of header + 16 bytes of fields = 28 bytes, but a memory tool reports 32 bytes per Student. A teammate suspects a memory leak. What is the correct explanation?",
+      "codeSnippet": null,
+      "options": [
+        "The tool also counts the 4-byte `s1` reference variable on the stack",
+        "The JVM adds 4 bytes of padding so the object size is a multiple of 8, which is faster for the CPU",
+        "Each String field secretly stores its characters inside the Student object",
+        "The constructor's code is stored inside each object and takes 4 bytes"
+      ],
+      "correctAnswer": 1,
+      "explanation": "HotSpot aligns objects to 8-byte boundaries, so 28 bytes is rounded up to 32 with 4 bytes of padding, as in the lecture. The reference variable is separate from the object, and String fields hold only references; the characters live in separate String objects.",
+      "source": "notes p1-p2",
+      "reference": "https://www.baeldung.com/java-memory-layout"
+    },
+    {
+      "id": "d14_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Copy constructor vs reference assignment",
+      "question": "Using the lecture's `Random` class (fields `x`, `y`, a constructor `Random(int x, int y)` and a copy constructor `Random(Random r)`), what does this print?",
+      "codeSnippet": "public class Demo2 {\n    public static void main(String[] args) {\n        Random r1 = new Random(4, 5);\n        Random r2 = new Random(r1);\n        addTen(r1);\n        System.out.println(r1.x + \" , \" + r1.y);\n        System.out.println(r2.x + \" , \" + r2.y);\n    }\n\n    static void addTen(Random r) {\n        r.x = r.x + 10;\n        r.y = r.y + 10;\n    }\n}",
+      "options": [
+        "4 , 5\n4 , 5",
+        "14 , 15\n4 , 5",
+        "14 , 15\n14 , 15",
+        "4 , 5\n14 , 15"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`addTen` gets a copy of r1's reference, which points to the same object, so r1's object becomes 14, 15. `new Random(r1)` created a separate object that copied 4 and 5 at construction time, so r2 is unaffected. Answering '14 , 15' twice treats the copy constructor as if it shared the object.",
+      "source": "code: Demo2.java; notes p4",
+      "reference": "https://www.baeldung.com/java-pass-by-value-or-pass-by-reference"
+    },
+    {
+      "id": "d14_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Passing object references",
+      "question": "A teammate writes a method `reset(Random r)` whose only statement is `r = new Random(0, 0);` and calls `reset(r1)` where r1 holds (4, 5). Afterwards r1 still shows 4, 5. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Objects are passed by reference, but `new` inside a method is ignored by the JVM",
+        "The new object is created on the stack and destroyed when `reset` returns",
+        "`r1` was copied deeply into `r` when the method was called",
+        "`r` holds a copy of r1's reference; reassigning `r` only changes that local copy, not the caller's `r1`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Because Java is call by value, `r` starts as a copy of the address in `r1`. Pointing `r` at a new object changes only the parameter; `r1` still refers to the original (4, 5) object. Mutating fields via `r.x = ...` would be visible, but reassigning the parameter never is. The new object is created normally on the heap, not on the stack.",
+      "source": "notes p4; code: Demo2.java",
+      "reference": "https://www.baeldung.com/java-pass-by-value-or-pass-by-reference"
+    },
+    {
+      "id": "d14_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Object header (mark word, class pointer)",
+      "question": "Using the lecture's figures (header = 8-byte mark word + 4-byte class pointer, objects padded to a multiple of 8), what is the size of an object of `class Person { byte age; }`?",
+      "codeSnippet": null,
+      "options": [
+        "1 byte",
+        "13 bytes",
+        "16 bytes",
+        "24 bytes"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Header 12 bytes + exact data 1 byte = 13 bytes, which is padded with 3 bytes up to the next multiple of 8, giving 16 bytes. 13 bytes forgets padding, and 1 byte forgets the header that every object carries (mark word for locks/synchronization/GC info plus a class pointer).",
+      "source": "notes p1, p3",
+      "reference": "https://www.baeldung.com/java-memory-layout"
+    },
+    {
+      "id": "d14_q8",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Copy constructor vs reference assignment",
+      "question": "Given `Random r1 = new Random(4, 5); Random r2 = new Random(r1); Random r3 = r1;`, which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`r2` is a separate object with copied field values; `r3` is another reference to r1's object, so `r3.x = 14` also changes `r1.x`",
+        "`r3` is a separate object, while `r2` shares r1's object because it was built from it",
+        "`r2` and `r3` are both separate objects, so neither change affects r1",
+        "`r2` and `r3` both point to r1's object, so all three always show the same values"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Only `new` creates objects: the copy constructor `Random(Random r)` builds a new object and copies x and y into it. `r3 = r1` copies just the reference, so both names reach one object, as drawn in the lecture where `r3.x = 14` changes the object r1 sees. The lecture labels these 'deep copy' and 'shallow copy' respectively.",
+      "source": "notes p4",
+      "reference": "https://www.baeldung.com/cs/deep-vs-shallow-copy"
+    },
+    {
+      "id": "d14_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Passing object references",
+      "question": "Using the lecture's `Random` class, what does this print?",
+      "codeSnippet": "public class Demo {\n    static void swap(Random a, Random b) {\n        Random t = a;\n        a = b;\n        b = t;\n        a.x = 100;\n    }\n\n    public static void main(String[] args) {\n        Random r1 = new Random(1, 2);\n        Random r2 = new Random(3, 4);\n        swap(r1, r2);\n        System.out.println(r1.x + \" \" + r2.x);\n    }\n}",
+      "options": [
+        "100 1",
+        "1 100",
+        "100 3",
+        "3 1"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The swap only exchanges the local copies `a` and `b`; r1 and r2 in main still point to their original objects. After the swap, `a` refers to r2's object, so `a.x = 100` changes r2's x. r1.x stays 1, giving '1 100'. '100 1' assumes the swap reached main's variables, which call by value never allows.",
+      "source": "notes p4; code: Demo2.java",
+      "reference": "https://www.baeldung.com/java-pass-by-value-or-pass-by-reference"
+    },
+    {
+      "id": "d14_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Shallow vs deep copy",
+      "question": "A teammate adds a field `int[] scores` to `Random` and extends the copy constructor with `this.scores = r.scores;`. After `Random r2 = new Random(r1); r2.scores[0] = 99;`, r1's scores also show 99. What is the right diagnosis and fix?",
+      "codeSnippet": null,
+      "options": [
+        "The copy constructor is fine; arrays are always shared between objects in Java",
+        "Call by value copied the array; fix by making `scores` a primitive int",
+        "Copying the reference makes this a shallow copy for `scores`; for a deep copy, create a new array in the copy constructor and copy each element into it",
+        "The bug is `r2.scores[0] = 99`; arrays inside objects must only be modified through r1"
+      ],
+      "correctAnswer": 2,
+      "explanation": "For primitive fields like x and y, copying values gives independent data, but for a reference field `this.scores = r.scores` copies only the address, so both objects share one array: a shallow copy. A deep copy allocates a new array and copies the elements so r1 and r2 no longer share it. Arrays are not inherently shared; only the copied reference made them so.",
+      "source": "notes p4; code: Demo2.java",
+      "reference": "https://www.baeldung.com/cs/deep-vs-shallow-copy"
+    }
+  ]
+}

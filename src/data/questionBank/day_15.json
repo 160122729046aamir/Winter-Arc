@@ -1,0 +1,200 @@
+{
+  "day": 15,
+  "title": "Lecture #15: Static & Final in Java",
+  "sources": [
+    "notes.pdf (3 pages)",
+    "Code/Demo.java",
+    "Code/Demo2.java",
+    "Code/Demo3.java"
+  ],
+  "topics": [
+    "Static (class) variables",
+    "Static methods & their restrictions",
+    "Static blocks",
+    "Why main is static",
+    "final variables & constants",
+    "String[] args (command-line arguments)"
+  ],
+  "questions": [
+    {
+      "id": "d15_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Static (class) variables",
+      "question": "In the lecture's `Student` class, `college` is declared as `static String college = \"IIT Guwahati\";`. What does `static` change?",
+      "codeSnippet": null,
+      "options": [
+        "Each Student object gets its own copy of `college`, but the value can never change",
+        "There is a single copy of `college` that belongs to the class and is shared by all Student objects, accessed as `Student.college`",
+        "`college` can only be read inside the constructor",
+        "`college` becomes a local variable of `main`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A static field is a class variable: one copy shared by every object, accessed with `ClassName.variable`. That saves storing the same college in every Student. Making a value unchangeable is the job of `final`, not `static`, which is the mix-up in the first option.",
+      "source": "notes p1; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    },
+    {
+      "id": "d15_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "String[] args (command-line arguments)",
+      "question": "The program is started with `java Demo5 input.txt output.txt`. What does it print?",
+      "codeSnippet": "public class Demo5 {\n    public static void main(String[] args) {\n        System.out.println(\"Number of arguments are \" + args.length);\n        for (int i = 0; i < args.length; i++) {\n            System.out.println(\"Argument \" + i + \" = \" + args[i]);\n        }\n    }\n}",
+      "options": [
+        "Number of arguments are 3\nArgument 0 = Demo5\nArgument 1 = input.txt\nArgument 2 = output.txt",
+        "Number of arguments are 2\nArgument 1 = input.txt\nArgument 2 = output.txt",
+        "Number of arguments are 0",
+        "Number of arguments are 2\nArgument 0 = input.txt\nArgument 1 = output.txt"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The words after the class name are passed to `main` as the `String[] args` array, starting at index 0, so args = {\"input.txt\", \"output.txt\"}. Unlike C, Java does not put the program/class name in `args[0]`. Running just `java Demo5` would give length 0.",
+      "source": "code: Demo3.java (Demo5)",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/environment/cmdLineArgs.html"
+    },
+    {
+      "id": "d15_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "final variables & constants",
+      "question": "In Demo4, `final int x; x = 4;` compiles fine. A teammate then adds `x = 5;` on the next line. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "Compile error: a final variable can be assigned only once",
+        "It compiles and x becomes 5, because the first assignment was not at the declaration",
+        "It compiles, but throws an exception at run time on `x = 5`",
+        "It compiles and x silently stays 4"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A final variable may be left blank at declaration, as in Demo4, but it can be assigned exactly once; a second assignment is rejected by the compiler. This is what makes final suitable for constants such as PI. Nothing is deferred to run time and nothing is silently ignored.",
+      "source": "code: Demo2.java (Demo4); notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    },
+    {
+      "id": "d15_q4",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Why main is static",
+      "question": "The lecture's comment asks \"why is main static?\" What is the reason?",
+      "codeSnippet": null,
+      "options": [
+        "So that `main` can access every instance variable of the class directly",
+        "Because static methods run faster than instance methods",
+        "So the JVM can call it as `Demo4.main(args)` without first creating an object of `Demo4`",
+        "Because a class can contain only one static method, and it must be `main`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Static methods belong to the class, so the JVM can invoke `ClassName.main(args)` at startup without needing `new Demo4()` first. Being static actually prevents `main` from touching instance variables directly. Classes may have any number of static methods, and speed is not the reason.",
+      "source": "code: Demo2.java (Demo4 comments)",
+      "reference": null
+    },
+    {
+      "id": "d15_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Static (class) variables",
+      "question": "What does this print?",
+      "codeSnippet": "class Student {\n    String name;\n    static String college = \"IIT Guwahati\";\n\n    Student(String name) {\n        this.name = name;\n    }\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        Student s1 = new Student(\"Aditya\");\n        Student s2 = new Student(\"Rohit\");\n        s1.college = \"IIT Delhi\";\n        System.out.println(s2.name + \" \" + s2.college + \" \" + Student.college);\n    }\n}",
+      "options": [
+        "Rohit IIT Guwahati IIT Guwahati",
+        "Rohit IIT Guwahati IIT Delhi",
+        "Rohit IIT Delhi IIT Delhi",
+        "Compile error: a static variable cannot be accessed through `s1`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "There is only one `college` variable, owned by the class; `s1.college` is just another (discouraged) way of writing `Student.college`. So the assignment changes the shared value seen through `s2` and `Student` alike. Accessing a static through a reference compiles (with a warning), so it is not an error.",
+      "source": "notes p1; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    },
+    {
+      "id": "d15_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Static methods & their restrictions",
+      "question": "Which marked line fails to compile?",
+      "codeSnippet": "class Student {\n    String name;\n    static int grade = 8;\n\n    static void show() {\n        System.out.println(grade);              // line 1\n        System.out.println(this.name);          // line 2\n    }\n\n    void print() {\n        System.out.println(grade + \" \" + name); // line 3\n        show();                                 // line 4\n    }\n}",
+      "options": [
+        "Line 1: a static method cannot print a variable",
+        "Line 2: a static method has no `this`, so it cannot reach the instance variable `name`",
+        "Line 3: an instance method cannot read a static variable",
+        "Line 4: an instance method cannot call a static method"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The lecture's rules say a static method can directly use only static members and has no access to `this`, because it is not called on any object. The restrictions apply only in that direction: instance methods like `print()` may freely use static variables and call static methods, so lines 3 and 4 are fine.",
+      "source": "notes p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    },
+    {
+      "id": "d15_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Static blocks",
+      "question": "The `Random` class has `static final double PI;` and a static block `static { PI = 3.14; }`. When does that static block run?",
+      "codeSnippet": null,
+      "options": [
+        "Once, when the class is loaded and initialized, before it is first used; not again for each new object",
+        "Every time `new Random()` is called, just before the constructor",
+        "Only when a method explicitly calls it by name",
+        "At compile time, so it never runs while the program executes"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A static block runs a single time when the class is initialized, which makes it the place to set static fields such as a blank `static final` constant or `grade = 8` in Demo.java. Code that should run for every object belongs in a constructor instead. Static blocks have no name, so they cannot be called explicitly.",
+      "source": "code: Demo.java, Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html"
+    },
+    {
+      "id": "d15_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Static methods & their restrictions",
+      "question": "The notes say a static method can only call other static methods. A teammate's `main` (static) needs to call the instance method `markAttendance()` of `Student`. Which approach compiles and works?",
+      "codeSnippet": null,
+      "options": [
+        "Call `markAttendance();` directly inside `main`",
+        "Call `this.markAttendance();` inside `main`",
+        "Call `Student.markAttendance();` from `main`",
+        "Create an object first, e.g. `Student s1 = new Student(...); s1.markAttendance();`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The rule means a static method cannot call instance members directly, because there is no current object. With an explicit object reference, any static method (including `main`) can call instance methods, which is exactly what all the lecture demos do. `this` does not exist in static context, and `ClassName.method()` works only for static methods.",
+      "source": "notes p1-p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    },
+    {
+      "id": "d15_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Static blocks",
+      "question": "What is the exact output?",
+      "codeSnippet": "class Counter {\n    static int count;\n    int id;\n\n    static {\n        count = 10;\n        System.out.print(\"S \");\n    }\n\n    Counter() {\n        count++;\n        id = count;\n        System.out.print(\"C\" + id + \" \");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.print(\"M \");\n        Counter a = new Counter();\n        Counter b = new Counter();\n        System.out.println(a.id + \" \" + Counter.count);\n    }\n}",
+      "options": [
+        "S M C11 C12 11 12",
+        "M S C11 S C12 11 12",
+        "M S C11 C12 11 12",
+        "M S C11 C12 12 12"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`Counter` is initialized when it is first used (the first `new Counter()`), so \"M \" prints before \"S \", and the static block runs only once. Each constructor increments the shared `count` (11, then 12) and stores it in its own instance field `id`, so a.id stays 11 while Counter.count is 12. '12 12' would require `id` to be static too.",
+      "source": "code: Demo.java; notes p1-p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html"
+    },
+    {
+      "id": "d15_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "final variables & constants",
+      "question": "A teammate declares `final Random r = new Random(4, 5);` (Random has int fields `x`, `y`) and expects it to be fully read-only. Which statement about the next lines is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`r.x = 10;` compiles and changes the object, but `r = new Random(1, 2);` is a compile error",
+        "Both `r.x = 10;` and `r = new Random(1, 2);` are compile errors, because the whole object is frozen",
+        "`r.x = 10;` is a compile error, but `r = new Random(1, 2);` is allowed once",
+        "Both lines compile, because final applies only to primitive variables"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`final` on a reference variable fixes the reference: `r` must always point to the same object, so reassigning it fails to compile. It does not make the object's fields final, so `r.x = 10` is allowed. To make the data unchangeable, the fields `x` and `y` themselves would have to be final.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    }
+  ]
+}

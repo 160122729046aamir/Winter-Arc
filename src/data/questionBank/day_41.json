@@ -1,0 +1,198 @@
+{
+  "day": 41,
+  "title": "Lecture #41: Java Optional Explained from Scratch",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Problem with null / null-check hell",
+    "Creating Optional (of, ofNullable, empty)",
+    "Getting values (get, isPresent, ifPresent, orElse, orElseGet, orElseThrow, ifPresentOrElse)",
+    "Transforming Optional (map, flatMap, filter)",
+    "Optional with Streams"
+  ],
+  "questions": [
+    {
+      "id": "d41_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Optional basics",
+      "question": "The notes call Optional a \"mini stream\". Which description best captures what an `Optional<T>` is?",
+      "codeSnippet": null,
+      "options": [
+        "A collection that can hold any number of T values, but at most one of them can be null",
+        "A subclass of T that adds null-safety to all of T's methods",
+        "A compile-time annotation telling the compiler that a variable may be null",
+        "A container object that holds either exactly one non-null value (present) or nothing (empty)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "An Optional wraps zero or one non-null value, while a Stream handles zero to many. It is an ordinary object (`private final T value`), not an annotation and not a subtype of T. Its value is either present or absent, never a stored null.",
+      "source": "notes p1, p2, p4",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Getting values from Optional",
+      "question": "In the lecture's Demo, `getName()` is changed to return `Optional.ofNullable(null)`. What does the program print?",
+      "codeSnippet": "import java.util.Optional;\n\npublic class Demo {\n    public static void main(String[] args) {\n        Optional<String> name = getName();\n        name.ifPresentOrElse(System.out::println,\n                () -> System.out.println(\"Unknown\"));\n    }\n\n    public static Optional<String> getName() {\n        return Optional.ofNullable(null);\n    }\n}",
+      "options": [
+        "Unknown",
+        "null",
+        "It throws `NullPointerException` inside `getName()`",
+        "Nothing is printed"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`ofNullable(null)` returns an empty Optional, so `ifPresentOrElse` runs the second argument (the empty-action) and prints \"Unknown\". The NPE option describes `Optional.of(null)`; `ofNullable` exists precisely to accept null.",
+      "source": "code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Transforming Optional (map, flatMap, filter)",
+      "question": "What does this program print?",
+      "codeSnippet": "import java.util.Optional;\n\npublic class Demo2 {\n    public static void main(String[] args) {\n        Optional<String> name = Optional.of(\"Ravi\");\n\n        int r = name.map(x -> x.length())\n                    .filter(len -> len > 4)\n                    .orElse(-1);\n\n        System.out.println(r);\n    }\n}",
+      "options": [
+        "4",
+        "-1",
+        "0",
+        "It throws `NoSuchElementException`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`map` turns `Optional[\"Ravi\"]` into `Optional[4]`. `filter(len -> len > 4)` fails, so the Optional becomes empty and `orElse(-1)` returns -1. A filter that fails does not throw: it just turns the Optional empty, and the exception only happens if you call `get()` on that empty Optional.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Getting values from Optional",
+      "question": "`findUser(id)` returns `Optional<User>`. Your endpoint must fail with an `IllegalArgumentException(\"No user \" + id)` when the user is missing, and otherwise use the User. Which line is the cleanest correct choice?",
+      "codeSnippet": null,
+      "options": [
+        "`User u = findUser(id).get();`",
+        "`User u = findUser(id).orElse(null);`",
+        "`User u = findUser(id).orElseThrow(() -> new IllegalArgumentException(\"No user \" + id));`",
+        "`User u = findUser(id).ifPresent(x -> x);`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`orElseThrow(Supplier)` returns the value if present and otherwise throws the exception you supply. `get()` also throws on an empty Optional, but it throws a generic `NoSuchElementException` without your message. `orElse(null)` brings back the very null problem Optional is meant to remove, and `ifPresent` returns void.",
+      "source": "notes p3, code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Transforming Optional (map, flatMap, filter)",
+      "question": "In Demo2, `User` has a field `Optional<Address> address`. Why does the lecture write `user.flatMap(x -> x.address)` instead of `user.map(x -> x.address)` to get an `Optional<Address>`?",
+      "codeSnippet": null,
+      "options": [
+        "Because the function already returns an Optional; `map` would wrap it again, giving `Optional<Optional<Address>>`, while `flatMap` returns it as-is",
+        "Because `map` cannot access public fields, only getter methods",
+        "Because `flatMap` also checks that `address.city` is non-null",
+        "Because `map` throws `NullPointerException` when the user is empty, while `flatMap` does not"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`map(f)` puts f's result into a new Optional, so if f already returns `Optional<Address>`, you get a nested Optional. `flatMap` expects a function that returns an Optional and does not wrap again. Both methods handle an empty user safely by returning empty, so null-safety is not what separates them.",
+      "source": "code: Demo2.java, notes p3",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Optional with Streams",
+      "question": "`List<User> users`, where `u.getEmail()` returns `Optional<String>` (some users have no email). You need a `List<String>` of the emails that exist. Which pipeline from the lecture does this correctly?",
+      "codeSnippet": null,
+      "options": [
+        "`users.stream().map(u -> u.getEmail().get()).toList()`",
+        "`users.stream().map(u -> u.getEmail()).filter(x -> x != null).map(x -> x.get()).toList()`",
+        "`users.stream().map(u -> u.getEmail()).toList()`",
+        "`users.stream().map(u -> u.getEmail()).filter(x -> x.isPresent()).map(x -> x.get()).toList()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Mapping gives a `Stream<Optional<String>>`. Filtering on `isPresent()` keeps only non-empty Optionals, so the following `get()` is safe. Checking `x != null` is the tempting mistake: an empty Optional is not null, so it passes the filter and `get()` throws `NoSuchElementException`.",
+      "source": "notes p4",
+      "reference": null
+    },
+    {
+      "id": "d41_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Problem with null / null-check hell",
+      "question": "You are refactoring the notes' \"null-check hell\" (`if (u != null) { if (u.getAddress() != null) { if (u.getAddress().getCity() != null) ... } }`). `getUser()` now returns `Optional<User>`, while `getAddress()` and `getCity()` still return plain values that may be null. Which chain prints the city only when every level is present?",
+      "codeSnippet": null,
+      "options": [
+        "`getUser().get().getAddress().getCity()` followed by `System.out.println`",
+        "`getUser().map(User::getAddress).map(Address::getCity).ifPresent(System.out::println);`",
+        "`getUser().flatMap(User::getAddress).flatMap(Address::getCity).ifPresent(System.out::println);`",
+        "`getUser().filter(u -> u.getAddress() != null).get().getAddress().getCity()` followed by `System.out.println`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "If the mapping function returns null, `map` produces an empty Optional, so a missing address or city stops the chain and `ifPresent` does nothing. `flatMap` does not compile here, because those getters return plain values, not Optionals. The `get()`-based versions bring back NPE or NoSuchElementException risks.",
+      "source": "notes p1, p3",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "orElse vs orElseGet",
+      "question": "What is the exact output?",
+      "codeSnippet": "import java.util.Optional;\n\npublic class Fallback {\n    static String fallback() {\n        System.out.print(\"fallback \");\n        return \"Guest\";\n    }\n\n    public static void main(String[] args) {\n        Optional<String> name = Optional.of(\"Aditya\");\n        System.out.println(name.orElse(fallback()));\n        System.out.println(name.orElseGet(() -> fallback()));\n    }\n}",
+      "options": [
+        "Aditya\nAditya",
+        "fallback Aditya\nfallback Aditya",
+        "fallback Aditya\nAditya",
+        "Aditya\nfallback Aditya"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`orElse(fallback())` is a normal method argument, so `fallback()` runs (printing \"fallback \") before `orElse` is even called, even though the value is present. `orElseGet` takes a Supplier and calls it only when the Optional is empty, so the second line prints just \"Aditya\". This is why expensive defaults belong in `orElseGet`.",
+      "source": "notes p3, code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Creating Optional (of, ofNullable, empty)",
+      "question": "Which one of these expressions throws a `NullPointerException` when evaluated?",
+      "codeSnippet": null,
+      "options": [
+        "`Optional.ofNullable(null).map(s -> s.toString())`",
+        "`Optional.of(\"a\").map(s -> null)`",
+        "`Optional.empty().orElse(null)`",
+        "`Optional.of(null)`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`Optional.of(value)` requires a non-null value and throws NPE immediately for null. `ofNullable(null)` is empty, so `map` never calls the lambda. A `map` function that returns null simply produces an empty Optional. `orElse(null)` just returns null without throwing.",
+      "source": "notes p2",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html"
+    },
+    {
+      "id": "d41_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Optional best practices",
+      "question": "`findEmail()` was changed to return `Optional<String>`, but one early-exit branch still says `return null;`. A caller does `findEmail().orElse(\"none\")`. What happens when that branch runs, and what is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "It throws `NullPointerException`, because the Optional reference itself is null; the branch must return `Optional.empty()`",
+        "It returns \"none\", because `orElse` treats a null Optional as empty",
+        "It fails to compile, because a method returning `Optional<String>` cannot contain `return null;`",
+        "It returns null, because `orElse` passes the null through"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Optional only protects you if the Optional object itself exists. Calling any method on a null reference throws NPE before `orElse` can run. `return null;` compiles for any reference return type, so the compiler will not catch this; a method returning Optional should never return null, so use `Optional.empty()`.",
+      "source": "notes p2 (Optional.empty instead of null)",
+      "reference": "https://dzone.com/articles/java-8-optional-usage-and-best-practices"
+    }
+  ]
+}

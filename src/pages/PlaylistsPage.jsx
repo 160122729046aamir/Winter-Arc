@@ -258,13 +258,7 @@ export default function PlaylistsPage() {
                   <input
                     type="checkbox"
                     checked={!!isWatched}
-                    onChange={() => {
-                      if (assignedDay) {
-                        toggleVideoWatched(assignedDay.day, video.id);
-                      } else {
-                        toggleVideoWatched(1, video.id);
-                      }
-                    }}
+                    onChange={() => toggleVideoWatched(assignedDay ? assignedDay.day : null, video.id)}
                     className="custom-checkbox mt-1 flex-shrink-0"
                     id={`pl-vid-${video.id}`}
                   />

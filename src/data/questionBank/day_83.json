@@ -1,0 +1,202 @@
+{
+  "day": 83,
+  "title": "Spring Lecture #26: JDBC in Java from Scratch",
+  "sources": [
+    "notes/Notes.pdf (50 pages)",
+    "notes/Excalidraw-Notes.pdf (4 pages)",
+    "code/jdbcDemo/pom.xml",
+    "code/jdbcDemo/Main.java",
+    "code/jdbcDemo/model/Student.java",
+    "code/jdbcDemo/repository/StudentRepository.java"
+  ],
+  "topics": [
+    "JDBC API vs driver",
+    "DriverManager & Connection",
+    "execute / executeQuery / executeUpdate",
+    "ResultSet & row mapping",
+    "PreparedStatement & SQL injection",
+    "Closing JDBC resources"
+  ],
+  "questions": [
+    {
+      "id": "d83_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "JDBC API vs driver",
+      "question": "In the lecture's project, the code imports `java.sql.Connection` and `java.sql.PreparedStatement`, and `pom.xml` adds `mysql-connector-j`. What role does each play?",
+      "codeSnippet": null,
+      "options": [
+        "`java.sql` contains the MySQL network protocol; Connector/J only provides the `DriverManager` class",
+        "`java.sql` defines the standard JDBC interfaces your code uses; Connector/J is the MySQL-specific driver that implements them and speaks MySQL's protocol",
+        "Connector/J is the MySQL server itself, embedded in the application so no separate server is needed",
+        "`java.sql` is only for PostgreSQL and Oracle; MySQL code must use Connector/J's own classes instead of the JDBC interfaces"
+      ],
+      "correctAnswer": 1,
+      "explanation": "JDBC (the `java.sql` package) is the database-neutral API of interfaces such as `Connection`, `PreparedStatement` and `ResultSet`. The driver (MySQL Connector/J) supplies the database-specific implementation and translates calls into MySQL's client-server protocol. The MySQL server is still a separate process that must be running, and `DriverManager` is part of `java.sql`, not the driver.",
+      "source": "notes §2 JDBC API and JDBC Driver",
+      "reference": null
+    },
+    {
+      "id": "d83_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "DriverManager & Connection",
+      "question": "A learner copies an old tutorial and asks why the lecture's `StudentRepository` never calls `Class.forName(\"com.mysql.cj.jdbc.Driver\")`. What is the correct answer?",
+      "codeSnippet": null,
+      "options": [
+        "Because `DriverManager.getConnection()` only works with the H2 in-memory database without that call",
+        "Because Spring Boot registers the driver automatically, and the lecture project is a Spring Boot app",
+        "Because `Class.forName()` is only needed when using `Statement`, not `PreparedStatement`",
+        "Because since JDBC 4.0 drivers on the classpath are discovered and registered automatically, so the explicit load is no longer needed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "JDBC 4.0+ drivers register themselves automatically through service discovery when the driver JAR is on the classpath. `DriverManager` then picks the driver that accepts the `jdbc:mysql:` URL. The lecture's jdbcDemo is a plain Maven project with no Spring, and the statement type has nothing to do with driver loading.",
+      "source": "notes §6 Establishing a Database Connection; code: pom.xml",
+      "reference": null
+    },
+    {
+      "id": "d83_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "execute / executeQuery / executeUpdate",
+      "question": "There is no student with id 999. What does this print?",
+      "codeSnippet": "try (Connection c = DriverManager.getConnection(url, username, password);\n     Statement st = c.createStatement()) {\n    boolean r = st.execute(\"UPDATE students SET age = 30 WHERE id = 999\");\n    if (r) {\n        System.out.println(\"rows returned\");\n    } else {\n        System.out.println(\"false, count=\" + st.getUpdateCount());\n    }\n}",
+      "options": [
+        "false, count=0",
+        "rows returned",
+        "false, count=-1",
+        "Nothing: `execute()` throws `SQLException` because it only accepts SELECT statements"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`execute()` returns true only when the first result is a `ResultSet`. For an UPDATE it returns false, and `getUpdateCount()` gives the affected-row count, which is 0 because no row matched. The boolean does NOT mean success or failure. -1 is returned only when the current result is a `ResultSet` or there are no more results.",
+      "source": "notes §7 Executing SQL with JDBC; code: StudentRepository.completeCRUD()",
+      "reference": "https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html"
+    },
+    {
+      "id": "d83_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "PreparedStatement & SQL injection",
+      "question": "A search method builds `\"SELECT id, name, email, age FROM students WHERE email = '\" + email + \"'\"` and runs it with a `Statement`. A user enters `x' OR '1'='1` as the email, and the API returns every student. What is the correct fix?",
+      "codeSnippet": null,
+      "options": [
+        "Use a text block with `.formatted(email)` instead of `+` concatenation",
+        "Switch from `executeQuery()` to `execute()`, which rejects multiple conditions",
+        "Use `WHERE email = ?` with a `PreparedStatement` and `setString(1, email)`, so the input is sent as a value and never parsed as SQL",
+        "Wrap the input in double quotes instead of single quotes"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Concatenation (or `formatted()`, which is the same thing) lets user text become part of the SQL structure, so `' OR '1'='1` turns the WHERE clause into an always-true condition. A parameterized `PreparedStatement` sends the SQL structure and the values separately. Changing quote characters or execute methods does not solve injection.",
+      "source": "notes §9 Why PreparedStatement Is Preferred",
+      "reference": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+    },
+    {
+      "id": "d83_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "ResultSet & row mapping",
+      "question": "The lecture's `Student` has `private int age;`, and `mapRow` is shown below. The table contains a row `(3, 'Priya', 'priya@gmail.com', NULL)` for `age`. What does `System.out.println(mapRow(resultSet))` print for that row?",
+      "codeSnippet": "private Student mapRow(ResultSet resultSet) throws SQLException {\n    Student student = new Student();\n    student.setId(resultSet.getLong(\"id\"));\n    student.setName(resultSet.getString(\"name\"));\n    student.setEmail(resultSet.getString(\"email\"));\n    student.setAge(resultSet.getInt(\"age\"));\n    return student;\n}\n// toString(): \"Student{id=\" + id + \", name='\" + name + \"', email='\" + email + \"', age=\" + age + \"}\"",
+      "options": [
+        "Student{id=3, name='Priya', email='priya@gmail.com', age=null}",
+        "Student{id=3, name='Priya', email='priya@gmail.com', age=0}",
+        "A `NullPointerException` from `setAge()`",
+        "An `SQLException`, because `getInt()` cannot read a NULL column"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`getInt()` returns a primitive, and for SQL NULL it returns 0 (only `wasNull()` can tell the difference). So the printed age is 0, which is indistinguishable from a real zero. The notes recommend an `Integer` field with `resultSet.getObject(\"age\", Integer.class)` to keep NULL as `null`.",
+      "source": "notes §8 Understanding ResultSet; code: StudentRepository.mapRow(), Student.java",
+      "reference": null
+    },
+    {
+      "id": "d83_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "PreparedStatement & SQL injection",
+      "question": "To support `?sort=name`, a developer writes `SELECT id, name, email, age FROM students ORDER BY ?` and calls `ps.setString(1, sortColumn)`. The query runs without error, but the results are never sorted by name. What is the right approach?",
+      "codeSnippet": null,
+      "options": [
+        "Use `ps.setObject(1, sortColumn)` so the driver detects it is a column name",
+        "Call `ps.setNull(1, Types.VARCHAR)` first to reset the sort",
+        "Use `ps.setString(0, sortColumn)`, because ORDER BY parameters are zero-based",
+        "Placeholders bind VALUES, not identifiers; validate `sortColumn` against a fixed allow-list (e.g. name/email/age) and only then put the chosen column into the SQL"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A placeholder is always bound as a data value, so the query orders by the constant string 'name', which has no effect. Column names, table names and ASC/DESC cannot be parameters. They must be chosen from an application-owned allow-list to stay safe from injection. No setter makes the driver treat a value as an identifier.",
+      "source": "notes §9 (placeholders vs identifiers)",
+      "reference": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+    },
+    {
+      "id": "d83_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "PreparedStatement & SQL injection",
+      "question": "This is placed inside the lecture's `createStudent()` (same try-with-resources and `catch (SQLException e)` that prints \"Database connection failed\"). What happens when it runs against a running MySQL server?",
+      "codeSnippet": "String sql = \"\"\"\n        INSERT INTO students(name, email, age)\n        VALUES(?, ?, ?)\n        \"\"\";\n// ... connection and preparedStatement created as in the lecture ...\npreparedStatement.setString(0, student.getName());\npreparedStatement.setString(1, student.getEmail());\npreparedStatement.setInt(2, student.getAge());\nint rowAffected = preparedStatement.executeUpdate();",
+      "options": [
+        "The row is inserted normally, because the driver converts zero-based indexes automatically",
+        "The row is inserted with the email in the `name` column and the age in the `email` column",
+        "`setString(0, ...)` throws an `SQLException` (parameter index out of range), and the catch block prints the misleading message \"Database connection failed\"",
+        "It does not compile, because `setString` requires an index of at least 1"
+      ],
+      "correctAnswer": 2,
+      "explanation": "JDBC parameter indexes start at 1, so index 0 is rejected at runtime with an `SQLException` (the compiler can't check int values). Nothing is inserted. The lecture's catch block prints \"Database connection failed\" for every `SQLException`, which is misleading here, since the connection was fine. Logging the real message or SQL state avoids this confusion.",
+      "source": "notes §9 Positional parameters; code: StudentRepository.createStudent()",
+      "reference": null
+    },
+    {
+      "id": "d83_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Closing JDBC resources",
+      "question": "A refactor makes the repository return the `ResultSet` so the caller can map rows. What happens when the caller runs?",
+      "codeSnippet": "public ResultSet findAll() throws SQLException {\n    try (Connection c = DriverManager.getConnection(url, username, password);\n         PreparedStatement ps = c.prepareStatement(\"SELECT id, name FROM students\")) {\n        return ps.executeQuery();\n    }\n}\n\n// caller\nResultSet rs = repository.findAll();\nwhile (rs.next()) {\n    System.out.println(rs.getString(\"name\"));\n}",
+      "options": [
+        "`rs.next()` throws an `SQLException`: leaving the try block closed the statement and connection, and closing a statement also closes its `ResultSet`",
+        "All names print normally, because the `ResultSet` already holds every row in memory",
+        "The loop prints nothing, because the cursor was moved past the last row when the try block ended",
+        "It fails to compile, because a `ResultSet` cannot be returned from inside try-with-resources"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Try-with-resources closes `ps` and then `c` as soon as the return value is computed, and the JDBC contract says closing a `Statement` closes its current `ResultSet`. The caller then gets a closed `ResultSet`, so `next()` fails. Map rows into a `List<Student>` inside the try block (as the lecture's `getStudent()` does) and return the list.",
+      "source": "notes §11 Closing JDBC Resources; code: StudentRepository.getStudent()",
+      "reference": "https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html"
+    },
+    {
+      "id": "d83_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Closing JDBC resources",
+      "question": "The lecture's `completeCRUD()` opens a connection without try-with-resources, creates a `Statement`, runs `statement.execute(sql)`, and calls `connection.close()` as the last line of the `try` block. Under load, a typo in the SQL starts causing \"Too many connections\" errors. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`execute()` opens a second connection for every call, and only the first one is closed",
+        "When `execute()` throws, control jumps to the catch block, so `connection.close()` is skipped and each failed call leaks an open connection (the `Statement` is never closed either)",
+        "MySQL keeps every connection open for 8 hours regardless of `close()`, so closing does not help",
+        "`getUpdateCount()` must be called before `close()`, otherwise the connection cannot be released"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Cleanup placed at the end of a try block runs only on the success path. Every `SQLException` skips `close()`, so failed calls keep server sessions open until the limit is hit. Declaring the `Connection` and `Statement` in try-with-resources (or closing them in `finally`) guarantees they are closed in reverse order on every path.",
+      "source": "code: StudentRepository.completeCRUD(); notes §11",
+      "reference": null
+    },
+    {
+      "id": "d83_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "execute / executeQuery / executeUpdate",
+      "question": "Before every update, a teammate calls `findById(id)` and runs the UPDATE only if a student is returned, so that the code can print \"Student not found\". According to the lecture, why is it usually better to run the UPDATE directly and check its update count?",
+      "codeSnippet": null,
+      "options": [
+        "Because `executeUpdate()` throws an `SQLException` when no row matches, so the SELECT is redundant",
+        "Because `findById()` locks the row, so the UPDATE afterwards always blocks",
+        "Because JDBC forbids running a SELECT and an UPDATE in the same method",
+        "Because the pre-check costs an extra round trip and leaves a race window (the row can change or be deleted between SELECT and UPDATE); an update count of 0 already signals that no row matched"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Two statements mean extra latency and a time gap in which another transaction can delete or change the row, so the check can be stale anyway. `executeUpdate()` returns 0 (not an exception) when no row matches the WHERE clause, which is enough for a 'not found' message. An extra query is justified only when you must distinguish cases such as 'unchanged' vs 'missing'.",
+      "source": "notes §10.4 Should findById() be called before update()?",
+      "reference": null
+    }
+  ]
+}

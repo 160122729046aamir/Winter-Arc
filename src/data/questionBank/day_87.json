@@ -1,0 +1,201 @@
+{
+  "day": 87,
+  "title": "Spring Lecture #30: JPA Relationships",
+  "sources": [
+    "notes/Notes.pdf (27 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/jpaRelationshipDemo (model: Student, Department, User, Profile, Student2, Course; repository; service; controller)"
+  ],
+  "topics": [
+    "Cardinality & relationship annotations",
+    "Owning vs inverse side (mappedBy)",
+    "@ManyToOne / @OneToMany",
+    "@OneToOne & @MapsId",
+    "@ManyToMany & @JoinTable",
+    "Keeping both sides in sync",
+    "Relationship dirty checking",
+    "Lombok with JPA entities"
+  ],
+  "questions": [
+    {
+      "id": "d87_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Owning vs inverse side (mappedBy)",
+      "question": "In the lecture code, `Student` has `@ManyToOne @JoinColumn(name = \"dept_id\") private Department department;` and `Department` has `@OneToMany(mappedBy = \"department\") private List<Student> students;`. What does the value `\"department\"` in `mappedBy` refer to?",
+      "codeSnippet": null,
+      "options": [
+        "The foreign-key column `dept_id` in the student table",
+        "The name of the department table in the database",
+        "The Java field `department` declared in the `Student` entity",
+        "The name of a join table that Hibernate creates for the collection"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`mappedBy` names the Java field on the owning entity (`Student.department`) that already maps the relationship. It is not a column name: the column is configured separately via `@JoinColumn(name = \"dept_id\")`, which is why the two strings differ in the lecture code without any error.",
+      "source": "notes p14; code: Department.java, Student.java",
+      "reference": null
+    },
+    {
+      "id": "d87_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@ManyToMany & @JoinTable",
+      "question": "Why does a `@ManyToMany` relationship such as Student2 <-> Course need a third table (`student_course`) instead of a single foreign-key column?",
+      "codeSnippet": null,
+      "options": [
+        "A single foreign-key column can hold only one referenced id per row, so each (student, course) pair must be stored as its own row with two foreign keys",
+        "Hibernate cannot generate foreign keys for entities that use `GenerationType.IDENTITY`",
+        "A join table is only needed when the relationship is bidirectional; a unidirectional many-to-many uses a foreign key",
+        "Relational databases forbid two tables from referencing each other with foreign keys"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Each row in a table can store only one value in a foreign-key column, but a student has many courses and a course has many students. A join table holds one row per association with `student_id` and `course_id` foreign keys. Direction (uni/bidirectional) only affects Java navigation, not the need for the join table.",
+      "source": "notes p21-22; code: Student2.java",
+      "reference": null
+    },
+    {
+      "id": "d87_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Relationship dirty checking",
+      "question": "Student 1 currently has `dept_id = 10`. Department 20 exists. Using the lecture's `Student` mapping (`@ManyToOne @JoinColumn(name = \"dept_id\")`), what happens when this method runs?",
+      "codeSnippet": "@Transactional\npublic void moveStudent() {\n    Student student = entityManager.find(Student.class, 1L);\n    Department hr = entityManager.find(Department.class, 20L);\n    student.setDepartment(hr);\n    // no persist / merge / save call\n}",
+      "options": [
+        "Nothing is written, because the student was never passed to `persist()` or a save method after the change",
+        "At flush/commit Hibernate issues an UPDATE on the student row setting `dept_id = 20`",
+        "Hibernate updates the department row 20 to add the student id to it",
+        "Hibernate deletes student 1 and re-inserts it with `dept_id = 20`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Both entities are managed inside the transaction, so Hibernate's dirty checking compares the student's state at flush time and detects that the owning-side reference changed. It issues an UPDATE of the foreign key `dept_id`; no explicit save is needed for a managed entity. The department table has no column for the relationship, so it is not touched.",
+      "source": "notes p13 (Update behaviour and dirty checking)",
+      "reference": null
+    },
+    {
+      "id": "d87_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "@OneToOne & @MapsId",
+      "question": "The lecture's `Profile` maps `@OneToOne @JoinColumn(name = \"user_id\") private User user;`. A tester manages to insert two profile rows that both have `user_id = 1`, and the database accepts them. What is the most accurate explanation and fix?",
+      "codeSnippet": null,
+      "options": [
+        "`@OneToOne` always creates a unique constraint, so the inserts must have bypassed Hibernate; nothing in the mapping needs changing",
+        "The inverse side `User.profile` is missing `cascade = CascadeType.ALL`; adding it blocks the second insert",
+        "Because `User` uses `mappedBy`, the `user_id` column is ignored; moving `@JoinColumn` to `User` fixes it",
+        "A foreign key alone allows repeated values; one-to-one needs a uniqueness constraint, e.g. `@JoinColumn(name = \"user_id\", unique = true)`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "In the database, one-to-one is normally 'foreign key + unique constraint'. Without uniqueness the same `user_id` can appear many times, which is effectively one-to-many. Cascade only propagates lifecycle operations and does not add constraints, so it would not prevent duplicate rows.",
+      "source": "notes p17-19; code: Profile.java",
+      "reference": "https://vladmihalcea.com/the-best-way-to-map-a-onetoone-relationship-with-jpa-and-hibernate/"
+    },
+    {
+      "id": "d87_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@ManyToOne / @OneToMany",
+      "question": "For a mandatory student-department relationship the notes use `@ManyToOne(optional = false)` together with `@JoinColumn(name = \"department_id\", nullable = false)`. What is the difference between the two settings?",
+      "codeSnippet": null,
+      "options": [
+        "`optional = false` says the association is required in the JPA persistence model; `nullable = false` makes the generated FK column NOT NULL in the schema",
+        "`optional = false` makes the column NOT NULL; `nullable = false` makes the association load eagerly",
+        "They are synonyms; JPA requires both only for backward compatibility",
+        "`optional = false` cascades persist to the department; `nullable = false` adds a unique constraint"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes describe the two settings as the same rule expressed at different layers: `optional` belongs to the JPA object/persistence model, while `nullable` on `@JoinColumn` affects the generated DDL column. Neither has anything to do with cascading or uniqueness.",
+      "source": "notes p11 (Nullable and mandatory relationships)",
+      "reference": null
+    },
+    {
+      "id": "d87_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Lombok with JPA entities",
+      "question": "A teammate replaces `@Getter @Setter @NoArgsConstructor` on the bidirectional `Department` and `Student` entities with `@Data`. Logging a department now crashes with `StackOverflowError`. What is the cause and the safest fix?",
+      "codeSnippet": null,
+      "options": [
+        "`@Data` makes all fields final, which breaks Hibernate proxies; add `@NonFinal` to the fields",
+        "`@Data` removes the no-args constructor Hibernate needs; add `@NoArgsConstructor` back",
+        "The generated `toString()` (and `equals()/hashCode()`) traverse Department -> students -> Student -> department... forever; use explicit `@Getter/@Setter` and exclude relationship fields from those methods",
+        "Hibernate cannot load a `List` when Lombok is present; change the collection to a `Set`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`@Data` generates `toString()`, `equals()` and `hashCode()` over all fields, so a bidirectional pair recurses until the stack overflows (and can also trigger unwanted lazy loads). The notes recommend explicit annotations and excluding relationship fields. `@Data` does not make fields final, and missing constructors would produce an instantiation error, not a stack overflow.",
+      "source": "notes p25-26 (Lombok with JPA Entities)",
+      "reference": null
+    },
+    {
+      "id": "d87_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Owning vs inverse side (mappedBy)",
+      "question": "Using the lecture's mapping (`Student2.courses` has `@ManyToMany @JoinTable(name = \"student_course\", ...)`; `Course.students` has `@ManyToMany(mappedBy = \"courses\")`), student 1 and course 101 already exist. What does this method write to `student_course`?",
+      "codeSnippet": "@Transactional\npublic void enroll() {\n    Student2 s = entityManager.find(Student2.class, 1L);\n    Course c = entityManager.find(Course.class, 101L);\n    c.getStudents().add(s);\n}",
+      "options": [
+        "One row (1, 101), because Hibernate detects the change to any managed collection",
+        "No row, because only the owning side `Student2.courses` controls the join table and it was not changed",
+        "Two rows, one for each side of the bidirectional mapping",
+        "It throws an exception because the inverse side collection is read-only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Hibernate derives join-table rows from the owning side, which is the side with `@JoinTable`. Adding only to the inverse (`mappedBy`) collection changes the in-memory graph but not the database, and it does not throw either. The fix is a helper such as `addCourse()` that updates `courses` and `course.getStudents()` together.",
+      "source": "notes p23-24; code: Student2.java, Course.java",
+      "reference": "https://vladmihalcea.com/jpa-hibernate-synchronize-bidirectional-entity-associations/"
+    },
+    {
+      "id": "d87_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@OneToOne & @MapsId",
+      "question": "The goal is a shared-primary-key one-to-one: `profiles.id` must equal the owning user's `id` and also act as the foreign key to `users.id`. Which change makes this mapping express that intent correctly?",
+      "codeSnippet": "@Entity\nclass Profile {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    private String bio;\n\n    @OneToOne\n    @MapsId\n    @JoinColumn(name = \"id\")\n    private User user;\n}",
+      "options": [
+        "Replace `@MapsId` with `mappedBy = \"profile\"` so the user's id is copied into the profile",
+        "Add `unique = true` to `@JoinColumn`, since `@MapsId` alone cannot guarantee one profile per user",
+        "Change `@OneToOne` to `@ManyToOne`, because `@MapsId` only works on many-to-one",
+        "Remove `@GeneratedValue`: with `@MapsId` the profile's id is taken from the associated user, not generated"
+      ],
+      "correctAnswer": 3,
+      "explanation": "With `@MapsId` the child's identifier is derived from the associated parent, so it must be a plain `@Id` without a generator, exactly as in the notes. `unique = true` is redundant because the shared column is already the primary key, and `mappedBy` would turn this side into the inverse side, which cannot supply the id.",
+      "source": "notes p20-21 (Shared primary-key mapping)",
+      "reference": "https://vladmihalcea.com/the-best-way-to-map-a-onetoone-relationship-with-jpa-and-hibernate/"
+    },
+    {
+      "id": "d87_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@ManyToMany & @JoinTable",
+      "question": "The lecture code maps `Student2.courses` as a `List<Course>` with `@JoinTable(name = \"student_course\", joinColumns = ..., inverseJoinColumns = ...)`. A double-clicked 'Enroll' button calls `student.getCourses().add(java)` twice, and two identical (1, 101) rows appear. Which change best follows the notes to prevent this?",
+      "codeSnippet": null,
+      "options": [
+        "Add `cascade = CascadeType.PERSIST` so Hibernate checks for existing rows before inserting",
+        "Swap `joinColumns` and `inverseJoinColumns` so the course becomes the owning side",
+        "Use a `Set<Course>` and add `uniqueConstraints = @UniqueConstraint(columnNames = {\"student_id\", \"course_id\"})` to `@JoinTable`",
+        "Mark the `Course.students` side with `mappedBy` so only one row can be written"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Each join-table row is one enrollment, so the (student_id, course_id) pair should be unique at the database level, and a `Set` avoids duplicate elements in memory. Cascade only propagates lifecycle operations to the Course entity; it does not de-duplicate association rows. `Course.students` already uses `mappedBy`, so that changes nothing.",
+      "source": "notes p22-23; code: Student2.java",
+      "reference": null
+    },
+    {
+      "id": "d87_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Owning vs inverse side (mappedBy)",
+      "question": "A teammate says: \"`Department` is the parent, so if I put `cascade = CascadeType.ALL` on `@OneToMany(mappedBy = \"department\")`, Department becomes the owning side and `department.getStudents().add(s)` alone will set `dept_id`.\" What is wrong with this reasoning?",
+      "codeSnippet": null,
+      "options": [
+        "Cascading only propagates lifecycle operations (persist, remove, ...); ownership is decided by `mappedBy`/`@JoinColumn`, so `Student.department` still controls `dept_id`",
+        "Nothing is wrong; cascade on the parent makes it the owning side as long as `mappedBy` is present",
+        "Cascade makes Department the owning side, but only for inserts, not for updates",
+        "`CascadeType.ALL` is not allowed on a `mappedBy` collection, so the code will not start"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes stress that owning side does not mean parent, and that cascading controls lifecycle propagation, not ownership. The `mappedBy` side is always the inverse side, so with cascade the new student may be persisted but its `dept_id` stays NULL unless `student.setDepartment(...)` is also called. Cascade on a `mappedBy` collection is perfectly legal.",
+      "source": "notes p8 (Owning side), p27 (Core principles 5 and 10)",
+      "reference": "https://vladmihalcea.com/jpa-hibernate-synchronize-bidirectional-entity-associations/"
+    }
+  ]
+}

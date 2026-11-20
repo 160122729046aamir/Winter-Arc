@@ -1,0 +1,204 @@
+{
+  "day": 76,
+  "title": "Spring Lecture #19: Spring Boot Filters",
+  "sources": [
+    "Notes.pdf (32 pages)",
+    "Excalidraw-Notes.pdf (5 pages)",
+    "code/filterDemo/.../filter/AuthenticationFilter.java",
+    "code/filterDemo/.../filter/LoggingFilter.java",
+    "code/filterDemo/.../controller/StudentController.java",
+    "code/filterDemo/.../service/StudentService.java",
+    "code/filterDemo/.../dto/Student.java"
+  ],
+  "topics": [
+    "Filter position in request flow",
+    "FilterChain & blocking",
+    "Filter ordering",
+    "try-finally in filters",
+    "Response commit timing",
+    "Filter vs Interceptor",
+    "jakarta.servlet imports"
+  ],
+  "questions": [
+    {
+      "id": "d76_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Filter position in request flow",
+      "question": "Where does a servlet `Filter` run in a Spring Boot web request?",
+      "codeSnippet": null,
+      "options": [
+        "Inside the controller method, just before its first line",
+        "In the servlet layer, after Tomcat receives the request and before `DispatcherServlet`",
+        "After `HandlerMapping` has chosen the controller method, between `DispatcherServlet` and the controller",
+        "Only on the response side, after the controller has returned"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Filters come from the Servlet API and wrap the rest of the chain: Tomcat -> filters -> `DispatcherServlet` -> interceptors -> controller. That is why a filter can reject a request before Spring MVC even maps it. Running after `HandlerMapping` describes an interceptor, not a filter, and filters act on both the request and the response side.",
+      "source": "notes p3-p5; Excalidraw p3",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    },
+    {
+      "id": "d76_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "FilterChain & blocking",
+      "question": "Inside `doFilter(request, response, chain)`, what does calling `chain.doFilter(request, response)` do, and what happens if a filter returns without calling it?",
+      "codeSnippet": null,
+      "options": [
+        "It sends the response to the client immediately; returning without it makes Spring call the controller anyway",
+        "It restarts the filter from the beginning; returning without it causes an infinite loop",
+        "It is optional logging; the request reaches the controller either way",
+        "It passes control to the next filter or, for the last filter, to `DispatcherServlet`; without it the request stops and the controller never runs"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`FilterChain` represents everything after the current filter (remaining filters, `DispatcherServlet`, controller, service). Calling `chain.doFilter(...)` continues the request; setting a status and returning without calling it blocks the request, which is how the lecture's `AuthenticationFilter` rejects bad tokens.",
+      "source": "notes p8-p11; code: AuthenticationFilter.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    },
+    {
+      "id": "d76_q3",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "FilterChain & blocking",
+      "question": "With the lecture's two filters, Postman sends `POST /api/students` with a valid `x-api-key: secret123` header but no `token` header. What does Postman get, and what does the console show?",
+      "codeSnippet": "@Component @Order(1)\npublic class AuthenticationFilter implements Filter {\n    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)\n            throws IOException, ServletException {\n        HttpServletRequest httpRequest = (HttpServletRequest) req;\n        HttpServletResponse httpResponse = (HttpServletResponse) res;\n        String token = httpRequest.getHeader(\"token\");\n        String apiKey = httpRequest.getHeader(\"x-api-key\");\n        if (token == null || !token.equals(\"12345\")) {\n            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);\n            return;\n        }\n        if (apiKey == null || !apiKey.equals(\"secret123\")) {\n            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);\n            httpResponse.setContentType(\"application/json\");\n            httpResponse.getWriter().write(\"{ \\\"message\\\" : \\\"Invalid or missing Api key\\\" }\");\n            return;\n        }\n        chain.doFilter(req, res);\n    }\n}\n\n// LoggingFilter is @Order(2): sets X-Request-ID, prints \"Incoming Request : ...\",\n// then chain.doFilter in try, and prints status + time in finally.",
+      "options": [
+        "401 with an empty body, no `X-Request-ID` header, and nothing printed by `LoggingFilter`",
+        "401 with the JSON \"Invalid or missing Api key\" message",
+        "401, and `LoggingFilter` still prints its lines because every filter always runs",
+        "200 \"DONE\", because the API key is valid"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The token check comes first and fails, so the filter sets 401 and returns without writing a body or calling the chain. `LoggingFilter` has order 2, so it sits after `AuthenticationFilter` in the chain and is never reached: no log lines and no request-id header. The JSON message belongs only to the second check (bad API key).",
+      "source": "code: AuthenticationFilter.java, LoggingFilter.java",
+      "reference": null
+    },
+    {
+      "id": "d76_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "try-finally in filters",
+      "question": "With valid `token` and `x-api-key` headers, Postman sends `POST /api/students` with `{\"name\":\"Riya\",\"email\":\"riya@x.com\"}`. In what order do these console lines appear?",
+      "codeSnippet": "// LoggingFilter (@Order(2))\nlong startTime = System.currentTimeMillis();\nhttpResponse.setHeader(\"X-Request-ID\", UUID.randomUUID().toString());\nSystem.out.println(\"Incoming Request : \" + httpRequest.getMethod() + \" \" + httpRequest.getRequestURI());\ntry {\n    filterChain.doFilter(servletRequest, servletResponse);\n} finally {\n    long duration = System.currentTimeMillis() - startTime;\n    System.out.println(\"Response status: \" + httpResponse.getStatus());\n    System.out.println(\"API Response time : \" + duration);\n}\n\n// StudentService.createStudent\nSystem.out.println(\"Student Created\");\nSystem.out.println(student.getName());\nSystem.out.println(student.getEmail());\n\n// StudentController returns ResponseEntity.ok(\"DONE\")",
+      "options": [
+        "Student Created, Riya, riya@x.com, Incoming Request : POST /api/students, Response status: 200, API Response time : <ms>",
+        "Incoming Request : POST /api/students, Response status: 200, API Response time : <ms>, Student Created, Riya, riya@x.com",
+        "Incoming Request : POST /api/students, Student Created, Riya, riya@x.com, Response status: 200, API Response time : <ms>",
+        "Incoming Request : POST /api/students, Response status: 0, Student Created, Riya, riya@x.com, API Response time : <ms>"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The \"before\" log runs first, then `doFilter` passes the request down to `DispatcherServlet`, controller and service, which print their lines. Only after that call returns does the `finally` block log the status (200 from `ResponseEntity.ok`) and the elapsed time. The filter wraps the downstream work rather than running before or after it as a separate step.",
+      "source": "code: LoggingFilter.java, StudentService.java, StudentController.java; notes p11-p13",
+      "reference": null
+    },
+    {
+      "id": "d76_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "jakarta.servlet imports",
+      "question": "A student copies a filter from an old Spring Boot 2 tutorial into the lecture's Boot 4 project. It starts with `import javax.servlet.Filter;` and `import javax.servlet.FilterChain;`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "The project does not compile: Boot 3+ uses the Jakarta Servlet API, so the imports must be `jakarta.servlet.*`",
+        "It compiles and works, because `javax` and `jakarta` are aliases of the same package",
+        "It compiles, but Spring registers it as an interceptor instead of a filter",
+        "It works only if the class is also annotated with `@Order`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes stress that Spring Boot 2 used `javax.servlet`, while Boot 3 and later use `jakarta.servlet`. The modern starter only brings the Jakarta Servlet API, so the `javax.servlet` types cannot be found; they are different packages, not aliases. `@Order` only affects ordering, not which API is used.",
+      "source": "notes p5-p6; code: AuthenticationFilter.java imports",
+      "reference": null
+    },
+    {
+      "id": "d76_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Filter vs Interceptor",
+      "question": "You need logic that depends on which controller method will handle the request (for example, its `@GetMapping` path pattern). According to the lecture, is a filter the right tool?",
+      "codeSnippet": null,
+      "options": [
+        "Yes, because `FilterChain` exposes the selected controller method",
+        "Yes, as long as the filter has `@Order(1)`",
+        "Usually no: when a filter runs, Spring MVC has not selected the handler yet, so handler-dependent logic fits a Spring MVC interceptor better",
+        "No, because filters cannot read the request URI"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A filter sees HTTP-level data (method, URI, headers, cookies, parameters) but runs before `DispatcherServlet` maps the request, so it has no natural access to controller metadata. Interceptors run after handler mapping, inside Spring MVC. A filter can read the URI; it just does not know which method that URI maps to.",
+      "source": "notes p8-p9, p30",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html"
+    },
+    {
+      "id": "d76_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "try-finally in filters",
+      "question": "Two filters are registered, and the controller throws an exception that no handler catches, so it propagates out of `DispatcherServlet`. Considering only the original request (not any later error-page dispatch), which lines are printed?",
+      "codeSnippet": "@Component @Order(1)\npublic class AuditFilter implements Filter {\n    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)\n            throws IOException, ServletException {\n        System.out.println(\"Audit before\");\n        chain.doFilter(req, res);\n        System.out.println(\"Audit after\");\n    }\n}\n\n@Component @Order(2)\npublic class LoggingFilter implements Filter {\n    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)\n            throws IOException, ServletException {\n        System.out.println(\"Logging before\");\n        try {\n            chain.doFilter(req, res);\n        } finally {\n            System.out.println(\"Logging finally\");\n        }\n    }\n}\n\n@GetMapping(\"/boom\")\npublic String boom() {\n    throw new IllegalStateException(\"boom\");\n}",
+      "options": [
+        "Audit before, Logging before, Logging finally, Audit after",
+        "Audit before, Logging before",
+        "Logging before, Audit before, Audit after, Logging finally",
+        "Audit before, Logging before, Logging finally"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Both \"before\" lines run in order 1 then 2. The exception travels back up through `chain.doFilter`: `LoggingFilter`'s `finally` still runs, but `AuditFilter` has no try/finally, so the exception skips its \"after\" line. This is why the notes recommend `try { chain.doFilter(...) } finally { ... }` for timing and cleanup.",
+      "source": "notes p11-p13, p24-p25; code: LoggingFilter.java",
+      "reference": null
+    },
+    {
+      "id": "d76_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Response commit timing",
+      "question": "A teammate moves the request-id header to after the chain in `LoggingFilter`. The controller returns `ResponseEntity.ok(\"DONE\")`. What is the most likely result for the `X-Request-ID` header?",
+      "codeSnippet": "try {\n    filterChain.doFilter(servletRequest, servletResponse);\n} finally {\n    httpResponse.setHeader(\"X-Request-ID\", UUID.randomUUID().toString());\n    System.out.println(\"Response status: \" + httpResponse.getStatus());\n}",
+      "options": [
+        "It is always present, because headers can be changed until the filter method returns",
+        "It is present twice, because `setHeader` appends a second value",
+        "It causes a 500 error, because headers cannot be set inside `finally`",
+        "It is likely missing: once the body has been written and flushed, the response is committed and later header changes are ignored"
+      ],
+      "correctAnswer": 3,
+      "explanation": "When Spring MVC writes \"DONE\" and flushes it, the status line and headers are sent, so the response is committed; changing headers afterwards has no effect. The notes therefore say headers that must be present should be added before calling `chain.doFilter(...)`, which is what the lecture's code does. Setting a header late does not throw; it is silently ignored.",
+      "source": "notes p26-p28; code: LoggingFilter.java",
+      "reference": null
+    },
+    {
+      "id": "d76_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Filter ordering",
+      "question": "Support wants every request, including ones rejected with 401, to be logged with its status and to carry an `X-Request-ID` header. With the lecture's code (`AuthenticationFilter` `@Order(1)`, `LoggingFilter` `@Order(2)`), rejected requests produce no log at all. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Make `AuthenticationFilter` call `chain.doFilter` even when the token is wrong",
+        "Give `LoggingFilter` a lower order value than `AuthenticationFilter` so it runs first and wraps the authentication check",
+        "Move the logging into the controller so it runs for every request",
+        "Remove `@Order` from both filters so they run in parallel"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Filters run in ascending order on the way in and wrap everything after them. If `LoggingFilter` is first, it sets the request id and logs, then calls the chain; when authentication rejects the request and returns, control comes back to the logging filter's `finally`, which logs the 401. Letting invalid tokens through would break security, and the controller never runs for blocked requests.",
+      "source": "notes p12-p13, p25-p26; code: AuthenticationFilter.java, LoggingFilter.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    },
+    {
+      "id": "d76_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Filter position in request flow",
+      "question": "After adding the token-checking `AuthenticationFilter` as a `@Component`, the browser gets 401 for `/favicon.ico` and for `/static/logo.png`, which have no controller. Why does the filter affect them?",
+      "codeSnippet": null,
+      "options": [
+        "Because a filter registered as a bean works at the servlet layer and, by default, applies to all request paths, not only controller endpoints",
+        "Because `@Component` filters are copied into every `@RestController`",
+        "Because static files are served by `DispatcherServlet` only after the controller authenticates them",
+        "Because the browser forwards the 401 status from the previous API call to every later request"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Filters operate below Spring MVC, so depending on registration they also see `/error`, `/favicon.ico`, static resources and other servlets; Boot maps filter beans to `/*` by default. Such paths must be skipped explicitly in the filter or excluded by registering it with specific URL patterns. Filters are not copied into controllers, and each HTTP request is checked independently.",
+      "source": "notes p5; Excalidraw p3",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    }
+  ]
+}

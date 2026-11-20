@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   ChevronLeft,
@@ -28,6 +28,7 @@ import Modal from '../components/common/Modal';
 import PauseModal from '../components/common/PauseModal';
 import DailyQuizWidget from '../components/quiz/DailyQuizWidget';
 import { confirmAction, toast } from '../utils/alerts';
+import { QUESTION_BANK_BY_DAY } from '../data/questionBankData';
 
 export default function DailyPlannerPage() {
   const {
@@ -46,7 +47,8 @@ export default function DailyPlannerPage() {
     markDayIncomplete,
     moveMissedTasksToDay,
     skipAndMoveToNextDay,
-    moveDayToToday
+    moveDayToToday,
+    stats
   } = usePlanner();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -77,10 +79,34 @@ export default function DailyPlannerPage() {
   // Active section view tab: 'tasks' vs 'quiz'
   const [activePlannerTab, setActivePlannerTab] = useState('tasks');
 
+  // Load the day's notes when switching days. Deliberately not keyed on
+  // currentDay.notes, so an autosave landing mid-typing can't clobber new keystrokes.
   useEffect(() => {
     setNotes(currentDay.notes || '');
     setIsSavedNotes(false);
-  }, [currentDay.day, currentDay.notes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentDay.day]);
+
+  // Autosave notes 800ms after typing stops; flush immediately when leaving the day/page
+  const pendingNotesRef = useRef(null);
+  useEffect(() => {
+    if (notes === (currentDay.notes || '')) return undefined;
+    pendingNotesRef.current = { day: currentDay.day, text: notes };
+    const id = setTimeout(() => {
+      updateDayNotes(currentDay.day, notes);
+      pendingNotesRef.current = null;
+      setIsSavedNotes(true);
+      setTimeout(() => setIsSavedNotes(false), 1500);
+    }, 800);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notes]);
+  useEffect(() => () => {
+    if (pendingNotesRef.current) {
+      updateDayNotes(pendingNotesRef.current.day, pendingNotesRef.current.text);
+      pendingNotesRef.current = null;
+    }
+  }, [currentDay.day, updateDayNotes]);
 
   const handlePrevDay = () => {
     if (activeDayNumber > 1) {
@@ -99,6 +125,7 @@ export default function DailyPlannerPage() {
   };
 
   const handleSaveNotes = () => {
+    pendingNotesRef.current = null;
     updateDayNotes(currentDay.day, notes);
     setIsSavedNotes(true);
     setTimeout(() => setIsSavedNotes(false), 2000);
@@ -113,11 +140,11 @@ export default function DailyPlannerPage() {
 
   // Task calculation
   const totalVideos = currentDay.videos?.length || 0;
-  const watchedVideos = Object.keys(currentDay.checkedVideos || {}).filter(k => currentDay.checkedVideos[k]).length;
+  const watchedVideos = (currentDay.videos || []).filter((v) => currentDay.checkedVideos?.[v.id]).length;
   const totalExercises = currentDay.exercises?.length || 0;
-  const checkedExercises = Object.keys(currentDay.checkedExercises || {}).filter(k => currentDay.checkedExercises[k]).length;
+  const checkedExercises = (currentDay.exercises || []).filter((_, i) => currentDay.checkedExercises?.[i]).length;
   const totalRevision = currentDay.revision?.length || 0;
-  const checkedRevision = Object.keys(currentDay.checkedRevision || {}).filter(k => currentDay.checkedRevision[k]).length;
+  const checkedRevision = (currentDay.revision || []).filter((_, i) => currentDay.checkedRevision?.[i]).length;
   const totalCustom = currentDay.customTasks?.length || 0;
   const checkedCustom = (currentDay.customTasks || []).filter(t => t.completed).length;
 
@@ -127,11 +154,16 @@ export default function DailyPlannerPage() {
 
   const isToday = currentDay.day === currentChallengeDay;
   const isTomorrow = currentDay.day === currentChallengeDay + 1;
-  const isMissed = currentDay.day < currentChallengeDay && !currentDay.completed && !currentDay.recovered && journeyStatus !== 'paused';
+  const isMissed = (stats.missedDays || []).some((d) => d.day === currentDay.day);
 
   // Day Quiz status
   const dayQuiz = quizState?.[currentDay.day] || { status: 'not_started', answers: {} };
   const quizAnswersCount = Object.keys(dayQuiz.answers || {}).length;
+  const dayBank = QUESTION_BANK_BY_DAY[currentDay.day];
+  const dayQuestionCount = dayBank?.totalQuestions || 0;
+  const dayQuestionMix = dayBank
+    ? `${dayBank.basic.length} easy • ${dayBank.medium.length} medium • ${dayBank.hard.length} hard`
+    : '';
 
   return (
     <div className="space-y-6 animate-fadeIn pb-16">
@@ -244,7 +276,7 @@ export default function DailyPlannerPage() {
               <button
                 onClick={() => setIsPauseModalOpen(true)}
                 className="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors"
-                title="Pause your 90-day challenge safely"
+                title="Pause your challenge safely"
               >
                 <PauseCircle className="w-4 h-4 text-amber-400" />
                 <span>Pause Arc</span>
@@ -264,7 +296,15 @@ export default function DailyPlannerPage() {
 
             {currentDay.completed ? (
               <button
-                onClick={() => markDayIncomplete(currentDay.day)}
+                onClick={async () => {
+                  const ok = await confirmAction({
+                    title: `Re-open Day ${currentDay.day}?`,
+                    text: 'The day is marked unfinished and its checklist is cleared. Notes, quiz answers and logged time are kept.',
+                    confirmText: 'Re-open Day',
+                    icon: 'warning'
+                  });
+                  if (ok) markDayIncomplete(currentDay.day);
+                }}
                 className="px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold hover:bg-emerald-500/20 transition-colors flex items-center gap-2"
               >
                 <CheckCircle className="w-4 h-4" /> Finished (Undo)
@@ -303,7 +343,7 @@ export default function DailyPlannerPage() {
             }`}
           >
             <HelpCircle className="w-4 h-4" />
-            <span>Daily Question Bank (25 Qs)</span>
+            <span>Daily Quiz ({dayQuestionCount} Qs)</span>
             <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
               dayQuiz.status === 'completed'
                 ? 'bg-emerald-500/20 text-emerald-300'
@@ -311,7 +351,7 @@ export default function DailyPlannerPage() {
                 ? 'bg-cyan-500/20 text-cyan-300'
                 : 'bg-slate-800 text-slate-400'
             }`}>
-              {dayQuiz.status === 'completed' ? 'Completed' : `${quizAnswersCount}/25`}
+              {dayQuiz.status === 'completed' ? 'Completed' : `${quizAnswersCount}/${dayQuestionCount}`}
             </span>
           </button>
         </div>
@@ -356,6 +396,7 @@ export default function DailyPlannerPage() {
       {/* VIEW 1: 25-Question Daily Question Bank */}
       {activePlannerTab === 'quiz' ? (
         <DailyQuizWidget
+          key={currentDay.day}
           dayNumber={currentDay.day}
           onGoToNotes={() => setActivePlannerTab('tasks')}
         />
@@ -462,10 +503,12 @@ export default function DailyPlannerPage() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-100 group-hover:text-cyan-300 transition-colors">
-                    Day {currentDay.day} Question Bank Ready
+                    {dayQuestionCount > 0 ? `Day ${currentDay.day} quiz ready` : `Day ${currentDay.day} quiz coming soon`}
                   </h4>
                   <p className="text-xs text-slate-400">
-                    25 Topic Questions: 10 Basic • 10 Medium • 5 Hard. Test your understanding!
+                    {dayQuestionCount > 0
+                      ? `${dayQuestionCount} questions from this lecture's notes and code: ${dayQuestionMix}.`
+                      : 'Questions for this lecture have not been added yet.'}
                   </p>
                 </div>
               </div>

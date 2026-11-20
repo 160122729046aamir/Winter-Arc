@@ -1,0 +1,201 @@
+{
+  "day": 53,
+  "title": "Lecture #53: Java Locks",
+  "sources": [
+    "notes/Notes.pdf (46 pages)",
+    "notes/slides.pdf (9 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Lock interface & unlock in finally",
+    "ReentrantLock (reentrancy, tryLock)",
+    "ReadWriteLock",
+    "StampedLock & optimistic reads",
+    "Semaphore",
+    "Condition variables"
+  ],
+  "questions": [
+    {
+      "id": "d53_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Lock interface & unlock in finally",
+      "question": "Why is the standard pattern `lock.lock(); try { ... } finally { lock.unlock(); }` and not simply `lock.lock(); ...; lock.unlock();`?",
+      "codeSnippet": null,
+      "options": [
+        "Because `unlock()` can only be called from inside a `finally` block",
+        "Because an explicit `Lock` is not released automatically like `synchronized`; if the critical section throws, `finally` makes sure the lock is still released",
+        "Because `finally` makes the critical section atomic",
+        "Because the `try` block is what actually acquires the lock"
+      ],
+      "correctAnswer": 1,
+      "explanation": "With `synchronized`, the JVM releases the monitor even when an exception is thrown. With a `Lock`, release is your responsibility. If an exception skips `unlock()`, the lock can stay held forever and every other thread waits. `lock()` is called before `try`, so that `finally` only unlocks a lock that was actually acquired.",
+      "source": "notes p3-4; code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/Lock.html"
+    },
+    {
+      "id": "d53_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Semaphore",
+      "question": "Your service has 200 worker threads, but a partner API allows at most 10 requests in flight at once. Which tool expresses this rule most directly?",
+      "codeSnippet": null,
+      "options": [
+        "A `ReentrantLock`, so that one request runs at a time",
+        "A `ReentrantReadWriteLock`, treating API calls as reads",
+        "A `Semaphore(10)`: acquire a permit before each call and release it afterward",
+        "A `StampedLock` with optimistic reads for each call"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A semaphore holds a number of permits, and with 10 permits at most 10 threads can be inside the limited section at once. The other threads wait for a permit. A `ReentrantLock` would allow only one call at a time, which is too strict. Read/write and stamped locks model readers and writers, not a capacity limit.",
+      "source": "notes p30-35",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Semaphore.html"
+    },
+    {
+      "id": "d53_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "ReentrantLock (reentrancy, tryLock)",
+      "question": "What does this single-threaded code print?",
+      "codeSnippet": "ReentrantLock lock = new ReentrantLock();\nlock.lock();\nlock.lock();\nSystem.out.print(lock.getHoldCount() + \" \");\nlock.unlock();\nSystem.out.print(lock.getHoldCount() + \" \" + lock.isLocked() + \" \");\nlock.unlock();\nSystem.out.print(lock.getHoldCount() + \" \" + lock.isLocked());",
+      "options": [
+        "2 1 true 0 false",
+        "1 0 false 0 false",
+        "2 1 false 0 false",
+        "It deadlocks on the second `lock()` call"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`ReentrantLock` is reentrant. The owning thread can acquire it again, and each acquisition adds 1 to the hold count, so it is 2 after two `lock()` calls. After one `unlock()` the count is 1 and the lock is still held (`isLocked()` is true). Only when the count reaches 0 is the lock actually released. The thread cannot deadlock on a lock it already owns.",
+      "source": "notes p5-6, p8-9, p13",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html"
+    },
+    {
+      "id": "d53_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "ReentrantLock (reentrancy, tryLock)",
+      "question": "A dashboard refresh job runs every minute. If the previous refresh is still running (holding `refreshLock`), the new run should skip at once instead of queuing up. Which implementation is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`if (!refreshLock.isLocked()) { refreshLock.lock(); try { refresh(); } finally { refreshLock.unlock(); } }`",
+        "`refreshLock.lockInterruptibly(); try { refresh(); } finally { refreshLock.unlock(); }`",
+        "`synchronized (refreshLock) { refresh(); }` with the timeout configured on the lock",
+        "`if (refreshLock.tryLock()) { try { refresh(); } finally { refreshLock.unlock(); } } else { skip(); }`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`tryLock()` tries to acquire the lock once and returns false immediately if it is busy, which is exactly 'try, otherwise fall back'. Checking `isLocked()` first is a check-then-act race, because another run can grab the lock between the check and `lock()`. `lockInterruptibly()` still waits, and `synchronized` has no try or timeout option.",
+      "source": "notes p1-2, p9-12",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html#tryLock()"
+    },
+    {
+      "id": "d53_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "ReadWriteLock",
+      "question": "In `Demo2`, three threads call `read()` under the read lock and three call `write()` under the write lock of one `ReentrantReadWriteLock`. Which statement about this lock is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Readers don't really need the read lock; it exists only so that two readers don't block each other",
+        "Two writers can hold the write lock together as long as no reader is active",
+        "Several readers can hold the read lock at the same time, but a writer needs exclusive access: no other writer and no reader",
+        "A reader and a writer can overlap, because reads never change the state"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The rule is: many readers, or one writer alone. The read lock does matter. It stops a writer from changing the data while a reader is in the middle of reading related fields. Writers never overlap with each other or with readers.",
+      "source": "notes p15-18; code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReentrantReadWriteLock.html"
+    },
+    {
+      "id": "d53_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "StampedLock & optimistic reads",
+      "question": "A teammate wrote this optimistic read for a `Point` with fields `x` and `y` guarded by a `StampedLock`. What is wrong with it?",
+      "codeSnippet": "public double distanceFromOrigin() {\n    long stamp = lock.tryOptimisticRead();\n    if (!lock.validate(stamp)) {\n        stamp = lock.readLock();\n        try {\n            return Math.sqrt(x * x + y * y);\n        } finally {\n            lock.unlockRead(stamp);\n        }\n    }\n    return Math.sqrt(x * x + y * y);\n}",
+      "options": [
+        "`validate()` must be called before `tryOptimisticRead()`",
+        "On the optimistic path, the fields are read AFTER `validate()`, so a writer can change them between validation and use; they should be copied into locals before validating",
+        "`unlockRead()` needs no stamp argument, so this does not compile",
+        "Optimistic reads need `lock.unlock(stamp)` on the success path as well"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Validation only tells you whether a write happened between taking the stamp and calling `validate()`. Here nothing is read before validation, so it always succeeds unless a writer is active at that moment. `x` and `y` are then read afterwards with no protection. The correct pattern copies `x` and `y` into locals first, then validates, and falls back to `readLock()` if validation fails. An optimistic stamp is not a lock, so nothing needs unlocking on the success path.",
+      "source": "notes p24-27; code: Demo3.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/StampedLock.html"
+    },
+    {
+      "id": "d53_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Condition variables",
+      "question": "A `BoundedBuffer` uses one `ReentrantLock` with two conditions, `notFull` and `notEmpty`. What is the main advantage over `wait()`/`notifyAll()` on a single monitor?",
+      "codeSnippet": null,
+      "options": [
+        "Producers wait only on `notFull` and consumers only on `notEmpty`, so a signal reaches the right group instead of waking every waiter",
+        "`await()` keeps the lock while waiting, so no other thread can disturb the buffer",
+        "Conditions remove the need to re-check the predicate in a `while` loop",
+        "Conditions can be signalled without holding the lock, which avoids contention"
+      ],
+      "correctAnswer": 0,
+      "explanation": "An intrinsic monitor has only one wait set, so producers and consumers are mixed together and `notifyAll()` has to wake all of them. One `Lock` can have several `Condition` queues, so each group of threads waits for its own predicate. `await()` does release the lock. Waiting still needs a `while` loop. `signal()` requires holding the lock, or it throws `IllegalMonitorStateException`.",
+      "source": "notes p35-42",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/Condition.html"
+    },
+    {
+      "id": "d53_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "StampedLock & optimistic reads",
+      "question": "A single thread runs this code. What happens?",
+      "codeSnippet": "StampedLock lock = new StampedLock();\nlong s1 = lock.writeLock();\nSystem.out.println(\"first\");\nlong s2 = lock.writeLock();\nSystem.out.println(\"second\");\nlock.unlockWrite(s2);\nlock.unlockWrite(s1);",
+      "options": [
+        "It prints \"first\" and \"second\", because the owning thread can always re-acquire its own lock",
+        "It prints \"first\", then `writeLock()` throws `IllegalMonitorStateException`",
+        "It prints \"first\" and \"second\", but `unlockWrite(s1)` then throws because `s1` is stale",
+        "It prints \"first\" and then blocks forever, because `StampedLock` is not reentrant"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Unlike `ReentrantLock` and `synchronized`, a `StampedLock` does not track an owner thread for re-entry. The second `writeLock()` waits for the write lock to become free, but the only thread that could free it is the one waiting, so it blocks forever. That is why methods sharing a `StampedLock` must never acquire it in a nested way.",
+      "source": "notes p27-28",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/StampedLock.html"
+    },
+    {
+      "id": "d53_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "ReadWriteLock",
+      "question": "A cache's `get()` takes `rw.readLock().lock()`. On a miss, while STILL holding the read lock, it calls `rw.writeLock().lock()` to load the value. The first cache miss hangs that thread forever, even with no other threads running. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Create the lock with `new ReentrantReadWriteLock(true)`, so the waiting writer is served first",
+        "Release the read lock, acquire the write lock, re-check whether the value is still missing, then load it",
+        "Swap in `ReentrantLock`, because read-write locks cannot be used for caches",
+        "Call `rw.readLock().unlock()` after loading, while holding the write lock"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`ReentrantReadWriteLock` does not support upgrading from a read lock to the write lock. The write lock waits for every read lock to be released, including the thread's own, so the thread blocks forever. The correct approach is to release the read lock, acquire the write lock, and re-check, because another thread may have loaded the value in between. Fairness does not change the fact that upgrading is impossible. The reverse, downgrading from write to read, is supported.",
+      "source": "notes p20-22",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReentrantReadWriteLock.html"
+    },
+    {
+      "id": "d53_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Semaphore",
+      "question": "This client should allow at most 3 concurrent `doWork()` calls. During a shutdown, many waiting threads are interrupted. Afterwards, monitoring shows 5 or more calls running at once. Why?",
+      "codeSnippet": "private final Semaphore permits = new Semaphore(3);\n\nvoid call() {\n    try {\n        permits.acquire();\n        doWork();\n    } catch (InterruptedException e) {\n        Thread.currentThread().interrupt();\n    } finally {\n        permits.release();\n    }\n}",
+      "options": [
+        "Threads interrupted inside `acquire()` never got a permit, but `finally` still releases one, so the permit count rises above 3; release only when the acquire succeeded",
+        "`Semaphore(3)` is non-fair, and non-fair semaphores may admit more threads than they have permits",
+        "Interrupting a thread that holds a permit returns its permit automatically, and then `finally` returns it a second time",
+        "`acquire()` hands out permits per thread, so each thread can hold up to 3"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A semaphore does not track which thread owns which permit. Any `release()` adds a permit, even one that was never acquired. When a thread is interrupted while waiting in `acquire()`, it gets no permit, but the unconditional `finally` still releases one, permanently raising the limit. The notes' pattern sets `acquired = true` after a successful `acquire()` and releases only if that flag is set. Fairness only affects the order of acquisition, never how many permits there are.",
+      "source": "notes p30-32",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Semaphore.html#release()"
+    }
+  ]
+}

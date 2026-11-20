@@ -1,0 +1,204 @@
+{
+  "day": 44,
+  "title": "Lecture #44: Exception Hierarchy Deep Dive",
+  "sources": [
+    "notes.pdf (3 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java",
+    "code/Demo6.java"
+  ],
+  "topics": [
+    "Nested try-catch",
+    "Throwable hierarchy (Error, Exception, RuntimeException)",
+    "Checked vs unchecked exceptions",
+    "Multi-catch & catch ordering",
+    "throw vs throws",
+    "Custom exceptions",
+    "try-with-resources"
+  ],
+  "questions": [
+    {
+      "id": "d44_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Checked vs unchecked exceptions",
+      "question": "According to the hierarchy in the notes, which of these is a checked exception?",
+      "codeSnippet": null,
+      "options": [
+        "`NullPointerException`",
+        "`ArithmeticException`",
+        "`IOException`",
+        "`IllegalArgumentException`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Checked exceptions are subclasses of `Exception` that do not extend `RuntimeException`, such as IOException, SQLException and ClassNotFoundException, and the compiler forces you to catch or declare them. The other three all extend RuntimeException, which makes them unchecked, however common they are.",
+      "source": "notes p2",
+      "reference": "https://howtodoinjava.com/java/exception-handling/checked-vs-unchecked-exceptions-in-java"
+    },
+    {
+      "id": "d44_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Nested try-catch",
+      "question": "This is the lecture's Demo2. What does it print?",
+      "codeSnippet": "public class Demo2 {\n    public static void main(String[] args) {\n        try {\n            System.out.println(\"Outer try starts\");\n            try {\n                System.out.println(\"Inner try starts\");\n                System.out.println(5 / 0);\n                System.out.println(\"Inner try ends\");\n            }\n            catch (NullPointerException e) {\n                System.out.println(\"Nulls are not allowed\");\n            }\n            System.out.println(\"Outer try ends\");\n        }\n        catch (ArithmeticException e) {\n            System.out.println(\"Divide by zero not allowed : Outer\");\n        }\n    }\n}",
+      "options": [
+        "Outer try starts\nInner try starts\nDivide by zero not allowed : Outer",
+        "Outer try starts\nInner try starts\nNulls are not allowed\nOuter try ends",
+        "Outer try starts\nInner try starts\nDivide by zero not allowed : Outer\nOuter try ends",
+        "Outer try starts\nInner try starts\nInner try ends\nOuter try ends"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The inner catch only handles NullPointerException, so the ArithmeticException escapes the inner try and skips the rest of the outer try, including \"Outer try ends\". The outer catch then handles it. Expecting \"Outer try ends\" assumes that execution comes back to the outer try after the exception, which it never does.",
+      "source": "code: Demo2.java, notes p1",
+      "reference": "https://open-exam-prep.com/study-guides/oracle-java-se17/exception-handling-and-assertions/try-catch-finally-multi-catch"
+    },
+    {
+      "id": "d44_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Multi-catch & catch ordering",
+      "question": "Which method fails to compile?",
+      "codeSnippet": "public class Catches {\n    static void m1() {\n        try { System.out.println(5 / 0); }\n        catch (ArithmeticException e) { }\n        catch (RuntimeException e) { }\n    }\n\n    static void m2() {\n        try { System.out.println(5 / 0); }\n        catch (ArithmeticException | NullPointerException e) { }\n        catch (Exception e) { }\n    }\n\n    static void m3() {\n        try { System.out.println(5 / 0); }\n        catch (RuntimeException e) { }\n        catch (ArithmeticException e) { }\n    }\n\n    static void m4() {\n        try { System.out.println(5 / 0); }\n        catch (Exception e) { }\n    }\n}",
+      "options": [
+        "`m1`",
+        "`m2`",
+        "`m3`",
+        "`m4`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "In `m3`, `RuntimeException` already catches every ArithmeticException, so the second catch can never run, and javac rejects it (\"exception ArithmeticException has already been caught\"). Catch blocks must go from most specific to most general, as `m1` does. `m2` is legal because its two multi-catch alternatives are unrelated types.",
+      "source": "code: Demo3.java",
+      "reference": "https://www.tutorialspoint.com/article/what-are-unreachable-catch-blocks-in-java"
+    },
+    {
+      "id": "d44_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "throw vs throws",
+      "question": "In Demo4, `checkEligibility(int age) throws InvalidAgeException` contains `throw new InvalidAgeException(\"Age cannot be negative\", age);`. What is the difference between the two keywords?",
+      "codeSnippet": null,
+      "options": [
+        "`throw` declares which exceptions a method may raise, and `throws` actually raises one",
+        "`throw` is a statement that actually raises one exception object, and `throws` in the method signature declares the checked exceptions the method may pass to its caller",
+        "They are interchangeable; `throws` is just the plural form used when there are several exceptions",
+        "`throw` works only with unchecked exceptions, and `throws` works only with checked exceptions"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`throw` is followed by an exception instance and transfers control immediately. `throws` is followed by exception types in a method header and tells callers (and the compiler) what they must handle. The first option swaps the two, which is the most common confusion. `throw` works with any Throwable, checked or not.",
+      "source": "code: Demo4.java, notes p2",
+      "reference": "https://howtodoinjava.com/java/exception-handling/throw-vs-throws"
+    },
+    {
+      "id": "d44_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Checked vs unchecked exceptions",
+      "question": "In Demo5, `readFile()` creates `new FileReader(\"abc.txt\")`. A teammate removes `throws FileNotFoundException` from `readFile()`'s signature and the try-catch from `main`, \"to keep it simple\". What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles, and at runtime a missing file is silently ignored",
+        "It compiles, and a missing file crashes the program with a stack trace",
+        "It compiles only if the file `abc.txt` exists when the code is compiled",
+        "It does not compile: `FileNotFoundException` is checked, so `readFile()` must either catch it or declare it with `throws`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The compiler checks checked exceptions: any code that can throw one must handle it with try-catch or declare it with `throws`, otherwise you get \"unreported exception ... must be caught or declared to be thrown\". The \"crash at runtime\" option describes unchecked exceptions, which the compiler does not check. Whether the file exists does not matter at compile time.",
+      "source": "code: Demo5.java",
+      "reference": "https://howtodoinjava.com/java/exception-handling/checked-vs-unchecked-exceptions-in-java"
+    },
+    {
+      "id": "d44_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Custom exceptions",
+      "question": "Your team is designing `InvalidAgeException` for a voting service and wants the compiler to force every caller of `checkEligibility` to deal with invalid ages. How should the class be declared?",
+      "codeSnippet": null,
+      "options": [
+        "`class InvalidAgeException extends Exception`, passing the message to `super(message)`, as in the lecture",
+        "`class InvalidAgeException extends RuntimeException`, because runtime exceptions must always be caught",
+        "`class InvalidAgeException extends Error`, because invalid input is a serious problem",
+        "`class InvalidAgeException implements Throwable`, because Throwable is the interface at the top of the hierarchy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Extending `Exception` (but not RuntimeException) makes it a checked exception, so callers must catch or declare it, which is exactly what Demo4 does. Extending RuntimeException would make it unchecked, so callers would not be forced to handle it. Throwable is a class, not an interface, and Error is reserved for serious JVM problems.",
+      "source": "notes p3, code: Demo4.java",
+      "reference": "https://www.baeldung.com/java-exceptions"
+    },
+    {
+      "id": "d44_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "try-with-resources",
+      "question": "The notes rewrite file handling as `try (FileReader fr = new FileReader(\"abc.txt\")) { ... } catch (FileNotFoundException e) { ... }`. What does declaring the resource in the try header give you?",
+      "codeSnippet": null,
+      "options": [
+        "The file is opened lazily, only when it is first read",
+        "No exception from the resource can ever reach the catch block",
+        "The resource is closed only if the try block throws an exception",
+        "The resource (which must be `AutoCloseable`) is closed automatically when the try block finishes, normally or with an exception, so no `finally { fr.close(); }` is needed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "try-with-resources guarantees `close()` on every resource declared in the header, in both the success and failure paths. This replaces the manual try/catch/finally cleanup pattern shown alongside it in the notes. Closing happens in both paths, not only on failure, and exceptions are still delivered to the catch block.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html"
+    },
+    {
+      "id": "d44_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Custom exceptions",
+      "question": "What does this program print?",
+      "codeSnippet": "public class Demo4 {\n    public static void main(String[] args) {\n        try {\n            checkEligibility(20);\n            checkEligibility(-5);\n            checkEligibility(30);\n        }\n        catch (InvalidAgeException e) {\n            System.out.println(e.getMessage());\n            System.out.println(\"Entered age was \" + e.getAge());\n        }\n    }\n\n    private static void checkEligibility(int age) throws InvalidAgeException {\n        if (age <= 0) {\n            throw new InvalidAgeException(\"Age cannot be negative\", age);\n        }\n        if (age > 18) {\n            System.out.println(\"You are eligible to vote\");\n        }\n    }\n}\n\nclass InvalidAgeException extends Exception {\n    private int age;\n\n    public InvalidAgeException(String message, int age) {\n        super(message);\n        this.age = age;\n    }\n\n    public int getAge() {\n        return this.age;\n    }\n}",
+      "options": [
+        "You are eligible to vote\nAge cannot be negative\nEntered age was -5\nYou are eligible to vote",
+        "You are eligible to vote\nAge cannot be negative\nEntered age was -5",
+        "Age cannot be negative\nEntered age was -5",
+        "You are eligible to vote\nInvalidAgeException: Age cannot be negative\nEntered age was -5"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The call with 20 prints the eligibility line. The call with -5 throws, which abandons the rest of the try block, so the call with 30 never happens. The catch prints `getMessage()`, which is just the string passed to `super(message)`, followed by the stored age. The class name appears only with `toString()`, not with `getMessage()`.",
+      "source": "code: Demo4.java",
+      "reference": "https://howtodoinjava.com/java/exception-handling/throw-vs-throws"
+    },
+    {
+      "id": "d44_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Throwable hierarchy (Error, Exception, RuntimeException)",
+      "question": "The notes list `getMessage()`, `printStackTrace()` and `toString()` on Throwable. For `ArithmeticException e` caught from `5 / 0`, which call prints exactly `java.lang.ArithmeticException: / by zero` (one line, no stack frames)?",
+      "codeSnippet": null,
+      "options": [
+        "`System.out.println(e.getMessage());`",
+        "`e.printStackTrace();`",
+        "`System.out.println(e);`",
+        "`System.out.println(e.getClass());`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Printing the exception calls `toString()`, which returns the fully qualified class name, a colon and the message. `getMessage()` gives only \"/ by zero\". `printStackTrace()` prints that same toString line plus all the \"at ...\" frames, to System.err. `getClass()` prints \"class java.lang.ArithmeticException\".",
+      "source": "notes p2",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html"
+    },
+    {
+      "id": "d44_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Checked vs unchecked exceptions",
+      "question": "A teammate writes `try { int x = 10 / 2; } catch (FileNotFoundException e) { }` and gets a compile error, yet `try { int x = 10 / 2; } catch (Exception e) { }` compiles. Why?",
+      "codeSnippet": null,
+      "options": [
+        "The compiler rejects a catch for a checked exception that the try block can never throw; `Exception` is allowed because it also covers unchecked exceptions, which any code may throw",
+        "`FileNotFoundException` cannot be caught at all; it can only be declared with `throws`",
+        "Catch blocks must list exactly the exceptions thrown, and `Exception` is a special keyword exempt from this rule",
+        "The import for `FileNotFoundException` is missing; with the import, both versions compile"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Since checked exceptions are tracked at compile time, javac knows that nothing in `10 / 2` can throw `FileNotFoundException`, so that catch is unreachable and is an error. `Exception` (like `RuntimeException`) includes unchecked subclasses that might be thrown anywhere, so catching it is always permitted. An import would not fix this.",
+      "source": "notes p2, code: Demo5.java",
+      "reference": "https://open-exam-prep.com/study-guides/oracle-java-se17/exception-handling-and-assertions/try-catch-finally-multi-catch"
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "day": 16,
+  "title": "Lecture #16: Encapsulation & Inheritance in Java",
+  "sources": [
+    "notes.pdf (8 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java",
+    "code/college/Student.java",
+    "code/college/Teacher.java",
+    "code/school/Student.java"
+  ],
+  "topics": [
+    "Encapsulation",
+    "Access modifiers",
+    "Getters/setters & validation",
+    "Packages & imports",
+    "Inheritance (extends, is-a)",
+    "Types of inheritance & diamond problem",
+    "super keyword"
+  ],
+  "questions": [
+    {
+      "id": "d16_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Encapsulation",
+      "question": "Which description of encapsulation matches the two points in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Creating many objects from one class so that data is copied safely",
+        "Splitting a class's data and its methods into two separate classes",
+        "A child class reusing the fields and methods of its parent",
+        "Keeping data and the behaviour that works on it together in one object (a capsule), and not giving unrestricted access to that data"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes define encapsulation as (1) data and behaviour kept together within an object and (2) no unrestricted access to the data, which in BankAccount means a `private` balance changed only through `deposit`/`withdraw`. Reusing a parent's members is inheritance, a different pillar.",
+      "source": "notes p1-p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html"
+    },
+    {
+      "id": "d16_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Access modifiers",
+      "question": "Which line fails to compile?",
+      "codeSnippet": "class BankAccount {\n    private double balance;\n\n    public void deposit(int amount) {\n        balance += amount;               // line 1\n    }\n\n    public double getBalance() {\n        return balance;\n    }\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        BankAccount ba = new BankAccount();\n        ba.deposit(500);                 // line 2\n        ba.balance = 100000;             // line 3\n        System.out.println(ba.getBalance()); // line 4\n    }\n}",
+      "options": [
+        "Line 1: a private field cannot be modified even inside its own class",
+        "Line 2: `deposit` takes an int but `balance` is a double",
+        "Line 3: `balance` is private, so code outside `BankAccount` cannot access it",
+        "Line 4: a public method cannot return a private field"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`private` restricts access to the declaring class only, so `Demo` cannot touch `ba.balance` directly; that is exactly the `ba.balance = 1,00,000 (X)` case in the notes. Methods of BankAccount itself (line 1, and the public getter) may freely read and write the private field, and an int added to a double is widened automatically.",
+      "source": "code: Demo.java; notes p2, p4",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html"
+    },
+    {
+      "id": "d16_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Access modifiers",
+      "question": "Which mapping of Java's four access modifiers is correct?",
+      "codeSnippet": null,
+      "options": [
+        "private: same class only; default (no keyword): same package; protected: same package + child classes; public: anyone",
+        "private: same package; default: same class only; protected: anyone; public: same package + child classes",
+        "private: same class only; default: anyone; protected: child classes only (not the package); public: same package",
+        "private: child classes; default: same package; protected: same class only; public: anyone"
+      ],
+      "correctAnswer": 0,
+      "explanation": "As listed in the notes: private is class-only, default (no modifier) allows anyone in the same package, protected adds inherited (child) classes on top of the package, and public allows everyone. A common mistake is thinking protected excludes the package; it actually includes it.",
+      "source": "notes p2-p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html"
+    },
+    {
+      "id": "d16_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Getters/setters & validation",
+      "question": "In the lecture's BankAccount, `withdraw` has the comment `// amount <= balance` but no check, so balances can go negative. How does encapsulation let you fix this for every caller?",
+      "codeSnippet": null,
+      "options": [
+        "Make `balance` public so callers can check it themselves before withdrawing",
+        "Add the check inside `withdraw` (e.g. reject when amount > balance); since `balance` is private, all changes must go through this method and cannot bypass it",
+        "Add a public setter `setBalance(double b)` with no checks so callers can correct negative values",
+        "Mark `withdraw` as private so nobody can call it"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Because `balance` is private, the only way to change it is through BankAccount's methods, so a validation inside `withdraw` (or a setter) protects every caller at once, just like the 'college should be real' validation comment in `setCollege`. Making the field public, or adding an unchecked setter, re-opens unrestricted access; a private withdraw makes the feature unusable.",
+      "source": "code: Demo.java; notes p4",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html"
+    },
+    {
+      "id": "d16_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Inheritance (extends, is-a)",
+      "question": "Based on Demo3 (parent Student, child EngineeringStudent), which marked line does not compile?",
+      "codeSnippet": "class Student {\n    public void markAttendance() {\n        System.out.println(\"Attendance marked\");\n    }\n}\n\nclass EngineeringStudent extends Student {\n    void attendLab() {\n        System.out.println(\"lab attended\");\n    }\n}\n\npublic class Demo3 {\n    public static void main(String[] args) {\n        EngineeringStudent es = new EngineeringStudent();\n        es.markAttendance();   // line 1\n        es.attendLab();        // line 2\n        Student s1 = new Student();\n        s1.markAttendance();   // line 3\n        s1.attendLab();        // line 4\n    }\n}",
+      "options": [
+        "Line 1: `markAttendance` is defined in Student, not EngineeringStudent",
+        "Line 2: `attendLab` has default access and cannot be called from Demo3",
+        "Line 3: a parent object cannot call its own methods once it has a child class",
+        "Line 4: a plain `Student` object has no `attendLab` method; only the child class adds it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Inheritance flows from parent to child: EngineeringStudent is-a Student, so it gets `markAttendance` plus its own `attendLab`. A Student is not an EngineeringStudent, so `s1.attendLab()` does not compile (marked '(wrong)' in Demo3). Default access is fine here because all classes are in the same package.",
+      "source": "code: Demo3.java",
+      "reference": null
+    },
+    {
+      "id": "d16_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Packages & imports",
+      "question": "The project has `college.Student` and `school.Student` (both public). A teammate writes `import college.*; import school.*;` and then `Student s = new Student();` in Demo2. What happens, and how does the lecture's Demo2 avoid it?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles and uses `college.Student`, because that import comes first",
+        "It compiles and uses `school.Student`, because the last import wins",
+        "Compile error: `Student` is ambiguous; Demo2 uses fully qualified names like `new college.Student()` and `new school.Student()`",
+        "Compile error: two packages may never contain classes with the same name"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Both wildcard imports bring in a class named `Student`, so the simple name is ambiguous and the compiler refuses to pick one; import order does not matter. Packages exist precisely so that same-named classes can coexist, and Demo2 distinguishes them with the fully qualified `packageName.ClassName` form.",
+      "source": "code: Demo2.java, college/Student.java, school/Student.java",
+      "reference": null
+    },
+    {
+      "id": "d16_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Types of inheritance & diamond problem",
+      "question": "Why does Java not allow `class D extends B, C`, according to the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Because of the diamond problem: if B and C both override A's `show()`, the call `d.show()` would be ambiguous",
+        "Because a class with two parents would need twice as much heap memory",
+        "Because `extends` can only be used once per package",
+        "Because multilevel inheritance (A -> B -> C) already gives exactly the same result"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With A at the top and B and C each providing their own `show()`, a D inheriting from both would not know which version `d.show()` should run; this is the diamond problem. Java supports single, multilevel and hierarchical inheritance of classes, and the notes point to interfaces as the way around it. Multilevel inheritance is a different shape, not a substitute.",
+      "source": "notes p6; code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/multipleinheritance.html"
+    },
+    {
+      "id": "d16_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "super keyword",
+      "question": "Building on the notes' `class A { int x = 4; }` / `class B extends A { int x = 5; }` example, what does `new B().show();` print?",
+      "codeSnippet": "class A {\n    int x = 4;\n\n    void greet() {\n        System.out.print(\"A\" + x + \" \");\n    }\n}\n\nclass B extends A {\n    int x = 5;\n\n    void show() {\n        System.out.print(x + \" \" + super.x + \" \");\n        super.greet();\n        greet();\n    }\n}",
+      "options": [
+        "5 5 A5 A5 ",
+        "5 4 A4 A4 ",
+        "5 4 A5 A5 ",
+        "4 4 A4 A4 "
+      ],
+      "correctAnswer": 1,
+      "explanation": "Inside B, plain `x` is B's own field (5) and `super.x` is the parent's hidden field (4). B does not override `greet()`, so both `super.greet()` and `greet()` run A's method, and code in A that says `x` always refers to A's field, giving A4 twice. Fields are not overridden like methods, which is why 'A5' is wrong.",
+      "source": "notes p7",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/super.html"
+    },
+    {
+      "id": "d16_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "super keyword",
+      "question": "Extending Demo5 with a multilevel class, what does `new CSEStudent().print();` print?",
+      "codeSnippet": "class Student {\n    String name;\n    Student() { System.out.print(\"S0 \"); }\n    Student(String name) {\n        this.name = name;\n        System.out.print(\"S1 \");\n    }\n    void print() { System.out.print(name + \" \"); }\n}\n\nclass EngineeringStudent extends Student {\n    String college;\n    EngineeringStudent(String name, String college) {\n        super(name);\n        this.college = college;\n        System.out.print(\"E \");\n    }\n    void print() {\n        super.print();\n        System.out.print(college + \" \");\n    }\n}\n\nclass CSEStudent extends EngineeringStudent {\n    CSEStudent() {\n        super(\"Aditya\", \"IIT G\");\n        System.out.print(\"C \");\n    }\n}",
+      "options": [
+        "S0 S1 E C Aditya IIT G ",
+        "C E S1 Aditya IIT G ",
+        "S1 E C Aditya IIT G ",
+        "S1 E C IIT G "
+      ],
+      "correctAnswer": 2,
+      "explanation": "Each constructor first runs the parent constructor it names: CSEStudent -> EngineeringStudent(name, college) -> Student(name), so the prints come out top-down: S1, E, C. Because `super(name)` is called explicitly, the no-arg Student() never runs (no S0). CSEStudent inherits EngineeringStudent's `print()`, which calls `super.print()` first (Aditya) and then prints the college.",
+      "source": "code: Demo5.java, Demo4.java; notes p7-p8",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/super.html"
+    },
+    {
+      "id": "d16_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "super keyword",
+      "question": "In Demo5, a teammate deletes the empty `Student() {}` constructor (keeping `Student(String name, int age, int rollNo)`) and adds a new constructor `EngineeringStudent(String college) { this.college = college; }`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles; the new constructor simply leaves name, age and rollNo at their defaults",
+        "It compiles, but `new EngineeringStudent(\"IIT G\")` throws an exception at run time",
+        "Compile error in the existing four-argument constructor, because it calls `super(...)` with arguments",
+        "Compile error in the new constructor: the compiler inserts an implicit `super()`, but Student no longer has a no-argument constructor"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A constructor that does not call `super(...)` or `this(...)` gets an implicit `super()` call to the parent's no-arg constructor. Once Student declares a parameterized constructor, no default one is generated, so removing `Student() {}` leaves nothing for `super()` to call: a compile-time error. The existing constructor is fine because it explicitly calls `super(name, age, rollNo)`.",
+      "source": "code: Demo5.java; notes p8",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/super.html"
+    }
+  ]
+}

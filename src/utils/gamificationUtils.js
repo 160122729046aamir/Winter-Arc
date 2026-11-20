@@ -14,6 +14,50 @@ export const XP_VALUES = {
   QUIZ_DAILY_COMPLETION_BONUS: 50
 };
 
+const countTrue = (obj) => Object.values(obj || {}).filter(Boolean).length;
+
+/**
+ * XP is derived from progress rather than accumulated, so it can never drift:
+ * un-checking a task, resetting a quiz, deleting a session or re-clicking
+ * "Complete Day" all produce the correct total automatically.
+ */
+export function computeXP(state) {
+  let xp = 0;
+
+  Object.values(state.watchedVideosGlobal || {}).forEach((v) => {
+    if (v?.watched) xp += XP_VALUES.WATCH_VIDEO;
+  });
+
+  (state.days || []).forEach((d) => {
+    xp += countTrue(d.checkedExercises) * XP_VALUES.COMPLETE_EXERCISE;
+    xp += countTrue(d.checkedRevision) * XP_VALUES.COMPLETE_REVISION;
+    xp += (d.customTasks || []).filter((t) => t.completed).length * XP_VALUES.COMPLETE_CUSTOM_TASK;
+    if (d.completed) xp += XP_VALUES.COMPLETE_DAY_BONUS;
+  });
+
+  Object.values(state.quizState || {}).forEach((q) => {
+    Object.values(q?.answers || {}).forEach((a) => {
+      if (!a?.isCorrect) return;
+      if (a.difficulty === 'basic') xp += XP_VALUES.QUIZ_BASIC_CORRECT;
+      else if (a.difficulty === 'medium') xp += XP_VALUES.QUIZ_MEDIUM_CORRECT;
+      else if (a.difficulty === 'hard') xp += XP_VALUES.QUIZ_HARD_CORRECT;
+    });
+    if (q?.status === 'completed') xp += XP_VALUES.QUIZ_DAILY_COMPLETION_BONUS;
+  });
+
+  (state.studySessions || []).forEach((s) => {
+    const mins = Number(s.durationMinutes) || 0;
+    if (mins > 0) xp += Math.round(mins * 0.75) + XP_VALUES.POMODORO_SESSION;
+  });
+
+  const unlocked = new Set(state.unlockedBadges || []);
+  BADGES_CATALOG.forEach((b) => {
+    if (unlocked.has(b.id)) xp += Number(b.xpReward) || 0;
+  });
+
+  return xp;
+}
+
 // Calculate level and progress to next level
 export function calculateLevel(totalXP) {
   let currentLevel = XP_LEVELS[0];

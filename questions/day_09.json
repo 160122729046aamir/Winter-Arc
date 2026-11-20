@@ -3,15 +3,17 @@
   "title": "Lecture #9: Introduction to Arrays",
   "topic": "Core Java",
   "totalQuestions": 25,
+  "codeFilesFound": 3,
+  "pdfNotesAnalyzed": false,
   "topicsCovered": [
-    "Contiguous homogeneous array memory structure",
-    "Array declaration syntax (int[] arr vs int arr[])",
-    "Array instantiation using the new operator",
-    "Array initialization (static literal {} vs dynamic allocation)",
-    "0-indexed element access and assignment",
-    "Array length immutability property (arr.length)",
-    "ArrayIndexOutOfBoundsException and bounds checking",
-    "Default initialization values of array elements (0, null, false)"
+    "Syntax & rules of Introduction to Arrays",
+    "Memory & stack/heap execution in Introduction to Arrays",
+    "Design & architectural pattern of Introduction to Arrays",
+    "Code implementation demonstrated in Introduction to Arrays",
+    "Boundary conditions & defensive checks in Introduction to Arrays",
+    "Exception handling & failure states in Introduction to Arrays",
+    "Thread-safety & concurrency in Introduction to Arrays",
+    "Testing & verification of Introduction to Arrays"
   ],
   "questions": {
     "easy": [
@@ -21,18 +23,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Contiguous homogeneous array memory structure' as explained in Lecture #9?",
-        "codeSnippet": null,
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Syntax & rules of Introduction to Arrays' (demonstrated in Demo)?",
+        "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        //int[] rollNums = new int[3];\n        int rollNums[] = new int[3];\n        // 101, 102, 103\n\n        // ro\n...",
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for contiguous homogeneous array memory structure.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Contiguous homogeneous array memory structure' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Contiguous homogeneous array memory structure",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Syntax & rules of Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Syntax & rules of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_2",
@@ -40,18 +42,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Array declaration syntax (int[] arr vs int arr[])' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Memory & stack/heap execution in Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for array declaration syntax (int[] arr vs int arr[]).",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Array declaration syntax (int[] arr vs int arr[])' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Array declaration syntax (int[] arr vs int arr[])",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Memory & stack/heap execution in Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Memory & stack/heap execution in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_3",
@@ -59,18 +61,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Array instantiation using the new operator' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Design & architectural pattern of Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for array instantiation using the new operator.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Array instantiation using the new operator' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Array instantiation using the new operator",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Design & architectural pattern of Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Design & architectural pattern of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_4",
@@ -78,18 +80,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Array initialization (static literal {} vs dynamic allocation)' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Code implementation demonstrated in Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for array initialization (static literal {} vs dynamic allocation).",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Array initialization (static literal {} vs dynamic allocation)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Array initialization (static literal {} vs dynamic allocation)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Code implementation demonstrated in Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Code implementation demonstrated in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_5",
@@ -97,18 +99,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes '0-indexed element access and assignment' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Boundary conditions & defensive checks in Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for 0-indexed element access and assignment.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, '0-indexed element access and assignment' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "0-indexed element access and assignment",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Boundary conditions & defensive checks in Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Boundary conditions & defensive checks in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_6",
@@ -116,18 +118,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Array length immutability property (arr.length)' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Exception handling & failure states in Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for array length immutability property (arr.length).",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Array length immutability property (arr.length)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Array length immutability property (arr.length)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Exception handling & failure states in Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Exception handling & failure states in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_7",
@@ -135,18 +137,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'ArrayIndexOutOfBoundsException and bounds checking' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Thread-safety & concurrency in Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for arrayindexoutofboundsexception and bounds checking.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'ArrayIndexOutOfBoundsException and bounds checking' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "ArrayIndexOutOfBoundsException and bounds checking",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Thread-safety & concurrency in Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Thread-safety & concurrency in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_8",
@@ -154,18 +156,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Default initialization values of array elements (0, null, false)' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Testing & verification of Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for default initialization values of array elements (0, null, false).",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Default initialization values of array elements (0, null, false)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Default initialization values of array elements (0, null, false)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Testing & verification of Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Testing & verification of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_9",
@@ -173,18 +175,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Contiguous homogeneous array memory structure' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Syntax & rules of Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for contiguous homogeneous array memory structure.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Contiguous homogeneous array memory structure' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Contiguous homogeneous array memory structure",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Syntax & rules of Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Syntax & rules of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_e_10",
@@ -192,18 +194,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Array declaration syntax (int[] arr vs int arr[])' as explained in Lecture #9?",
+        "question": "In Lecture #9: Introduction to Arrays, what is the primary role of 'Memory & stack/heap execution in Introduction to Arrays' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for array declaration syntax (int[] arr vs int arr[]).",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Introduction to Arrays.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #9: Introduction to Arrays, 'Array declaration syntax (int[] arr vs int arr[])' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Array declaration syntax (int[] arr vs int arr[])",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "In Lecture #9: Introduction to Arrays, understanding 'Memory & stack/heap execution in Introduction to Arrays' is essential for mastering the core rules and syntax of Introduction to Arrays.",
+        "concept": "Memory & stack/heap execution in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       }
     ],
     "medium": [
@@ -213,18 +215,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Array instantiation using the new operator' in production backend execution?",
-        "codeSnippet": null,
+        "question": "During the execution of 'Design & architectural pattern of Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
+        "codeSnippet": "public class Demo2 {\n    public static void main(String[] args) {\n        // Multi dimensional arrays:\n\n        // int[][] marks = new int[3][3];  // rows, cols\n        // marks[0]\n...",
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Array instantiation using the new operator' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Array instantiation using the new operator",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_2",
@@ -232,18 +234,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Array initialization (static literal {} vs dynamic allocation)' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Array initialization (static literal {} vs dynamic allocation)' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Array initialization (static literal {} vs dynamic allocation)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_3",
@@ -251,18 +253,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during '0-indexed element access and assignment' in production backend execution?",
+        "question": "During the execution of 'Boundary conditions & defensive checks in Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of '0-indexed element access and assignment' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "0-indexed element access and assignment",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Boundary conditions & defensive checks in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_4",
@@ -270,18 +272,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Array length immutability property (arr.length)' in production backend execution?",
+        "question": "During the execution of 'Exception handling & failure states in Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Array length immutability property (arr.length)' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Array length immutability property (arr.length)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Exception handling & failure states in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_5",
@@ -289,18 +291,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'ArrayIndexOutOfBoundsException and bounds checking' in production backend execution?",
+        "question": "During the execution of 'Thread-safety & concurrency in Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'ArrayIndexOutOfBoundsException and bounds checking' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "ArrayIndexOutOfBoundsException and bounds checking",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Thread-safety & concurrency in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_6",
@@ -308,18 +310,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Default initialization values of array elements (0, null, false)' in production backend execution?",
+        "question": "During the execution of 'Testing & verification of Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Default initialization values of array elements (0, null, false)' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Default initialization values of array elements (0, null, false)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Testing & verification of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_7",
@@ -327,18 +329,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Contiguous homogeneous array memory structure' in production backend execution?",
+        "question": "During the execution of 'Syntax & rules of Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Contiguous homogeneous array memory structure' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Contiguous homogeneous array memory structure",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Syntax & rules of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_8",
@@ -346,18 +348,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Array declaration syntax (int[] arr vs int arr[])' in production backend execution?",
+        "question": "During the execution of 'Memory & stack/heap execution in Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Array declaration syntax (int[] arr vs int arr[])' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Array declaration syntax (int[] arr vs int arr[])",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Memory & stack/heap execution in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_9",
@@ -365,18 +367,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Array instantiation using the new operator' in production backend execution?",
+        "question": "During the execution of 'Design & architectural pattern of Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Array instantiation using the new operator' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Array instantiation using the new operator",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_m_10",
@@ -384,18 +386,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Array initialization (static literal {} vs dynamic allocation)' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in Introduction to Arrays' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Array initialization (static literal {} vs dynamic allocation)' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Array initialization (static literal {} vs dynamic allocation)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Runtime execution for Introduction to Arrays relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       }
     ],
     "hard": [
@@ -405,18 +407,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with '0-indexed element access and assignment'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Boundary conditions & defensive checks in Introduction to Arrays' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for '0-indexed element access and assignment'.",
-        "concept": "0-indexed element access and assignment",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Boundary conditions & defensive checks in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_h_2",
@@ -424,18 +426,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Array length immutability property (arr.length)'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Exception handling & failure states in Introduction to Arrays' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Array length immutability property (arr.length)'.",
-        "concept": "Array length immutability property (arr.length)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Exception handling & failure states in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_h_3",
@@ -443,18 +445,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'ArrayIndexOutOfBoundsException and bounds checking'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Thread-safety & concurrency in Introduction to Arrays' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'ArrayIndexOutOfBoundsException and bounds checking'.",
-        "concept": "ArrayIndexOutOfBoundsException and bounds checking",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Thread-safety & concurrency in Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_h_4",
@@ -462,18 +464,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Default initialization values of array elements (0, null, false)'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Testing & verification of Introduction to Arrays' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Default initialization values of array elements (0, null, false)'.",
-        "concept": "Default initialization values of array elements (0, null, false)",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Testing & verification of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       },
       {
         "id": "d9_h_5",
@@ -481,18 +483,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Contiguous homogeneous array memory structure'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Syntax & rules of Introduction to Arrays' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Contiguous homogeneous array memory structure'.",
-        "concept": "Contiguous homogeneous array memory structure",
-        "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Syntax & rules of Introduction to Arrays",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2009"
       }
     ]
   }

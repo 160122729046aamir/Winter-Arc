@@ -3,15 +3,17 @@
   "title": "Lecture #17: Abstraction & Polymorphism in Depth",
   "topic": "Core Java",
   "totalQuestions": 25,
+  "codeFilesFound": 3,
+  "pdfNotesAnalyzed": false,
   "topicsCovered": [
-    "Core architecture of Abstraction & Polymorphism in Depth",
-    "Syntax and declaration rules for Abstraction & Polymorphism in Depth",
-    "Memory and execution lifecycle of Abstraction & Polymorphism in Depth",
-    "Exception handling and defensive coding in Abstraction & Polymorphism in Depth",
-    "Edge case handling and validation for Abstraction & Polymorphism in Depth",
-    "Design patterns and best practices in Abstraction & Polymorphism in Depth",
-    "Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth",
-    "Performance optimization and testing of Abstraction & Polymorphism in Depth"
+    "Syntax & rules of Abstraction & Polymorphism in Depth",
+    "Memory & stack/heap execution in Abstraction & Polymorphism in Depth",
+    "Design & architectural pattern of Abstraction & Polymorphism in Depth",
+    "Code implementation demonstrated in Abstraction & Polymorphism in Depth",
+    "Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth",
+    "Exception handling & failure states in Abstraction & Polymorphism in Depth",
+    "Thread-safety & concurrency in Abstraction & Polymorphism in Depth",
+    "Testing & verification of Abstraction & Polymorphism in Depth"
   ],
   "questions": {
     "easy": [
@@ -21,18 +23,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Core architecture of Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
-        "codeSnippet": null,
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Syntax & rules of Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
+        "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        Car car = new FuelCar();\n        car.start();\n        car.accelerate();\n        car.brake();\n    }\n}\n\n// ab\n...",
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for core architecture of abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Core architecture of Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Core architecture of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Syntax & rules of Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Syntax & rules of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_2",
@@ -40,18 +42,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Syntax and declaration rules for Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Memory & stack/heap execution in Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Syntax and declaration rules for Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Syntax and declaration rules for Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Memory & stack/heap execution in Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Memory & stack/heap execution in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_3",
@@ -59,18 +61,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Memory and execution lifecycle of Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Design & architectural pattern of Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for memory and execution lifecycle of abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Memory and execution lifecycle of Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Memory and execution lifecycle of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Design & architectural pattern of Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Design & architectural pattern of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_4",
@@ -78,18 +80,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Exception handling and defensive coding in Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Code implementation demonstrated in Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for exception handling and defensive coding in abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Exception handling and defensive coding in Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Exception handling and defensive coding in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Code implementation demonstrated in Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Code implementation demonstrated in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_5",
@@ -97,18 +99,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Edge case handling and validation for Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for edge case handling and validation for abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Edge case handling and validation for Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Edge case handling and validation for Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_6",
@@ -116,18 +118,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Design patterns and best practices in Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Exception handling & failure states in Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for design patterns and best practices in abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Design patterns and best practices in Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Design patterns and best practices in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Exception handling & failure states in Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Exception handling & failure states in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_7",
@@ -135,18 +137,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Thread-safety & concurrency in Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for thread-safety and concurrency considerations in abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Thread-safety & concurrency in Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Thread-safety & concurrency in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_8",
@@ -154,18 +156,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Performance optimization and testing of Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Testing & verification of Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for performance optimization and testing of abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Performance optimization and testing of Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Performance optimization and testing of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Testing & verification of Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Testing & verification of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_9",
@@ -173,18 +175,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Core architecture of Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Syntax & rules of Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for core architecture of abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Core architecture of Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Core architecture of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Syntax & rules of Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Syntax & rules of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_e_10",
@@ -192,18 +194,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Syntax and declaration rules for Abstraction & Polymorphism in Depth' as explained in Lecture #17?",
+        "question": "In Lecture #17: Abstraction & Polymorphism in Depth, what is the primary role of 'Memory & stack/heap execution in Abstraction & Polymorphism in Depth' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for abstraction & polymorphism in depth.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Abstraction & Polymorphism in Depth.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, 'Syntax and declaration rules for Abstraction & Polymorphism in Depth' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Syntax and declaration rules for Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "In Lecture #17: Abstraction & Polymorphism in Depth, understanding 'Memory & stack/heap execution in Abstraction & Polymorphism in Depth' is essential for mastering the core rules and syntax of Abstraction & Polymorphism in Depth.",
+        "concept": "Memory & stack/heap execution in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       }
     ],
     "medium": [
@@ -213,18 +215,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Abstraction & Polymorphism in Depth' in production backend execution?",
-        "codeSnippet": null,
+        "question": "During the execution of 'Design & architectural pattern of Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
+        "codeSnippet": "public class Demo2 {\n    public static void main(String[] args) {\n        Car car = new FuelCar();\n        car.start();\n        car.accelerate();\n        car.brake();\n    }\n}\n\ninte\n...",
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Memory and execution lifecycle of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_2",
@@ -232,18 +234,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Exception handling and defensive coding in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_3",
@@ -251,18 +253,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Edge case handling and validation for Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Edge case handling and validation for Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Edge case handling and validation for Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_4",
@@ -270,18 +272,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Design patterns and best practices in Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Exception handling & failure states in Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Design patterns and best practices in Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Design patterns and best practices in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Exception handling & failure states in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_5",
@@ -289,18 +291,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Thread-safety & concurrency in Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Thread-safety & concurrency in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_6",
@@ -308,18 +310,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Performance optimization and testing of Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Testing & verification of Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Performance optimization and testing of Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Performance optimization and testing of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Testing & verification of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_7",
@@ -327,18 +329,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Core architecture of Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Syntax & rules of Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Core architecture of Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Core architecture of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Syntax & rules of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_8",
@@ -346,18 +348,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Syntax and declaration rules for Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Memory & stack/heap execution in Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Syntax and declaration rules for Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Syntax and declaration rules for Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Memory & stack/heap execution in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_9",
@@ -365,18 +367,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Design & architectural pattern of Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Memory and execution lifecycle of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_m_10",
@@ -384,18 +386,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Abstraction & Polymorphism in Depth' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in Abstraction & Polymorphism in Depth' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Abstraction & Polymorphism in Depth' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Exception handling and defensive coding in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Runtime execution for Abstraction & Polymorphism in Depth relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       }
     ],
     "hard": [
@@ -405,18 +407,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Edge case handling and validation for Abstraction & Polymorphism in Depth'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Edge case handling and validation for Abstraction & Polymorphism in Depth'.",
-        "concept": "Edge case handling and validation for Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Boundary conditions & defensive checks in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_h_2",
@@ -424,18 +426,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Design patterns and best practices in Abstraction & Polymorphism in Depth'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Exception handling & failure states in Abstraction & Polymorphism in Depth' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Design patterns and best practices in Abstraction & Polymorphism in Depth'.",
-        "concept": "Design patterns and best practices in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Exception handling & failure states in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_h_3",
@@ -443,18 +445,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Thread-safety & concurrency in Abstraction & Polymorphism in Depth' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth'.",
-        "concept": "Thread-safety and concurrency considerations in Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Thread-safety & concurrency in Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_h_4",
@@ -462,18 +464,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Performance optimization and testing of Abstraction & Polymorphism in Depth'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Testing & verification of Abstraction & Polymorphism in Depth' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Performance optimization and testing of Abstraction & Polymorphism in Depth'.",
-        "concept": "Performance optimization and testing of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Testing & verification of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       },
       {
         "id": "d17_h_5",
@@ -481,18 +483,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Core architecture of Abstraction & Polymorphism in Depth'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Syntax & rules of Abstraction & Polymorphism in Depth' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Core architecture of Abstraction & Polymorphism in Depth'.",
-        "concept": "Core architecture of Abstraction & Polymorphism in Depth",
-        "reference": "https://docs.oracle.com/javase/tutorial/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Syntax & rules of Abstraction & Polymorphism in Depth",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2017"
       }
     ]
   }

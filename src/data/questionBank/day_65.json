@@ -1,0 +1,204 @@
+{
+  "day": 65,
+  "title": "Spring Lecture #8: Spring XML Configuration Explained",
+  "sources": [
+    "notes/Notes.pdf (37 pages)",
+    "notes/Excalidraw-Notes.pdf (1 page)",
+    "code/XMLBasedConfigDemo/pom.xml",
+    "code/XMLBasedConfigDemo/src/main/java/in/strikes/**/*.java",
+    "code/XMLBasedConfigDemo/src/main/resources/appConfig.xml",
+    "code/XMLBasedConfigDemo/src/main/resources/beans.xml",
+    "code/XMLBasedConfigDemo/src/main/resources/beans2.xml"
+  ],
+  "topics": [
+    "XML bean definitions",
+    "Getting beans (name/type)",
+    "id, name & aliases",
+    "Constructor & setter injection in XML",
+    "value vs ref",
+    "XML autowiring",
+    "Splitting XML with import"
+  ],
+  "questions": [
+    {
+      "id": "d65_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "value vs ref",
+      "question": "In XML configuration, what is the difference between `value` and `ref` in `<constructor-arg>` or `<property>`?",
+      "codeSnippet": null,
+      "options": [
+        "`value` is used for constructor injection and `ref` for setter injection",
+        "`value` passes a simple value such as a String or int; `ref` passes another bean from the container",
+        "`ref` passes a copy of a bean, while `value` passes the original bean",
+        "They are synonyms; `ref` is just the older spelling"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`value=\"Razorpay\"` injects a plain value, while `ref=\"paymentService\"` injects the bean with that name. Both attributes work with both `<constructor-arg>` and `<property>`, so they are not tied to an injection style. `ref` refers to the managed bean itself, not a copy.",
+      "source": "notes p11-15",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/definition.html"
+    },
+    {
+      "id": "d65_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "XML bean definitions",
+      "question": "What does `<bean id=\"paymentService\" class=\"in.strikes.PaymentService\"/>` tell Spring?",
+      "codeSnippet": null,
+      "options": [
+        "Scan the package `in.strikes` and register every class in it",
+        "Create a prototype object each time `paymentService` is used",
+        "Use `paymentService` as the class name and `in.strikes.PaymentService` as the package",
+        "Create and manage an object of the fully qualified class `in.strikes.PaymentService` under the bean name `paymentService`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`id` is the bean's name in the container and `class` is the fully qualified class Spring should instantiate. It is roughly equivalent to `@Component(\"paymentService\")` on the class. With no `scope` attribute the bean is a singleton, and no package scanning happens - that would need `<context:component-scan>`.",
+      "source": "notes p4-6",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/definition.html"
+    },
+    {
+      "id": "d65_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "XML bean definitions",
+      "question": "`new ClassPathXmlApplicationContext(\"beans.xml\")` fails saying `beans.xml` cannot be found. The file is in the project's root folder next to `pom.xml`. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Move `beans.xml` into `src/main/resources` so it ends up on the classpath",
+        "Rename the file to `beans.java` so the compiler includes it",
+        "Pass the full Windows path, because `ClassPathXmlApplicationContext` only reads absolute paths",
+        "Annotate `Main` with `@Configuration` so Spring finds the file"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`ClassPathXmlApplicationContext` looks the file up on the classpath, and files in `src/main/resources` are copied onto it during the build - that is where the lecture keeps `appConfig.xml`, `beans.xml` and `beans2.xml`. The project root is not on the classpath, and annotations play no role in locating the XML file.",
+      "source": "notes p3; code: src/main/resources/*.xml, Main.java",
+      "reference": null
+    },
+    {
+      "id": "d65_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Getting beans (name/type)",
+      "question": "`PaymentService`'s constructor prints \"PaymentService object created\". What happens when `Main` runs with this `beans.xml`?",
+      "codeSnippet": "<!-- beans.xml -->\n<bean id=\"paymentService1\" class=\"in.strikes.PaymentService\"/>\n<bean id=\"paymentService2\" class=\"in.strikes.PaymentService\"/>\n\n// Main.java\nApplicationContext context = new ClassPathXmlApplicationContext(\"beans.xml\");\nSystem.out.println(\"Context ready\");\nPaymentService p = context.getBean(PaymentService.class);\np.pay();",
+      "options": [
+        "Startup fails immediately because two beans share the same class",
+        "\"Context ready\" is printed, then `paymentService1` is returned because it is defined first",
+        "\"PaymentService object created\" twice, \"Context ready\", then `getBean` throws `NoUniqueBeanDefinitionException`",
+        "\"Context ready\", then \"PaymentService object created\" once when `getBean` is called"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Two different bean ids with the same class are legal, and both are eager singletons, so both constructors run while the context starts. Looking up by type then finds two candidates and Spring refuses to guess, throwing `NoUniqueBeanDefinitionException`. `getBean(\"paymentService1\", PaymentService.class)` would work.",
+      "source": "notes p6-8",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/definition.html"
+    },
+    {
+      "id": "d65_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Constructor & setter injection in XML",
+      "question": "`OrderService` has a no-arg constructor and the setter below. What happens when the context loads this XML?",
+      "codeSnippet": "public class OrderService {\n    private PaymentService paymentService;\n\n    public void setPaymentServiceBean(PaymentService paymentService) {\n        this.paymentService = paymentService;\n    }\n}\n\n<!-- beans.xml -->\n<bean id=\"paymentService\" class=\"in.strikes.payment.UPIPaymentService\"/>\n<bean id=\"orderService\" class=\"in.strikes.OrderService\">\n    <property name=\"paymentService\" ref=\"paymentService\"/>\n</bean>",
+      "options": [
+        "It works: `<property>` matches the field name `paymentService` and sets it via reflection",
+        "Startup fails: `<property name=\"paymentService\">` makes Spring look for a `setPaymentService(...)` setter, which does not exist",
+        "It works, but the field stays `null` until `placeOrder()` is called",
+        "Startup fails because `UPIPaymentService` cannot be assigned to a `PaymentService` property"
+      ],
+      "correctAnswer": 1,
+      "explanation": "XML setter injection works through setter methods, not fields: `name=\"paymentService\"` means \"call `setPaymentService(...)`\". This class only has `setPaymentServiceBean`, so the property `paymentService` is not writable and bean creation fails. Using `name=\"paymentServiceBean\"` would match the setter. `UPIPaymentService` implements `PaymentService`, so the type is fine.",
+      "source": "notes p14-15; code: OrderService.java (commented setter), beans.xml",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-autowire.html"
+    },
+    {
+      "id": "d65_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Constructor & setter injection in XML",
+      "question": "A legacy XML file defines `razorpayPaymentService` and `stripePaymentService` (both implement `PaymentService`). `OrderService` needs exactly one in its constructor, and the team wants the choice to be obvious to anyone reading the XML. What is the clearest approach?",
+      "codeSnippet": null,
+      "options": [
+        "Add `autowire=\"byType\"` to `orderService` and let Spring pick",
+        "Delete the Stripe bean, since XML can only hold one bean per interface",
+        "Give both beans the same `id` so either can be injected",
+        "Wire it explicitly: `<constructor-arg ref=\"razorpayPaymentService\"/>` inside the `orderService` bean"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Explicit wiring with `ref` names the exact bean, so there is no ambiguity and the dependency is documented in the XML itself. `primary=\"true\"` or `autowire-candidate=\"false\"` also work, but the notes call explicit `ref` the clearest. `byType` fails with two candidates, and duplicate ids are invalid.",
+      "source": "notes p15-16",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-autowire.html"
+    },
+    {
+      "id": "d65_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "id, name & aliases",
+      "question": "Given `<bean id=\"paymentService\" name=\"payService, gatewayService\" class=\"in.strikes.PaymentService\"/>` (singleton), what is true about `context.getBean(\"paymentService\")` and `context.getBean(\"gatewayService\")`?",
+      "codeSnippet": null,
+      "options": [
+        "Both return the same object, because the extra names are aliases of one bean",
+        "They return two different objects, one per name",
+        "Only `paymentService` works; the `name` attribute is ignored when `id` is present",
+        "`gatewayService` works only after an `<alias>` element is also added"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`id` gives the main name and `name` can list additional aliases (comma, semicolon or space separated); all refer to the same single bean definition, so a singleton lookup by any of them returns the same instance. `<alias>` is just another way to add a name to a bean defined elsewhere - it is not required here.",
+      "source": "notes p9-10",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/definition.html"
+    },
+    {
+      "id": "d65_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "XML autowiring",
+      "question": "`OrderService` has a no-arg constructor printing \"OrderService object created\", a setter `setPaymentService(PaymentService ps)` printing \"Setter called\", and `placeOrder()` that calls `paymentService.pay()` (prints \"Payment successful\") then prints \"Order placed\". What happens?",
+      "codeSnippet": "<!-- beans.xml -->\n<bean id=\"abc\" class=\"in.strikes.PaymentService\"/>\n<bean id=\"orderService\" class=\"in.strikes.OrderService\" autowire=\"byName\"/>\n\n// Main.java\nClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(\"beans.xml\");\ncontext.getBean(\"orderService\", OrderService.class).placeOrder();",
+      "options": [
+        "OrderService object created\nSetter called\nPayment successful\nOrder placed",
+        "Startup fails with \"no bean named 'paymentService'\"",
+        "OrderService object created\nSetter called, then a NullPointerException",
+        "OrderService object created, then a NullPointerException when `placeOrder()` runs"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`byName` looks for a bean whose name equals the property name (`paymentService`, from `setPaymentService`). The only `PaymentService` bean is called `abc`, so nothing matches; the property is simply left unset, the setter is never called, and `placeOrder()` hits a `null` field. `autowire=\"byType\"` would have injected `abc`, as in the notes' byType example.",
+      "source": "notes p17-19",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-autowire.html"
+    },
+    {
+      "id": "d65_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Splitting XML with import",
+      "question": "In the lecture project, `appConfig.xml` only contains `<import resource=\"beans.xml\"/>` and `<import resource=\"beans2.xml\"/>`; `userService` is defined in `beans2.xml`. A teammate changes `Main` to `new ClassPathXmlApplicationContext(\"beans.xml\")`, and `context.getBean(UserService.class)` now throws `NoSuchBeanDefinitionException`. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`beans2.xml` is imported automatically only when the files are in alphabetical order",
+        "`UserService` is a prototype, and prototype beans cannot be fetched by type",
+        "Only `beans.xml` is loaded now; `beans2.xml` was pulled in only through `appConfig.xml`'s `<import>`, so `userService` is never defined",
+        "`getBean` by type only searches the first XML file of the project"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`<import>` lets one main file pull in the split files, so the application should load the main file (`appConfig.xml`). Loading `beans.xml` alone registers only its own beans. Prototype beans can be fetched by type just fine; each call simply creates a new object.",
+      "source": "notes p31-32; code: appConfig.xml, beans.xml, beans2.xml, Main.java",
+      "reference": null
+    },
+    {
+      "id": "d65_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Constructor & setter injection in XML",
+      "question": "For `PaymentService(String providerName, int retryCount)`, the notes say `<constructor-arg index=\"0\" .../>` is more reliable to demonstrate than `<constructor-arg name=\"providerName\" .../>`. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Name-based matching is deprecated and ignored by Spring 7",
+        "Matching by name needs the constructor's parameter names to be discoverable at runtime, which depends on how the class was compiled; an index always identifies the position",
+        "Index-based arguments are converted to the right type automatically, while named ones are always passed as Strings",
+        "Named arguments only work with setter injection, not with constructors"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Java does not always keep parameter names in compiled bytecode, so `name=\"providerName\"` works only when Spring can discover them (e.g. compiled with parameter-name information). `index` refers to the parameter position, which is always known. Type conversion (e.g. \"3\" to `int`) happens either way, and `name` is fully supported for constructors.",
+      "source": "notes p12-13",
+      "reference": null
+    }
+  ]
+}

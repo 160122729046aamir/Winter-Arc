@@ -1,0 +1,204 @@
+{
+  "day": 73,
+  "title": "Spring Lecture #16: DTOs & Validations in Spring Boot",
+  "sources": [
+    "notes.pdf (40 pages)",
+    "Excalidraw-Notes.pdf (1 page)",
+    "code/dtoDemo/pom.xml",
+    "code/dtoDemo/.../controller/StudentController.java",
+    "code/dtoDemo/.../dto/CreateStudentRequestDto.java",
+    "code/dtoDemo/.../dto/CreateStudentResponseDto.java",
+    "code/dtoDemo/.../dto/UpdateStudentRequestDto.java",
+    "code/dtoDemo/.../entity/Student.java",
+    "code/dtoDemo/.../service/StudentService.java"
+  ],
+  "topics": [
+    "Why DTOs (entity exposure, mass assignment)",
+    "Request vs response DTOs & mapping",
+    "Validation annotations",
+    "@Valid and 400 Bad Request",
+    "Null handling in constraints"
+  ],
+  "questions": [
+    {
+      "id": "d73_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Validation annotations",
+      "question": "For a `String name` field, which single annotation rejects all three of these values: `null`, `\"\"` and `\"   \"`?",
+      "codeSnippet": null,
+      "options": [
+        "`@NotNull`",
+        "`@NotBlank`",
+        "`@NotEmpty`",
+        "`@Size(min = 1)`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@NotBlank` rejects null, empty and whitespace-only strings, which is why the lecture prefers it for names and emails. `@NotNull` accepts `\"\"`, and `@NotEmpty` rejects null and `\"\"` but accepts `\"   \"` because spaces give it a non-zero length.",
+      "source": "notes p27-p29; Excalidraw p1",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    },
+    {
+      "id": "d73_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Why DTOs (entity exposure, mass assignment)",
+      "question": "The controller accepts the `Student` entity directly with `@RequestBody Student student`. The entity has fields like `role`, `isVerified` and `isDeleted`. What is the main risk the lecture describes?",
+      "codeSnippet": null,
+      "options": [
+        "The client can send internal fields such as `\"role\":\"ADMIN\"` or `\"isDeleted\":false`, and the backend accidentally accepts them (mass assignment)",
+        "Entities cannot be converted from JSON, so the request always fails",
+        "JPA refuses to save an entity that was created by Jackson",
+        "The entity makes the request slower because Hibernate validates every field"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When the entity is the request model, the outside world can set any of its fields, including ones only the backend should control (id, flags, role, timestamps); the notes call this the mass assignment problem. Jackson can map JSON into an entity without trouble, which is exactly why the danger exists.",
+      "source": "notes p5-p9",
+      "reference": "https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html"
+    },
+    {
+      "id": "d73_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "@Valid and 400 Bad Request",
+      "question": "A teammate added `@NotBlank`, `@Email` and `@Min(18)` to `CreateStudentRequestDto`, but the controller method is `createStudent(@RequestBody CreateStudentRequestDto dto)`. Students with blank names and age 5 are still being saved. What is missing?",
+      "codeSnippet": null,
+      "options": [
+        "The annotations must be moved to the `Student` entity to take effect",
+        "`@RequestBody` must be replaced with `@ModelAttribute` for validation to run",
+        "The service must call `dto.validate()` before mapping",
+        "`@Valid` on the parameter: the annotations only define the rules, and `@Valid` tells Spring to apply them"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes separate the two parts: constraint annotations define the rules, and `@Valid @RequestBody` triggers validation after JSON is converted. Without `@Valid`, the DTO reaches the service unchecked. Moving rules to the entity is the wrong direction; request rules belong on the request DTO.",
+      "source": "notes p31-p33; code: StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    },
+    {
+      "id": "d73_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Validation annotations",
+      "question": "The client posts the body below to `POST /api/students`, whose parameter is `@Valid @RequestBody CreateStudentRequestDto`. What happens?",
+      "codeSnippet": "// Request body\n{ \"name\": \"A\", \"age\": 17, \"email\": \"abc\", \"rollNo\": 5, \"subject\": \"Math\" }\n\npublic class CreateStudentRequestDto {\n    @NotBlank(message = \"Name cannot be null/Empty or blank\")\n    @Size(min = 2, max = 50, message = \"Student name must be within 2 to 50 character long\")\n    private String name;\n\n    @NotNull(message = \"Age is required\")\n    @Min(value = 18, message = \"Student must be atleast 18 years old\")\n    private Integer age;\n\n    @NotBlank(message = \"Student email cannot be blank\")\n    @Email(message = \"Student email must be valid\")\n    private String email;\n\n    @NotNull(message = \"RollNo is required\")\n    private Integer rollNo;\n\n    @NotBlank(message = \"Subject is required\")\n    private String subject;\n}",
+      "options": [
+        "400, reporting only the name error, because validation stops at the first failure",
+        "201 Created, because every field is present and non-null",
+        "400 with errors for `name`, `age` and `email`; the service method is never called",
+        "400 with errors for `name`, `age`, `email` and `rollNo`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "All constraints are checked: \"A\" is not blank but violates `@Size(min = 2)`, 17 violates `@Min(18)`, and \"abc\" is not a valid email; `rollNo` (5) and `subject` pass. Validation failure means 400 Bad Request and the service is not invoked. Bean Validation collects all violations rather than stopping at the first one.",
+      "source": "code: CreateStudentRequestDto.java, StudentController.java; notes p33-p35",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    },
+    {
+      "id": "d73_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Request vs response DTOs & mapping",
+      "question": "A client tries to cheat by posting extra fields to the lecture's create API (Spring Boot 4 defaults). Assuming all validations pass and the email is new, what does the response contain?",
+      "codeSnippet": "// Request body\n{ \"id\": 100, \"name\": \"Amit\", \"age\": 21, \"email\": \"amit@gmail.com\",\n  \"rollNo\": 7, \"subject\": \"Math\", \"deleted\": true }\n\n// CreateStudentRequestDto fields: name, age, email, rollNo, subject\n\nprivate Student mapToEntity(CreateStudentRequestDto dto) {\n    Student student = new Student();\n    student.setName(dto.getName());\n    // ... age, email, rollNo, subject\n    student.setCreatedAt(LocalDateTime.now());\n    student.setUpdatedAt(LocalDateTime.now());\n    student.setDeleted(false);\n    return student;\n}\n// mapToDto copies id, name, age, email, rollNo, subject, createdAt, updatedAt\n// and sets message = \"Student saved successfully\"",
+      "options": [
+        "201 with `\"id\": 100` and `\"deleted\": true`, because the client supplied them",
+        "400, because the body contains fields the DTO does not declare",
+        "201 with `\"id\": 100`, but `deleted` is reset to false",
+        "201 with a database-generated id, the success message and timestamps, and no `deleted` field at all"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`id` and `deleted` have no place in the request DTO, so they are ignored during JSON conversion (unknown properties do not fail by default here), and the service sets `deleted=false` and lets MySQL generate the id. The response DTO has no `deleted` field, so it never leaks. This is exactly how the request DTO protects the API boundary.",
+      "source": "code: StudentService.java, CreateStudentRequestDto.java, CreateStudentResponseDto.java; notes p13-p20",
+      "reference": "https://spring.io/blog/2025/10/07/introducing-jackson-3-support-in-spring/"
+    },
+    {
+      "id": "d73_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Request vs response DTOs & mapping",
+      "question": "The lecture's `UpdateStudentRequestDto` has `name`, `age`, `rollNo` and `subject`, but no `email`. A client calls the update API and includes `\"email\":\"new@x.com\"` in the body. What happens to the student's email?",
+      "codeSnippet": null,
+      "options": [
+        "It is updated, because the entity has an `email` field",
+        "It stays unchanged: the update DTO has no email field, so the value is never read, which is how the API forbids email changes",
+        "The request fails with 400 because `email` is not allowed",
+        "It is set to null, because the DTO's missing email overwrites the old one"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes use exactly this example: create may allow email while update does not, so each API defines its own contract. The extra JSON property is ignored, and the service never calls `setEmail` during update, so the stored email stays as it was. Nothing in the update DTO could set it to null either.",
+      "source": "notes p16-p17; code: UpdateStudentRequestDto.java, StudentService.java",
+      "reference": null
+    },
+    {
+      "id": "d73_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Why DTOs (entity exposure, mass assignment)",
+      "question": "For database reasons, the `Student` entity's `name` is split into `firstName` and `lastName`. The mobile app still expects `\"name\": \"Amit Sharma\"` in responses. How do response DTOs help?",
+      "codeSnippet": null,
+      "options": [
+        "The response DTO keeps a `name` field and the service maps `firstName + \" \" + lastName` into it, so the API contract does not change",
+        "The response DTO automatically mirrors the entity, so the app sees the new fields with no code change",
+        "DTOs force the database column to stay named `name`",
+        "They do not help; the mobile app must be updated whenever the entity changes"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Because the API returns a separate response DTO filled by explicit mapping, internal changes stay internal: only the mapping code changes. If the entity were returned directly, the JSON would switch to `firstName`/`lastName` and break the client, which is the lecture's Problem 5. DTOs do not mirror entities automatically; mapping is written by hand in the service.",
+      "source": "notes p11-p13, p20-p22",
+      "reference": null
+    },
+    {
+      "id": "d73_q8",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Validation annotations",
+      "question": "Why does the lecture put request validations (`@NotBlank`, `@Email`, `@Min`) on the request DTOs instead of on the `Student` entity?",
+      "codeSnippet": null,
+      "options": [
+        "Because Bean Validation annotations cannot compile on classes annotated with `@Entity`",
+        "Because putting them on the DTO makes the database enforce them as column constraints",
+        "Because the rules describe what a client may send to a specific API, and different APIs (create vs update) need different rules, while the entity is one shared internal model",
+        "Because `@Valid` only works on classes whose names end with `Dto`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Validation is about the request contract: create requires email, update does not even accept it, so each request DTO carries its own rules and `@Valid` checks them before the service runs. The entity is shared by all operations and represents the table. Bean Validation can technically annotate entities, so it is a design choice, not a compiler limit.",
+      "source": "notes p16-p17, p29-p31, p39",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    },
+    {
+      "id": "d73_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Null handling in constraints",
+      "question": "A teammate deletes `@NotNull` from `age` but keeps `@Min(18)`. A client posts a valid body that simply omits `age`. The entity's field is `private int age` with `setAge(int age)`. What happens?",
+      "codeSnippet": "// CreateStudentRequestDto\n@Min(value = 18, message = \"Student must be atleast 18 years old\")\nprivate Integer age;\n\n// StudentService.mapToEntity\nStudent student = new Student();\nstudent.setName(dto.getName());\nstudent.setAge(dto.getAge());   // setAge(int)\n// ...",
+      "options": [
+        "400, because `@Min(18)` rejects a missing value",
+        "Validation passes (`@Min` treats null as valid), then `setAge(dto.getAge())` unboxes null and throws `NullPointerException`, so the request ends in a 500",
+        "The student is saved with age 0, the default for `int`",
+        "The student is saved with age 18, the minimum allowed"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Bean Validation constraints like `@Min` and `@Size` consider null valid, so only `@NotNull` would catch a missing age. The null `Integer` then reaches `setAge(int)`, where auto-unboxing throws `NullPointerException`, a server error rather than a clean 400. That is why the lecture pairs `@NotNull` with `@Min`.",
+      "source": "code: CreateStudentRequestDto.java, StudentService.java, Student.java; notes p27-p30",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    },
+    {
+      "id": "d73_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Null handling in constraints",
+      "question": "`name` has both `@NotBlank(message = \"Name cannot be null/Empty or blank\")` and `@Size(min = 2, max = 50, ...)`. A client sends a body with no `name` property at all (other fields valid). Which validation error(s) are reported for `name`?",
+      "codeSnippet": null,
+      "options": [
+        "Only \"Name cannot be null/Empty or blank\", because `@Size` treats null as valid",
+        "Both messages, because a missing name is shorter than 2 characters",
+        "Only the `@Size` message, because it is declared last",
+        "No error, because missing properties are skipped by validation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A missing property leaves the field null. `@NotBlank` rejects null, but `@Size` only checks the length of a non-null value, so it passes. This is why `@Size` alone would not make a field required. Validation is not skipped for missing properties: the DTO field is simply null and every constraint is evaluated against that value.",
+      "source": "code: CreateStudentRequestDto.java; notes p27-p30",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    }
+  ]
+}

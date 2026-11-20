@@ -1,0 +1,201 @@
+{
+  "day": 33,
+  "title": "Lecture #33: Set & Map Interface in Java",
+  "sources": [
+    "notes.pdf (11 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "Set & Map basics",
+    "HashSet backed by HashMap",
+    "HashMap put/get internals",
+    "hashCode() & equals() contract",
+    "Load factor & resizing",
+    "Treeification (Java 8+)",
+    "LinkedHashSet / LinkedHashMap",
+    "TreeSet / TreeMap (red-black BST)",
+    "Null keys & values"
+  ],
+  "questions": [
+    {
+      "id": "d33_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "HashSet backed by HashMap",
+      "question": "According to the lecture, how does `HashSet` store its elements internally?",
+      "codeSnippet": null,
+      "options": [
+        "In a sorted array that is searched with binary search",
+        "In an ArrayList, checking every element for duplicates before adding",
+        "In an internal HashMap, using each element as a key and a shared dummy object `PRESENT` as the value",
+        "In a TreeMap, using each element as both the key and the value"
+      ],
+      "correctAnswer": 2,
+      "explanation": "HashSet wraps a `HashMap<E, Object>`: `set.add(x)` becomes `map.put(x, PRESENT)` and `set.contains(x)` becomes `map.containsKey(x)`, where `PRESENT` is a `private static final Object`. Because map keys are unique, the set gets duplicate rejection and O(1) average lookup for free. It is TreeSet, not HashSet, that is backed by a TreeMap.",
+      "source": "notes p4-p5",
+      "reference": "https://crackthebackend.pages.dev/blog/java/hashmap-deep-dive"
+    },
+    {
+      "id": "d33_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Set & Map basics",
+      "question": "What does this print?",
+      "codeSnippet": "Map<Integer, String> map = new HashMap<>();\nmap.put(101, \"Aditya\");\nmap.put(102, \"Rohit\");\nmap.put(101, \"Rohan\");\n\nSystem.out.println(map.size() + \" \" + map.get(101) + \" \" + map.get(104));",
+      "options": [
+        "2 Rohan null",
+        "3 Aditya null",
+        "2 Aditya null",
+        "3 Rohan, then NoSuchElementException for key 104"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Map keys are unique: putting 101 again does not add a new entry, it replaces the old value, so size stays 2 and `get(101)` returns \"Rohan\". `get` on a missing key returns null rather than throwing. Values may repeat freely (two keys could both map to \"Aditya\"), only keys may not.",
+      "source": "code: Demo.java; notes p1",
+      "reference": null
+    },
+    {
+      "id": "d33_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Set & Map basics",
+      "question": "During sign-up, a website must reject a username that is already taken, and the check must stay fast even with millions of users. Which structure from the lecture fits best?",
+      "codeSnippet": null,
+      "options": [
+        "An `ArrayList<String>` checked with `contains`, because it keeps insertion order",
+        "A `TreeMap<String, String>`, because tree lookups are O(1)",
+        "A `LinkedList<String>`, because adding at the end is O(1)",
+        "A `HashSet<String>`, because it rejects duplicates and `contains` is O(1) on average"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A Set gives exactly the two properties the lecture highlights: no duplicates and constant-time search on average via hashing. `ArrayList.contains` or a LinkedList search is O(N), which degrades with millions of users. A TreeMap would work but its lookups are O(log N), not O(1), and it stores pairs you don't need.",
+      "source": "notes p1",
+      "reference": null
+    },
+    {
+      "id": "d33_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Load factor & resizing",
+      "question": "A `HashMap` starts with the default capacity 16 and load factor 0.75. What happens once the number of entries exceeds 12?",
+      "codeSnippet": null,
+      "options": [
+        "Further `put` calls are rejected until some entries are removed",
+        "The bucket array is doubled to 32 and existing entries are redistributed, because the bucket index depends on the array length",
+        "Every bucket is immediately converted into a red-black tree",
+        "The array grows by one bucket at a time so that the load factor stays exactly 0.75"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Load factor = elements / capacity; 16 × 0.75 = 12 is the threshold. When it is exceeded, HashMap creates an array twice as large and re-places every entry, since the index is derived from the hash and the table length, so entries may move to new buckets. This keeps chains short; treeification is a separate per-bucket mechanism, and nothing is ever rejected.",
+      "source": "notes p8-p9",
+      "reference": "https://crackthebackend.pages.dev/blog/java/hashmap-deep-dive"
+    },
+    {
+      "id": "d33_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "HashMap put/get internals",
+      "question": "What does this print? (Note: `put` returns the previous value for that key.)",
+      "codeSnippet": "Map<Integer, String> map = new HashMap<>();\nString a = map.put(101, \"Aditya\");\nString b = map.put(101, \"Rohit\");\nmap.put(102, null);\n\nSystem.out.println(a + \" \" + b + \" \" + map.get(101) + \" \"\n        + map.containsKey(102) + \" \" + map.get(103));",
+      "options": [
+        "Aditya Rohit Rohit true null",
+        "null null Rohit false null",
+        "null Aditya Rohit true null",
+        "null Aditya Aditya true null"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The first `put` finds no existing key and returns null; the second finds key 101 (same hash and `equals`), replaces the value and returns the old value \"Aditya\". HashMap allows null values, so key 102 exists even though its value is null — `containsKey(102)` is true, while `get(103)` is null because 103 is absent. This is why `get(k) == null` alone can't tell you whether a key is present.",
+      "source": "notes p5-p6, p11; code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d33_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "LinkedHashSet / LinkedHashMap",
+      "question": "You must keep a list of unique page visitors (Aditya, Rohit, Rohan, Abhay) and later display them in the exact order they first visited. A plain HashSet shows them in an unpredictable order. Which class fixes this, and how?",
+      "codeSnippet": null,
+      "options": [
+        "`LinkedHashSet` — each entry also has `before`/`after` links that record insertion order",
+        "`TreeSet` — it stores elements in insertion order inside a balanced tree",
+        "`HashSet` with a larger initial capacity, so elements never collide and keep their order",
+        "`ArrayList` with `contains` checks, because it is the only ordered collection"
+      ],
+      "correctAnswer": 0,
+      "explanation": "LinkedHashSet (backed by LinkedHashMap) is hashing plus a doubly linked list through all entries (`before`/`after`), so iteration follows insertion order while lookups stay O(1). TreeSet orders elements by sorted value, not by arrival, so it would show Abhay first. Capacity changes don't make HashSet's bucket order meaningful, and an ArrayList with `contains` costs O(N) per check.",
+      "source": "notes p9",
+      "reference": null
+    },
+    {
+      "id": "d33_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Null keys & values",
+      "question": "Which statement about nulls is correct according to the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "HashMap allows any number of null keys but no null values",
+        "TreeMap allows one null key, stored as the smallest key",
+        "Neither HashMap nor TreeMap accepts null values",
+        "HashMap allows one null key and many null values, while TreeMap rejects a null key because it must compare keys"
+      ],
+      "correctAnswer": 3,
+      "explanation": "In HashMap/LinkedHashMap a null key is special-cased (it goes to bucket 0), and since keys are unique there can be only one, while null values are unrestricted. TreeMap places keys by comparing them, and comparing with null throws `NullPointerException`, so a null key is not allowed. TreeMap can still hold null values; only keys are compared.",
+      "source": "notes p11",
+      "reference": null
+    },
+    {
+      "id": "d33_q8",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Treeification (Java 8+)",
+      "question": "Because of many collisions, one HashMap bucket has accumulated a long chain of nodes. What does Java 8+ do once that chain grows past the treeify threshold (8 in the lecture)?",
+      "codeSnippet": null,
+      "options": [
+        "It converts the whole HashMap into a TreeMap, so iteration becomes sorted",
+        "It converts that bucket's linked list into a red-black tree, so searching that bucket drops from O(n) to O(log n)",
+        "It switches that bucket to open addressing and moves extra nodes into empty neighbouring buckets",
+        "It throws an exception, because more than 8 keys in one bucket means `hashCode()` is broken"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Treeification is per bucket: a long chain (linear O(n) search) is replaced by a self-balancing red-black tree, giving O(log n) lookups in that bucket even with a poor hash distribution. The map stays a HashMap — other buckets are unaffected and iteration does not become sorted. Java's HashMap uses chaining, not open addressing, and it never rejects colliding keys.",
+      "source": "notes p8-p9",
+      "reference": "https://crackthebackend.pages.dev/blog/java/hashmap-deep-dive"
+    },
+    {
+      "id": "d33_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "hashCode() & equals() contract",
+      "question": "`Student` overrides `hashCode()` but not `equals()`. What does this print?",
+      "codeSnippet": "class Student {\n    int roll;\n    Student(int roll) { this.roll = roll; }\n\n    @Override\n    public int hashCode() { return roll; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Set<Student> set = new HashSet<>();\n        set.add(new Student(1));\n        set.add(new Student(1));\n        set.add(new Student(2));\n        System.out.println(set.size() + \" \" + set.contains(new Student(2)));\n    }\n}",
+      "options": [
+        "2 true",
+        "3 true",
+        "2 false",
+        "3 false"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The two `Student(1)` objects have the same hash and land in the same bucket, but HashMap only treats keys as duplicates if the hashes match AND `equals` returns true; the inherited `Object.equals` compares references, so both are kept and the size is 3. For the same reason, a new `Student(2)` finds the right bucket but fails the `equals` check, so `contains` is false. Overriding both `hashCode()` and `equals()` consistently is required.",
+      "source": "notes p6-p7",
+      "reference": "https://crackthebackend.pages.dev/blog/java/hashmap-deep-dive"
+    },
+    {
+      "id": "d33_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "TreeSet / TreeMap (red-black BST)",
+      "question": "Keys arrive already sorted (50, 60, 70, 80, 90, ...) and you need sorted iteration plus smallest/largest/range queries. Why does Java's TreeMap use a self-balancing red-black tree instead of a plain binary search tree?",
+      "codeSnippet": null,
+      "options": [
+        "Because a plain BST cannot store keys in sorted order at all",
+        "Because a red-black tree gives O(1) lookups, like a HashMap",
+        "Because sorted insertions turn a plain BST into a one-sided chain with O(n) operations, while rebalancing keeps the height around log n",
+        "Because a plain BST does not allow duplicate keys, while a red-black tree does"
+      ],
+      "correctAnswer": 2,
+      "explanation": "In a plain BST each larger key goes to the right, so 50, 60, 70, ... forms a straight line and search degrades to O(n). A red-black tree rotates and recolours nodes on insert (the lecture's 50-60-70 → 60 at the root example), keeping operations at O(log n). It is still O(log n), not O(1), and neither tree stores duplicate keys in a TreeMap.",
+      "source": "notes p10-p11",
+      "reference": null
+    }
+  ]
+}

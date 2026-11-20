@@ -23,7 +23,7 @@ import ProgressBar from './ProgressBar';
 
 const NAVIGATION_ITEMS = [
   { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { name: 'My 90-Day Plan', path: '/plan', icon: Map },
+  { name: 'My Plan', path: '/plan', icon: Map },
   { name: 'Daily Planner', path: '/daily-planner', icon: CalendarCheck, highlight: true },
   { name: 'Weekly Sprints', path: '/sprints', icon: Target },
   { name: 'System Projects', path: '/projects', icon: Server, badge: 'Full Code' },
@@ -65,7 +65,7 @@ export default function Sidebar({ isOpen, onClose }) {
             </div>
             <ProgressBar value={stats.overallCompletionPercent} size="sm" color="cyan" />
             <div className="flex justify-between items-center text-[11px] text-slate-400 mt-2 font-mono">
-              <span>{stats.completedDaysCount} / {stats?.totalDays || 90} days</span>
+              <span>{stats.completedDaysCount} / {stats?.totalDays || 97} days</span>
               <span className="text-indigo-400 font-medium">Day {currentChallengeDay}</span>
             </div>
           </div>
@@ -97,7 +97,7 @@ export default function Sidebar({ isOpen, onClose }) {
                   {isActive && (
                     <motion.span
                       layoutId="sidebar-active-pill"
-                      className="absolute inset-0 -z-10 rounded-xl bg-white/[0.11] border border-white/20 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md"
+                      className="sidebar-pill absolute inset-0 -z-10 rounded-xl bg-white/[0.11] border border-white/20 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md"
                       transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.8 }}
                     />
                   )}

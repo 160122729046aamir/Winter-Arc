@@ -114,7 +114,7 @@ export default function QuickActionBanner() {
                   </h5>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Recalculates your calendar timeline so that Day {missedDays[0].day} becomes your new starting point today, preserving your 90-day curriculum sequence.
+                  Recalculates your calendar timeline so that Day {missedDays[0].day} becomes your new starting point today, preserving your curriculum sequence.
                 </p>
               </div>
 

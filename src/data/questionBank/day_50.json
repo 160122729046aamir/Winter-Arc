@@ -1,0 +1,201 @@
+{
+  "day": 50,
+  "title": "Lecture #50: Problems in Multithreading",
+  "sources": [
+    "notes/Notes.pdf (29 pages)",
+    "notes/slides.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Race conditions",
+    "Atomicity",
+    "Check-then-act",
+    "Visibility & volatile",
+    "Ordering & safe publication",
+    "Thread-safe collections",
+    "Immutability"
+  ],
+  "questions": [
+    {
+      "id": "d50_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Atomicity",
+      "question": "Why is `count++` on a shared `int` field unsafe when two threads run it at the same time?",
+      "codeSnippet": null,
+      "options": [
+        "Because a write to an `int` can be torn, leaving half of the old value and half of the new one",
+        "Because it is a read-modify-write sequence, so another thread can run between the read and the write and an update can be lost",
+        "Because `++` on a field always throws `ConcurrentModificationException` when two threads use it",
+        "Because the JVM caches `int` fields per thread forever, so the threads never see each other's writes"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`count++` is a single statement, but it reads `count`, adds 1, and writes the result back. If two threads both read the same old value, one increment overwrites the other (a lost update). A plain `int` read or write is itself atomic and is never torn, so the first option misidentifies the problem.",
+      "source": "notes p3-5, p9-10; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/interfere.html"
+    },
+    {
+      "id": "d50_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Immutability",
+      "question": "Several threads read the same object, and none of them use locks. Which object is safe to share this way, once it has been properly constructed and published?",
+      "codeSnippet": null,
+      "options": [
+        "An `ArrayList<String>` that some threads add to while others read it",
+        "A `Counter` object whose `public int count` field threads increment",
+        "A `BankAccount` whose `balance` threads check and then deduct from",
+        "A `final class User` whose `private final` fields are set only in the constructor"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Concurrency problems come from data that is both shared and mutable. An immutable object's state cannot change after construction, so threads can read it at the same time without synchronization. The other three objects are all shared and mutated by threads. `ArrayList` in particular is not thread-safe.",
+      "source": "notes p1-2, p26",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/immutable.html"
+    },
+    {
+      "id": "d50_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Race conditions",
+      "question": "`increment()` is NOT synchronized here. Which statement about the printed value is correct?",
+      "codeSnippet": "class Counter {\n    int count = 0;\n    void increment() { count++; }\n}\n\npublic class Main {\n    public static void main(String[] args) throws InterruptedException {\n        Counter c = new Counter();\n        Runnable task = () -> {\n            for (int i = 1; i <= 100_000; i++) c.increment();\n        };\n        Thread t1 = new Thread(task);\n        Thread t2 = new Thread(task);\n        t1.start(); t2.start();\n        t1.join(); t2.join();\n        System.out.println(c.count);\n    }\n}",
+      "options": [
+        "It is at most 200000, and it is often less, with a different value on different runs",
+        "It is always 200000, because `join()` waits for both threads to finish",
+        "It is always exactly 100000, because the two threads overwrite each other completely",
+        "It can be more than 200000, because both threads may write the same increment twice"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Each lost update removes one increment, so the result can never be more than 200000. It is often less, and the exact value depends on how the threads interleave. `join()` only guarantees that main sees the final value once both threads have finished. It cannot recover updates that were already lost.",
+      "source": "notes p5-6; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/interfere.html"
+    },
+    {
+      "id": "d50_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Visibility & volatile",
+      "question": "A page-view counter `int views` loses updates under load. A teammate changes it to `volatile int views;` and keeps `views++` in an unsynchronized method. Is the bug fixed?",
+      "codeSnippet": null,
+      "options": [
+        "Yes: `volatile` makes every operation on the variable atomic",
+        "Yes: `volatile` makes the threads take turns entering the method",
+        "No: `volatile` gives visibility and ordering, but `views++` is still read-modify-write; use `AtomicInteger` or synchronization",
+        "No: `volatile` only works with `boolean` fields, so it is ignored for `int`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`volatile` guarantees that each read sees the latest write, and makes single reads and writes atomic. It does not make a compound action like `++` atomic, so two threads can still read the same value and overwrite each other. `AtomicInteger.incrementAndGet()` or a synchronized block fixes this. `volatile` works with any field type.",
+      "source": "notes p15-16, p24",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/atomic.html"
+    },
+    {
+      "id": "d50_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Visibility & volatile",
+      "question": "`flag` is NOT volatile here. The updater sets it after about one second. Which statement about what the program can do is correct?",
+      "codeSnippet": "public class Main {\n    static boolean flag = false;\n\n    public static void main(String[] args) {\n        Thread updater = new Thread(() -> {\n            try { Thread.sleep(1000); } catch (InterruptedException e) { return; }\n            flag = true;\n            System.out.println(\"Flag updated\");\n        });\n        Thread observer = new Thread(() -> {\n            while (!flag) { }\n            System.out.println(\"Detected flag change\");\n        });\n        updater.start();\n        observer.start();\n    }\n}",
+      "options": [
+        "It always prints both lines, because the sleep gives the write plenty of time to reach memory",
+        "It may print both lines, or it may print only \"Flag updated\" while the observer spins forever; `volatile` on `flag` removes the second possibility",
+        "It always hangs, because a non-volatile field is never shared between threads",
+        "It throws `IllegalMonitorStateException`, because `flag` is read outside a synchronized block"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Without a happens-before relationship, the observer is not guaranteed to ever see the updater's write. For example, the JIT may hoist the read out of the loop. It may still see the write on some runs, so the program 'usually works' but is not correct. Declaring `flag` volatile means the observer's reads must eventually see the write. Waiting longer (the sleep) gives no guarantee.",
+      "source": "notes p13-15; code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-17.html#jls-17.4.5"
+    },
+    {
+      "id": "d50_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Check-then-act",
+      "question": "`withdraw(int amount) { if (balance >= amount) { balance = balance - amount; } }` has no synchronization. The balance is 1000, and two threads each call `withdraw(800)` at the same time. The final balance comes out as -600. What is the root cause and the right fix?",
+      "codeSnippet": null,
+      "options": [
+        "A visibility problem only; declaring `balance` as `volatile` fixes it",
+        "Integer overflow in the subtraction; switching `balance` to `long` fixes it",
+        "The second thread read a stale balance; adding `Thread.sleep()` before the check fixes it",
+        "Both threads passed the check before either one deducted; the check and the update must run as one atomic unit (e.g. a synchronized method)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "This is a check-then-act race. Both threads see 1000 ≥ 800, then both deduct, giving -600. The check and the update form one critical section, so they must run under the same lock. `volatile` makes the latest balance visible, but it does not stop both threads from passing the check before either one deducts.",
+      "source": "notes p2-3, p7-8, p23",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html"
+    },
+    {
+      "id": "d50_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Thread-safe collections",
+      "question": "`map` is a `ConcurrentHashMap`. Is `if (!map.containsKey(k)) { map.put(k, v); }` safe when several threads run it for the same key?",
+      "codeSnippet": null,
+      "options": [
+        "No: each call is thread-safe, but the check-then-put sequence is not atomic; use `putIfAbsent(k, v)`",
+        "Yes: every method of `ConcurrentHashMap` locks the whole map until the next call",
+        "Yes: `containsKey()` reserves the key for the calling thread until it calls `put()`",
+        "No: `ConcurrentHashMap` is no safer than `HashMap`, so the map should be `HashMap` inside `synchronized`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A thread-safe collection protects each of its own operations. It does not protect a sequence of separate calls. Two threads can both see the key as missing and both put, so the first value is overwritten. `putIfAbsent` (or `computeIfAbsent`) does the whole check-then-act as one atomic operation.",
+      "source": "notes p11",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html#putIfAbsent(K,V)"
+    },
+    {
+      "id": "d50_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Ordering & safe publication",
+      "question": "`data` is a plain `int`, and `ready` is `volatile`. One thread runs `writer()`, and another thread runs `reader()` once, at the same time. Which outputs are possible?",
+      "codeSnippet": "class Shared {\n    int data = 0;\n    volatile boolean ready = false;\n\n    void writer() {\n        data = 10;\n        ready = true;\n    }\n\n    void reader() {\n        if (ready) {\n            System.out.println(data);\n        }\n    }\n}",
+      "options": [
+        "Only `10`",
+        "Nothing, `10`, or `0`",
+        "Nothing or `10`, but never `0`",
+        "Only `0`, because `data` is not volatile"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The reader might check `ready` before the writer sets it, so printing nothing is possible. The write `data = 10` comes before the volatile write `ready = true` in the writer, and that volatile write happens-before any read that sees `ready == true`. So a reader that sees `true` must also see `data == 10`. Printing 0 would be possible only if `ready` were NOT volatile.",
+      "source": "notes p17-20",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-17.html#jls-17.4.5"
+    },
+    {
+      "id": "d50_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Visibility & volatile",
+      "question": "In a config service, `update()` writes `host` and `port` inside `synchronized (writeLock)`. `read()` reads both fields inside `synchronized (readLock)`, which is a different lock object, so reads don't wait for writes. Users sometimes see a new `host` paired with an old `port`. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`synchronized` only works on methods, not on blocks, so neither lock is applied",
+        "Mutual exclusion and visibility come from releasing and then acquiring the SAME monitor; with two different locks there is no happens-before and no exclusion between reader and writer",
+        "Two locks make the code twice as safe, so the only possible cause is a JVM bug",
+        "Visibility needs `volatile` on both fields; `synchronized` never affects visibility"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A monitor release happens-before a later acquire of that same monitor. Because the writer and reader use different locks, there is no ordering or visibility guarantee between them. The reader can also run in the middle of an update and see one new field and one old field. All threads must follow the same synchronization policy. `synchronized` does give visibility, but only through the same monitor.",
+      "source": "notes p16-17, p20-21, p28 (rule 9)",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/memconsist.html"
+    },
+    {
+      "id": "d50_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Atomicity",
+      "question": "According to the Java Language Specification, which statement about a `long` field shared between threads is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Reads and writes of a plain `long` are always atomic, so `volatile` adds nothing for `long`",
+        "Declaring it `volatile` makes `value++` atomic, because volatile `long` operations are indivisible",
+        "A plain `long` cannot be shared between threads at all; it must be an `AtomicLong`",
+        "A plain `long` write may be split into two 32-bit writes; `volatile` makes each read and write atomic, but `value++` is still not atomic"
+      ],
+      "correctAnswer": 3,
+      "explanation": "JLS §17.7 allows a non-volatile 64-bit `long` or `double` read or write to be done as two 32-bit halves, so another thread could see a torn value. Most modern JVMs don't actually do this, but portable code shouldn't rely on that. `volatile` makes single reads and writes atomic and visible. `value++` is still a separate read and write, so it can lose updates.",
+      "source": "notes p12",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-17.html#jls-17.7"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "day": 97,
+  "title": "Spring Lecture #40: Testing Spring Boot Applications | JUnit 5, Mockito & MockMvc",
+  "sources": [
+    "notes/Notes.pdf (39 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/springTestingDemo (PriceCalculator, ProductService, ProductController, PriceCalculatorTest, ProductServiceTest, ProductControllerTest, ProductRepositoryTest)"
+  ],
+  "topics": [
+    "Arrange-Act-Assert & JUnit basics",
+    "Unit vs slice vs integration tests",
+    "assertThrows",
+    "Mockito: @Mock & @InjectMocks",
+    "Stubbing, assertion & verification",
+    "@WebMvcTest & MockMvc",
+    "@Mock vs @MockitoBean",
+    "Security in controller tests",
+    "@DataJpaTest"
+  ],
+  "questions": [
+    {
+      "id": "d97_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Arrange-Act-Assert & JUnit basics",
+      "question": "`PriceCalculatorTest` has a `@BeforeEach void setup()` that creates `new PriceCalculator()` and two `@Test` methods. How many times does `setup()` run when the class's tests are executed?",
+      "codeSnippet": null,
+      "options": [
+        "Once, before the first test, and the same instance is shared",
+        "Twice: once before each test method, so every test starts from a fresh, predictable state",
+        "Three times: once for the class and once per test",
+        "Zero times unless the class is annotated with `@SpringBootTest`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@BeforeEach` runs before every test method, giving each test a predictable starting state; with two tests it runs twice. Running once before all tests is what `@BeforeAll` is for. JUnit processes these annotations itself, without any Spring context.",
+      "source": "notes p13-14 (@BeforeEach and @AfterEach); code: PriceCalculatorTest",
+      "reference": null
+    },
+    {
+      "id": "d97_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Unit vs slice vs integration tests",
+      "question": "A teammate adds `@SpringBootTest` and `@Autowired PriceCalculator` to `PriceCalculatorTest` \"so the calculator is a real Spring bean\". The suite becomes noticeably slower. What does the lecture recommend?",
+      "codeSnippet": null,
+      "options": [
+        "Keep it: every class annotated with `@Service` must be tested through the Spring context",
+        "Replace it with `@WebMvcTest`, which is faster than `@SpringBootTest`",
+        "Mock `PriceCalculator` with `@MockitoBean` so the context starts faster",
+        "Remove the Spring annotations and create it with `new PriceCalculator()` in a plain JUnit test, because it has no dependencies and its logic can be tested directly"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The core principle is to use the smallest environment that can prove the behaviour. `PriceCalculator` is plain Java logic, so a plain JUnit test (as in the lecture code) is fastest and isolates the calculation. Mocking the class under test would test nothing, and `@WebMvcTest` is for the web layer.",
+      "source": "notes p5-7, p10-11 (unit tests, testing pyramid, first JUnit test), p38 (core principle)",
+      "reference": null
+    },
+    {
+      "id": "d97_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "assertThrows",
+      "question": "Using the lecture's `PriceCalculator` below, what is the outcome of this test?",
+      "codeSnippet": "// PriceCalculator (lecture code)\npublic double calculatePrice(double price, double discount) {\n    if (price < 0) {\n        throw new IllegalArgumentException(\"price cannot be negative\");\n    }\n    if (discount < 0 || discount > 100) {\n        throw new IllegalArgumentException(\"Discount should be within 0 to 100\");\n    }\n    return price - ((price * discount) / 100);\n}\n\n// Test\n@Test\nvoid shouldRejectInvalidInput() {\n    IllegalArgumentException ex = assertThrows(\n            IllegalArgumentException.class,\n            () -> priceCalculator.calculatePrice(-10, 120));\n    assertEquals(\"Discount should be within 0 to 100\", ex.getMessage());\n}",
+      "options": [
+        "It passes, because both inputs are invalid and an `IllegalArgumentException` is thrown",
+        "It fails at `assertThrows`, because two exceptions are thrown",
+        "It fails at `assertEquals`: the price check runs first, so the message is \"price cannot be negative\"",
+        "It errors, because `assertThrows` cannot be combined with `assertEquals`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The method throws on the first failing check, which is `price < 0`, so only one exception with \"price cannot be negative\" is thrown. `assertThrows` succeeds (the type matches) and returns that exception, and the message assertion then fails. Testing one behaviour per test (separate negative-price and discount-above-100 tests) avoids this confusion.",
+      "source": "code: PriceCalculator, PriceCalculatorTest; notes p12-13 (assertThrows)",
+      "reference": null
+    },
+    {
+      "id": "d97_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@Mock vs @MockitoBean",
+      "question": "Why does `ProductServiceTest` use `@Mock` for the repository while `ProductControllerTest` uses `@MockitoBean` for the service?",
+      "codeSnippet": null,
+      "options": [
+        "There is no Spring context in the service test, so Mockito creates a plain mock field; in `@WebMvcTest` Spring creates the controller, so the mock must be a bean in the test `ApplicationContext`, which `@MockitoBean` provides",
+        "`@Mock` only works for interfaces and `@MockitoBean` only works for classes",
+        "`@MockitoBean` creates a real bean wrapped in a spy, while `@Mock` creates a fake",
+        "They are interchangeable; the choice is a matter of style"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In the service test, `MockitoExtension` creates the `@Mock` and `@InjectMocks` passes it to the `ProductService` constructor, with no Spring involved. In a `@WebMvcTest`, Spring builds `ProductController`, and its constructor needs a `ProductService` bean; `@MockitoBean` adds or replaces that bean with a Mockito mock. A plain `@Mock` field would never reach the Spring context.",
+      "source": "notes p17-19, p29-30 (@Mock, @InjectMocks, @Mock vs @MockitoBean); code: ProductServiceTest, ProductControllerTest",
+      "reference": "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html"
+    },
+    {
+      "id": "d97_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Mockito: @Mock & @InjectMocks",
+      "question": "A teammate copies the lecture's `ProductServiceTest` but forgets `@ExtendWith(MockitoExtension.class)`. What happens when this test runs?",
+      "codeSnippet": "public class ProductServiceTest {      // no @ExtendWith\n\n    @Mock\n    private ProductRepository productRepository;\n\n    @InjectMocks\n    private ProductService productService;\n\n    @Test\n    void shouldReturnProductWhenProductExist() {\n        Product product = new Product(1L, \"Laptop\", 50000, 10);\n        when(productRepository.findById(1L))\n                .thenReturn(Optional.of(product));\n\n        Product result = productService.getProductById(1L);\n        assertEquals(\"Laptop\", result.getName());\n    }\n}",
+      "options": [
+        "It passes, because JUnit Jupiter processes `@Mock` and `@InjectMocks` by itself",
+        "It fails with a `NullPointerException` at the `when(...)` line: without the extension the annotated fields are never initialized, so `productRepository` is null",
+        "It fails because `ProductService` is created without its repository and `getProductById` returns null",
+        "It starts a Spring context and uses the real `ProductRepository`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "JUnit knows how to run tests but does not process Mockito annotations; `MockitoExtension` is what initializes `@Mock` and `@InjectMocks` fields. Without it both fields stay null, so `productRepository.findById(1L)` inside `when(...)` throws a `NullPointerException` before the service is even called. No Spring context is involved in this test.",
+      "source": "notes p17-19 (Configuring Mockito with JUnit); code: ProductServiceTest",
+      "reference": null
+    },
+    {
+      "id": "d97_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Security in controller tests",
+      "question": "The notes' project has Spring Security on the classpath. A `@WebMvcTest` for `POST /api/products` is annotated with `@WithMockUser` and sends valid JSON, but the response is 403 instead of 201. What is the most likely fix?",
+      "codeSnippet": null,
+      "options": [
+        "Replace `@WithMockUser` with `@SpringBootTest`, because security only works with the full context",
+        "Add `@MockitoBean` for the `SecurityFilterChain`",
+        "Change the expected status to 403, since mock users can never create data",
+        "Add `.with(csrf())` to the request: the security filters run in MockMvc, and CSRF protection rejects unsafe methods without a token"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`@WebMvcTest` loads the security filters, so MockMvc requests pass through them. `@WithMockUser` handles authentication (otherwise the result would be 401), but POST, PUT and DELETE still need a CSRF token when CSRF protection is enabled, which `.with(csrf())` supplies. Mocking the filter chain or using the full context does not remove CSRF.",
+      "source": "notes p28-29, p33-36 (@WebMvcTest loads security filters, POST test, handling Spring Security)",
+      "reference": null
+    },
+    {
+      "id": "d97_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Stubbing, assertion & verification",
+      "question": "This variant of the lecture's `shouldCreateProductWhenNameIsUnique` runs with `@ExtendWith(MockitoExtension.class)`. `Product` has only Lombok `@Getter @Setter @NoArgsConstructor @AllArgsConstructor` (no `equals`). Why does the test fail?",
+      "codeSnippet": "Product request = new Product(null, \"Keyboard\", 200, 5);\nProduct savedProduct = new Product(10L, \"Keyboard\", 200, 5);\n\nwhen(productRepository.existsByName(\"Keyboard\")).thenReturn(false);\nwhen(productRepository.save(new Product(null, \"Keyboard\", 200, 5)))\n        .thenReturn(savedProduct);\n\nProduct result = productService.createProduct(request);\nassertEquals(10L, result.getId());",
+      "options": [
+        "The `save` stub was registered for a different `Product` instance; Mockito matches arguments with `equals`, which here is identity, so `save(request)` doesn't match the stub (strict stubs report the argument mismatch; without a match `save` would return null)",
+        "`existsByName` returns `true` by default for unstubbed calls, so the service throws",
+        "`assertEquals(10L, ...)` always fails because `getId()` returns a `Long`",
+        "The test passes; Mockito compares objects field by field"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Without a matcher, Mockito compares stubbed arguments using `equals`. `Product` doesn't override it, so a new object with the same fields is not equal to `request`. The lecture's version stubs `save(request)` with the same instance; alternatively `any(Product.class)` would work. An unstubbed `boolean` method returns `false`, so `existsByName` is not the problem.",
+      "source": "code: ProductServiceTest, Product; notes p22-26 (product creation tests, argument matchers)",
+      "reference": null
+    },
+    {
+      "id": "d97_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@DataJpaTest",
+      "question": "A developer adds `Optional<Product> findByNameIgnoreCase(String name)` and 'tests' it by mocking the repository and stubbing `findByNameIgnoreCase(\"laptop\")` to return a product. The test is green, but the query fails in production because of a typo in the property name. What should have been done?",
+      "codeSnippet": null,
+      "options": [
+        "Also verify the mock with `verify(repository).findByNameIgnoreCase(\"laptop\")`",
+        "Use `@WebMvcTest`, which runs repository queries through MockMvc",
+        "Test the real repository in a `@DataJpaTest` slice with an embedded database such as H2, so Spring Data and Hibernate actually create and execute the query",
+        "Use `@MockitoBean` instead of `@Mock` so the stub goes through Spring Data"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A mocked repository only returns what the test configured, so it proves nothing about the real query or mapping. `@DataJpaTest` loads entities, Spring Data repositories, Hibernate and an embedded database, and each test runs in a transaction that is rolled back. `verify` only checks the call, and `@MockitoBean` is still a mock.",
+      "source": "notes p36-38 (Why repository tests use a database, @DataJpaTest, H2); code: ProductRepositoryTest",
+      "reference": "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html"
+    },
+    {
+      "id": "d97_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Unit vs slice vs integration tests",
+      "question": "Following 'use the smallest test environment that can prove the behaviour', which mapping fits these three checks? (1) the discount-above-100 rule in `PriceCalculator`; (2) `POST /api/product` returns 201 with the saved product as JSON; (3) the derived query `existsByName` works against the real schema.",
+      "codeSnippet": null,
+      "options": [
+        "(1) `@SpringBootTest`; (2) `@DataJpaTest`; (3) Mockito `@Mock` repository",
+        "(1) plain JUnit; (2) `@WebMvcTest` + MockMvc with a `@MockitoBean` service; (3) `@DataJpaTest` with an embedded database",
+        "(1) `@WebMvcTest`; (2) plain JUnit calling `controller.createProduct(...)` directly; (3) `@SpringBootTest` against MySQL",
+        "(1) Mockito `@InjectMocks`; (2) `@SpringBootTest` with Postman; (3) `@WebMvcTest`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Plain logic needs only JUnit; the HTTP contract (mapping, JSON conversion, status code) needs Spring MVC's infrastructure via `@WebMvcTest` and MockMvc, with the service mocked; a repository query needs a real JPA slice and database. Calling the controller method directly would skip mapping, JSON and status handling, and mocking the repository can't validate a query.",
+      "source": "notes p26-28 (why not call the controller directly), p37-38 (quick comparison, core principle)",
+      "reference": null
+    },
+    {
+      "id": "d97_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@WebMvcTest & MockMvc",
+      "question": "In the lecture's `ProductControllerTest`, a teammate deletes the `@MockitoBean private ProductService productService;` field because the GET test 'doesn't really need a service'. What happens when the test class runs?",
+      "codeSnippet": null,
+      "options": [
+        "The test context fails to load: `@WebMvcTest` scans controllers but not `@Service` beans, so no `ProductService` bean exists for `ProductController`'s constructor",
+        "Spring automatically creates the real `ProductService`, which then fails because no database is configured",
+        "The test runs and the controller receives `null` for `productService`, causing a 500 response",
+        "MockMvc skips the controller and returns 404"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`@WebMvcTest` is a slice: it loads controllers, MVC infrastructure, JSON conversion and filters, but regular `@Component`/`@Service` beans are not scanned. `ProductController` requires a `ProductService` in its constructor, so the context cannot be built and the tests error out before any request is made. `@MockitoBean` supplies that missing bean as a mock.",
+      "source": "notes p28-30 (@WebMvcTest, @Mock vs @MockitoBean); code: ProductControllerTest, ProductController",
+      "reference": "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html"
+    }
+  ]
+}

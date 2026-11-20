@@ -100,9 +100,10 @@ export default function AnalyticsPage() {
   const courseComparisonData = useMemo(() => {
     return [
       { name: 'Core Java Completed', value: stats.javaCompletedDays, color: '#06b6d4' },
-      { name: 'Core Java Remaining', value: Math.max(0, 25 - stats.javaCompletedDays), color: '#164e63' },
-      { name: 'Spring Boot Completed', value: stats.springCompletedDays, color: '#6366f1' },
-      { name: 'Spring Boot Remaining', value: Math.max(0, 30 - stats.springCompletedDays), color: '#312e81' },
+      { name: 'Core Java Remaining', value: Math.max(0, stats.javaDaysCount - stats.javaCompletedDays), color: '#164e63' },
+      // Spring Boot spans phase 2 and phase 3 of the plan
+      { name: 'Spring Boot Completed', value: stats.springCompletedDays + stats.revCompletedDays, color: '#6366f1' },
+      { name: 'Spring Boot Remaining', value: Math.max(0, (stats.springDaysCount + stats.revDaysCount) - (stats.springCompletedDays + stats.revCompletedDays)), color: '#312e81' },
     ];
   }, [stats]);
 

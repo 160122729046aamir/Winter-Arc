@@ -1,0 +1,198 @@
+{
+  "day": 40,
+  "title": "Lecture #40: Java Stream Methods Deep Dive",
+  "sources": [
+    "notes.pdf (1 page)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Intermediate operations (filter, map, flatMap, sorted, distinct, limit, skip, peek)",
+    "Stateful operations",
+    "Terminal operations (reduce, count, match, find, primitive sum/average)",
+    "Collectors (toList, toSet, toMap, groupingBy + mapping, partitioningBy, joining)"
+  ],
+  "questions": [
+    {
+      "id": "d40_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Intermediate vs terminal operations",
+      "question": "Which of these stream methods is a terminal operation?",
+      "codeSnippet": null,
+      "options": [
+        "`peek()`",
+        "`sorted()`",
+        "`count()`",
+        "`flatMap()`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`count()` ends the pipeline and returns a `long`, so it is a terminal (reducing) operation. `peek()` is the tempting wrong answer because it performs an action like `forEach`, but it returns a Stream and is an intermediate operation meant for debugging.",
+      "source": "notes p1, code: Demo.java, Demo2.java",
+      "reference": "https://howtodoinjava.com/java8/java-stream-peek-example"
+    },
+    {
+      "id": "d40_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Collectors.joining",
+      "question": "What does this program print?",
+      "codeSnippet": "import java.util.*;\nimport java.util.stream.Collectors;\n\npublic class Demo3 {\n    public static void main(String[] args) {\n        List<String> list = new ArrayList<>(List.of(\"AA\", \"BBB\", \"CCCC\", \"DD\", \"EEE\"));\n\n        String result = list.stream()\n            .collect(Collectors.joining(\"-\"));\n\n        System.out.println(result);\n    }\n}",
+      "options": [
+        "AA-BBB-CCCC-DD-EEE",
+        "AA-DD-BBB-EEE-CCCC",
+        "AABBBCCCCDDEEE",
+        "EEE-DD-CCCC-BBB-AA"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`joining(\"-\")` concatenates the elements in encounter order, the order of the source list, and puts the delimiter only between neighbours. It does not sort or group the strings, so \"AA-DD-BBB-EEE-CCCC\" (ordered by length) is wrong. The delimiter is not ignored either, which rules out \"AABBBCCCCDDEEE\".",
+      "source": "code: Demo3.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Collectors.html"
+    },
+    {
+      "id": "d40_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "limit and skip",
+      "question": "An API shows results 10 per page. To return page 3 (items 21-30) from a stream of results, which pair of operations is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`.limit(10).skip(20)`",
+        "`.skip(20).limit(10)`",
+        "`.skip(30).limit(10)`",
+        "`.limit(30).skip(10)`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Skip the first two pages (20 items), then take the next 10. The order matters: `limit(10).skip(20)` first cuts the stream down to 10 items and then skips 20 of them, which leaves an empty result.",
+      "source": "code: Demo.java (iterate/limit/skip)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html"
+    },
+    {
+      "id": "d40_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "reduce",
+      "question": "What value is printed?",
+      "codeSnippet": "import java.util.*;\n\npublic class Demo2 {\n    public static void main(String[] args) {\n        List<Integer> list = new ArrayList<>(List.of(1, 13, 11, 9));\n\n        int sum = list.stream()\n            .reduce(1, (a, b) -> a + b);\n\n        System.out.println(sum);\n    }\n}",
+      "options": [
+        "34",
+        "1",
+        "36",
+        "35"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The first argument of `reduce` is the identity (starting value), so the result is 1 + 1 + 13 + 11 + 9 = 35. Answering 34 assumes the identity is ignored. The correct identity for a sum is 0; using 1 is a bug that shifts the result.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html"
+    },
+    {
+      "id": "d40_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "flatMap",
+      "question": "For `List<List<Integer>> list2 = List.of(List.of(1, 2), List.of(3, 4));`, the lecture writes `list2.stream().flatMap(x -> x.stream()).map(x -> x * 2)`. Why is `flatMap` needed before `map(x -> x * 2)`?",
+      "codeSnippet": null,
+      "options": [
+        "Each element of `list2.stream()` is a `List<Integer>`; `flatMap` replaces each list with its elements, giving one `Stream<Integer>` of 1, 2, 3, 4",
+        "`flatMap` sorts the inner lists, and `map` needs sorted input",
+        "`flatMap` removes duplicates across the inner lists before `map` runs",
+        "`map` cannot be the second operation in a pipeline, so `flatMap` is a required first step"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`flatMap` takes a function that returns a Stream for each element and merges all those streams into one flat stream. With plain `map(x -> x.stream())` you would get a `Stream<Stream<Integer>>`, and `x * 2` would not compile because `x` would be a list, not a number.",
+      "source": "code: Demo.java (list2 / flatMap)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html"
+    },
+    {
+      "id": "d40_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "groupingBy + mapping",
+      "question": "From `List.of(\"AA\", \"BBB\", \"CCCC\", \"DD\", \"EEE\")` you need a map from word length to the lowercase words of that length (for example 3 -> [bbb, eee]). Which collector does this?",
+      "codeSnippet": null,
+      "options": [
+        "`Collectors.partitioningBy(x -> x.length(), Collectors.toList())`",
+        "`Collectors.toMap(x -> x.length(), x -> x.toLowerCase())`",
+        "`Collectors.groupingBy(x -> x.length(), Collectors.mapping(x -> x.toLowerCase(), Collectors.toList()))`",
+        "`Collectors.groupingBy(x -> x.toLowerCase(), Collectors.mapping(x -> x.length(), Collectors.toList()))`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`groupingBy` takes a classifier (length) and a downstream collector. `mapping` turns each word into lowercase before collecting it into a list. `toMap` looks close, but it allows only one value per key: \"AA\" and \"DD\" share key 2, so it throws `IllegalStateException` (duplicate key). `partitioningBy` needs a boolean predicate.",
+      "source": "code: Demo3.java",
+      "reference": "https://www.baeldung.com/java-map-collectors-tomap-vs-groupingby"
+    },
+    {
+      "id": "d40_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "anyMatch / allMatch / noneMatch",
+      "question": "A validator checks `orders.stream().allMatch(o -> o.isPaid())` and `orders.stream().anyMatch(o -> o.isPaid())`. If `orders` is an empty list, what do the two calls return?",
+      "codeSnippet": null,
+      "options": [
+        "`allMatch` returns false and `anyMatch` returns false",
+        "`allMatch` returns true and `anyMatch` returns false",
+        "Both throw `NoSuchElementException`, because there is nothing to test",
+        "`allMatch` returns false and `anyMatch` returns true"
+      ],
+      "correctAnswer": 1,
+      "explanation": "On an empty stream, `allMatch` is vacuously true, because no element fails the predicate. `anyMatch` is false, because no element satisfies it. Many developers expect `allMatch` to be false here; if \"at least one order, and all paid\" is the rule, add an explicit emptiness check.",
+      "source": "notes p1, code: Demo2.java",
+      "reference": "https://howtodoinjava.com/java8/stream-allmatch-example"
+    },
+    {
+      "id": "d40_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Stateful operations",
+      "question": "This is the lecture's Demo.java pipeline. What exactly does it print, line by line?",
+      "codeSnippet": "import java.util.*;\n\npublic class Demo {\n    public static void main(String[] args) {\n        List<Integer> list = new ArrayList<>(List.of(11, 34, 1, 13, 4));\n\n        list.stream()\n            .filter(x -> x > 10)\n            .map(x -> x * 2)\n            .peek(System.out::println)\n            .sorted()\n            .distinct()\n            .forEach(System.out::println);\n    }\n}",
+      "options": [
+        "22\n26\n68",
+        "22\n22\n68\n68\n26\n26",
+        "22\n68\n26\n22\n68\n26",
+        "22\n68\n26\n22\n26\n68"
+      ],
+      "correctAnswer": 3,
+      "explanation": "11, 34 and 13 pass the filter and become 22, 68, 26. `sorted()` is stateful: it has to receive every element before it can emit any. So `peek` prints 22, 68, 26 first, and then `forEach` prints the sorted values 22, 26, 68. The interleaved \"22 22 68 68 26 26\" is what you would see without `sorted()`, when each element passes straight through.",
+      "source": "code: Demo.java",
+      "reference": "https://howtodoinjava.com/java8/java-stream-peek-example"
+    },
+    {
+      "id": "d40_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "partitioningBy",
+      "question": "A report splits order amounts into even and odd with `Map<Boolean, List<Integer>> mp = list.stream().collect(Collectors.groupingBy(x -> x % 2 == 0));` and then calls `mp.get(true).size()`. When every amount is odd, this throws a `NullPointerException`. Which change fixes it with the least code?",
+      "codeSnippet": null,
+      "options": [
+        "Use `Collectors.partitioningBy(x -> x % 2 == 0)`, because the result always contains both the `true` and `false` keys, so `get(true)` returns an empty list",
+        "Use `Collectors.toSet()` instead, because sets never return null for missing elements",
+        "Add `.distinct()` before `collect`, so that `groupingBy` creates both keys",
+        "Use `Collectors.groupingBy(x -> x % 2)`, because integer keys are always pre-filled"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`groupingBy` only creates keys for classifications that actually occur, so with no even numbers there is no `true` key and `get(true)` returns null. `partitioningBy` always produces a map with both `false` and `true`, with empty lists where nothing matched. Adding `distinct()` changes nothing about which keys appear.",
+      "source": "code: Demo3.java (partitioningBy)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Collectors.html"
+    },
+    {
+      "id": "d40_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Stateful operations",
+      "question": "The lecture marks `sorted()` and `distinct()` as stateful. Given that, why does `Stream.iterate(1, x -> x + 1).limit(5).sorted().forEach(System.out::println)` print 1-5, while `Stream.iterate(1, x -> x + 1).sorted().limit(5).forEach(System.out::println)` prints nothing and never finishes?",
+      "codeSnippet": null,
+      "options": [
+        "`limit` is a terminal operation, so in the second pipeline nothing after it runs",
+        "`sorted()` can only sort streams of at most `Integer.MAX_VALUE` elements, so it waits for more input",
+        "`sorted()` must see every upstream element before emitting the first; on an infinite stream that never happens, whereas `limit(5)` first makes the input finite",
+        "`iterate` produces elements in random order, so `sorted()` keeps re-sorting as new elements arrive"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A stateful operation like `sorted()` buffers its whole input, because the smallest element could arrive last. Before an infinite source, it keeps buffering until memory runs out and never emits anything. Putting `limit(5)` first makes the input finite. `limit` is not terminal: it is a short-circuiting intermediate operation.",
+      "source": "code: Demo.java (comments on sorted/distinct, iterate/limit)",
+      "reference": "https://levelup.gitconnected.com/java-stream-api-exploring-intermediate-operations-a8fb7be4cac1"
+    }
+  ]
+}

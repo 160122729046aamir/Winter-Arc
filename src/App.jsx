@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { ThemeProvider } from './context/ThemeContext';
 import { PlannerProvider } from './context/PlannerContext';
+import { TimerProvider } from './context/TimerContext';
 import Navbar from './components/common/Navbar';
 import Sidebar from './components/common/Sidebar';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -105,7 +106,7 @@ function AppLayout() {
           {/* Liquid Glass Footer */}
           <footer className="border-t border-white/[0.06] glass-ultra py-4 px-6 text-center text-xs text-slate-500 font-mono mt-auto">
             <p>
-              Winter Arc – 90 Days of Backend Engineering • Apple Liquid Glass Edition
+              Winter Arc – Backend Engineering with Java &amp; Spring Boot
             </p>
           </footer>
         </main>
@@ -121,7 +122,9 @@ export default function App() {
         <PlannerProvider>
           <BrowserRouter>
             <MotionConfig reducedMotion="user">
-              <AppLayout />
+              <TimerProvider>
+                <AppLayout />
+              </TimerProvider>
             </MotionConfig>
           </BrowserRouter>
         </PlannerProvider>

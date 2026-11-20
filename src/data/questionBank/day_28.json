@@ -1,0 +1,203 @@
+{
+  "day": 28,
+  "title": "Lecture #28: Wildcards in Generics",
+  "sources": [
+    "notes.pdf (6 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java"
+  ],
+  "topics": [
+    "Generics are invariant",
+    "Array covariance & ArrayStoreException",
+    "Unbounded wildcard <?>",
+    "Upper-bounded wildcard <? extends T>",
+    "Lower-bounded wildcard <? super T>",
+    "PECS rule",
+    "Type erasure"
+  ],
+  "questions": [
+    {
+      "id": "d28_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Generics are invariant",
+      "question": "`Dog extends Animal`, yet `List<Animal> animals = dogs;` (where `dogs` is a `List<Dog>`) does not compile. What is the reason?",
+      "codeSnippet": null,
+      "options": [
+        "Because `List` is an interface, and an interface reference can never be assigned from another interface reference",
+        "Because generics are invariant: if it were allowed, `animals.add(new Animal())` would silently put a non-Dog into the list of dogs",
+        "Because the compiler cannot prove that `dogs` is non-empty, so it refuses the assignment until an element is added",
+        "Because `List<Dog>` is actually a supertype of `List<Animal>`, so the assignment goes in the wrong direction"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`Generic<A>` is not a subtype of `Generic<B>` even when A is a subtype of B — generics are invariant. If `List<Dog>` could be viewed as `List<Animal>`, you could add an Animal through that view and later a `for (Dog d : dogs) d.bark();` loop would break, so type safety would be lost. There is no relationship in either direction, so it is not that `List<Dog>` is the supertype.",
+      "source": "notes p1-p2",
+      "reference": "https://www.baeldung.com/java-generics-interview-questions"
+    },
+    {
+      "id": "d28_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Unbounded wildcard <?>",
+      "question": "Inside `static void fun(List<?> list)`, which statement compiles?",
+      "codeSnippet": null,
+      "options": [
+        "`list.add(\"Hello\");`",
+        "`Animal a = list.get(0);`",
+        "`Object obj = list.get(0);`",
+        "`list.add(new Object());`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`List<?>` means \"a list of some specific type, but we don't know which\", so the only safe type to read an element as is `Object`. Adding a String or even an Object is rejected because the real list might be a `List<Dog>`. Assigning to `Animal` without a cast also fails since the compiler only knows the element is an Object.",
+      "source": "notes p3; code: Demo2.java",
+      "reference": "https://www.baeldung.com/java-generics-interview-questions"
+    },
+    {
+      "id": "d28_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Upper-bounded wildcard <? extends T>",
+      "question": "You need a method `feedAll(...)` that only reads elements and calls `eat()` on each one. It must accept a `List<Dog>`, a `List<Cat>` and a `List<Animal>`. Which parameter type fits best?",
+      "codeSnippet": null,
+      "options": [
+        "`List<Animal> animals`",
+        "`List<? super Animal> animals`",
+        "`List<Object> animals`",
+        "`List<? extends Animal> animals`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`List<? extends Animal>` accepts a list of Animal or any subclass, and every element can be read as an `Animal`, so `eat()` can be called directly. `List<Animal>` would reject `List<Dog>` because generics are invariant. `List<? super Animal>` would reject `List<Dog>`/`List<Cat>` and would only let you read elements as Object.",
+      "source": "notes p3; code: Demo3.java",
+      "reference": "https://howtodoinjava.com/java/generics/java-generics-what-is-pecs-producer-extends-consumer-super/"
+    },
+    {
+      "id": "d28_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Array covariance & ArrayStoreException",
+      "question": "What happens when this code is compiled and run?",
+      "codeSnippet": "class Animal { }\nclass Dog extends Animal { }\n\npublic class Main {\n    public static void main(String[] args) {\n        Dog[] dogs = new Dog[3];\n        Animal[] animals = dogs;\n        animals[0] = new Dog();\n        animals[1] = new Animal();\n        System.out.println(\"done\");\n    }\n}",
+      "options": [
+        "It compiles, but `animals[1] = new Animal();` throws `ArrayStoreException` at runtime",
+        "It fails to compile at `Animal[] animals = dogs;` because arrays are invariant like generics",
+        "It compiles and prints `done`, because `animals` is declared as `Animal[]`",
+        "It compiles, but `animals[0] = new Dog();` throws `ClassCastException` at runtime"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Arrays are covariant, so a `Dog[]` can be assigned to an `Animal[]` and the code compiles. The underlying object is still a `Dog[]`, and arrays check every store at runtime, so storing a plain `Animal` throws `ArrayStoreException`. Storing a Dog at index 0 is fine; the danger only appears at runtime, which is exactly why generics chose invariance and compile-time checks instead.",
+      "source": "notes p2; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html"
+    },
+    {
+      "id": "d28_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Upper-bounded wildcard <? extends T>",
+      "question": "Which marked line fails to compile? (`Dog extends Animal`.)",
+      "codeSnippet": "static void fun(List<? extends Animal> values) {\n    for (Animal a : values) {      // A\n        a.eat();\n    }\n    Animal first = values.get(0);   // B\n    values.add(new Dog());          // C\n    Object o = values.get(0);       // D\n}",
+      "options": [
+        "Line A",
+        "Line B",
+        "Line C",
+        "Line D"
+      ],
+      "correctAnswer": 2,
+      "explanation": "With `? extends Animal` the actual list could be a `List<Cat>`, so the compiler cannot allow adding a Dog (or even an Animal) — the list is read-only apart from `null`. Reading is safe: every element is at least an Animal, so lines A, B and D all compile. This is the \"Producer Extends\" half of PECS.",
+      "source": "notes p3; code: Demo3.java",
+      "reference": "https://howtodoinjava.com/java/generics/java-generics-what-is-pecs-producer-extends-consumer-super/"
+    },
+    {
+      "id": "d28_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Lower-bounded wildcard <? super T>",
+      "question": "A utility method is declared as `static void fun(List<? super Animal> values)`. Teammates call it with different lists. Which argument will the compiler reject? (`Dog extends Animal`.)",
+      "codeSnippet": null,
+      "options": [
+        "A `List<Animal>`",
+        "A `List<Object>`",
+        "An `ArrayList<Animal>`",
+        "A `List<Dog>`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`? super Animal` accepts lists whose element type is Animal or a supertype of Animal (Animal, Object). `List<Dog>` is rejected because Dog is below Animal, and the method is allowed to add any Animal (e.g. a Cat) into the list. `ArrayList<Animal>` is fine since it is a `List<Animal>`.",
+      "source": "notes p4; code: Demo4.java",
+      "reference": "https://howtodoinjava.com/java/generics/java-generics-what-is-pecs-producer-extends-consumer-super/"
+    },
+    {
+      "id": "d28_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Type erasure",
+      "question": "After the compiler applies type erasure, what does the field in `class Box<T extends Number> { T value; }` become in the bytecode?",
+      "codeSnippet": null,
+      "options": [
+        "`Object value;` — every type parameter is always replaced by Object",
+        "`Number value;` — a bounded type parameter is replaced by its bound",
+        "`T value;` — the JVM keeps T and resolves it when an object is created",
+        "`Integer value;` — the compiler picks the most common subclass of the bound"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Type erasure replaces an unbounded type parameter with Object, but a bounded one with its (first) bound, so `T extends Number` becomes `Number`. The JVM does not know about generics at runtime, so T is not kept. The \"always Object\" option is the common misconception — it only applies when there is no bound.",
+      "source": "notes p5",
+      "reference": "https://www.baeldung.com/java-generics-interview-questions"
+    },
+    {
+      "id": "d28_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Lower-bounded wildcard <? super T>",
+      "question": "What does this program print?",
+      "codeSnippet": "import java.util.*;\n\nclass Animal { void eat() { System.out.println(\"Animal Eating\"); } }\nclass Dog extends Animal { @Override void eat() { System.out.println(\"Dog Eating\"); } }\nclass Labrador extends Dog { }\nclass Cat extends Animal { }\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Animal> animals = new ArrayList<>();\n        animals.add(new Animal());\n        fun(animals);\n    }\n\n    static void fun(List<? super Animal> values) {\n        values.add(new Dog());\n        values.add(new Cat());\n        values.add(new Labrador());\n        for (Object obj : values) {\n            Animal a = (Animal) obj;\n            a.eat();\n        }\n    }\n}",
+      "options": [
+        "Animal Eating, Dog Eating, Animal Eating, Dog Eating (one per line)",
+        "Animal Eating, Dog Eating, Animal Eating, Animal Eating (one per line)",
+        "Compilation error: `values.add(new Labrador())` is not allowed with `? super Animal`",
+        "Compilation error: elements of a `? super Animal` list cannot be iterated as Object"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With `? super Animal` you may add an Animal or any subclass of it (Dog, Cat, Labrador), and reading gives Object, which the code casts back to Animal. Dynamic dispatch then runs Animal's eat for the Animal and the Cat, and Dog's overridden eat for the Dog and the Labrador (which inherits Dog's override). The tempting wrong answer forgets that Labrador inherits `Dog.eat()`.",
+      "source": "code: Demo4.java",
+      "reference": "https://howtodoinjava.com/java/generics/java-generics-what-is-pecs-producer-extends-consumer-super/"
+    },
+    {
+      "id": "d28_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Type erasure",
+      "question": "A teammate writes this check and asks why the build fails. What is the correct diagnosis?\n\n`Object obj = new ArrayList<String>();`\n`if (obj instanceof List<String>) { ... }`",
+      "codeSnippet": null,
+      "options": [
+        "It compiles but always evaluates to false, because erasure removes the String information from the object",
+        "It compiles but throws `ClassCastException` because `ArrayList` is not the same class as `List`",
+        "It does not compile: because of type erasure the runtime only sees `List`, so `List<String>` cannot be checked from an Object; `obj instanceof List<?>` works",
+        "It does not compile because `instanceof` can never be used with interfaces such as `List`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Generic type arguments are erased at compile time, so at runtime `List<String>` and `List<Integer>` are both just `List`; the JVM cannot verify the `<String>` part of an arbitrary Object, so the compiler rejects the test. `obj instanceof List<?>` (or the raw `List`) is allowed because it is reifiable. It does not quietly return false — it never compiles — and `instanceof` with an interface type is perfectly legal.",
+      "source": "notes p6",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html"
+    },
+    {
+      "id": "d28_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "PECS rule",
+      "question": "You are writing `static <T> void copy(dest, src)` that reads every element from `src` and adds it to `dest`. It must allow copying a `List<Dog>` into a `List<Animal>`, and a `List<Labrador>` into a `List<Object>`. Which parameter types should you use?",
+      "codeSnippet": null,
+      "options": [
+        "`List<T> dest, List<T> src`",
+        "`List<? super T> dest, List<? extends T> src`",
+        "`List<? extends T> dest, List<? super T> src`",
+        "`List<?> dest, List<?> src`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "By PECS, `src` produces values you read, so it is `? extends T`, and `dest` consumes values you write, so it is `? super T` (with T = Dog, `List<Animal>` is a valid `? super Dog`). `List<T>` for both would force both lists to have exactly the same element type because generics are invariant. The swapped version and the `List<?>` version both make `dest.add(...)` fail to compile.",
+      "source": "notes p4",
+      "reference": "https://howtodoinjava.com/java/generics/java-generics-what-is-pecs-producer-extends-consumer-super/"
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "day": 60,
+  "title": "Spring Lecture #3: Master Apache Maven in one video",
+  "sources": [
+    "notes/Notes.pdf (31 pages)",
+    "notes/excalidraw-notes.pdf (3 pages)",
+    "code/MavenDemo/pom.xml",
+    "code/MavenDemo/src/main/java/org/example/*.java"
+  ],
+  "topics": [
+    "JAR files & classpath",
+    "Maven project structure",
+    "pom.xml & coordinates",
+    "Dependencies & transitive dependencies",
+    "Plugins",
+    "Maven repositories",
+    "Maven lifecycle"
+  ],
+  "questions": [
+    {
+      "id": "d60_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Plugins",
+      "question": "What is the difference between a Maven dependency and a Maven plugin?",
+      "codeSnippet": null,
+      "options": [
+        "A dependency is downloaded from Maven Central, while a plugin is always written inside the project",
+        "A dependency runs during the build, while a plugin is a library your code imports",
+        "A dependency is a library your application code uses; a plugin is a tool Maven uses to perform build tasks",
+        "There is no difference; both terms describe JAR files listed under `<dependencies>`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Dependencies (like `mysql-connector-j` or `hibernate-core`) are libraries used by your code. Plugins are used by Maven itself to compile, run tests, create JARs or run a Spring Boot app - e.g. `spring-boot-maven-plugin`. The second option swaps the two roles, and plugins are also downloaded from repositories rather than written in the project.",
+      "source": "notes p17",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html"
+    },
+    {
+      "id": "d60_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Maven project structure",
+      "question": "A teammate accidentally deletes the `target` folder of a Maven project and panics. What should you tell them?",
+      "codeSnippet": null,
+      "options": [
+        "No problem: `target` is generated build output, and Maven recreates it on the next build",
+        "The Java source files were inside `target`, so they must be restored from Git",
+        "The `pom.xml` lived inside `target`, so the project can no longer be built",
+        "All downloaded dependencies were stored in `target`, so they are permanently lost"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`target` holds generated output: compiled `.class` files, test reports and the final JAR/WAR. Source code lives in `src/main/java`, `pom.xml` sits at the project root, and downloaded dependencies are cached in `~/.m2/repository`, so deleting `target` loses nothing that a build cannot recreate (`mvn clean` deletes it on purpose).",
+      "source": "notes p9-11",
+      "reference": null
+    },
+    {
+      "id": "d60_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "pom.xml & coordinates",
+      "question": "A `pom.xml` has no `<packaging>` tag at all. What type of artifact does Maven build?",
+      "codeSnippet": null,
+      "options": [
+        "A WAR file",
+        "A POM-only artifact",
+        "Nothing, the build fails until packaging is declared",
+        "A JAR file"
+      ],
+      "correctAnswer": 3,
+      "explanation": "If packaging is not specified, Maven defaults to `jar`. `war` must be declared explicitly for traditional web applications, and `pom` is used for parent/aggregator projects. The tag is optional, so the build does not fail.",
+      "source": "notes p14",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html"
+    },
+    {
+      "id": "d60_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Maven lifecycle",
+      "question": "You run `mvn package` on the lecture's MavenDemo project (relevant part of the POM below). Where is the resulting artifact?",
+      "codeSnippet": "<project>\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>org.example</groupId>\n    <artifactId>MavenDemo</artifactId>\n    <version>1.0-SNAPSHOT</version>\n\n    <packaging>jar</packaging>\n    ...\n</project>",
+      "options": [
+        "target/org.example.MavenDemo.jar",
+        "target/MavenDemo-1.0-SNAPSHOT.jar",
+        "~/.m2/repository/org/example/MavenDemo/1.0-SNAPSHOT/MavenDemo-1.0-SNAPSHOT.jar only",
+        "target/classes/Main.jar"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The `package` phase creates the JAR inside `target`, named `artifactId-version.jar` by default. Copying it into `~/.m2/repository/org/example/MavenDemo/1.0-SNAPSHOT/` is what the later `install` phase does, which `mvn package` does not reach. The `groupId` is used for the repository folder path, not the JAR's file name.",
+      "source": "code: MavenDemo/pom.xml; notes p26, 28; excalidraw p3",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html"
+    },
+    {
+      "id": "d60_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Dependencies & transitive dependencies",
+      "question": "The MavenDemo POM declares only `mysql-connector-j` and `hibernate-core`, yet the IDE's External Libraries list shows many more JARs. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Maven also downloads the dependencies of those dependencies (transitive dependencies)",
+        "The IDE adds every JAR found in Maven Central so code completion works",
+        "`<scope>compile</scope>` tells Maven to download all available versions of each library",
+        "Maven bundles the JDK's own classes as separate JAR dependencies"
+      ],
+      "correctAnswer": 0,
+      "explanation": "If your project needs A, and A needs B, and B needs C, Maven reads their POMs and fetches B and C automatically. Hibernate in particular needs several supporting libraries. This is one of the biggest reasons Maven exists - without it you would have to find each of those JARs by hand.",
+      "source": "notes p15-17; code: MavenDemo/pom.xml",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html"
+    },
+    {
+      "id": "d60_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Maven lifecycle",
+      "question": "You run `mvn package`, but one unit test in `src/test/java` fails. What is the outcome?",
+      "codeSnippet": null,
+      "options": [
+        "The JAR is created anyway, because `package` only packages and does not run tests",
+        "Only the failing test class is left out of the JAR",
+        "The build fails at the `test` phase, so no new JAR is produced",
+        "Maven skips straight to `install` and stores the previous JAR in `.m2`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Running a phase runs every earlier phase of that lifecycle first: validate -> compile -> test -> package. A failing test stops the build at the `test` phase, before packaging happens. This ordering is deliberate: it verifies the code works before the artifact is produced.",
+      "source": "notes p23-26",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html"
+    },
+    {
+      "id": "d60_q7",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Maven repositories",
+      "question": "This POM is built on a machine where `jackson-databind` 2.17.0 is not yet in `~/.m2/repository`. What does Maven do?",
+      "codeSnippet": "<repositories>\n    <repository>\n        <id>company-repo</id>\n        <url>https://repo.company.com/maven2</url>\n    </repository>\n</repositories>\n\n<dependencies>\n    <dependency>\n        <groupId>com.fasterxml.jackson.core</groupId>\n        <artifactId>jackson-databind</artifactId>\n        <version>2.17.0</version>\n    </dependency>\n</dependencies>",
+      "options": [
+        "It fails immediately, because only artifacts in the local repository can be used offline-first",
+        "It downloads the JAR into the project's `target` folder and deletes it after the build",
+        "It searches only `company-repo`, because declaring a repository disables Maven Central",
+        "It checks the local repository, then the remote repositories, downloads the JAR and POM into `~/.m2/repository`, and reuses them in later builds"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Maven always checks the local repository first; if the artifact is missing it looks in the remote repositories (here the company repo and, by default, Maven Central), downloads the JAR and POM, caches them in `~/.m2/repository`, and uses them. That caching is why the first build is slower than later ones. Declaring an extra repository adds to the search, it does not remove Central.",
+      "source": "notes p18-21; code: MavenDemo/pom.xml (commented repositories)",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html"
+    },
+    {
+      "id": "d60_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Dependencies & transitive dependencies",
+      "question": "In the Spring Boot project from Lecture 2, the starter dependency has no `<version>` and builds fine. A student copies the same block into the plain MavenDemo POM (which has no `<parent>`), and the build fails with \"dependencies.dependency.version ... is missing\". Why?",
+      "codeSnippet": "<!-- Lecture 2 project: works -->\n<parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>4.0.6</version>\n</parent>\n...\n<dependency>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-webmvc</artifactId>\n</dependency>\n\n<!-- MavenDemo project (no parent): fails -->\n<dependency>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-webmvc</artifactId>\n</dependency>",
+      "options": [
+        "Starter dependencies can only be downloaded through Spring Initializr, not through Maven",
+        "In the Lecture 2 project the version is inherited from the parent POM's configuration; without a parent, Maven has no version and needs one stated explicitly",
+        "Maven always picks the latest version automatically, so the error must come from a missing `<scope>`",
+        "The `groupId` must be changed to `org.example` to match the MavenDemo project"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A dependency is identified by groupId + artifactId + version. In the Spring Boot project, `spring-boot-starter-parent` supplies managed versions, so the child POM may omit `<version>`. MavenDemo has no such parent configuration, so the version is missing and must be written explicitly - Maven never silently picks \"the latest\".",
+      "source": "notes p11, 15-16; code: Lecture 02 pom.xml, MavenDemo/pom.xml",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html"
+    },
+    {
+      "id": "d60_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Maven repositories",
+      "question": "Your Wi-Fi dropped while Maven was downloading `hibernate-core`. Since then, every build fails with errors about a corrupted/invalid JAR, even though the POM is correct and you are back online. What is the most targeted fix?",
+      "codeSnippet": null,
+      "options": [
+        "Run `mvn clean`, because the corrupted JAR is stored in the `target` folder",
+        "Change the version in the POM to 6.x, because the current version is broken on Maven Central",
+        "Delete the `org/hibernate/orm/hibernate-core` folder inside `~/.m2/repository` and build again so Maven re-downloads it",
+        "Delete `settings.xml`, because it caches downloaded JARs"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Maven checks the local repository first, so a partially downloaded JAR cached in `.m2/repository` keeps being reused. Deleting that dependency's folder forces a fresh download; deleting the whole `.m2/repository` also works but re-downloads everything. `mvn clean` only removes `target`, and `settings.xml` holds user settings (credentials, proxies, mirrors), not cached JARs.",
+      "source": "notes p18, 21-22",
+      "reference": null
+    },
+    {
+      "id": "d60_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Maven lifecycle",
+      "question": "On your laptop you have two Maven projects: a library `com.coderarmy:calculator-lib:1.0.0` and an app that declares it as a dependency. The app's build fails with \"Could not find artifact com.coderarmy:calculator-lib:jar:1.0.0\". Neither project is published anywhere. What is the simplest fix?",
+      "codeSnippet": null,
+      "options": [
+        "Run `mvn package` in the library, because the app reads JARs from the library's `target` folder",
+        "Push the library's source code to GitHub, because Maven downloads dependencies from Git repositories",
+        "Run `mvn site` in the library, so its documentation tells Maven where the JAR is",
+        "Run `mvn install` in the library, so its JAR is stored in the local `~/.m2/repository` where the app's build can find it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`install` runs the lifecycle up to packaging and then copies the artifact into the local `.m2` repository, which is exactly where other local projects look first. `package` leaves the JAR only in the library's own `target` folder, which other projects do not search. GitHub stores source code, not Maven artifacts; sharing with other machines would need `deploy` to a remote repository.",
+      "source": "notes p18-19, 27-28",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html"
+    }
+  ]
+}

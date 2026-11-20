@@ -1,0 +1,202 @@
+{
+  "day": 89,
+  "title": "Spring Lecture #32: Master Spring Data JPA in one video",
+  "sources": [
+    "notes/Notes.pdf (45 pages)",
+    "notes/Excalidraw-Notes.pdf (8 pages)",
+    "code/springDataJPADemo (Student, StudentRepository, StudentService, StudentController)"
+  ],
+  "topics": [
+    "JPA vs Spring Data JPA",
+    "Repository hierarchy & proxy",
+    "save(): persist vs merge",
+    "Dirty checking & transactions",
+    "flush vs commit",
+    "Derived query methods",
+    "@Query: JPQL vs native",
+    "Sorting",
+    "Pagination: Page vs Slice"
+  ],
+  "questions": [
+    {
+      "id": "d89_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "JPA vs Spring Data JPA",
+      "question": "Which statement correctly describes how `JpaRepository`, JPA and Hibernate relate to each other?",
+      "codeSnippet": null,
+      "options": [
+        "`JpaRepository` is defined by the Jakarta Persistence specification, and Hibernate implements it",
+        "Spring Data JPA replaces Hibernate, so `EntityManager` is no longer used underneath",
+        "Hibernate generates the `JpaRepository` implementation class at compile time",
+        "JPA is the specification, Hibernate is a JPA provider, and `JpaRepository` belongs to Spring Data JPA, which delegates to the `EntityManager`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes stress that `JpaRepository` is part of Spring Data JPA, not the JPA specification. Spring Data creates a repository proxy at runtime whose standard methods (in `SimpleJpaRepository`) still delegate to the `EntityManager`, which is commonly implemented by Hibernate. Nothing is generated at compile time.",
+      "source": "notes p1, p7-8, p44-45 (Key takeaways)",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html"
+    },
+    {
+      "id": "d89_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Derived query methods",
+      "question": "Given this repository, which call returns the students whose name contains the text `har` anywhere in it?",
+      "codeSnippet": "public interface StudentRepository extends JpaRepository<Student, Long> {\n    List<Student> findByName(String name);\n    List<Student> findByNameLike(String pattern);\n    List<Student> findByNameContaining(String value);\n    List<Student> findByNameStartingWith(String prefix);\n}",
+      "options": [
+        "`studentRepository.findByNameLike(\"har\")`",
+        "`studentRepository.findByNameContaining(\"har\")`",
+        "`studentRepository.findByName(\"%har%\")`",
+        "`studentRepository.findByNameStartingWith(\"har\")`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "With `Containing`, Spring Data wraps the value into a contains pattern (`%har%`) for you. With `Like`, the caller must supply the wildcards, so `\"har\"` without `%` matches only the exact value; `findByName` is a plain equality check, so `%` is not a wildcard there, and `StartingWith` matches only a prefix.",
+      "source": "notes p24-25 (Like versus Containing)",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d89_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Pagination: Page vs Slice",
+      "question": "This is the lecture's `fetchAll` method. The author expected the first two students ordered by name ascending, then age descending. What actually happens?",
+      "codeSnippet": "public List<Student> fetchAll(String name) {\n    Sort sort = Sort.by(\"name\").ascending()\n            .and(Sort.by(\"age\").descending());\n\n    Pageable pageable = PageRequest.of(0, 2);\n    Page<Student> studentList = studentRepository.findAll(pageable);\n\n    return studentList.getContent();\n}",
+      "options": [
+        "The two students are sorted by name then age, because the `Sort` object is picked up from the method's scope",
+        "It throws an exception, because a `Sort` was created but no sorted repository method was called",
+        "Two students are returned, but the `sort` is never passed, so the query has no ORDER BY and the order is not guaranteed; use `PageRequest.of(0, 2, sort)`",
+        "Every student is returned, because `findAll` ignores the page size when no sort is given"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The `Sort` object is built but never attached to the `Pageable`, so the generated query only limits to 2 rows. Without ORDER BY, the database does not guarantee any meaningful order. `PageRequest.of(page, size, sort)` combines both. (The `name` parameter is also unused.)",
+      "source": "code: StudentService.fetchAll; notes p34, p38-40",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html"
+    },
+    {
+      "id": "d89_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Pagination: Page vs Slice",
+      "question": "A mobile app has an infinite-scroll student feed with a 'Load more' button; it never shows 'page 3 of 25'. Why is `Slice<Student> findByActiveTrue(Pageable pageable)` a better return type here than `Page<Student>`?",
+      "codeSnippet": null,
+      "options": [
+        "`Slice` doesn't need the total, so it avoids the extra COUNT query and typically just fetches one extra row to know `hasNext()`",
+        "`Slice` loads all matching rows once and caches them, so later pages need no queries",
+        "`Page` cannot be used with derived query methods, only with `findAll`",
+        "`Slice` sorts results automatically by id, while `Page` does not support sorting"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Page` exposes `getTotalElements()` and `getTotalPages()`, which usually needs an additional count query that can be costly. `Slice` only knows whether another chunk exists, typically by requesting size + 1 rows. Both work with derived methods and both respect the `Sort` inside the `Pageable`.",
+      "source": "notes p41-44 (Count queries, Slice<T>)",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html"
+    },
+    {
+      "id": "d89_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "flush vs commit",
+      "question": "Inside a `@Transactional` service method you call `studentRepository.saveAndFlush(student)`, and later in the same method an exception causes a rollback. What happens to the INSERT that was flushed?",
+      "codeSnippet": null,
+      "options": [
+        "It stays in the database, because `saveAndFlush` commits the row immediately",
+        "It stays, because flushed statements cannot be undone by a rollback",
+        "It is never sent, because Hibernate always delays SQL until commit",
+        "It is rolled back: a flush only sends pending SQL to the database inside the transaction; it does not commit"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes state: flush = send pending SQL to the database; commit = permanently complete the transaction. After a flush the transaction can still roll back, undoing the INSERT. `saveAndFlush` is useful for detecting problems such as constraint violations early, not for committing early.",
+      "source": "notes p20-21 (flush(), saveAndFlush())",
+      "reference": null
+    },
+    {
+      "id": "d89_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "@Query: JPQL vs native",
+      "question": "The lecture's repository declares `@Query(value = \"select * from student where email = :email\", nativeQuery = true) Optional<Student> findByEmail(@Param(\"email\") String email);`. A teammate deletes `nativeQuery = true` because \"Spring Data can tell it's SQL\". What happens?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing changes; Spring Data detects `select *` and switches to native mode automatically",
+        "The string is now parsed as JPQL, where `select *` and raw table/column names are not valid, so the query is rejected as invalid",
+        "The query still runs, but returns `Object[]` rows instead of `Student` entities",
+        "Spring Data ignores the `@Query` and derives a query from the method name `findByEmail` instead"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Without `nativeQuery = true`, the `@Query` string is treated as JPQL, which works with entity names and fields (`SELECT s FROM Student s WHERE s.email = :email`). `select *` is SQL syntax, so the query fails validation. A declared `@Query` takes precedence over method-name derivation, so Spring Data does not quietly fall back to a derived query.",
+      "source": "code: StudentRepository.java; notes p27, p32-34",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d89_q7",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Dirty checking & transactions",
+      "question": "A PUT endpoint calls the lecture's `updateStudent` method below. The service class has no `@Transactional` anywhere. The endpoint returns 200, but the row in the database is unchanged. Why?",
+      "codeSnippet": "public void updateStudent(Student studentReq, Long id) {\n    Optional<Student> studentRes = studentRepository.findById(id);\n    Student student = studentRes.get();\n    student.setAge(studentReq.getAge());\n    student.setName(studentReq.getName());\n}",
+      "options": [
+        "`findById` runs in its own short repository transaction; the setters run after it has ended, and no later transaction flushes the change. Add `@Transactional` to the method (or call `save`)",
+        "Dirty checking only works on entities returned by `getReferenceById`, not `findById`",
+        "`Optional.get()` returns a copy of the entity, so changes never reach the managed instance",
+        "Setters generated by Lombok bypass Hibernate's change tracking; hand-written setters are required"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Dirty checking produces an UPDATE only when the persistence context is flushed, normally at commit of a transaction that covers the change. Here the only transaction is the one `SimpleJpaRepository.findById` opens, and it is already over when the setters run. Wrapping the method in `@Transactional` makes the entity managed for the whole method, so the UPDATE is generated at commit without calling `save()`.",
+      "source": "code: StudentService.updateStudent; notes p21-22 (save() versus dirty checking)",
+      "reference": null
+    },
+    {
+      "id": "d89_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Derived query methods",
+      "question": "The lecture repository declares `Optional<Student> findByEmailLike(String pattern);`. In production someone calls `findByEmailLike(\"%@gmail.com\")` and 40 students match. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It returns `Optional.empty()`, because more than one row is treated as 'not found'",
+        "It returns an `Optional` holding the first matching row in id order",
+        "It throws an `IncorrectResultSizeDataAccessException`, because a single-result return type got more than one row",
+        "It returns an `Optional` holding a `List<Student>` with all 40 rows"
+      ],
+      "correctAnswer": 2,
+      "explanation": "An `Optional<Student>` (or plain `Student`) return type means a single-result query. When the query returns several rows, JPA raises a non-unique result error, which Spring translates to `IncorrectResultSizeDataAccessException`. Use `List<Student>` for a pattern search, or `findFirst...OrderBy...` if one row is really wanted.",
+      "source": "code: StudentRepository.findByEmailLike; notes p24-25",
+      "reference": null
+    },
+    {
+      "id": "d89_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "save(): persist vs merge",
+      "question": "`Student` has `@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;` and no `@Version`. `detached` was loaded in an earlier request and has id 7, name \"Rahul\". What name is stored for student 7 after this method commits?",
+      "codeSnippet": "@Transactional\npublic void rename(Student detached) {\n    detached.setName(\"Aman\");\n    studentRepository.save(detached);\n    detached.setName(\"Priya\");\n}",
+      "options": [
+        "\"Priya\", because `save()` makes `detached` managed, so the later change is dirty-checked",
+        "\"Aman\", because `save()` merges the detached state and returns a different managed instance; `detached` itself stays detached",
+        "\"Rahul\", because `save()` on a non-new entity is a no-op",
+        "A duplicate row with a new id, because `save()` always issues an INSERT"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The id is non-null and there is no version property, so Spring Data treats the entity as not new and calls `merge()`. `merge()` copies the state (name \"Aman\") onto a managed instance and returns it; the argument does not become managed, so the later `setName(\"Priya\")` is not tracked. That is why the notes say the return value of `save()` matters for detached entities.",
+      "source": "notes p18-19 (save()), p22",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html"
+    },
+    {
+      "id": "d89_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Sorting",
+      "question": "`GET /students?page=N&size=10` uses `PageRequest.of(page, 10, Sort.by(\"name\"))`. Many students share the same name, and users report that some students appear on two pages while others never appear. What is the recommended fix?",
+      "codeSnippet": null,
+      "options": [
+        "Switch from `Page` to `Slice`, because the count query is shifting the offsets",
+        "Increase the page size so duplicates fall onto the same page",
+        "Sort with `Sort.Direction.DESC` instead of ascending",
+        "Add a unique tie-breaker so the order is deterministic, e.g. `Sort.by(\"name\").ascending().and(Sort.by(\"id\").ascending())`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Page boundaries depend on ordering. When the sort key is not unique, rows with equal names can be returned in a different order on each request, so OFFSET-based pages overlap or skip rows. Adding a unique tie-breaker like `id` makes the order stable; changing the direction, page size or using `Slice` does not remove the ambiguity.",
+      "source": "notes p39-40 (Sorting and pagination must work together)",
+      "reference": null
+    }
+  ]
+}

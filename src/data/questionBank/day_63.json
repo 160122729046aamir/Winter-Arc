@@ -1,0 +1,202 @@
+{
+  "day": 63,
+  "title": "Spring Lecture #6: Circular Dependency in Spring",
+  "sources": [
+    "notes/Notes.pdf (38 pages)",
+    "PracticeQuestions.pdf (39 pages)",
+    "notes/Excalidraw-Notes.pdf (5 pages)",
+    "code/BeanScopeDemo/src/main/java/in/strikes/*.java",
+    "code/BeanInitializationDemo/src/main/java/in/strikes/*.java",
+    "code/CircularDependencyDemo/src/main/java/in/strikes/**/*.java"
+  ],
+  "topics": [
+    "Circular dependency",
+    "Early references & Spring Boot policy",
+    "Singleton scope",
+    "Prototype scope",
+    "Eager vs lazy initialization",
+    "@Lazy on class vs injection point"
+  ],
+  "questions": [
+    {
+      "id": "d63_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Singleton scope",
+      "question": "What does Spring's default `singleton` scope actually guarantee?",
+      "codeSnippet": null,
+      "options": [
+        "Only one object of that class can ever exist in the whole JVM",
+        "Only one object of that class can exist per thread",
+        "One shared object per bean definition inside the Spring container",
+        "One object per HTTP request handled by the application"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Spring singleton means the container keeps one shared instance per bean definition (bean name). It is not the classic Singleton design pattern: you can still `new` the class yourself, and two `@Bean` methods returning the same class give two singleton objects. One object per HTTP request is the `request` web scope.",
+      "source": "notes p14-16",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+    },
+    {
+      "id": "d63_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Circular dependency",
+      "question": "`OrderService` needs `PaymentService` in its constructor, and `PaymentService` needs `OrderService` in its constructor. Why can't Spring create these beans?",
+      "codeSnippet": null,
+      "options": [
+        "Constructor injection needs every argument before the object exists, so neither bean can be created first",
+        "Spring creates beans in alphabetical order and `OrderService` comes first",
+        "Two beans may never refer to each other's types in Spring",
+        "Constructor injection only works for classes annotated with `@Configuration`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "To call `new OrderService(...)` Spring needs a finished `PaymentService`, which itself needs a finished `OrderService` - there is no starting point, so startup fails (e.g. `BeanCurrentlyInCreationException`). Spring orders creation by dependencies, not alphabetically. The same loop in plain Java with `new` inside constructors ends in `StackOverflowError`.",
+      "source": "notes p3-7; practice Q10",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    },
+    {
+      "id": "d63_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Prototype scope",
+      "question": "Each checkout needs its own `OrderRequest` object that stores that order's items and address, while `PaymentService` only contains reusable payment logic. Which scopes fit best?",
+      "codeSnippet": null,
+      "options": [
+        "Both singleton, because singleton is the default",
+        "`OrderRequest` singleton, `PaymentService` prototype",
+        "Both prototype, so nothing is ever shared",
+        "`OrderRequest` prototype (stateful), `PaymentService` singleton (stateless)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes' rule: singleton for stateless beans that only provide behaviour, prototype for stateful beans holding changing data. A singleton `OrderRequest` would be shared by every checkout and mix their data, while making stateless services prototype just creates needless objects.",
+      "source": "notes p17-18; code: BeanScopeDemo/User.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+    },
+    {
+      "id": "d63_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Singleton scope",
+      "question": "`OrderService` is a plain class (no `@Component`) whose constructor prints \"OrderService created\". What does `main` print?",
+      "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public OrderService getOrder() {\n        return new OrderService();\n    }\n\n    @Bean\n    public OrderService getOrder2() {\n        return new OrderService();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);\n        OrderService o1 = context.getBean(\"getOrder\", OrderService.class);\n        OrderService o2 = context.getBean(\"getOrder\", OrderService.class);\n        OrderService o3 = context.getBean(\"getOrder2\", OrderService.class);\n        System.out.println(o1 == o2);\n        System.out.println(o1 == o3);\n    }\n}",
+      "options": [
+        "OrderService created\ntrue\ntrue",
+        "OrderService created\nOrderService created\ntrue\nfalse",
+        "OrderService created\nOrderService created\nOrderService created\ntrue\nfalse",
+        "true\nfalse"
+      ],
+      "correctAnswer": 1,
+      "explanation": "There are two bean definitions, both singleton and eager, so two objects are created during startup and none on `getBean`. Asking for `getOrder` twice returns the same object (`true`), but `getOrder2` is a different bean definition with its own object (`false`) - singleton is per bean definition, not per class.",
+      "source": "code: BeanScopeDemo/AppConfig.java, Main.java; notes p15-16; practice Q14",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+    },
+    {
+      "id": "d63_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Prototype scope",
+      "question": "All classes are scanned components. What is the output?",
+      "codeSnippet": "@Component\n@Scope(\"prototype\")\npublic class Cart {\n    private static int counter = 0;\n    private final int id = ++counter;\n\n    public Cart() {\n        System.out.println(\"Cart created: \" + id);\n    }\n    public int getId() { return id; }\n}\n\n@Component\npublic class CheckoutService {\n    private final Cart cart;\n\n    public CheckoutService(Cart cart) {\n        this.cart = cart;\n        System.out.println(\"CheckoutService created\");\n    }\n    public void checkout() {\n        System.out.println(\"Using cart \" + cart.getId());\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);\n        CheckoutService service = context.getBean(CheckoutService.class);\n        service.checkout();\n        service.checkout();\n        System.out.println(context.getBean(Cart.class).getId());\n    }\n}",
+      "options": [
+        "CheckoutService created\nCart created: 1\nUsing cart 1\nCart created: 2\nUsing cart 2\nCart created: 3\n3",
+        "Cart created: 1\nCheckoutService created\nUsing cart 1\nUsing cart 1\n1",
+        "Cart created: 1\nCheckoutService created\nUsing cart 1\nUsing cart 1\nCart created: 2\n2",
+        "Cart created: 1\nCart created: 2\nCheckoutService created\nUsing cart 1\nUsing cart 2\n2"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The eager singleton `CheckoutService` needs a `Cart` in its constructor, so one prototype (id 1) is created first and stored; both `checkout()` calls reuse it. Prototype means a new object each time it is requested from the container, so the explicit `getBean(Cart.class)` creates cart 2. It does not mean a new object each time a singleton's method runs.",
+      "source": "notes p18-20; practice Q8",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+    },
+    {
+      "id": "d63_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Eager vs lazy initialization",
+      "question": "You marked a slow `ReportService` with `@Component @Lazy` to speed up startup, but the log still shows it being constructed during startup. `DashboardService` (a normal `@Component`) takes `ReportService` as a constructor argument. What explains this?",
+      "codeSnippet": null,
+      "options": [
+        "The eager singleton `DashboardService` needs it, so Spring must create `ReportService` at startup to satisfy that dependency",
+        "`@Lazy` only works on prototype beans",
+        "`@Lazy` is ignored unless `@Scope(\"singleton\")` is written explicitly",
+        "Component scanning always instantiates every class it finds"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A lazy bean is still created at startup when an eagerly created singleton directly depends on it, because that dependency must be satisfied. To really defer it, mark the injection point (`@Lazy ReportService` in the constructor) so a proxy is injected, or make the consumer lazy too. Scanning only registers bean definitions; it does not force creation of lazy beans.",
+      "source": "notes p23-26; practice Q4",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-lazy-init.html"
+    },
+    {
+      "id": "d63_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Eager vs lazy initialization",
+      "question": "Why are singleton beans eagerly initialized by default, even though some may not be used right away?",
+      "codeSnippet": null,
+      "options": [
+        "Because eager creation uses less memory than lazy creation",
+        "Because lazy beans cannot have dependencies",
+        "Because prototype beans require all singletons to exist first",
+        "Because configuration or dependency errors then fail fast at startup instead of when the first user hits the feature"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Eager creation gives fast failure, early error detection and predictable startup validation. The trade-off of lazy initialization (including Boot's `spring.main.lazy-initialization=true`) is faster startup but errors that surface only when the bean is first used. Memory is not the reason - eager creation uses at least as much.",
+      "source": "notes p22-23, 27",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-lazy-init.html"
+    },
+    {
+      "id": "d63_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@Lazy on class vs injection point",
+      "question": "This is the lecture's `BeanInitializationDemo`: the two services depend on each other through constructors. What happens when `Main` runs?",
+      "codeSnippet": "@Component\npublic class OrderService {\n    PaymentService paymentService;\n\n    public OrderService(@Lazy PaymentService paymentService) {\n        this.paymentService = paymentService;\n    }\n    public void placeOrder() {\n        paymentService.pay();\n        System.out.println(\"Order placed\");\n    }\n    public void getOrderDetails() {\n        System.out.println(\"Order Details\");\n    }\n}\n\n@Component\n@Lazy\npublic class PaymentService {\n    OrderService orderService;\n\n    public PaymentService(OrderService orderService) {\n        this.orderService = orderService;\n    }\n    public void pay() {\n        System.out.println(\"Payment successful\");\n        orderService.getOrderDetails();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);\n        OrderService order = context.getBean(OrderService.class);\n        order.placeOrder();\n    }\n}",
+      "options": [
+        "Startup fails with a circular-dependency exception, because both use constructor injection",
+        "Payment successful\nOrder Details\nOrder placed",
+        "Order placed\nPayment successful\nOrder Details",
+        "Payment successful\nOrder placed, then a `NullPointerException` because `orderService` is still null"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@Lazy` on the constructor parameter makes Spring inject a proxy, so `OrderService` can be created without a real `PaymentService`, breaking the loop. On the first `pay()` call the proxy creates the real `PaymentService`, injecting the already-existing `OrderService`, so it prints \"Payment successful\", then \"Order Details\", and finally `placeOrder()` prints \"Order placed\". The notes stress this is a workaround - refactoring is the real fix.",
+      "source": "code: BeanInitializationDemo/OrderService.java, PaymentService.java, Main.java; notes p28-29",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-lazy-init.html"
+    },
+    {
+      "id": "d63_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Early references & Spring Boot policy",
+      "question": "`OrderService` and `PaymentService` reference each other through `@Autowired` fields. In a plain Spring Core demo this started fine, but the same classes in a Spring Boot 3 app fail at startup with a circular-reference error. What is going on, and what is the best fix?",
+      "codeSnippet": null,
+      "options": [
+        "Field injection is not supported in Spring Boot; switch both to setter injection",
+        "Spring Boot creates beans in parallel, so the early reference is lost; add `@Order` to both classes",
+        "Spring Core could resolve it with an early reference, but Spring Boot (2.6+) prohibits circular references by default; the best fix is to refactor, e.g. move the shared logic into a third bean",
+        "Boot needs `spring.main.allow-circular-references=true`, which is the recommended production setting"
+      ],
+      "correctAnswer": 2,
+      "explanation": "With field/setter injection, Spring Core can create one object, expose an early (not yet fully initialized) reference, and finish the other. Spring Boot 2.6+ disables this by default (`spring.main.allow-circular-references=false`). Setting it to `true` is only a workaround; the design smell - two classes knowing too much about each other - is fixed by refactoring, as the lecture's `CircularDependencyDemo` does by removing `PaymentService`'s call back into `OrderService`.",
+      "source": "notes p8-13; code: CircularDependencyDemo/OrderService.java, PaymentService.java",
+      "reference": "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.6-Release-Notes"
+    },
+    {
+      "id": "d63_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "@Lazy on class vs injection point",
+      "question": "`EmailService` is a normal `@Component` (NOT marked `@Lazy`). `UserService` is also a normal `@Component` with constructor `UserService(@Lazy EmailService emailService)`. When is the real `EmailService` object created?",
+      "codeSnippet": null,
+      "options": [
+        "Only when `userService.registerUser()` first calls a method on it",
+        "Never - `UserService` only ever talks to the proxy",
+        "Only when someone calls `context.getBean(EmailService.class)`",
+        "During startup anyway, because `EmailService` is itself an eager singleton; `@Lazy` on the parameter only gives `UserService` a proxy"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`@Lazy` on an injection point changes what is injected (a proxy that resolves the target later); it does not change the target bean's own definition. Since `EmailService` is an eager singleton, the container still pre-instantiates it at startup, and the proxy later delegates to that same object. Delaying creation until first use needs `@Lazy` on the class as well, as in the practice question.",
+      "source": "notes p25-26; practice Q5-Q6, revision C",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-lazy-init.html"
+    }
+  ]
+}

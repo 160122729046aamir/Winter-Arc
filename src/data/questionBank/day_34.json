@@ -1,0 +1,204 @@
+{
+  "day": 34,
+  "title": "Lecture #34: Set & Map Methods Explained",
+  "sources": [
+    "notes.pdf (5 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java"
+  ],
+  "topics": [
+    "SortedSet methods (first/last/headSet/tailSet/subSet)",
+    "NavigableSet methods (lower/floor/ceiling/higher)",
+    "Map methods (putIfAbsent, replace, getOrDefault, remove)",
+    "Hashtable (legacy)",
+    "Properties",
+    "IdentityHashMap",
+    "EnumMap",
+    "WeakHashMap"
+  ],
+  "questions": [
+    {
+      "id": "d34_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Hashtable (legacy)",
+      "question": "How does the lecture describe `Hashtable` compared with `HashMap`?",
+      "codeSnippet": null,
+      "options": [
+        "Hashtable is the modern replacement for HashMap and should be preferred in new code",
+        "Hashtable is a legacy class similar to HashMap; it is thread-safe, but that synchronization adds overhead and makes it slower",
+        "Hashtable stores keys in sorted order, while HashMap does not",
+        "Hashtable compares keys with `==`, while HashMap uses `equals()`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Hashtable is an old (legacy) hash-based map, like Vector is a legacy list. Its methods are synchronized, so it is thread-safe but pays a locking cost on every call, which is why HashMap is used in normal code and ConcurrentHashMap when thread safety is needed. Sorted order is TreeMap's feature, and `==` comparison is IdentityHashMap's.",
+      "source": "notes p2, p5",
+      "reference": null
+    },
+    {
+      "id": "d34_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "SortedSet methods (first/last/headSet/tailSet/subSet)",
+      "question": "What does this print?",
+      "codeSnippet": "TreeSet<Integer> set = new TreeSet<>();\nset.add(80);\nset.add(23);\nset.add(10);\nset.add(90);\nset.add(50);\n\nSystem.out.println(set.first() + \" \" + set.last() + \" \" + set.headSet(80));",
+      "options": [
+        "80 50 [80, 23, 10]",
+        "10 90 [10, 23, 50, 80]",
+        "10 90 [80, 90]",
+        "10 90 [10, 23, 50]"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A TreeSet keeps elements sorted: [10, 23, 50, 80, 90]. `first()` is the smallest (left-most node) and `last()` the largest (right-most node). `headSet(80)` returns the elements strictly less than 80 — the bound is exclusive — so 80 is not included; `[80, 90]` would be `tailSet(80)`.",
+      "source": "code: Demo2.java; notes p1",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/NavigableSet.html"
+    },
+    {
+      "id": "d34_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Properties",
+      "question": "Your application reads configuration like `username=admin` and `password=123` from a file into key-value pairs of Strings. Which specialised map class does the lecture associate with this use case?",
+      "codeSnippet": null,
+      "options": [
+        "`Properties`",
+        "`EnumMap`",
+        "`WeakHashMap`",
+        "`IdentityHashMap`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Properties` is a specialised map (it extends Hashtable) designed for configuration data as String key/value pairs. EnumMap needs enum keys, WeakHashMap is for cache-like entries that can be garbage-collected, and IdentityHashMap compares keys by reference — none of these fit simple config files.",
+      "source": "notes p3",
+      "reference": null
+    },
+    {
+      "id": "d34_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "IdentityHashMap",
+      "question": "`String a = new String(\"Aditya\"); String b = new String(\"Aditya\");` Both are put as keys into a `HashMap` and, separately, into an `IdentityHashMap`. How many entries does each map end up with?",
+      "codeSnippet": null,
+      "options": [
+        "HashMap: 2, IdentityHashMap: 1",
+        "HashMap: 2, IdentityHashMap: 2",
+        "HashMap: 1, IdentityHashMap: 2",
+        "HashMap: 1, IdentityHashMap: 1"
+      ],
+      "correctAnswer": 2,
+      "explanation": "HashMap is equality-based: `a.equals(b)` is true and their `hashCode()` values match, so the second put replaces the first's value — one entry. IdentityHashMap compares keys with `==`, and `a` and `b` are two distinct objects created with `new`, so it keeps two entries. The reversed option confuses which map uses reference equality.",
+      "source": "notes p3-p4",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/IdentityHashMap.html"
+    },
+    {
+      "id": "d34_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "NavigableSet methods (lower/floor/ceiling/higher)",
+      "question": "With the TreeSet `[10, 23, 50, 80, 90]`, what does this print?",
+      "codeSnippet": "TreeSet<Integer> set = new TreeSet<>(List.of(80, 23, 10, 90, 50));\n\nSystem.out.println(set.lower(50) + \" \" + set.floor(55) + \" \"\n        + set.higher(90) + \" \" + set.ceiling(80));",
+      "options": [
+        "50 50 90 80",
+        "23 50 null 80",
+        "23 55 null 90",
+        "10 50 null 90"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`lower(50)` is the greatest element strictly below 50 → 23; `floor(55)` is the greatest element ≤ 55 → 50 (55 itself is not in the set). `higher(90)` needs something strictly above 90, there is none, so it returns null. `ceiling(80)` is the smallest element ≥ 80 → 80 itself, whereas `higher(80)` would give 90.",
+      "source": "code: Demo2.java; notes p1",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/NavigableSet.html"
+    },
+    {
+      "id": "d34_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "EnumMap",
+      "question": "You count tasks per weekday with keys from `enum Day { MON, TUE, WED, ... }`. A reviewer suggests replacing `new HashMap<Day, Integer>()` with `new EnumMap<>(Day.class)`. Which benefit described in the lecture is correct?",
+      "codeSnippet": null,
+      "options": [
+        "EnumMap allows a null key for \"no day\", which HashMap does not",
+        "EnumMap is thread-safe, so no synchronization is ever needed",
+        "EnumMap sorts entries by the Integer value instead of by key",
+        "EnumMap skips hashing (it is array-based on the enum constants), is memory-efficient and iterates in the enum's declaration order"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Because the set of possible keys is fixed, EnumMap can store values in an array indexed by each constant's position — no hashing, compact memory, and iteration order follows the enum (MON, TUE, ...). It does not allow a null key (null values are allowed), the opposite of the first option. It is not synchronized and orders by key, not by value.",
+      "source": "notes p4-p5",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/IdentityHashMap.html"
+    },
+    {
+      "id": "d34_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Map methods (putIfAbsent, replace, getOrDefault, remove)",
+      "question": "At startup you load default settings into a `Map<String, String>` that may already contain values the user has customised. Defaults must fill in only missing keys and never overwrite a user's choice. Which call should you use for each default?",
+      "codeSnippet": null,
+      "options": [
+        "`settings.putIfAbsent(key, defaultValue)`",
+        "`settings.put(key, defaultValue)`",
+        "`settings.replace(key, defaultValue)`",
+        "`settings.getOrDefault(key, defaultValue)`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "As the lecture's code comment says, `put()` always replaces, while `putIfAbsent()` only inserts when the key is missing and leaves an existing value alone. `replace` does the opposite of what is needed — it only changes keys that already exist. `getOrDefault` just reads a fallback value and never stores anything in the map.",
+      "source": "code: Demo3.java",
+      "reference": null
+    },
+    {
+      "id": "d34_q8",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "SortedSet methods (first/last/headSet/tailSet/subSet)",
+      "question": "For the TreeSet `[10, 23, 50, 80, 90]`, which call returns exactly `[23, 50, 80]`?",
+      "codeSnippet": null,
+      "options": [
+        "`set.subSet(23, 80)`",
+        "`set.subSet(23, true, 80, true)`",
+        "`set.headSet(80)`",
+        "`set.tailSet(23)`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The two-argument `subSet(from, to)` includes `from` but excludes `to`, giving [23, 50]. NavigableSet's overload `subSet(from, fromInclusive, to, toInclusive)` lets you include both ends, giving [23, 50, 80]. `headSet(80)` is everything below 80 ([10, 23, 50]) and `tailSet(23)` is everything from 23 up ([23, 50, 80, 90]).",
+      "source": "code: Demo2.java; notes p1",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/NavigableSet.html"
+    },
+    {
+      "id": "d34_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Map methods (putIfAbsent, replace, getOrDefault, remove)",
+      "question": "What does this program print? (A TreeMap is used so the printed order is the sorted key order.)",
+      "codeSnippet": "Map<Integer, String> map = new TreeMap<>();\nmap.put(101, \"Aditya\");\nmap.put(102, \"Rohit\");\nmap.put(103, \"Rohan\");\n\nSystem.out.println(map.putIfAbsent(103, \"Abhay\"));\nmap.remove(101, \"Abhay\");\nmap.replace(102, \"Aditya\", \"Sonu\");\nmap.replace(101, \"Sonu\");\nSystem.out.println(map + \" \" + map.getOrDefault(105, \"Unknown\"));",
+      "options": [
+        "null, then {101=Sonu, 102=Sonu, 103=Abhay} Unknown",
+        "Abhay, then {102=Rohit, 103=Abhay} null",
+        "Rohan, then {101=Sonu, 102=Rohit, 103=Rohan} Unknown",
+        "Rohan, then {102=Sonu, 103=Rohan} Unknown"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`putIfAbsent(103, ...)` finds 103 already mapped, changes nothing and returns the existing value \"Rohan\". `remove(101, \"Abhay\")` and `replace(102, \"Aditya\", \"Sonu\")` only act if the current value matches, and it doesn't (101 is Aditya, 102 is Rohit), so both do nothing. `replace(101, \"Sonu\")` updates the existing key 101, and `getOrDefault(105, \"Unknown\")` returns the fallback because 105 is absent.",
+      "source": "code: Demo3.java",
+      "reference": null
+    },
+    {
+      "id": "d34_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "WeakHashMap",
+      "question": "You keep extra metadata for UI objects in a map keyed by those objects. When a UI object is discarded and no longer referenced anywhere else, its entry should disappear automatically instead of keeping the object alive forever. Which map fits, per the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "`IdentityHashMap`, because it compares keys by reference",
+        "`LinkedHashMap`, because it removes the oldest entry automatically",
+        "`EnumMap`, because it is the most memory-efficient map",
+        "`WeakHashMap`, because it holds keys through weak references so unused keys can be garbage-collected along with their entries"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A normal map holds strong references to its keys, so the key object can never be collected while it is in the map — a classic memory leak. WeakHashMap holds keys weakly; once nothing else references a key, the garbage collector can reclaim it and the entry vanishes, giving cache-like behaviour. IdentityHashMap only changes how keys are compared, and LinkedHashMap does not evict on its own by default.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/IdentityHashMap.html"
+    }
+  ]
+}

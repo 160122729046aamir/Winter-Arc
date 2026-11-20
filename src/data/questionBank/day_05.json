@@ -1,0 +1,199 @@
+{
+  "day": 5,
+  "title": "Lecture #5: Java Type Conversions & Type Promotions Explained",
+  "sources": [
+    "notes.pdf (5 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Implicit (widening) conversion",
+    "Explicit casting & narrowing",
+    "Truncating conversion",
+    "boolean is not convertible",
+    "Automatic type promotion in expressions",
+    "Type promotion rules"
+  ],
+  "questions": [
+    {
+      "id": "d5_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Implicit (widening) conversion",
+      "question": "According to the lecture, when does Java convert a value from one type to another implicitly (automatically, without a cast)?",
+      "codeSnippet": null,
+      "options": [
+        "Whenever both types are numeric, regardless of size",
+        "When the destination data type is wider than the source data type, e.g. byte -> int",
+        "When the destination data type is narrower than the source, e.g. int -> byte",
+        "Only when converting to and from boolean"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes' rule for implicit conversion: the destination type must be wider than the source (byte 8-bit -> int 32-bit, short -> int, int -> long), so no information can be lost. int -> byte is narrowing and needs an explicit cast, which is why 'whenever both are numeric' is too broad.",
+      "source": "notes p1-p2",
+      "reference": "https://www.zetcode.com/java/type-promotions/"
+    },
+    {
+      "id": "d5_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Implicit (widening) conversion",
+      "question": "What does this snippet print?",
+      "codeSnippet": "char c = 'a';\nint i;\ni = c;\nSystem.out.println(i);",
+      "options": [
+        "a",
+        "65",
+        "Compile error: char cannot be assigned to int",
+        "97"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A char (16-bit) is stored as its Unicode number, and assigning it to a wider int (32-bit) is an implicit widening conversion, so i holds 97, the code of lowercase 'a'. 65 is the code for uppercase 'A', a common mix-up.",
+      "source": "notes p3; code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d5_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Explicit casting & narrowing",
+      "question": "A teammate writes `int i = 300; byte b; b = i;` and the code does not compile. What is the correct explanation and fix?",
+      "codeSnippet": null,
+      "options": [
+        "int -> byte is a narrowing conversion, so Java requires an explicit cast: `b = (byte) i;`",
+        "byte variables must be declared and assigned on the same line; write `byte b = i;`",
+        "300 is not a valid int literal; change it to 300L",
+        "Java never allows int values in byte variables, even with a cast"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Going from a wider type (int, 32-bit) to a narrower one (byte, 8-bit) can lose data, so Java only allows it as an explicit conversion (casting), as in the notes' `b = (byte) i;`. A cast is allowed; it is the programmer's way of accepting possible data loss.",
+      "source": "notes p2",
+      "reference": "https://www.zetcode.com/java/type-promotions/"
+    },
+    {
+      "id": "d5_q4",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Truncating conversion",
+      "question": "What value does `(int) 15.678f` produce, and why?",
+      "codeSnippet": null,
+      "options": [
+        "16, because casting rounds to the nearest whole number",
+        "15.678, because the cast only changes the type label",
+        "15, because a float/double -> int conversion truncates (drops) the fractional part",
+        "Compile error, because float cannot be cast to int"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes call this a truncating conversion: float/double -> int simply cuts off everything after the decimal point, so 15.678 becomes 15 (and 16.25 becomes 16). It does not round, so 16 is the tempting but wrong answer.",
+      "source": "notes p3; code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d5_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Explicit casting & narrowing",
+      "question": "The cast below forces an int that is too large into a byte. What value is printed?",
+      "codeSnippet": "int i = 300;\nbyte b;\nb = (byte) i;\nSystem.out.println(b);",
+      "options": [
+        "300",
+        "44",
+        "127",
+        "Compile error: 300 is out of byte range"
+      ],
+      "correctAnswer": 1,
+      "explanation": "300 in binary is 1 0010 1100; the cast keeps only the lowest 8 bits, 00101100 = 44 (equivalently 300 - 256). Java does not clamp to the maximum 127, and because there is an explicit cast the compiler accepts it.",
+      "source": "notes p2; code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d5_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Automatic type promotion in expressions",
+      "question": "A teammate writes `byte b = 50;` and then `b = b * 2;`. The value 100 clearly fits in a byte, yet the second line does not compile. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Because the literal 2 is a long by default",
+        "Because the compiler thinks 100 is outside the byte range -128..127",
+        "Because a variable cannot appear on both sides of an assignment",
+        "Because in an expression byte values are promoted to int, so `b * 2` is an int, and int -> byte needs a cast: `b = (byte) (b * 2);`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Automatic type promotion turns byte, short and char operands into int, so `b * 2` has type int even though its value is 100; storing an int in a byte is narrowing and needs a cast, exactly as the lecture's `b = (byte) (b * 2);`. The compiler checks types, not the runtime value, so 'out of range' is not the reason; and 2 is an int literal, not a long.",
+      "source": "notes p4; code: Demo.java",
+      "reference": "https://www.zetcode.com/java/type-promotions/"
+    },
+    {
+      "id": "d5_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "boolean is not convertible",
+      "question": "Which of these conversions is impossible in Java, even with an explicit cast?",
+      "codeSnippet": null,
+      "options": [
+        "double -> byte",
+        "boolean -> int",
+        "char -> int",
+        "long -> float"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The lecture's code notes that boolean cannot be converted to or from any other data type; `i = bool;` fails and `(int) bool` is also illegal. double -> byte is allowed with a cast (it narrows), while char -> int and long -> float are implicit widening conversions.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d5_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Automatic type promotion in expressions",
+      "question": "With `byte a = 50; byte b = 40; byte c = 100;`, a teammate worries that `int i = (a * b) / c;` will break because 50 * 40 = 2000 does not fit in a byte. What is actually stored in `i`?",
+      "codeSnippet": null,
+      "options": [
+        "20, because a and b are promoted to int, so 2000 is computed safely and then divided by 100",
+        "-48, because 2000 overflows a byte before the division",
+        "Nothing; the line does not compile because a * b exceeds the byte range",
+        "0, because byte division always truncates to zero"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Rule 1 of type promotion: byte, short and char are promoted to int inside expressions, so a * b is the int 2000 and 2000 / 100 = 20. The intermediate value is never squeezed into a byte, so no overflow happens; and assigning the int result to an int needs no cast.",
+      "source": "notes p4-p5",
+      "reference": "https://www.zetcode.com/java/type-promotions/"
+    },
+    {
+      "id": "d5_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Type promotion rules",
+      "question": "Reviewing the lecture's Demo2.java, a teammate makes four claims about the expression below. Which claim is correct?",
+      "codeSnippet": "byte b = 42;\nchar c = 'a';\nshort s = 1024;\nint i = 50000;\nfloat f = 5.67f;\ndouble d = .1234;\n\ndouble result = (f * b) + (i / c) - (d * s);",
+      "options": [
+        "`i / c` is 515 (int division, c promoted to int), and the whole expression ends up as double",
+        "`i / c` is about 515.46, because the float in the expression makes every part float first",
+        "The whole expression is float, because f is the first operand and sets the type",
+        "It does not compile, because a char cannot be used in arithmetic"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Promotion applies per operation: `f * b` is float, `i / c` is int / int (c = 97) = 515 with the fraction dropped, and `d * s` is double; then float + int -> float, and float - double -> double. A float elsewhere in the expression does not reach into `i / c`, which is the most tempting mistake.",
+      "source": "code: Demo2.java; notes p5",
+      "reference": "https://www.zetcode.com/java/type-promotions/"
+    },
+    {
+      "id": "d5_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Explicit casting & narrowing",
+      "question": "A student uses the shortcut \"result = value % 256\" from the (byte) 300 example to predict the output below. What does the program actually print?",
+      "codeSnippet": "int i = 200;\nbyte b = (byte) i;\nSystem.out.println(b);",
+      "options": [
+        "200",
+        "127",
+        "-56",
+        "-128"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The cast keeps the low 8 bits: 200 = 11001000. In a signed byte the MSB 1 means negative, and the 2's complement (00110111 + 1 = 00111000 = 56) gives -56. The % 256 shortcut only works when the remainder is at most 127; here 200 % 256 = 200 is out of byte range, so it fails.",
+      "source": "notes p2 (with Day 4 two's complement)",
+      "reference": null
+    }
+  ]
+}

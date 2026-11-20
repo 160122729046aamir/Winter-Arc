@@ -1,0 +1,201 @@
+{
+  "day": 21,
+  "title": "Lecture #21: Immutable Classes in Java",
+  "sources": [
+    "notes.pdf (2 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "What immutability means",
+    "Rules for immutable classes",
+    "Shallow copy leak",
+    "final field vs immutable object",
+    "Defensive copy in getters",
+    "Defensive copy in constructor",
+    "Immutability and thread safety",
+    "Why the class must be final"
+  ],
+  "questions": [
+    {
+      "id": "d21_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "What immutability means",
+      "question": "What does it mean for a class like `Student` to be immutable?",
+      "codeSnippet": null,
+      "options": [
+        "Its fields are declared `static`, so all objects share one fixed copy",
+        "Once an object is constructed, its state can never change; any \"change\" requires creating a new object",
+        "Its objects cannot be passed to other methods or stored in variables",
+        "Its reference variables cannot be reassigned to point to a different object"
+      ],
+      "correctAnswer": 1,
+      "explanation": "An immutable object's state is fixed for its whole lifetime once the constructor finishes. Whether a variable holding it can be reassigned is a separate matter: `Student s1 = ...; s1 = other;` just moves the reference and does not change either object.",
+      "source": "notes p1",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/immutable.html"
+    },
+    {
+      "id": "d21_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Rules for immutable classes",
+      "question": "Which of these is NOT one of the rules for writing an immutable class given in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Declare the class `final`",
+        "Make every field `private` and `final`",
+        "Make defensive copies of mutable objects in the constructor and getters",
+        "Provide setters, but validate their input before assigning"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The lecture's rules are: mark the class `final`, mark fields `private final`, provide no setters, and defensively copy mutable (non-primitive) fields in the constructor and getters. Any setter, even a validating one, changes state after construction, which defeats immutability.",
+      "source": "notes p1-p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html"
+    },
+    {
+      "id": "d21_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Rules for immutable classes",
+      "question": "Your `Student` class is immutable (final class, `private final String name`, no setters). A teammate needs a student whose name is \"Rohit\" instead of \"Aditya\". What is the correct approach?",
+      "codeSnippet": null,
+      "options": [
+        "Create a new `Student` object with the new name, leaving the original unchanged",
+        "Add a `setName(String n)` method that assigns `this.name = n`",
+        "Remove `final` from the class so a subclass can override `getName()`",
+        "Use `s1.getName() = \"Rohit\";` to overwrite the value through the getter"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With immutable objects, a \"modification\" is done by building a new object with the desired values, just as `String` methods return new strings. A setter would not even compile against a `final` field, and removing `final` from the class breaks one of the immutability rules. You cannot assign to a method call result.",
+      "source": "notes p1",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/immutable.html"
+    },
+    {
+      "id": "d21_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Shallow copy leak",
+      "question": "This is the lecture's first `Student` (final class, `private final` fields, no setters). What does `main` print?",
+      "codeSnippet": "final class Student {\n    private final int age;\n    private final String name;\n    private final College college;\n\n    Student(int age, String name, College college) {\n        this.age = age;\n        this.name = name;\n        this.college = college;\n    }\n\n    public College getCollege() {\n        return this.college;\n    }\n}\n\nclass College {\n    String name;\n    String address;\n\n    College(String name, String address) {\n        this.name = name;\n        this.address = address;\n    }\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        College college = new College(\"IIT G\", \"Assam\");\n        Student s1 = new Student(28, \"Aditya\", college);\n\n        System.out.println(s1.getCollege().name);\n        s1.getCollege().name = \"IIT B\";\n        System.out.println(s1.getCollege().name);\n    }\n}",
+      "options": [
+        "`IIT G` then `IIT G`",
+        "It does not compile, because `college` is a `final` field",
+        "`IIT G` then `IIT B`",
+        "`IIT B` then `IIT B`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The constructor stores the caller's `College` reference and `getCollege()` returns that same reference, so `s1.getCollege().name = \"IIT B\"` changes the object inside `s1`. `final` only stops the field `college` from being pointed at another object; it does not freeze the `College` object's own fields. That is why the lecture calls this version \"not purely immutable\".",
+      "source": "code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html"
+    },
+    {
+      "id": "d21_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "final field vs immutable object",
+      "question": "Which marked line fails to compile?",
+      "codeSnippet": "final class Student {\n    private final int age;\n    private final String name;\n    private final College college;\n\n    Student(int age, String name, College college) {\n        this.age = age;\n        this.name = name;\n        this.college = college;\n    }\n\n    void moveTo(String newName) { college.name = newName; }   // Line A\n    void birthday()             { age++; }                    // Line B\n    String upperName()          { return name.toUpperCase(); } // Line C\n    College getCollege()        { return college; }           // Line D\n}\n\nclass College {\n    String name;\n    String address;\n\n    College(String name, String address) {\n        this.name = name;\n        this.address = address;\n    }\n}",
+      "options": [
+        "Line A",
+        "Line B",
+        "Line C",
+        "Line D"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Line B tries to reassign the `final` field `age` outside the constructor, which is a compile error. Line A compiles even though `college` is `final`, because it changes a field of the `College` object, not the reference itself; this is exactly why mutable fields need defensive copies. Lines C and D only read fields.",
+      "source": "notes p1 (rules); code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html"
+    },
+    {
+      "id": "d21_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Defensive copy in getters",
+      "question": "In the lecture's fixed version (`Demo2.java`), `getCollege()` returns `new College(this.college.name, this.college.address)`. When `main` runs `s1.getCollege().name = \"IIT B\";`, what is actually modified?",
+      "codeSnippet": null,
+      "options": [
+        "The `College` object stored inside `s1`, because `getCollege()` still returns a reference",
+        "Nothing; the assignment is a compile error because the getter returns a copy",
+        "The original `college` object that `main` passed into the constructor",
+        "A brand-new temporary `College` copy, which is then discarded; `s1`'s own college stays \"IIT G\""
+      ],
+      "correctAnswer": 3,
+      "explanation": "Every call to `getCollege()` builds a fresh `College` with the same values, so the assignment changes only that temporary copy, which nobody keeps. The `College` inside `s1` is never exposed, so the next `getCollege().name` still prints `IIT G`. The assignment compiles fine; it just has no lasting effect.",
+      "source": "code: Demo2.java; notes p2 (deep copy diagram)",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html"
+    },
+    {
+      "id": "d21_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Defensive copy in constructor",
+      "question": "In code review you see an \"immutable\" `Student` whose constructor does `this.college = college;` but whose getter returns `new College(...)` copies. The caller keeps its own `College c` that it passed in. Is the class safe, and why?",
+      "codeSnippet": null,
+      "options": [
+        "Yes: since the getter copies, nobody can ever reach the internal `College`",
+        "Yes: `private final College college` already prevents the object from changing",
+        "No: the caller can still run `c.name = \"IIT B\"`, which changes the student's college because both share one object; the constructor must copy too",
+        "No: the getter should return `this.college` and the constructor should make the copy instead"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Defensive copying is needed in both places. Without a copy in the constructor, the caller's `c` and the student's field point to the same heap object, so changing `c` later changes the student. Copying only in the getter covers the leak through getters, not the one through the original argument, so moving the copy from one place to the other just swaps which leak exists.",
+      "source": "notes p1-p2 (defensive copy in constructor / getter)",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html"
+    },
+    {
+      "id": "d21_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Defensive copy in constructor",
+      "question": "Here the constructor makes a defensive copy, but the getter does not. What is printed?",
+      "codeSnippet": "final class Student {\n    private final College college;\n\n    Student(College college) {\n        this.college = new College(college.name, college.address);\n    }\n\n    public College getCollege() {\n        return this.college;\n    }\n}\n\nclass College {\n    String name;\n    String address;\n\n    College(String name, String address) {\n        this.name = name;\n        this.address = address;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        College c = new College(\"IIT G\", \"Assam\");\n        Student s1 = new Student(c);\n\n        c.name = \"IIT D\";\n        System.out.println(s1.getCollege().name);\n\n        s1.getCollege().name = \"IIT B\";\n        System.out.println(s1.getCollege().name);\n    }\n}",
+      "options": [
+        "`IIT G` then `IIT B`",
+        "`IIT D` then `IIT B`",
+        "`IIT G` then `IIT G`",
+        "`IIT D` then `IIT D`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Because the constructor copied `c`, changing `c.name` to \"IIT D\" does not affect `s1`, so the first line is `IIT G`. The getter, however, returns the internal reference, so `s1.getCollege().name = \"IIT B\"` modifies `s1`'s own `College`, and the second line is `IIT B`. Only copying in both places makes the class truly immutable.",
+      "source": "code: Demo.java, Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html"
+    },
+    {
+      "id": "d21_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Immutability and thread safety",
+      "question": "The lecture ends by linking immutable objects to threads and race conditions. Why can one immutable `Student` object be shared by many threads without synchronization?",
+      "codeSnippet": null,
+      "options": [
+        "Because the JVM automatically places a lock on every `final` class",
+        "Because immutable objects are copied into each thread's stack, so each thread has its own version",
+        "Because no thread can change its state after construction, there is no write that could race with a read",
+        "Because `private` fields cannot be accessed from more than one thread at a time"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A race condition needs at least one thread writing shared state while others read or write it. An immutable object has no writes after construction, so every thread always sees the same consistent values without locks. The JVM does not add locks to `final` classes, and objects live on the shared heap, not per-thread stacks.",
+      "source": "notes p2 (Threads, race condition)",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/immutable.html"
+    },
+    {
+      "id": "d21_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Why the class must be final",
+      "question": "A `Student` class has `private final` fields and no setters, but is NOT declared `final`. Someone writes `class FakeStudent extends Student` that keeps its own mutable `alias` field, adds `setAlias(...)`, and overrides `getName()` to return `alias`. What does this break?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing: the parent's `private final name` field still cannot change, so every `Student` reference is still safe",
+        "Code that receives a `Student` may get a `FakeStudent` whose `getName()` result changes over time, so \"Student objects never change\" no longer holds; declaring `Student` final prevents this",
+        "It fails to compile, because a subclass cannot override a getter of a class with `final` fields",
+        "Only serialization breaks; ordinary method calls on `Student` still behave immutably"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Through polymorphism, a variable of type `Student` can hold a subclass object whose overridden methods expose mutable state. Callers that rely on `Student` values never changing (for example as map keys or shared across threads) are then broken, even though the parent's own fields are untouched. Declaring the class `final` (the first rule in the notes) blocks such subclasses entirely.",
+      "source": "notes p1 (CompSciStudent extends Student, rule: mark class final)",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html"
+    }
+  ]
+}

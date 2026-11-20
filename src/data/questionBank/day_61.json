@@ -1,0 +1,200 @@
+{
+  "day": 61,
+  "title": "Spring Lecture #4: Dependency Injection & IoC Explained",
+  "sources": [
+    "notes/Notes.pdf (17 pages)",
+    "notes/excalidraw-notes.pdf (2 pages)",
+    "code/CoreDemo/src/main/java/in/coderarmy/Main.java",
+    "code/CoreDemo/src/main/java/in/coderarmy/OrderService.java",
+    "code/CoreDemo/src/main/java/in/coderarmy/notification/*.java"
+  ],
+  "topics": [
+    "Tight vs loose coupling",
+    "Dependency Injection",
+    "Constructor vs setter injection",
+    "Inversion of Control",
+    "Spring IoC container & beans"
+  ],
+  "questions": [
+    {
+      "id": "d61_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Dependency Injection",
+      "question": "Which statement best defines Dependency Injection?",
+      "codeSnippet": null,
+      "options": [
+        "A class creates every object it needs inside its own constructor",
+        "A class receives the objects it depends on from outside instead of creating them itself",
+        "A class inherits from its dependency so it can call the dependency's methods",
+        "A feature invented by Spring that cannot be used in plain Java"
+      ],
+      "correctAnswer": 1,
+      "explanation": "DI means \"do not create your dependency, receive it\": the dependency is passed in from outside, e.g. through a constructor or setter. It is a design principle usable in plain Java - Spring did not invent it, it automates it. Creating dependencies yourself is exactly the tight coupling DI removes.",
+      "source": "notes p8-9",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    },
+    {
+      "id": "d61_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Inversion of Control",
+      "question": "How are IoC (Inversion of Control) and DI (Dependency Injection) related?",
+      "codeSnippet": null,
+      "options": [
+        "They are two names for exactly the same thing",
+        "DI is the principle, and IoC is one technique to implement it",
+        "IoC is only about web requests, while DI is about objects",
+        "IoC is the principle (control of object creation moves outside the class); DI is a technique to achieve it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "IoC is the idea: the class no longer controls creation of what it needs - control moves to something outside (Main, or the Spring IoC container). DI is one way to implement that idea, by passing dependencies in. They are related but not identical, and the second option reverses the roles.",
+      "source": "notes p12-14; excalidraw p2",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    },
+    {
+      "id": "d61_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Tight vs loose coupling",
+      "question": "`OrderService` receives a `NotificationService` through its constructor, and `Main` currently passes `new EmailService()`. The business now wants SMS notifications instead. What has to change?",
+      "codeSnippet": null,
+      "options": [
+        "Only `Main`: pass `new SmsService()` instead; `OrderService` stays unchanged",
+        "`OrderService` must be edited to create an `SmsService` internally",
+        "The `NotificationService` interface must get a new `sendSms()` method",
+        "Both `EmailService` and `OrderService` must be rewritten to extend `SmsService`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Because `OrderService` depends only on the `NotificationService` interface and receives the implementation from outside, switching implementations is just a change in the place that creates and passes the object. That is the main benefit of loose coupling: a change in notification logic no longer forces a change in the business class.",
+      "source": "notes p9-10; code: Main.java",
+      "reference": null
+    },
+    {
+      "id": "d61_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Constructor vs setter injection",
+      "question": "Using the lecture's `OrderService` (which has both a constructor and a setter for the dependency), what does this `main` print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        NotificationService n = new EmailService();\n        OrderService order = new OrderService(n);\n        order.setNotification(new SmsService());\n        order.placeOrder();\n    }\n}\n\n// OrderService.placeOrder():\n//     System.out.println(\"Order placed\");\n//     notification.sendNotification();\n// EmailService prints \"Email notification sent\"\n// SmsService   prints \"SMS notification sent\"",
+      "options": [
+        "Order placed\nEmail notification sent",
+        "Order placed\nEmail notification sent\nSMS notification sent",
+        "Order placed\nSMS notification sent",
+        "SMS notification sent\nOrder placed"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Constructor injection first sets the field to the `EmailService`, then setter injection replaces it with the `SmsService`. `placeOrder()` prints \"Order placed\" and then calls `sendNotification()` on the current field value, which is the SMS service. This is why the notes say setter injection fits dependencies that can be changed later.",
+      "source": "code: OrderService.java, Main.java; notes p11-12",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    },
+    {
+      "id": "d61_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Spring IoC container & beans",
+      "question": "In a Spring application, a developer writes `EmailService email = new EmailService();` inside some method. Is `email` a Spring bean?",
+      "codeSnippet": null,
+      "options": [
+        "No - it is a normal Java object, because Spring did not create or manage it",
+        "Yes - every object of a class in a Spring project is automatically a bean",
+        "Yes - any object that implements an interface becomes a bean",
+        "No - beans are only objects that are created through `static` factory methods"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A bean is an object that the Spring IoC container creates and manages. Every bean is an object, but not every object is a bean: one created with `new` by your own code is outside Spring's control. Implementing an interface has nothing to do with being a bean.",
+      "source": "notes p15-16; excalidraw p2",
+      "reference": null
+    },
+    {
+      "id": "d61_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Tight vs loose coupling",
+      "question": "A developer changes `private EmailService service = new EmailService();` to `private NotificationService service = new EmailService();` inside `OrderService` and calls it \"loosely coupled\". Why do the notes say this is still not enough?",
+      "codeSnippet": null,
+      "options": [
+        "Because interfaces cannot be used as field types in Java",
+        "Because `EmailService` must be declared `final` for loose coupling",
+        "Because the field must be `public` so other classes can replace it",
+        "Because `OrderService` still creates the object and decides which implementation is used"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The variable type is now an interface, but `new EmailService()` is still inside `OrderService`, so the business class still picks the concrete implementation and must be edited to change it. As the notes put it, creating objects is not the problem - creating them in the wrong place is. The fix is to receive the dependency from outside.",
+      "source": "notes p5-7",
+      "reference": null
+    },
+    {
+      "id": "d61_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Dependency Injection",
+      "question": "You want to unit-test `OrderService.placeOrder()` without sending a real email. The lecture code includes a `FakeEmailService` that only prints \"Dummy Email sent\". How should the test use it?",
+      "codeSnippet": null,
+      "options": [
+        "Edit `OrderService` to create a `FakeEmailService` when a test flag is set",
+        "Pass a `FakeEmailService` into `OrderService` through its constructor or setter",
+        "Make `FakeEmailService` extend `OrderService` and override `placeOrder()`",
+        "Delete `EmailService` temporarily while tests run"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Since `OrderService` depends on the `NotificationService` interface and receives it from outside, the test can inject a fake implementation and exercise the real order logic without side effects. Adding test flags inside the business class would mix test concerns into it and keep it deciding its own dependencies.",
+      "source": "notes p10; code: FakeEmailService.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    },
+    {
+      "id": "d61_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Constructor vs setter injection",
+      "question": "A teammate edits the lecture's `Main` and comments out the setter call. What happens when it runs?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        NotificationService notification = new EmailService();\n        OrderService order = new OrderService();   // no-arg constructor\n        // order.setNotification(notification);\n        order.placeOrder();\n    }\n}\n\n// OrderService:\n//     NotificationService notification;\n//     public OrderService() { }\n//     public void placeOrder() {\n//         System.out.println(\"Order placed\");\n//         notification.sendNotification();\n//     }",
+      "options": [
+        "It does not compile, because `notification` is never assigned",
+        "It prints \"Order placed\" and then \"Email notification sent\", because the local variable is picked up automatically",
+        "It prints \"Order placed\" and then throws a `NullPointerException`",
+        "It prints nothing and throws a `NullPointerException` before \"Order placed\""
+      ],
+      "correctAnswer": 2,
+      "explanation": "Instance fields default to `null`, so it compiles; nothing links the local variable in `main` to the field. `placeOrder()` prints first, then calls a method on the `null` field and throws a `NullPointerException`. This is why constructor injection is preferred for required dependencies: the object cannot be built without them.",
+      "source": "code: Main.java, OrderService.java; notes p11",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    },
+    {
+      "id": "d61_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Tight vs loose coupling",
+      "question": "In the original design, `OrderService` contains `new EmailService()`. Each time a new channel (SMS, WhatsApp, pop-up) is requested, someone edits `OrderService`, and order bugs keep appearing in those edits. Which design principles from the notes does this violate, and why?",
+      "codeSnippet": null,
+      "options": [
+        "Single Responsibility and Open-Closed: the class both handles orders and chooses notifications, and must be modified instead of extended",
+        "Liskov Substitution only: `SmsService` cannot replace `EmailService`",
+        "Interface Segregation only: `NotificationService` has too many methods",
+        "None: editing a class for new requirements is normal and expected"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`OrderService` has two jobs - order logic and creating/choosing the notification service - which breaks Single Responsibility. Adding a channel requires modifying existing, working code rather than adding a new implementation, which breaks Open-Closed. The notes name exactly these two (S and O); the interface has a single method, so segregation is not the issue.",
+      "source": "notes p6-7",
+      "reference": null
+    },
+    {
+      "id": "d61_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Dependency Injection",
+      "question": "Four versions of `OrderService` are shown. Which one lets you switch between `EmailService`, `SmsService` and `FakeEmailService` without modifying `OrderService` at all?",
+      "codeSnippet": "// Version A\nclass OrderService {\n    private EmailService service = new EmailService();\n}\n\n// Version B\nclass OrderService {\n    private NotificationService service = new EmailService();\n}\n\n// Version C\nclass OrderService {\n    private EmailService service;\n    OrderService(EmailService service) { this.service = service; }\n}\n\n// Version D\nclass OrderService {\n    private NotificationService service;\n    OrderService(NotificationService service) { this.service = service; }\n}",
+      "options": [
+        "Version A",
+        "Version B",
+        "Version C",
+        "Version D"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Version D both depends on the interface and receives the implementation from outside, so any `NotificationService` can be passed in. Version C is tempting because it uses constructor injection, but its parameter type is the concrete `EmailService`, so an `SmsService` cannot be passed. Versions A and B create the object themselves, so changing the implementation means editing the class.",
+      "source": "notes p3-9; code: OrderService.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    }
+  ]
+}

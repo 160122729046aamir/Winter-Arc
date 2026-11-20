@@ -1,0 +1,203 @@
+{
+  "day": 80,
+  "title": "Spring Lecture #23: Spring AOP Advice Types Explained",
+  "sources": [
+    "notes/Notes.pdf (38 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/aopDemo/pom.xml",
+    "code/aopDemo/aspect/LoggingAspect.java",
+    "code/aopDemo/service/StudentService.java",
+    "code/aopDemo/controller/StudentController.java"
+  ],
+  "topics": [
+    "Setting up an aspect",
+    "@Before & JoinPoint",
+    "@AfterReturning",
+    "@AfterThrowing",
+    "@After (after-finally)",
+    "@Around & ProceedingJoinPoint",
+    "Advice ordering"
+  ],
+  "questions": [
+    {
+      "id": "d80_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@After (after-finally)",
+      "question": "You need to remove a `ThreadLocal` value after a service method finishes, whether it returned normally or threw an exception, and you don't need the result or the exception. Which advice fits most precisely?",
+      "codeSnippet": null,
+      "options": [
+        "`@AfterReturning`, because it runs after the method completes",
+        "`@After`, because it behaves like a `finally` block and runs on both success and failure",
+        "`@AfterThrowing`, because cleanup is mainly needed when something goes wrong",
+        "`@Before`, because the value must be cleared before the next call starts"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@After` is 'after-finally' advice: it runs for every outcome and is the narrowest choice for outcome-neutral cleanup. `@AfterReturning` runs only on normal return, so the ThreadLocal would leak whenever the method throws. `@AfterThrowing` covers only the failure path.",
+      "source": "notes p20-23",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d80_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Setting up an aspect",
+      "question": "In a Spring Boot 4 project with `spring-boot-starter-aspectj`, you write the class below inside a subpackage of the main application package. The advice never prints anything when `createStudent()` is called. What is wrong?",
+      "codeSnippet": "@Aspect\npublic class LoggingAspect {\n    @Before(\"execution(* in.strikes.aopDemo.service.StudentService.createStudent(..))\")\n    public void logBefore() {\n        System.out.println(\"Student is going to be saved\");\n    }\n}",
+      "options": [
+        "`@Before` advice must take a `JoinPoint` parameter, otherwise it is skipped",
+        "The pointcut must use `within(...)` instead of `execution(...)` for service classes",
+        "`@EnableAspectJAutoProxy` must be added manually in every Spring Boot application",
+        "`@Aspect` only describes the class's role; without `@Component` (or a `@Bean`) it is never registered as a bean, so Spring never applies it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`@Aspect` marks the class as containing pointcuts and advice, but it is not a stereotype, so component scanning does not register it. Adding `@Component` (as in the lecture's `LoggingAspect`) fixes it. The `JoinPoint` parameter is optional, and Spring Boot auto-configures the AOP proxy infrastructure when the starter is present.",
+      "source": "notes p1-4; code: LoggingAspect.java, pom.xml",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html"
+    },
+    {
+      "id": "d80_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "@Around & ProceedingJoinPoint",
+      "question": "The controller calls `studentService.dummyMethod(\"aditya\")` through the Spring proxy. What does the console show, and what does the controller receive?",
+      "codeSnippet": "// StudentService\npublic String dummyMethod(String s) {\n    System.out.println(\"dummyMethod called\");\n    return s;\n}\n\n// LoggingAspect\n@Around(\"execution(* in.strikes.aopDemo.service.StudentService.dummyMethod(..))\")\npublic Object logAroundMethod(ProceedingJoinPoint joinPoint) throws Throwable {\n    Object return1 = joinPoint.proceed();\n    System.out.println(\"Intercepted, calling again\");\n    Object return2 = joinPoint.proceed();\n    return return2;\n}",
+      "options": [
+        "\"dummyMethod called\", \"Intercepted, calling again\", \"dummyMethod called\"; the controller receives \"aditya\"",
+        "\"dummyMethod called\", \"Intercepted, calling again\"; the second `proceed()` is ignored and the controller receives \"aditya\"",
+        "\"Intercepted, calling again\", \"dummyMethod called\"; the controller receives \"aditya\"",
+        "\"dummyMethod called\" once, then an `IllegalStateException` because `proceed()` was already used"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`@Around` advice may call `proceed()` zero, one or several times, and each call runs the rest of the chain and the target again. So the target prints twice, with the advice's message between the two calls, and the advice returns the second result. This is why retrying with multiple `proceed()` calls is dangerous for side-effecting methods.",
+      "source": "code: LoggingAspect.java, StudentService.java; notes p35-36",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d80_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "@Around & ProceedingJoinPoint",
+      "question": "The controller calls `studentService.dummyMethod(\"aditya\")` and returns the result as the response body. What is printed, and what is the response body?",
+      "codeSnippet": "// StudentService\npublic String dummyMethod(String s) {\n    System.out.println(\"dummyMethod called: \" + s);\n    return s;\n}\n\n// LoggingAspect\n@Around(\"execution(* in.strikes.aopDemo.service.StudentService.dummyMethod(..))\")\npublic Object logAroundMethod(ProceedingJoinPoint joinPoint) throws Throwable {\n    Object[] arr = joinPoint.getArgs();\n    String modified = ((String) arr[0]).toUpperCase();\n    String result = (String) joinPoint.proceed(new Object[]{ modified });\n    return result + \" : String Intercepted\";\n}",
+      "options": [
+        "Prints \"dummyMethod called: aditya\"; body \"aditya\", because the original arguments are always passed to the target",
+        "Prints the original lowercase name (the target still sees the old arguments); body is the uppercase name followed by \" : String Intercepted\"",
+        "Prints \"dummyMethod called: ADITYA\"; body \"ADITYA : String Intercepted\"",
+        "Prints \"dummyMethod called: ADITYA\"; body \"ADITYA\", because `@Around` cannot change the return value"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`proceed(Object[])` invokes the target with the replacement arguments, so the method receives and prints \"ADITYA\". The value the around advice returns is what the caller sees, so the appended suffix reaches the controller. Changing both arguments and the result is exactly what only `@Around` can do.",
+      "source": "code: LoggingAspect.java (commented variant); notes p32-34",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d80_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "@AfterThrowing",
+      "question": "`makePayment()` contains `try { throw new RuntimeException(\"Gateway failed\"); } catch (RuntimeException e) { return \"Fallback response\"; }`. An aspect has both `@AfterReturning` and `@AfterThrowing` advice on this method. Which advice runs?",
+      "codeSnippet": null,
+      "options": [
+        "Only `@AfterThrowing`, because an exception was thrown during the method",
+        "Only `@AfterReturning`, because the exception never escaped and the method exited normally",
+        "Both, because one exception was thrown and a value was returned",
+        "Neither, because a caught exception cancels all after-advice for that call"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Advice reacts to how the target method EXITS, not to events inside it. The exception was caught internally, and the method returned \"Fallback response\" normally, so `@AfterReturning` runs and `@AfterThrowing` does not. Thinking that `@AfterThrowing` fires for any thrown exception is the common misconception.",
+      "source": "notes p16-17",
+      "reference": null
+    },
+    {
+      "id": "d80_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@Before & JoinPoint",
+      "question": "A feature flag must stop `makePayment()` and return the string \"Payments disabled\" to the caller (no exception). Why can't a `@Before` advice do this, and what should be used?",
+      "codeSnippet": null,
+      "options": [
+        "`@Before` can do it by calling `joinPoint.skip()` and returning the string",
+        "`@Before` can do it if the advice method's return type is `String`; its return value replaces the result",
+        "`@Before` cannot access the method arguments, so it cannot check the flag; use `@AfterReturning` instead",
+        "`@Before` receives only a `JoinPoint`, which can inspect but not control the invocation, so it can only stop the call by throwing; use `@Around` and return the value without calling `proceed()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`JoinPoint` exposes the signature, arguments, target and proxy but has no way to skip the call or supply a result. A `@Before` advice can only prevent the target by throwing an exception. `@Around` with `ProceedingJoinPoint` can decide not to call `proceed()` and return an alternative value. A `@Before` advice's return value is simply ignored.",
+      "source": "notes p11-13, p34",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d80_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Advice ordering",
+      "question": "All four advice methods are in the SAME aspect and match `createStudent()`, which prints \"Student saved\" and returns normally. In what order are the lines printed?",
+      "codeSnippet": "@Around(\"execution(* in.strikes.aopDemo.service.StudentService.createStudent(..))\")\npublic Object around(ProceedingJoinPoint pjp) throws Throwable {\n    System.out.println(\"Around-before\");\n    Object r = pjp.proceed();\n    System.out.println(\"Around-after\");\n    return r;\n}\n\n@Before(\"execution(* in.strikes.aopDemo.service.StudentService.createStudent(..))\")\npublic void before() { System.out.println(\"Before\"); }\n\n@AfterReturning(\"execution(* in.strikes.aopDemo.service.StudentService.createStudent(..))\")\npublic void afterReturning() { System.out.println(\"AfterReturning\"); }\n\n@After(\"execution(* in.strikes.aopDemo.service.StudentService.createStudent(..))\")\npublic void after() { System.out.println(\"After\"); }",
+      "options": [
+        "Before, Around-before, Student saved, Around-after, After, AfterReturning",
+        "Around-before, Before, Student saved, After, AfterReturning, Around-after",
+        "Around-before, Before, Student saved, AfterReturning, After, Around-after",
+        "Before, Around-before, Student saved, AfterReturning, Around-after, After"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Within one aspect, `@Around` has the highest precedence, so its pre-`proceed()` code runs first, followed by `@Before`, then the target. Following AspectJ's after-finally semantics, `@After` is effectively invoked after `@AfterReturning`. Only then does control return to the around advice for \"Around-after\". This matches the notes' final invocation-flow diagram.",
+      "source": "notes p37 (Complete Invocation Flow)",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d80_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@AfterThrowing",
+      "question": "`placeOrder()` throws `new IllegalStateException(\"Out of stock\")`. The caller wraps the call in `try { orderService.placeOrder(); } catch (RuntimeException e) { System.out.println(\"Caller caught: \" + e.getMessage()); }`. What is printed?",
+      "codeSnippet": "@AfterThrowing(\n        value = \"execution(* com.shop.service.OrderService.placeOrder(..))\",\n        throwing = \"exception\")\npublic void onInvalid(IllegalArgumentException exception) {\n    System.out.println(\"Invalid: \" + exception.getMessage());\n}\n\n@After(\"execution(* com.shop.service.OrderService.placeOrder(..))\")\npublic void clearContext() {\n    System.out.println(\"Clearing context\");\n}",
+      "options": [
+        "Clearing context\nCaller caught: Out of stock",
+        "Invalid: Out of stock\nClearing context\nCaller caught: Out of stock",
+        "Invalid: Out of stock\nClearing context",
+        "Clearing context"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The `throwing` parameter type restricts matching: this advice runs only for `IllegalArgumentException` (and subclasses), and `IllegalStateException` is not one. `@After` runs on every outcome, so \"Clearing context\" is printed. After-advice never swallows the exception, so it still reaches the caller's catch block.",
+      "source": "notes p18-21",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d80_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@AfterReturning",
+      "question": "The lecture's `@AfterReturning(returning = \"result\")` advice on `createStudent(..)` takes a `Student result` and calls `result.setName(\"Rohit\"); result.setAge(21);`. A client POSTs `{\"name\":\"Aditya\",\"age\":25}`, and `createStudent()` returns the same `Student` object that the controller puts in `ResponseEntity.ok(...)`. What does the client receive?",
+      "codeSnippet": null,
+      "options": [
+        "`{\"name\":\"Aditya\",\"age\":25}`, because `@AfterReturning` can never affect what the caller gets",
+        "A 500 error, because `@AfterReturning` advice is not allowed to call setters on the returned value",
+        "`{\"name\":\"Aditya\",\"age\":25}`, because the advice receives a defensive copy of the returned object",
+        "`{\"name\":\"Rohit\",\"age\":21}`, because the advice gets the same object reference and mutates it, even though it cannot return a different object"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`@AfterReturning` cannot replace the returned reference (any value the advice returns is ignored), but it receives the SAME object, so mutating it changes what the caller sees. The notes call this poor design because it hides data transformation outside the visible business flow. Use `@Around` for deliberate result changes, and keep `@AfterReturning` for observation.",
+      "source": "code: LoggingAspect.java (commented @AfterReturning); notes p15-16",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d80_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "@Around & ProceedingJoinPoint",
+      "question": "A timing aspect declares `@Around(\"execution(* com.app.service.*.*(..))\") public void time(ProceedingJoinPoint pjp) throws Throwable { long t = System.nanoTime(); pjp.proceed(); System.out.println(System.nanoTime() - t); }`. After deploying it, `studentService.getStudent()` (returns `String`) suddenly returns `null` to the controller. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`System.nanoTime()` cannot be used inside advice, which makes the proxy fall back to returning `null`",
+        "The around advice is `void`, so the value from `proceed()` is discarded and the caller always gets `null`; it should return `Object` and return the `proceed()` result",
+        "`proceed()` must be called with `pjp.getArgs()` explicitly, otherwise the target receives no arguments and returns `null`",
+        "Around advice always returns `null` for `String` methods unless `returning = \"result\"` is configured"
+      ],
+      "correctAnswer": 1,
+      "explanation": "What the around advice returns is what the caller observes. A `void` around advice discards the `proceed()` result, so the caller always gets `null`. A generic around advice should be declared `Object` and return the result (ideally with the timing in a `finally` block so failures are timed too). `proceed()` with no arguments reuses the original arguments, and `returning` is an `@AfterReturning` attribute.",
+      "source": "notes p34-35 (sections 35-36)",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    }
+  ]
+}

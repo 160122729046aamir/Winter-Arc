@@ -1,0 +1,204 @@
+{
+  "day": 59,
+  "title": "Spring Lecture #2: Build Your First Spring Boot Application",
+  "sources": [
+    "notes/Notes.pdf (20 pages)",
+    "notes/Excalidraw-Notes.pdf (2 pages)",
+    "code/demo/pom.xml",
+    "code/demo/src/main/java/com/example/demo/DemoApplication.java",
+    "code/demo/src/main/java/com/example/demo/HelloController.java",
+    "code/demo/src/main/resources/application.properties",
+    "code/demo/src/test/java/com/example/demo/DemoApplicationTests.java"
+  ],
+  "topics": [
+    "IP address, port & localhost",
+    "Default ports",
+    "Spring Initializr & versions",
+    "JAR packaging",
+    "@RestController & @GetMapping",
+    "Changing the port",
+    "Request flow & debugging"
+  ],
+  "questions": [
+    {
+      "id": "d59_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "IP address, port & localhost",
+      "question": "In the address `192.168.1.10:8080`, what does `8080` identify?",
+      "codeSnippet": null,
+      "options": [
+        "The machine on the network that should receive the data",
+        "The application on that machine that should receive the data",
+        "The HTTP method the browser will use",
+        "The version of the HTTP protocol in use"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The IP address brings data to the correct machine; the port number lets the operating system hand it to the right application on that machine (e.g. a Spring Boot app listening on 8080). Identifying the machine is the IP address's job, not the port's.",
+      "source": "notes p2-4; excalidraw p2",
+      "reference": "https://docs.spring.io/spring-boot/how-to/webserver.html"
+    },
+    {
+      "id": "d59_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Spring Initializr & versions",
+      "question": "On Spring Initializr you see a Spring Boot version ending in `-SNAPSHOT`. What does that mean?",
+      "codeSnippet": null,
+      "options": [
+        "It is the latest fully tested stable release recommended for production",
+        "It is a release candidate that only needs final documentation",
+        "It is a long-term-support release with extended security fixes",
+        "It is a work-in-progress build that may contain bugs and is not final"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A SNAPSHOT is a work-in-progress version and is not considered final. RC (Release Candidate) is almost ready but still not the final release. For learning and real projects the notes recommend choosing a stable release.",
+      "source": "notes p8-9",
+      "reference": null
+    },
+    {
+      "id": "d59_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Default ports",
+      "question": "A user types `https://www.coderarmy.in` into the browser without any port number. Which port does the browser connect to?",
+      "codeSnippet": null,
+      "options": [
+        "443",
+        "80",
+        "8080",
+        "Whatever port DNS returns with the IP address"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When no port is written, the browser uses the protocol's default: 443 for HTTPS and 80 for HTTP. DNS only resolves the domain name to an IP address; it does not supply the port. 8080 is just Spring Boot's default for local development, which is why we type it explicitly.",
+      "source": "notes p5-6; excalidraw p1",
+      "reference": null
+    },
+    {
+      "id": "d59_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Changing the port",
+      "question": "Given the lecture project's `application.properties` and controller below, which URL returns `<h1>Hello World</h1>`?",
+      "codeSnippet": "# application.properties\nspring.application.name=demo\nserver.port=9090\n\n// HelloController.java\n@RestController\npublic class HelloController {\n\n    @GetMapping(\"hello\")\n    public String hello() {\n        return \"<h1>Hello World</h1>\";\n    }\n}",
+      "options": [
+        "http://localhost:8080/hello",
+        "http://localhost:9090/demo/hello",
+        "http://localhost:9090/hello",
+        "http://localhost:9090/HelloController/hello"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`server.port=9090` makes the embedded Tomcat listen on 9090 instead of the default 8080, and `@GetMapping(\"hello\")` maps GET `/hello`. `spring.application.name` only names the application; it does not add a `/demo` prefix to URLs. The class name is not part of the path either.",
+      "source": "code: application.properties, HelloController.java; notes p14-15",
+      "reference": "https://docs.spring.io/spring-boot/how-to/webserver.html"
+    },
+    {
+      "id": "d59_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "JAR packaging",
+      "question": "Why can a Spring Boot web application packaged as a JAR be started directly (e.g. with `java -jar`) instead of being deployed into a separately installed server?",
+      "codeSnippet": null,
+      "options": [
+        "Because the JVM itself understands HTTP once a class is annotated with `@RestController`",
+        "Because the JAR contains the application together with the setup it needs, including an embedded server",
+        "Because JAR packaging converts the application into a native operating-system executable",
+        "Because Spring Initializr installs Tomcat globally on the machine when the project is generated"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A Spring Boot JAR bundles your code with what is required to run it, and with the web dependency that includes an embedded Tomcat that Spring Boot starts for you. That is why you never installed Tomcat yet saw \"Tomcat started on port 8080\". The JVM alone still does not understand HTTP, and Initializr only generates a project skeleton.",
+      "source": "notes p9, 13-14",
+      "reference": "https://docs.spring.io/spring-boot/how-to/webserver.html"
+    },
+    {
+      "id": "d59_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Request flow & debugging",
+      "question": "In the flow of a request to `localhost:8080/hello`, which component matches the path `/hello` to the `sayHello()` method?",
+      "codeSnippet": null,
+      "options": [
+        "The browser, which looks up the method name in the URL",
+        "The operating system, using the port number",
+        "The embedded Tomcat server, which reads `application.properties`",
+        "Spring MVC, which checks the registered request mappings"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes split the work: Spring Boot starts and configures the application, embedded Tomcat listens on the port and receives the HTTP request, and Spring MVC checks its mappings and calls the matching controller method. The OS only uses the port to deliver data to the right application; Tomcat does not know about your `@GetMapping` methods by itself.",
+      "source": "notes p13-15",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann.html"
+    },
+    {
+      "id": "d59_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Changing the port",
+      "question": "You start the lecture app while another copy of it is still running, and startup fails saying port 9090 is already in use. What is the correct fix?",
+      "codeSnippet": null,
+      "options": [
+        "Stop the other instance, or give this one a different `server.port` in `application.properties`",
+        "Rename `spring.application.name` so the two apps no longer conflict",
+        "Change `@GetMapping(\"hello\")` to a different path so the endpoints do not clash",
+        "Run the app from `localhost` instead of `127.0.0.1`, because they use separate ports"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A port identifies one listening application on a machine, so two servers cannot both listen on 9090. Either free the port or configure another one with `server.port`. The application name and endpoint paths have nothing to do with the port, and `localhost` is just another name for `127.0.0.1`, the same machine.",
+      "source": "notes p2-4, 14",
+      "reference": "https://docs.spring.io/spring-boot/how-to/webserver.html"
+    },
+    {
+      "id": "d59_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@RestController & @GetMapping",
+      "question": "With the lecture's controller below, the app is running on port 9090. What happens when you open `http://localhost:9090/bye` in a browser?",
+      "codeSnippet": "@RestController\npublic class HelloController {\n\n    @GetMapping(\"hello\")\n    public String hello() {\n        return \"<h1>Hello World</h1>\";\n    }\n\n    @GetMapping(\"bye\")\n    public String greetBye() {\n        return \"<h1>Bye</h1>\";\n    }\n}",
+      "options": [
+        "Error 404, because the method is named `greetBye`, so the URL must be `/greetBye`",
+        "Error, because Spring looks for an HTML template file named `<h1>Bye</h1>` to render",
+        "`greetBye()` runs and the returned string is written directly into the response body, so the page shows \"Bye\" as a heading",
+        "The browser downloads a JSON object `{\"greetBye\": \"<h1>Bye</h1>\"}`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The URL comes from the `@GetMapping` value, not the method name, so `/bye` maps to `greetBye()`. In a `@RestController` every method's return value is written straight to the response body (it behaves as `@Controller` + `@ResponseBody`), so the browser receives the text `<h1>Bye</h1>` and renders it as a heading. Looking up a template by the returned name is what a plain `@Controller` does, not `@RestController`.",
+      "source": "code: HelloController.java; notes p11-13",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann.html"
+    },
+    {
+      "id": "d59_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Request flow & debugging",
+      "question": "The log says `Tomcat started on port 9090`. Request A to `http://localhost:8080/hello` shows \"This site can't be reached\"; request B to `http://localhost:9090/hellooo` returns 404 Not Found. What do these two symptoms tell you?",
+      "codeSnippet": null,
+      "options": [
+        "Both mean the controller was not detected by Spring",
+        "A never reached any application because nothing listens on 8080; B reached Tomcat, but Spring MVC found no mapping for that path",
+        "A means the URL path is wrong, and B means the application is not running",
+        "Both mean the embedded Tomcat failed to start"
+      ],
+      "correctAnswer": 1,
+      "explanation": "\"Can't be reached\" means no application accepted the connection on that port - a wrong-port problem, since the app is on 9090. A 404 is an HTTP response, so the request did reach the running server; it just found no mapping for `/hellooo`. Telling these layers apart is exactly why the notes say internals matter for debugging.",
+      "source": "notes p14, 17-18",
+      "reference": null
+    },
+    {
+      "id": "d59_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@RestController & @GetMapping",
+      "question": "In the lecture's `DemoApplication`, the commented-out lines are enabled. What happens when the application is started?",
+      "codeSnippet": "@SpringBootApplication\npublic class DemoApplication {\n\n    public static void main(String[] args) {\n        SpringApplication.run(DemoApplication.class, args);\n\n        HelloController controller = new HelloController();\n        String s = controller.hello();\n        System.out.println(s);\n    }\n}",
+      "options": [
+        "Compilation fails, because a class annotated with `@RestController` cannot be created with `new`",
+        "Nothing is printed, because `hello()` only executes when an HTTP request arrives",
+        "Startup fails, because Spring already created a `HelloController` and a second instance is not allowed",
+        "After startup, `<h1>Hello World</h1>` is printed to the console, and the server keeps serving requests"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`SpringApplication.run` starts the context and the embedded Tomcat, then returns; the next lines are ordinary Java, so `hello()` is called like any method and its string is printed. Annotations do not stop you from using `new`, and creating your own object does not conflict with the one Spring manages. The server stays up because Tomcat keeps running after `main` continues.",
+      "source": "code: DemoApplication.java",
+      "reference": null
+    }
+  ]
+}

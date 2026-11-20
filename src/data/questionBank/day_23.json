@@ -1,0 +1,204 @@
+{
+  "day": 23,
+  "title": "Lecture #23: Java Enums",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java"
+  ],
+  "topics": [
+    "What an enum compiles to",
+    "When to use an enum",
+    "Problems with int/String constants",
+    "values(), valueOf(), ordinal()",
+    "Constant-specific methods",
+    "name() vs toString()",
+    "Comparing enum constants",
+    "Enum constructors and fields"
+  ],
+  "questions": [
+    {
+      "id": "d23_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "What an enum compiles to",
+      "question": "Given `enum Direction { NORTH, SOUTH, EAST, WEST; }`, what is `Direction.NORTH` under the hood, as shown in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "An `int` constant with value 0 that the compiler substitutes wherever it is used",
+        "A `public static final` field holding a `Direction` object that is created once",
+        "A `String` constant `\"NORTH\"` stored in the string pool",
+        "A new `Direction` object created each time `Direction.NORTH` is written"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The compiler turns the enum into a class extending `java.lang.Enum<Direction>` with one `public static final Direction` field per constant, each pointing to a single object created when the class is initialized. Every use of `Direction.NORTH` refers to that same object. It has an ordinal of 0, but it is an object, not an `int`.",
+      "source": "notes p1-p2 (compiler-generated class)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    },
+    {
+      "id": "d23_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "When to use an enum",
+      "question": "According to the lecture, an enum fits best when a value must come from a fixed, predefined set. Which of these is the WEAKEST fit for an enum?",
+      "codeSnippet": null,
+      "options": [
+        "A user's email address",
+        "The day of the week",
+        "A payment status: success, failed, pending",
+        "A log level: INFO, ERROR, DEBUG"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Enums model a predefined set of constants known at compile time, like days of the week, payment or order status, and log levels (the lecture's own examples). An email address can take practically unlimited values decided at runtime, so it belongs in a `String` field, not an enum constant.",
+      "source": "notes p1, p4 (use cases); code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    },
+    {
+      "id": "d23_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Problems with int/String constants",
+      "question": "Your app uses `class Role { static final int USER = 1; static final int ADMIN = 2; static final int MANAGER = 2; }` (as in the lecture). Managers are passing `if (role == Role.ADMIN)` checks. What is the root cause, and the best fix?",
+      "codeSnippet": null,
+      "options": [
+        "`==` cannot compare `int` values reliably; use `Integer.compare` instead",
+        "`static final` values are copied at runtime; remove `final` so they stay distinct",
+        "The `if` needs `Role.ADMIN.equals(role)` because constants are objects",
+        "Plain `int` constants can silently share a value and any `int` is accepted; an `enum Role { USER, ADMIN, MANAGER }` gives distinct constants and only allows valid roles"
+      ],
+      "correctAnswer": 3,
+      "explanation": "With `int` constants nothing stops two names from having the same value, and any integer (even 100) can be passed where a role is expected, which is the lack of type safety the lecture lists. Enum constants are separate objects, so `MANAGER` can never be equal to `ADMIN`, and a variable of type `Role` can hold only declared roles. Comparing ints with `==` is fine; the values themselves are the bug.",
+      "source": "code: Demo.java (Role, problems listed: type safety, readability, grouping)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    },
+    {
+      "id": "d23_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "values(), valueOf(), ordinal()",
+      "question": "What does this program print?",
+      "codeSnippet": "enum Direction {\n    NORTH, SOUTH, EAST, WEST;\n}\n\npublic class Demo5 {\n    public static void main(String[] args) {\n        for (Direction d : Direction.values()) {\n            System.out.println(d.name());\n        }\n\n        Direction d = Direction.valueOf(\"EAST\");\n        System.out.println(d);\n        System.out.println(d.ordinal());\n    }\n}",
+      "options": [
+        "`NORTH SOUTH EAST WEST` (one per line), then `EAST`, then `3`",
+        "`0 1 2 3` (one per line), then `EAST`, then `2`",
+        "`NORTH SOUTH EAST WEST` (one per line), then `EAST`, then `2`",
+        "`NORTH SOUTH EAST WEST` (one per line), then `2`, then `2`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`values()` returns the constants in declaration order and `name()` gives each identifier. `valueOf(\"EAST\")` returns the `EAST` constant, and printing it uses `toString()`, which by default is the name. `ordinal()` is zero-based, so `EAST` (third constant) gives 2, not 3.",
+      "source": "code: Demo5.java; notes p3-p4",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html"
+    },
+    {
+      "id": "d23_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Constant-specific methods",
+      "question": "Using the lecture's `Direction` enum with an abstract `move()`, what does this program print?",
+      "codeSnippet": "enum Direction {\n    NORTH {\n        @Override\n        public void move() { System.out.println(\"Move up (Y + 1)\"); }\n    },\n    SOUTH {\n        @Override\n        public void move() { System.out.println(\"Move down (Y - 1)\"); }\n    },\n    EAST {\n        @Override\n        public void move() { System.out.println(\"Move right (X + 1)\"); }\n    },\n    WEST {\n        @Override\n        public void move() { System.out.println(\"Move left (X - 1)\"); }\n    };\n\n    public abstract void move();\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        for (Direction d : Direction.values()) {\n            if (d.ordinal() % 2 == 1) {\n                d.move();\n            }\n        }\n    }\n}",
+      "options": [
+        "`Move up (Y + 1)` then `Move right (X + 1)`",
+        "`Move down (Y - 1)` then `Move left (X - 1)`",
+        "`Move up (Y + 1)` then `Move down (Y - 1)`",
+        "Nothing; it does not compile because an enum cannot have an abstract method"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Ordinals are 0 for NORTH, 1 for SOUTH, 2 for EAST and 3 for WEST, so the odd ones are SOUTH and WEST. Each constant has its own body that overrides `move()`, so the call dispatches to that constant's version. An enum may declare an abstract method as long as every constant provides an implementation, as this one does.",
+      "source": "code: Demo4.java; notes p2-p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    },
+    {
+      "id": "d23_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "name() vs toString()",
+      "question": "In `Demo5.java` there is a commented-out override of `toString()` in `Direction`. Which statement about `name()` and `toString()` is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Both are `final` in `java.lang.Enum`, so the commented-out override would not compile",
+        "`toString()` returns the ordinal unless it is overridden, while `name()` returns the identifier",
+        "`name()` can be overridden for display, while `toString()` always returns the exact identifier",
+        "`name()` is `final` and always returns the declared identifier; `toString()` returns the same by default but can be overridden"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`Enum.name()` is final, so it always gives the exact constant name, which is what you want for storage or lookups with `valueOf`. `toString()` also returns the name by default but is meant to be overridden for a friendlier display, so with the override `println(d)` would print `EAST Direction` while `d.name()` would still be `EAST`.",
+      "source": "code: Demo5.java (name() vs toString())",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html"
+    },
+    {
+      "id": "d23_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Comparing enum constants",
+      "question": "The lecture's `Demo.java` compares `status == \"success\"` while the constant is `\"Success\"`, and the bug compiles silently. After switching to `enum PaymentStatus`, a teammate asks whether `status == PaymentStatus.SUCCESS` is safe or whether they must use `equals()`. What is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`==` is safe: each enum constant is a single object, so equal constants are always the same reference",
+        "`==` is unsafe because enums are objects; always use `equals()` as with strings",
+        "`==` compares the ordinals, so it is safe only if no two constants share an ordinal",
+        "`==` only works after calling `status.name()` on both sides"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Each enum constant is created exactly once (a `public static final` object), and Java guarantees no other instances exist, so reference comparison with `==` is correct and even null-safe. With `String` constants, `==` compares references and a typo or case difference still compiles; with an enum, comparing against a misspelt constant is a compile error.",
+      "source": "code: Demo.java, Demo2.java; notes p1",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html"
+    },
+    {
+      "id": "d23_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "values(), valueOf(), ordinal()",
+      "question": "Input from a form arrives in lowercase. What happens when this runs?",
+      "codeSnippet": "enum Direction {\n    NORTH, SOUTH, EAST, WEST;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        String input = \"east\";\n        Direction d = Direction.valueOf(input);\n        System.out.println(d.ordinal());\n    }\n}",
+      "options": [
+        "It prints `2`, because `valueOf` ignores case",
+        "It prints `-1`, because no constant matched",
+        "It throws `IllegalArgumentException`, because no constant is named exactly `east`",
+        "`valueOf` returns `null`, so `d.ordinal()` throws `NullPointerException`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The compiler-generated `valueOf(String)` matches the constant name exactly, including case. Since there is no constant called `east`, it throws `IllegalArgumentException` (it never returns `null`). A common fix is `Direction.valueOf(input.toUpperCase())`, ideally with validation.",
+      "source": "code: Demo5.java; notes p4 (valueOf)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html"
+    },
+    {
+      "id": "d23_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Enum constructors and fields",
+      "question": "In `Demo3.java`, `Direction(int degree)` is declared without any access modifier. What is true about this constructor?",
+      "codeSnippet": null,
+      "options": [
+        "It is implicitly `private`, so `new Direction(45)` anywhere is a compile error; the only objects are the four declared constants",
+        "It is package-private, so another class in the same package can call `new Direction(45)`",
+        "It is `public`, because enum constructors must be callable by `valueOf()`",
+        "It runs every time `Direction.SOUTH` is accessed, recomputing `degree`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "An enum constructor is always private (declaring it `public` or `protected` is a compile error), and enums cannot be instantiated with `new`. The constructor runs once per constant, `NORTH(0)`, `SOUTH(180)` and so on, when the enum class is initialized, which is why `SOUTH.getDegree()` simply returns the stored 180.",
+      "source": "code: Demo3.java; notes p2 (private Direction(int degrees))",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    },
+    {
+      "id": "d23_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Constant-specific methods",
+      "question": "A teammate adds a new constant `UP` (with no body) to the `Direction` enum from `Demo4.java`, where `move()` is declared `public abstract void move();`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles; calling `UP.move()` later throws `AbstractMethodError`",
+        "It fails to compile: `UP` does not implement the abstract `move()`, so the compiler forces every constant to define its behaviour",
+        "It compiles; `UP.move()` silently does nothing because enums supply an empty default",
+        "It compiles; `UP` reuses the body of the constant declared just before it"
+      ],
+      "correctAnswer": 1,
+      "explanation": "With an abstract method, each constant becomes an anonymous subclass of the enum, and every one must implement `move()`. Leaving `UP` without a body is therefore a compile-time error. This is the advantage over a `switch` on the constant, where forgetting a new case compiles and fails silently at runtime.",
+      "source": "code: Demo4.java; notes p3 (abstract move())",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "day": 38,
+  "title": "Lecture #38: Lambdas & Functional Interface Deep Dive",
+  "sources": [
+    "notes.pdf (7 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java",
+    "code/Demo6.java"
+  ],
+  "topics": [
+    "Core functional interfaces (Function, Consumer, Supplier, Predicate)",
+    "Predicate and/or/negate",
+    "Primitive functional interfaces",
+    "Method references",
+    "Constructor references",
+    "Function composition: andThen vs compose"
+  ],
+  "questions": [
+    {
+      "id": "d38_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Core functional interfaces",
+      "question": "In the lecture, `() -> Math.random()` was stored in a variable. Which `java.util.function` interface and abstract method fit the shape \"takes nothing, returns a value\" (void -> T)?",
+      "codeSnippet": null,
+      "options": [
+        "`Consumer<T>` with `void accept(T t)`",
+        "`Supplier<T>` with `T get()`",
+        "`Function<T, R>` with `R apply(T t)`",
+        "`Predicate<T>` with `boolean test(T t)`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A Supplier takes no input and supplies a value through `get()`, which is exactly what `() -> Math.random()` does. Consumer is the opposite shape (T -> void): it takes a value and returns nothing.",
+      "source": "notes p1-p2, code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html"
+    },
+    {
+      "id": "d38_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Predicate and/or/negate",
+      "question": "What does this predicate-combining program print?",
+      "codeSnippet": "import java.util.function.Predicate;\n\npublic class Demo {\n    public static void main(String[] args) {\n        Predicate<Integer> isGreater = x -> x > 100;\n        Predicate<Integer> isEven = x -> x % 2 == 0;\n\n        System.out.println(isGreater.and(isEven).test(56));\n        System.out.println(isGreater.or(isEven).negate().test(57));\n    }\n}",
+      "options": [
+        "false\ntrue",
+        "true\ntrue",
+        "false\nfalse",
+        "true\nfalse"
+      ],
+      "correctAnswer": 0,
+      "explanation": "For 56, `isGreater` is false, so the AND is false. For 57, both predicates are false, so the OR is false and `negate()` turns it into true. If you print \"true\" on the first line, you are treating `and()` like `or()`: 56 is even, but it is not greater than 100.",
+      "source": "code: Demo4.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html"
+    },
+    {
+      "id": "d38_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Method references",
+      "question": "A teammate wrote `list.forEach(x -> System.out.println(x));` and the code reviewer asks for a method reference instead. Which replacement compiles and does the same thing?",
+      "codeSnippet": null,
+      "options": [
+        "`list.forEach(System::println);`, a reference to `println` on the `System` class",
+        "`list.forEach(System.out.println);`, passing the method by its plain name",
+        "`list.forEach(System.out::println);`, a reference to `println` on the `System.out` object",
+        "`list.forEach(System.out::println(x));`, a reference that also passes the argument"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The syntax is `target::methodName`, with no parentheses or arguments. The target here is the `PrintStream` object `System.out`, so the reference is `System.out::println`, as in Demo2. `System::println` does not compile because `println` is not a method of the `System` class; it belongs to the `System.out` object.",
+      "source": "notes p4, code: Demo2.java",
+      "reference": "https://www.baeldung.com/java-method-references"
+    },
+    {
+      "id": "d38_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Function composition: andThen vs compose",
+      "question": "What does this composition demo print?",
+      "codeSnippet": "import java.util.function.Function;\n\npublic class Demo3 {\n    public static void main(String[] args) {\n        Function<Integer, Integer> add2 = x -> x + 2;\n        Function<Integer, Integer> multiply3 = x -> x * 3;\n\n        System.out.println(add2.andThen(multiply3).apply(4));\n        System.out.println(add2.compose(multiply3).apply(4));\n    }\n}",
+      "options": [
+        "14\n18",
+        "18\n18",
+        "14\n14",
+        "18\n14"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`f.andThen(g)` means g(f(x)), so add2 runs first: (4 + 2) * 3 = 18. `f.compose(g)` means f(g(x)), so multiply3 runs first: 4 * 3 + 2 = 14. Answering 14 then 18 means the two methods were swapped.",
+      "source": "notes p5-p6, code: Demo3.java",
+      "reference": "https://zetcode.com/java/function-method-function-compose/"
+    },
+    {
+      "id": "d38_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Primitive functional interfaces",
+      "question": "The notes point out that `Function<Integer, Integer> square = x -> x * x;` goes through \"unboxing -> operation -> autoboxing\" on every call. Why does `java.util.function` also provide interfaces like `IntUnaryOperator` and `IntPredicate`?",
+      "codeSnippet": null,
+      "options": [
+        "They work directly on primitive `int`/`long`/`double` values, so the boxing and unboxing overhead goes away",
+        "Generic interfaces like `Function` cannot be used with numbers at all, so primitive versions are mandatory for arithmetic",
+        "They are allowed to declare more than one abstract method, which makes them more flexible than `Function`",
+        "They make the lambda run on a separate thread, which speeds up numeric code"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Generics only work with reference types, so `Function<Integer, Integer>` has to box and unbox wrapper objects. The primitive specialisations take and return `int`, `long` or `double` directly and avoid that cost. They are not mandatory, though: `Function<Integer, Integer>` works fine with numbers through autoboxing, just less efficiently.",
+      "source": "notes p2-p3",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html"
+    },
+    {
+      "id": "d38_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Primitive functional interfaces",
+      "question": "You need a functional interface that takes a `String` and returns its length as a primitive `int`, without boxing the result. Using the naming scheme from the notes (`IntFunction` vs `ToIntFunction`), which one fits?",
+      "codeSnippet": null,
+      "options": [
+        "`IntFunction<String>`, because its method takes a `String` and returns an `int`",
+        "`Function<String, Integer>`, because it is the primitive version of `Function`",
+        "`ToIntFunction<String>`, because its `applyAsInt(String)` method returns a primitive `int`",
+        "`IntUnaryOperator`, because it is the `int -> int` operator"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`ToIntFunction<T>` maps T -> int, so `ToIntFunction<String> len = String::length;` returns a primitive. `IntFunction<R>` is the reverse shape (int -> R): its input is an `int`, so `IntFunction<String>` would turn an int into a String.",
+      "source": "notes p2",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/ToIntFunction.html"
+    },
+    {
+      "id": "d38_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Method references",
+      "question": "The notes write `Predicate<String> p = String::isEmpty;` and then `p.test(\"Hello\")` returns `false`. `isEmpty()` takes no arguments, so how is `test(String)` mapped onto it?",
+      "codeSnippet": null,
+      "options": [
+        "It is a static method reference, so `String.isEmpty(\"Hello\")` is called",
+        "It refers to an instance method of an arbitrary object of type String: the argument to `test` becomes the receiver, so `\"Hello\".isEmpty()` is called",
+        "It is bound to one fixed String object chosen when the lambda is created, and `test`'s argument is ignored",
+        "It compiles only because `Predicate` has a special overload `test()` with no parameters"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`ClassName::instanceMethod` is an unbound reference: the first parameter of the functional method becomes the object the method is called on, so it is equivalent to `s -> s.isEmpty()`. It is not a static reference, because `isEmpty` is an instance method and no static `String.isEmpty(String)` exists.",
+      "source": "notes p4",
+      "reference": "https://www.baeldung.com/java-method-references"
+    },
+    {
+      "id": "d38_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Function composition: andThen vs compose",
+      "question": "Which marked line fails to compile?",
+      "codeSnippet": "import java.util.function.Function;\n\npublic class Compose {\n    public static void main(String[] args) {\n        Function<Integer, String> f = x -> \"v\" + x;\n        Function<String, Integer> g = String::length;\n\n        Function<Integer, Integer> a = f.andThen(g);   // Line A\n        Function<String, String>   b = g.andThen(f);   // Line B\n        Function<String, String>   c = f.compose(g);   // Line C\n        Function<Integer, Integer> d = f.compose(g);   // Line D\n    }\n}",
+      "options": [
+        "Line A",
+        "Line B",
+        "Line C",
+        "Line D"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`f.compose(g)` is f(g(x)): the input goes into g (String), and the result comes out of f (String), so its type is `Function<String, String>`. Line C is correct and Line D does not compile. Line A, g(f(x)), is Integer -> String -> Integer, so `Function<Integer, Integer>` is fine; picking it means mixing up the direction of andThen.",
+      "source": "notes p5-p7",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html"
+    },
+    {
+      "id": "d38_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Predicate and/or/negate",
+      "question": "A validation rule is built as `Predicate<String> valid = notEmpty.and(notNull);` where `notEmpty = s -> !s.isEmpty()` and `notNull = s -> s != null`. Calling `valid.test(null)` throws a `NullPointerException`. What is the correct fix?",
+      "codeSnippet": null,
+      "options": [
+        "Use `notEmpty.or(notNull)`, because `or()` never evaluates its first predicate when the input is null",
+        "Swap the order to `notNull.and(notEmpty)`, because `and()` short-circuits and skips the second predicate once the first returns false",
+        "Nothing can fix it with composition, because `and()` always evaluates both predicates, just like the `&` operator",
+        "Wrap it as `valid.negate().negate()`, because `negate()` filters out null inputs before testing"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The composed `and()` evaluates the left predicate first and skips the right one if the left is false. Putting `notNull` first means `isEmpty()` is never called on null. The idea that `and()` always evaluates both sides is a common misconception: the Javadoc says it is a short-circuiting logical AND, like `&&`.",
+      "source": "notes p1-p2, code: Demo4.java, Demo5.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html"
+    },
+    {
+      "id": "d38_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Constructor references",
+      "question": "The notes show `Supplier<List<Integer>> s = ArrayList::new;`. Suppose instead you write `Function<Integer, List<String>> make = ArrayList::new;`. Which constructor does the reference use, and what does `make.apply(10).size()` return?",
+      "codeSnippet": null,
+      "options": [
+        "`ArrayList(int initialCapacity)` is used, so the list has capacity 10 but `size()` returns 0",
+        "`ArrayList()` is used and 10 is added as the first element, so `size()` returns 1",
+        "`ArrayList(Collection)` is used, so the call throws `ClassCastException` and `size()` is never reached",
+        "`ArrayList(int initialCapacity)` is used and filled with 10 null slots, so `size()` returns 10"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A constructor reference chooses the constructor that matches the functional method's parameters. `apply(Integer)` matches `ArrayList(int)` through unboxing, so 10 becomes the initial capacity. Capacity is not size: a new list holds no elements, so `size()` is 0, not 10.",
+      "source": "notes p4",
+      "reference": "https://www.baeldung.com/java-method-references"
+    }
+  ]
+}

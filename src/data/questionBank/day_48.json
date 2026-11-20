@@ -1,0 +1,204 @@
+{
+  "day": 48,
+  "title": "Lecture #48: Java Thread Creation & Lifecycle Explained from Scratch",
+  "sources": [
+    "notes/Notes.pdf (42 pages)",
+    "notes/slides.pdf (2 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java",
+    "code/Demo6.java"
+  ],
+  "topics": [
+    "Thread object vs thread of execution",
+    "Thread vs Runnable",
+    "start() vs run()",
+    "Non-deterministic execution order",
+    "Thread lifecycle states",
+    "Lock behaviour in waiting states"
+  ],
+  "questions": [
+    {
+      "id": "d48_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Thread object vs thread of execution",
+      "question": "Right after `MyThread t1 = new MyThread();` runs, and before anything else, what is true?",
+      "codeSnippet": null,
+      "options": [
+        "A new thread of execution is already running `run()` in the background",
+        "Only a Java `Thread` object exists, in state NEW; no new thread of execution has started",
+        "The thread is in RUNNABLE state, waiting for the CPU",
+        "The JVM has created the thread's stack and is waiting for `run()` to be called"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Constructing a `Thread` creates only the Java object that will configure and control a thread. Its state is NEW. A separate thread of execution starts only when `start()` is called, which moves it to RUNNABLE. The RUNNABLE option skips that required `start()` call.",
+      "source": "notes p1-3; code: Demo.java, Demo6.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.State.html"
+    },
+    {
+      "id": "d48_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Non-deterministic execution order",
+      "question": "A student runs `Demo5` (`t1` prints even numbers, `t2` prints odd numbers, `t1.start()` is called first) twice and gets different interleavings of the `T1`/`T2` lines. What does this mean?",
+      "codeSnippet": null,
+      "options": [
+        "There is a bug: `t1` was started first, so all `T1` lines should print first",
+        "The JVM is broken, because the same program with the same input must give the same output",
+        "Java alternates threads strictly one line at a time, so the output should always be T1, T2, T1, T2…",
+        "This is normal: the scheduler decides when each thread runs, and `start()` order does not fix execution order"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Calling `t1.start()` first only makes `t1` eligible to run first. OS/JVM scheduling, the number of cores and system load decide the actual interleaving, so it can differ on every run. Non-determinism like this is expected, and it becomes a bug only when correctness depends on the order. If order matters, use coordination tools such as `join()` or locks.",
+      "source": "code: Demo5.java; notes p18-21",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/runthread.html"
+    },
+    {
+      "id": "d48_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "start() vs run()",
+      "question": "What does this program print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        Runnable task = () ->\n            System.out.println(\"Executed by: \" + Thread.currentThread().getName());\n\n        Thread first = new Thread(task, \"Worker-run\");\n        Thread second = new Thread(task, \"Worker-start\");\n        first.run();\n        second.start();\n    }\n}",
+      "options": [
+        "Executed by: Worker-run, then Executed by: Worker-start, in either order",
+        "Executed by: main, then Executed by: Worker-start, always in this order",
+        "Executed by: Worker-run, then Executed by: Worker-start, always in this order",
+        "Executed by: main, then Executed by: main"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`first.run()` is an ordinary method call. It runs the task on the calling thread (main) and returns before the next line runs, so \"Executed by: main\" is printed before `second` is even started. `second.start()` creates a real thread named \"Worker-start\", which prints its own name. `first` is never started, so the name \"Worker-run\" never appears.",
+      "source": "notes p16-18; code: Demo4.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.html"
+    },
+    {
+      "id": "d48_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Thread vs Runnable",
+      "question": "Why is implementing `Runnable` usually preferred over extending `Thread` for application code?",
+      "codeSnippet": null,
+      "options": [
+        "It separates the task from the thread that runs it, and leaves the class free to extend another class",
+        "A `Runnable` lets a class inherit from several classes at once",
+        "A thread built from a `Runnable` gets higher scheduling priority than a `Thread` subclass",
+        "A `Runnable` task is automatically thread-safe, even when it has mutable fields"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Runnable` describes what work to do, and `Thread` (or an executor) decides which thread runs it. That makes the task reusable and easy to submit to thread pools. It also keeps the class's single superclass slot free. That does not mean interfaces give multiple class inheritance. Implementing `Runnable` has no effect on priority or thread safety.",
+      "source": "notes p6-10",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/runthread.html"
+    },
+    {
+      "id": "d48_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Thread vs Runnable",
+      "question": "A teammate writes `class CounterTask implements Runnable { private int count; public void run() { count++; } }`. They create ONE `CounterTask` object and pass it to `new Thread(task, \"W1\")` and `new Thread(task, \"W2\")`, expecting each thread to keep its own `count`. What actually happens?",
+      "codeSnippet": null,
+      "options": [
+        "Each `Thread` object makes its own copy of the task, so each one has a separate `count`",
+        "The second `new Thread(task, ...)` call throws, because a `Runnable` can belong to only one thread",
+        "Both threads update the same `count` field of the one shared task object, so updates can conflict",
+        "`count` is stored on each thread's stack because it is used inside `run()`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A `Thread` only stores a reference to the `Runnable` passed in. Both threads call `run()` on the same object, so they share its instance field `count`, which lives on the heap. Mutable fields in a shared task need synchronization, or each thread needs its own task object. Only local variables declared inside `run()` would be per-thread.",
+      "source": "notes p10-11, p15",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/runthread.html"
+    },
+    {
+      "id": "d48_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Thread lifecycle states",
+      "question": "A monitoring tool shows a thread in state `RUNNABLE`. What can you conclude?",
+      "codeSnippet": null,
+      "options": [
+        "It is executing on a CPU core at this exact instant",
+        "It is either running or ready to run, waiting only for CPU time",
+        "It has been created but `start()` has not been called yet",
+        "It is waiting to acquire a monitor held by another thread"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`Thread.State` has no separate RUNNING value. RUNNABLE covers both 'currently executing' and 'ready but waiting for the scheduler'. So RUNNABLE does not prove the thread is on a core right now. NEW means `start()` has not been called, and waiting for a monitor is BLOCKED.",
+      "source": "notes p22-23",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.State.html"
+    },
+    {
+      "id": "d48_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Thread lifecycle states",
+      "question": "A thread dump shows the `report-main` thread in state `WAITING`, stopped inside `Thread.join()` on a worker thread. A colleague says: \"Someone forgot to call `notify()` — add a `notifyAll()` and it will continue.\" What is the correct response?",
+      "codeSnippet": null,
+      "options": [
+        "Agree: every WAITING thread resumes only through `notify()` or `notifyAll()`",
+        "Agree: `join()` releases every lock the caller holds, so `notifyAll()` will let it reacquire them",
+        "Disagree: the thread is really BLOCKED, and the dump labels it WAITING by mistake",
+        "Disagree: `join()` returns when the target thread terminates (or the waiting thread is interrupted), so look at why the worker has not finished"
+      ],
+      "correctAnswer": 3,
+      "explanation": "WAITING has several causes, and the method that caused it decides what ends it. `Object.wait()` ends on notification, `join()` ends when the target terminates, and `park()` ends on `unpark()`. Calling `notifyAll()` does nothing for a thread waiting in `join()` on a worker that is still running. `join()` also does not release unrelated monitors the caller holds.",
+      "source": "notes p27-28",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.State.html"
+    },
+    {
+      "id": "d48_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Lock behaviour in waiting states",
+      "question": "`t1` is started first and reaches `lockB.wait()`. After that, `t2` is started. No code ever sets `ready` or calls `notify`. What happens to `t2`?",
+      "codeSnippet": "static final Object lockA = new Object();\nstatic final Object lockB = new Object();\nstatic boolean ready = false;\n\n// t1's task\nsynchronized (lockA) {\n    synchronized (lockB) {\n        while (!ready) {\n            lockB.wait();\n        }\n    }\n}\n\n// t2's task\nsynchronized (lockB) {\n    System.out.println(\"got B\");\n}\nsynchronized (lockA) {\n    System.out.println(\"got A\");\n}",
+      "options": [
+        "It prints \"got B\", then stays BLOCKED forever trying to enter `synchronized (lockA)`",
+        "It prints \"got B\" and \"got A\", because `wait()` releases every monitor `t1` holds",
+        "It prints nothing, because `t1` still holds `lockB` while waiting",
+        "It prints \"got A\" first, because `lockA` is outermost and is released first"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`lockB.wait()` releases only `lockB`'s monitor. `t1` keeps holding `lockA` while it waits, and the `while (!ready)` loop puts it straight back to waiting even after a spurious wakeup. So `t2` enters `synchronized (lockB)` and prints \"got B\". It then blocks on `lockA` forever. The belief that `wait()` releases all held locks is exactly the misconception the notes correct.",
+      "source": "notes p25-28 (lock-release comparison)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()"
+    },
+    {
+      "id": "d48_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Thread lifecycle states",
+      "question": "A unit test runs `Thread t = new Thread(() -> System.out.println(\"hi\")); t.start(); assertEquals(Thread.State.RUNNABLE, t.getState());`. It passes on a developer laptop but fails now and then on CI. What is the best explanation?",
+      "codeSnippet": null,
+      "options": [
+        "`start()` returns before the JVM has created the thread, so the state is often still NEW",
+        "On some machines a printing thread goes straight to BLOCKED, because `System.out` is synchronized",
+        "`getState()` is only a momentary snapshot; the tiny task may already have finished, so it can read TERMINATED",
+        "`getState()` may only be called from the thread being inspected, so the result is undefined"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Thread states are momentary snapshots and can change right after they are read. A task this short may finish before main calls `getState()`, so the result can be TERMINATED. It could also briefly be BLOCKED if it is contending for `System.out`'s lock. The NEW option is wrong because once `start()` has returned, the thread is no longer NEW. A test should not depend on scheduling timing like this.",
+      "source": "notes p34-35; code: Demo6.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.html#getState()"
+    },
+    {
+      "id": "d48_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Thread lifecycle states",
+      "question": "What does this program print? (`main` is declared `throws InterruptedException`.)",
+      "codeSnippet": "Thread worker = new Thread(() -> System.out.println(\"Done\"));\nSystem.out.println(worker.getState());\nworker.start();\nworker.join();\nSystem.out.println(worker.getState());\nworker.start();\nSystem.out.println(\"Restarted\");",
+      "options": [
+        "NEW, Done, TERMINATED, Done, Restarted",
+        "NEW, Done, RUNNABLE, then IllegalThreadStateException",
+        "RUNNABLE, Done, TERMINATED, Restarted",
+        "NEW, Done, TERMINATED, then an IllegalThreadStateException is thrown and \"Restarted\" is not printed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Before `start()` the state is NEW. `join()` waits until the worker finishes, so \"Done\" prints before the second state check, which reads TERMINATED. A `Thread` object can be started only once, so calling `start()` again on a terminated thread throws `IllegalThreadStateException` in main, and \"Restarted\" is never reached. To run the task again, create a new `Thread`.",
+      "source": "notes p20-21, p31-34; code: Demo4.java, Demo6.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.html#start()"
+    }
+  ]
+}

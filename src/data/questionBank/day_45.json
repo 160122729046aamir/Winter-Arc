@@ -1,0 +1,199 @@
+{
+  "day": 45,
+  "title": "Lecture #45: Java Memory Management Explained in Depth",
+  "sources": [
+    "notes.pdf (7 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Why memory management (leaks, OutOfMemoryError, StackOverflowError)",
+    "JVM memory areas (Heap, Method Area, Stack, PC, Native Method Stack)",
+    "Stack memory & frames",
+    "Heap memory & -Xms/-Xmx",
+    "Class loading & program start-up",
+    "GC eligibility (unreachable objects)"
+  ],
+  "questions": [
+    {
+      "id": "d45_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "JVM memory areas",
+      "question": "The notes divide JVM memory into areas that are \"thread shared\" and areas that are \"thread specific\". Which grouping is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Shared: Heap and Method Area. Per thread: Stack and Program Counter",
+        "Shared: Stack and Heap. Per thread: Method Area and Program Counter",
+        "Shared: Method Area and Program Counter. Per thread: Heap and Stack",
+        "All four areas are shared by every thread in the JVM"
+      ],
+      "correctAnswer": 0,
+      "explanation": "There is one heap (objects) and one method area (class metadata) per JVM, used by all threads. Each thread gets its own stack of frames and its own PC register, which points to the instruction that thread is executing. Putting the stack in the shared group is the usual mistake: each thread's method calls must be tracked separately.",
+      "source": "notes p2",
+      "reference": "https://www.artima.com/insidejvm/ed2/jvm2.html"
+    },
+    {
+      "id": "d45_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "JVM memory areas",
+      "question": "When `main` has run the three lines below, where does each piece live, according to the lecture's memory model?",
+      "codeSnippet": "class Student {\n    String name;\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        int x = 5;\n        Student s1 = new Student();\n        s1.name = \"Aditya\";\n    }\n}",
+      "options": [
+        "`x`, `s1` and the Student object are all inside main's stack frame; the class metadata is on the heap",
+        "`x` is on the stack; `s1` and the Student object are on the heap; the class metadata is on the stack",
+        "`x` and the reference `s1` are in main's stack frame; the Student object (with its `name` field) is on the heap; Student's class metadata and bytecode are in the Method Area",
+        "Everything is in the Method Area, because `main` is a static method"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Local variables, including reference variables, live in the current method's stack frame. Objects created with `new`, together with their instance fields, live on the heap. Class-level blueprints (metadata, method bytecode) are kept in the Method Area. A common confusion is to put `s1` on the heap: only the object it points to is there.",
+      "source": "notes p3-p4, p6",
+      "reference": "https://howtodoinjava.com/java/garbage-collection/java-memory-model/"
+    },
+    {
+      "id": "d45_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Stack memory & frames",
+      "question": "What happens when this program runs?",
+      "codeSnippet": "public class Recurse {\n    static void f1() {\n        f1();\n    }\n\n    public static void main(String[] args) {\n        f1();\n    }\n}",
+      "options": [
+        "It fails with `OutOfMemoryError: Java heap space`, because each call allocates on the heap",
+        "It fails with `StackOverflowError`, because each call pushes a new frame onto the thread's stack and there is no base case to pop them",
+        "It runs forever, because the JVM reuses the same frame for the recursive call",
+        "It does not compile, because a method cannot call itself without a return value"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Every method call gets a new stack frame. Unbounded recursion keeps pushing frames until the thread's fixed-size stack is full, and the JVM throws StackOverflowError, the \"common\" case named in the notes. No objects are allocated here, so the heap is not involved, and the JVM does not reuse frames for recursive calls.",
+      "source": "notes p5",
+      "reference": "https://www.artima.com/insidejvm/ed2/jvm2.html"
+    },
+    {
+      "id": "d45_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Heap memory & -Xms/-Xmx",
+      "question": "The lecture's Demo.java is run with `java -Xmx64m Demo`. What is the outcome?",
+      "codeSnippet": "import java.util.*;\n\npublic class Demo {\n    public static void main(String[] args) {\n        List<int[]> list = new ArrayList<>();\n        int count = 0;\n\n        while (true) {\n            list.add(new int[250000]); // about 1 MB each\n            count++;\n            System.out.println(\"Allocated Block :\" + count);\n        }\n    }\n}",
+      "options": [
+        "It runs forever, because the GC frees each 1 MB block after it is printed",
+        "It throws `StackOverflowError` after a few blocks, because the `while` loop grows the stack",
+        "It stops after exactly 64 blocks and exits normally with no error",
+        "It prints a number of \"Allocated Block\" lines, then fails with `OutOfMemoryError: Java heap space`, because every array stays reachable through `list`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Each `int[250000]` is about 1 MB on the heap, and `list` keeps a reference to every one, so none of them is eligible for garbage collection. Once the 64 MB maximum heap set by `-Xmx` is exhausted, the JVM throws OutOfMemoryError. A loop does not add stack frames, and the GC can only free objects that are no longer referenced.",
+      "source": "code: Demo.java, notes p2, p6",
+      "reference": "https://howtodoinjava.com/java/garbage-collection/java-memory-model/"
+    },
+    {
+      "id": "d45_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Stack memory & frames",
+      "question": "In the notes' example, `main` calls `int result = add(a, 20);`, and `add(int x, int y)` computes `int sum = x + y; return sum;`. What happens to `x`, `y` and `sum` when `add` returns?",
+      "codeSnippet": null,
+      "options": [
+        "add's frame is popped off the stack (LIFO), so its locals disappear immediately; only the returned value 30 is stored in `result` in main's frame",
+        "They stay on the stack until the garbage collector runs and removes them",
+        "They are moved to the heap, so that `main` can still read them later",
+        "They remain in add's frame until `main` returns, because frames are released only when the program ends"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Stack memory grows and shrinks automatically: a frame holding a method's parameters, locals and return address is pushed on call and popped on return. No GC is involved for stack frames; the garbage collector manages heap objects. The return value is copied into the caller's variable before the frame goes away.",
+      "source": "notes p4-p5",
+      "reference": "https://www.artima.com/insidejvm/ed2/jvm2.html"
+    },
+    {
+      "id": "d45_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Why memory management",
+      "question": "A service keeps `static List<Student> list = new ArrayList<>();` and adds every Student it processes, but never removes them. After a few days its memory use keeps climbing and it finally crashes. What is happening?",
+      "codeSnippet": null,
+      "options": [
+        "A StackOverflowError, because a static list is stored on the stack",
+        "Nothing serious: the GC will eventually free old Students, because they are no longer used",
+        "A memory leak: every Student is still reachable through the static list, so the GC can never reclaim it, and the heap fills until OutOfMemoryError",
+        "The Method Area fills up, because each Student object is stored as class metadata"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The GC only frees objects that are unreachable. A long-lived static collection keeps references to objects the program no longer needs, which is the memory leak shown in the notes, so performance degrades and the program eventually hits OutOfMemoryError. \"No longer used\" does not mean unreachable, and that difference is the trap.",
+      "source": "notes p2",
+      "reference": "https://howtodoinjava.com/java/garbage-collection/java-memory-model/"
+    },
+    {
+      "id": "d45_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Heap memory & -Xms/-Xmx",
+      "question": "An app started with `java -Xms256m -Xmx512m App` throws `OutOfMemoryError: Java heap space` under peak load. After confirming there is no leak, you want to let the heap grow to 2 GB. Which change does that?",
+      "codeSnippet": null,
+      "options": [
+        "Change `-Xms256m` to `-Xms2g`, because `-Xms` sets the maximum heap",
+        "Change `-Xmx512m` to `-Xmx2g`, because `-Xmx` sets the maximum heap size",
+        "Add `-Xss2g`, because a bigger stack also gives objects more room",
+        "Drop both flags, because without them the heap can grow without any limit"
+      ],
+      "correctAnswer": 1,
+      "explanation": "As the notes say, `-Xms` is the initial (minimum) heap and `-Xmx` is the maximum, so raising `-Xmx` lets the heap grow further. Raising only `-Xms` would change the starting size but not the 512 MB limit. `-Xss` controls per-thread stack size, not the heap, and the JVM always has a default maximum heap.",
+      "source": "notes p6",
+      "reference": "https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html#jvms-2.5"
+    },
+    {
+      "id": "d45_q8",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "GC eligibility (unreachable objects)",
+      "question": "Following the notes' `class A { B b; }` and `class B { C c; }` example: `A a = new A(); a.b = new B(); a.b.c = new C(); a = null;`. After the last statement, which objects are eligible for garbage collection?",
+      "codeSnippet": null,
+      "options": [
+        "Only the A object, because B and C are still referenced by other objects",
+        "None of them, because B and C still hold references, so the chain stays alive",
+        "Only the C object, because it is at the end of the chain",
+        "All three (A, B and C), because none of them can be reached from any live reference such as a stack variable"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Eligibility depends on reachability from roots such as local variables on the stack, not on whether any reference to the object exists. Once `a` is null, nothing reachable points to A, so B (referenced only by A) and C (referenced only by B) are unreachable too, and the whole chain can be collected. Being referenced by another unreachable object does not keep an object alive.",
+      "source": "notes p7",
+      "reference": "https://howtodoinjava.com/java/garbage-collection/java-memory-model/"
+    },
+    {
+      "id": "d45_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "JVM memory areas",
+      "question": "Two threads run the same method at the same time. Inside it, `int localCount = 0;` is incremented 1,000 times, and so is a field `shared.count` on one `Counter` object that both threads hold. Why does `localCount` always end at 1,000 in each thread while `shared.count` can end below 2,000?",
+      "codeSnippet": null,
+      "options": [
+        "Each thread has its own stack, so each call gets a private `localCount` in its own frame, while the Counter object lives on the shared heap and both threads update the same field",
+        "Primitive variables are atomic in Java, while fields of objects are not",
+        "`localCount` lives in the Method Area, which locks automatically, while the heap does not",
+        "The PC register serialises local variables but not object fields"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Stack memory is thread-specific: each invocation has its own frame and its own copy of local variables, so there is nothing to race on. The heap is shared, so unsynchronised increments of the same field can overwrite each other. `count++` is not atomic even for a primitive, so \"primitives are atomic\" is a misconception.",
+      "source": "notes p2, p4",
+      "reference": "https://www.artima.com/insidejvm/ed2/jvm2.html"
+    },
+    {
+      "id": "d45_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Class loading & program start-up",
+      "question": "For `java Demo`, where `main` contains `int x = 5; Student s1 = new Student(); s1.name = \"Aditya\";`, which order of events matches the lecture's walkthrough?",
+      "codeSnippet": null,
+      "options": [
+        "The main thread creates its stack, the Student object is allocated, and only then does the class loader read Demo.class",
+        "Demo.class is loaded lazily after `main` finishes, and the Student object is created at compile time",
+        "The JVM starts; the class loader reads Demo.class bytecode and creates the Method Area entry; the main thread is created with its own stack and PC; main's frame is pushed; `new Student()` allocates the object on the heap",
+        "The heap is created per thread first, then Demo.class is copied into the main thread's stack"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes number the steps: JVM start, then class loading (find Demo.class, read the bytecode, create the Method Area entry), then the main thread is created with its stack and PC. Only when main executes does its frame get `x` and `s1`, and `new` puts the Student object on the heap. Code cannot run before its class is loaded, which rules out the first option.",
+      "source": "notes p4",
+      "reference": "https://www.freecodecamp.org/news/jvm-tutorial-java-virtual-machine-architecture-explained-for-beginners/"
+    }
+  ]
+}

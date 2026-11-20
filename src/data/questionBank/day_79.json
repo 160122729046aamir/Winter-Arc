@@ -1,0 +1,202 @@
+{
+  "day": 79,
+  "title": "Spring Lecture #22: Spring AOP",
+  "sources": [
+    "notes/Notes.pdf (25 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/aopIntroductionDemo/service/ExecutionTimeService.java",
+    "code/aopIntroductionDemo/service/LoggingDecorator.java",
+    "code/aopIntroductionDemo/service/LoggingServiceUtil.java",
+    "code/aopIntroductionDemo/service/StudentServiceImpl.java",
+    "code/aopIntroductionDemo/controller/StudentController.java"
+  ],
+  "topics": [
+    "Cross-cutting concerns",
+    "Scattering & tangling",
+    "Utility / inheritance / wrapper attempts",
+    "Advice, pointcut & advice type",
+    "Target & proxy"
+  ],
+  "questions": [
+    {
+      "id": "d79_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Cross-cutting concerns",
+      "question": "Which of these requirements is a cross-cutting concern?",
+      "codeSnippet": null,
+      "options": [
+        "Calculating the discount for an order based on the customer's loyalty tier",
+        "Deciding which fields are mandatory when a new student is created",
+        "Recording the start, end and failure of method calls in the student, order and payment services",
+        "Computing the refund amount when a payment is cancelled"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A concern is cross-cutting when the same kind of behaviour is needed across many unrelated modules. Method-execution logging applies to student, order and payment services alike. The other options are business rules that belong to a single domain (orders, students, payments).",
+      "source": "notes p3-6",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html"
+    },
+    {
+      "id": "d79_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Advice, pointcut & advice type",
+      "question": "In the lecture's \"what / where / when\" model of AOP, the rule \"apply only to methods annotated with `@TrackExecutionTime`\" is an example of which concept?",
+      "codeSnippet": null,
+      "options": [
+        "Pointcut: it selects WHERE the extra behaviour applies",
+        "Advice: it describes WHAT extra action runs",
+        "Advice type: it decides WHEN the action runs relative to the method",
+        "Target: it is the real object holding the business logic"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A pointcut is the rule that selects which method executions are affected (the 'where'). The advice is the action itself, such as measuring time (the 'what'). The advice type (before, after, around…) is the 'when'. The target is the advised bean, not a selection rule.",
+      "source": "notes p19-20",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html"
+    },
+    {
+      "id": "d79_q3",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Scattering & tangling",
+      "question": "Two complaints come up in a code review. (A) \"Changing the log format means editing about 100 methods across 20 services.\" (B) \"`processPayment()` mixes logging, permission checks, timing and auditing around one line of real payment logic.\" Which labels are correct?",
+      "codeSnippet": null,
+      "options": [
+        "(A) is tangling and (B) is scattering",
+        "Both are scattering, because the same logging code appears in many places",
+        "Both are tangling, because business and infrastructure code are mixed",
+        "(A) is scattering and (B) is tangling"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Scattering means one concern's code is spread across many locations, so a policy change touches many classes (A). Tangling means one method contains code from several unrelated concerns, which hides its business intent (B). They are two different problems that cross-cutting code usually causes together.",
+      "source": "notes p6-9",
+      "reference": null
+    },
+    {
+      "id": "d79_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Utility / inheritance / wrapper attempts",
+      "question": "A teammate says: \"We moved all logging into `LoggingServiceUtil.logStart()` and `logEnd()`, so the cross-cutting problem is solved.\" What problem still remains?",
+      "codeSnippet": null,
+      "options": [
+        "Static utility methods cannot be called from Spring beans, so logging will not run at all",
+        "Every business method must still call the utility, so WHERE and WHEN logging applies stays scattered and can be forgotten or applied inconsistently",
+        "The logging implementation is now duplicated in every class that calls the utility",
+        "The utility makes each service method run twice, once for logging and once for the business logic"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A utility centralises WHAT the concern does, but the invocation stays in every method. Developers must remember `logStart`/`logEnd` (and the try/catch for failures), which keeps the code scattered and error-prone. The implementation itself is not duplicated, and static methods are perfectly callable from beans.",
+      "source": "notes p10-11; code: LoggingServiceUtil.java",
+      "reference": null
+    },
+    {
+      "id": "d79_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Utility / inheritance / wrapper attempts",
+      "question": "In the lecture project, `StudentController` gets a `StudentService` injected and calls `createStudent(student)`. The beans are wired as shown. What is printed (ignoring the exact millisecond value)?",
+      "codeSnippet": "@Component @Primary\npublic class ExecutionTimeService implements StudentService {\n    private LoggingDecorator loggingDecorator;   // injected\n    public void createStudent(Student student) {\n        long start = System.currentTimeMillis();\n        loggingDecorator.createStudent(student);\n        long end = System.currentTimeMillis();\n        System.out.println(end - start);\n    }\n}\n\n@Component\npublic class LoggingDecorator implements StudentService {\n    private StudentServiceImpl studentServiceimpl; // injected\n    public void createStudent(Student student) {\n        LoggingServiceUtil.logStart(\"StudentServiceImpl\", \"createStudent\"); // prints \"Executing -> StudentServiceImpl : createStudent\"\n        studentServiceimpl.createStudent(student);                   // repository prints \"Student saved\"\n        LoggingServiceUtil.logEnd(\"StudentServiceImpl\", \"createStudent\");   // prints \"Finishing -> StudentServiceImpl : createStudent\"\n    }\n}",
+      "options": [
+        "Executing -> ..., Student saved, Finishing -> ..., then the elapsed time",
+        "The elapsed time, then Executing -> ..., Student saved, Finishing -> ...",
+        "Student saved only, because the controller is injected with `StudentServiceImpl`",
+        "Executing -> ..., Finishing -> ..., Student saved, then the elapsed time"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`@Primary` makes Spring inject `ExecutionTimeService` (the outermost wrapper) into the controller. It starts the timer and delegates to `LoggingDecorator`, which logs start, calls the real `StudentServiceImpl` (\"Student saved\"), and logs finish. Control then returns and the elapsed time is printed last. This is the manual wrapper chain that Spring AOP later automates.",
+      "source": "code: ExecutionTimeService.java, LoggingDecorator.java, StudentServiceImpl.java",
+      "reference": null
+    },
+    {
+      "id": "d79_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Utility / inheritance / wrapper attempts",
+      "question": "Why does putting `logStart()`/`logEnd()` in an abstract `BaseService` that all services extend NOT solve the cross-cutting problem?",
+      "codeSnippet": null,
+      "options": [
+        "Protected methods in an abstract class cannot be called by subclasses in another package",
+        "Spring cannot create beans for classes that extend an abstract class",
+        "Inheritance only shares the code; each method must still call it manually, and Java's single inheritance forces unrelated services into one artificial hierarchy",
+        "Subclasses would execute the base-class logging automatically before every method, so it would run twice"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A base class gives subclasses access to shared methods but never runs them automatically around selected methods, so the calls stay scattered. It also uses up Java's single superclass slot and tends to grow into a bloated class mixing logging, security and so on. Protected members are accessible to subclasses in any package, and Spring handles such beans fine.",
+      "source": "notes p11-12",
+      "reference": null
+    },
+    {
+      "id": "d79_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Utility / inheritance / wrapper attempts",
+      "question": "In the lecture project, someone deletes the `@Primary` annotation from `ExecutionTimeService`. Nothing else changes. What happens when the application starts?",
+      "codeSnippet": "public interface StudentService { void createStudent(Student s); }\n\n@Component            // @Primary removed\npublic class ExecutionTimeService implements StudentService { /* needs LoggingDecorator */ }\n\n@Component\npublic class LoggingDecorator implements StudentService { /* needs StudentServiceImpl */ }\n\n@Service\npublic class StudentServiceImpl implements StudentService { /* needs StudentRepository */ }\n\n@RestController\npublic class StudentController {\n    public StudentController(StudentService studentService) { ... }\n}",
+      "options": [
+        "It starts and injects `StudentServiceImpl`, because `@Service` beans are preferred over `@Component` beans",
+        "Startup fails: three beans implement `StudentService` and none is primary or matches the parameter name, so the controller's dependency is ambiguous (`NoUniqueBeanDefinitionException`)",
+        "It starts and injects whichever implementation was scanned first",
+        "Startup fails because `LoggingDecorator` cannot be injected with the concrete `StudentServiceImpl` type"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The controller asks for `StudentService`, and three candidates exist: `executionTimeService`, `loggingDecorator` and `studentServiceImpl`. Without `@Primary` (or `@Qualifier`, or a matching parameter name) Spring cannot choose and fails with `NoUniqueBeanDefinitionException`. Spring never prefers `@Service` over `@Component` or picks the first scanned bean, and injecting by a concrete class type is fine because only one bean has that type.",
+      "source": "code: ExecutionTimeService.java, LoggingDecorator.java, StudentController.java",
+      "reference": null
+    },
+    {
+      "id": "d79_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Utility / inheritance / wrapper attempts",
+      "question": "What does this manual-wrapper program print?",
+      "codeSnippet": "interface StudentOperations {\n    String createStudent(String name);\n}\n\nclass LoggingStudentService implements StudentOperations {\n    private final StudentOperations target;\n    LoggingStudentService(StudentOperations target) { this.target = target; }\n\n    public String createStudent(String name) {\n        System.out.println(\"Method started\");\n        try {\n            return target.createStudent(name);\n        } finally {\n            System.out.println(\"Method finished\");\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        StudentOperations real = name -> { throw new IllegalStateException(\"DB down\"); };\n        StudentOperations ops = new LoggingStudentService(real);\n        try {\n            System.out.println(ops.createStudent(\"Aditya\"));\n            System.out.println(\"Saved\");\n        } catch (IllegalStateException e) {\n            System.out.println(\"Caught: \" + e.getMessage());\n        }\n    }\n}",
+      "options": [
+        "Method started\nCaught: DB down",
+        "Method started\nMethod finished\nSaved",
+        "Caught: DB down\nMethod finished",
+        "Method started\nMethod finished\nCaught: DB down"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The wrapper prints \"Method started\", then delegates to the target, which throws. The `finally` block still runs (\"Method finished\") before the exception propagates to `main`, where it is caught. Neither the println of the result nor \"Saved\" runs. This before/delegate/after shape is exactly what an AOP proxy automates.",
+      "source": "notes p12-14",
+      "reference": null
+    },
+    {
+      "id": "d79_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Target & proxy",
+      "question": "A logging aspect correctly logs `StudentService.createStudent()` when called from the controller. In a unit-style helper, a developer writes `StudentService s = new StudentService(repo); s.createStudent(st);` and no log appears. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Spring AOP works by handing callers a Spring-created proxy around a Spring-managed bean; an object built with `new` is the plain target, so nothing intercepts the call",
+        "Aspects only run for methods called from a `@RestController`",
+        "The aspect is applied lazily, and the first call to any bean is never advised",
+        "Calling the constructor directly removes the pointcut annotation from the class at runtime"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Advice runs because the caller holds a proxy that Spring created and injected; the proxy runs the advice and delegates to the real target. `new StudentService(...)` bypasses the IoC container, so the caller has the raw target and no proxy is involved. Being called from a controller has nothing to do with it; what matters is whether the call goes through the proxy.",
+      "source": "notes p21-22",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html"
+    },
+    {
+      "id": "d79_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Utility / inheritance / wrapper attempts",
+      "question": "Your app has three unrelated service interfaces (`StudentOperations`, `OrderOperations`, `PaymentOperations`), and each needs security, logging, timing and auditing. Using only hand-written, interface-specific decorators like the lecture's `LoggingStudentService`, how many wrapper classes do you need, and what does AOP change?",
+      "codeSnippet": null,
+      "options": [
+        "4 wrappers (one per concern); AOP only removes the need to order them",
+        "3 wrappers (one per interface); AOP removes the need for interfaces",
+        "12 wrappers (4 concerns x 3 interfaces), each assembled in the right order by hand; with AOP each concern is one aspect whose pointcut selects the methods",
+        "7 wrappers (4 + 3); AOP merges them into a single proxy class written by the developer"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A decorator implements one specific interface, so `LoggingStudentService` cannot wrap `OrderOperations`. Each concern needs a wrapper per interface (4 x 3 = 12), plus manual nesting and injection of the outermost layer. AOP keeps each concern in one aspect, uses pointcuts to choose the methods, and lets Spring generate and integrate the proxies.",
+      "source": "notes p14-16, p22",
+      "reference": null
+    }
+  ]
+}

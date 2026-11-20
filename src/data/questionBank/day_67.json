@@ -1,0 +1,202 @@
+{
+  "day": 67,
+  "title": "Spring Lecture #10: Spring Boot application properties, @Value & Runner Interface",
+  "sources": [
+    "Notes.pdf (21 pages)",
+    "code/demo/pom.xml",
+    "code/demo/src/main/java/in/strikes/demo/DemoApplication.java",
+    "code/demo/src/main/java/in/strikes/demo/DemoRunner.java",
+    "code/demo/src/main/java/in/strikes/demo/PaymentGateway.java",
+    "code/demo/src/main/java/in/strikes/demo/PaymentProperties.java",
+    "code/demo/src/main/resources/application.properties"
+  ],
+  "topics": [
+    "Externalized configuration",
+    "@Value injection & defaults",
+    "@ConfigurationProperties & relaxed binding",
+    "CommandLineRunner vs ApplicationRunner",
+    "Startup flow"
+  ],
+  "questions": [
+    {
+      "id": "d67_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Externalized configuration",
+      "question": "`PaymentService` has `private String providerName = \"Razorpay\";` hardcoded. What is the main benefit of moving this value to `payment.provider=Razorpay` in configuration and injecting it?",
+      "codeSnippet": null,
+      "options": [
+        "The value is checked by the compiler, so a typo in the provider name is caught at build time",
+        "The value can change per environment or over time without editing the Java business logic",
+        "Spring Boot caches configuration values, so reading the provider becomes faster than a field",
+        "The value becomes a constant that no other bean can read, improving encapsulation"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Externalized configuration keeps changeable values (provider, retry count, URLs, keys) out of the Java code, so dev and prod can use different values with the same code. It does not give compile-time checking: property keys and values are plain text resolved at runtime, so a typo surfaces only at startup or later.",
+      "source": "notes p1-p4",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d67_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@Value injection & defaults",
+      "question": "A bean has `@Value(\"${payment.provider:DefaultProvider}\") private String providerName;` and `application.properties` contains no `payment.provider` key at all. What happens at startup?",
+      "codeSnippet": null,
+      "options": [
+        "Startup fails because the placeholder `payment.provider` cannot be resolved",
+        "`providerName` is set to `null` because the key is missing",
+        "`providerName` is set to the literal text `${payment.provider:DefaultProvider}`",
+        "`providerName` is set to `DefaultProvider`, the value after the colon"
+      ],
+      "correctAnswer": 3,
+      "explanation": "In `${key:default}` the part after the colon is the fallback used when the key is not found in the Environment, so the field gets `DefaultProvider`. Startup failure is what happens when there is no default and the key is missing; the colon syntax exists exactly to avoid that.",
+      "source": "notes p6",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d67_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "@ConfigurationProperties & relaxed binding",
+      "question": "Your service needs `payment.provider`, `payment.retry-count`, `payment.enabled` and `payment.timeout`, and a teammate injected each one with a separate `@Value` field. More payment keys are coming. Following the lecture, what is the cleaner design?",
+      "codeSnippet": null,
+      "options": [
+        "Create one class annotated with `@ConfigurationProperties(prefix = \"payment\")` that has fields and setters for the group, and inject that object",
+        "Keep `@Value` but move all fields into the main class annotated with `@SpringBootApplication`",
+        "Read the file manually with `new FileInputStream(\"application.properties\")` inside the service constructor",
+        "Replace the keys with one comma-separated `payment.all=...` key and split it with a single `@Value`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`@ConfigurationProperties` binds a whole group of keys sharing a prefix onto one typed object, which is cleaner than many repeated `@Value` annotations. Moving `@Value` fields to the main class does not remove the repetition, and manually reading the file bypasses Spring's Environment (and stops working once the file sits inside a JAR).",
+      "source": "notes p7-p10; code: PaymentProperties.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d67_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "@ConfigurationProperties & relaxed binding",
+      "question": "The lecture's `PaymentProperties` (prefix `payment-property`, fields `type`, `retryCount`, `enabled`, `timeout` with getters/setters) is bound from the properties below. Note that the timeout line was deleted. What does `PaymentGateway.print()` output?",
+      "codeSnippet": "# application.properties\npayment-property.type=paytm\npayment-property.retry-count=5\npayment-property.enabled=true\n\n// PaymentGateway\npublic void print() {\n    System.out.println(getType());\n    System.out.println(getRetryCount());\n    System.out.println(isEnabled());\n    System.out.println(getTimeout());\n}",
+      "options": [
+        "The application fails to start because `payment-property.timeout` is missing",
+        "paytm, 5, true, null",
+        "paytm, 5, true, 0",
+        "paytm, 0, true, 0 (because `retry-count` does not match `retryCount`)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`@ConfigurationProperties` only calls setters for keys that exist; a missing key leaves the field at its Java default, which is 0 for an `int`. `retry-count` binds to `retryCount` through relaxed binding, so 5 is printed. Unlike `@Value` without a default, a missing key in a properties class does not fail startup, and an `int` can never print `null`.",
+      "source": "code: PaymentProperties.java, PaymentGateway.java, application.properties",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d67_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "@Value injection & defaults",
+      "question": "`PaymentService` has a constructor parameter `@Value(\"${payment.provider}\") String providerName`. During cleanup, someone deletes the `payment.provider` line from `application.properties` and nothing else supplies it. What do you observe?",
+      "codeSnippet": null,
+      "options": [
+        "The app starts and `providerName` is an empty string",
+        "The app fails during startup with an error that the placeholder `payment.provider` could not be resolved",
+        "The app starts, but the first call to `pay()` throws a `NullPointerException`",
+        "The app starts and Spring injects the bean's parameter name, `providerName`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A required `${...}` placeholder with no value and no default cannot be resolved, so creating the bean fails and the context does not start. The failure happens at startup, not lazily on the first `pay()` call; to make the key optional you would write `${payment.provider:SomeDefault}`.",
+      "source": "notes p6",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d67_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "CommandLineRunner vs ApplicationRunner",
+      "question": "The app is started with `java -jar app.jar --provider=Razorpay --retry=3`. What does this `ApplicationRunner` print on its first line?",
+      "codeSnippet": "@Component\npublic class AppStartupRunner implements ApplicationRunner {\n    @Override\n    public void run(ApplicationArguments args) {\n        System.out.println(args.getOptionValues(\"provider\"));\n        System.out.println(args.getNonOptionArgs());\n    }\n}",
+      "options": [
+        "[Razorpay] (a List)",
+        "Razorpay (a single String)",
+        "--provider=Razorpay",
+        "null"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`ApplicationArguments` parses `--name=value` arguments as options, and `getOptionValues(\"provider\")` returns a `List<String>`, so printing it shows `[Razorpay]`. It is a list (not a single String) because an option may be given several times; the raw `--provider=Razorpay` text is what a `CommandLineRunner` would see instead.",
+      "source": "notes p17-p18; code: DemoRunner.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/spring-application.html"
+    },
+    {
+      "id": "d67_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Externalized configuration",
+      "question": "The JAR is already built with `payment.provider=Razorpay` in `src/main/resources/application.properties`. Operations must switch production to Stripe today without rebuilding. Which approach works?",
+      "codeSnippet": null,
+      "options": [
+        "Edit `src/main/resources/application.properties` on the server; the running JAR reads the source folder",
+        "Rename the JAR so Spring Boot re-scans resources on the next start",
+        "Change the `@Value` default to Stripe in the deployed class file",
+        "Start the JAR with `--payment.provider=Stripe` (or an environment variable), since external sources override the packaged file"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A file in `src/main/resources` is packaged inside the JAR, so editing the source copy needs a rebuild. Spring Boot's externalized configuration lets command-line arguments, environment variables or external config files override the packaged values, and command-line arguments take precedence over file-based sources.",
+      "source": "notes p3-p4",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d67_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "CommandLineRunner vs ApplicationRunner",
+      "question": "The app is started with `java -jar app.jar hello --retry=3 world`. What does this runner print?",
+      "codeSnippet": "@Component\npublic class AppRunner implements CommandLineRunner {\n    @Override\n    public void run(String... args) {\n        for (String arg : args) {\n            System.out.println(arg);\n        }\n    }\n}",
+      "options": [
+        "hello\nworld",
+        "hello world --retry=3",
+        "hello\n--retry=3\nworld",
+        "retry=3"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`CommandLineRunner` receives the raw `String[]` passed to `SpringApplication.run`, in the original order and without any parsing, so the option text `--retry=3` is printed as-is between the other two. Separating options from non-option arguments is what `ApplicationRunner`'s `ApplicationArguments` does, not `CommandLineRunner`.",
+      "source": "notes p16-p17",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/spring-application.html"
+    },
+    {
+      "id": "d67_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@Value injection & defaults",
+      "question": "`application.properties` has `payment.retry-count=3`. A teammate, knowing that `@ConfigurationProperties` maps `retry-count` to `retryCount`, writes `@Value(\"${payment.retryCount}\") private int retryCount;` with no default. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It injects 3, because relaxed binding treats `retryCount` and `retry-count` as the same key everywhere",
+        "Startup fails: `@Value` should reference the canonical kebab-case name `${payment.retry-count}`; the camelCase placeholder does not match the kebab-case key",
+        "It injects 0, the default value of an `int` field when a key is not found",
+        "It injects 3 only if the class is also annotated with `@ConfigurationProperties`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Spring Boot docs say `@Value` placeholders should use the canonical kebab-case form: `${demo.item-price}` also matches `demo.itemPrice`, but `${demo.itemPrice}` does not match `demo.item-price`. So `${payment.retryCount}` is unresolved and, with no default, startup fails. Full relaxed binding is a `@ConfigurationProperties` feature, and `@Value` never falls back to an `int` default of 0.",
+      "source": "notes p11-p12",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d67_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Startup flow",
+      "question": "In the lecture's startup flow, when exactly does `DemoRunner.run()` (a `CommandLineRunner`) execute relative to the rest of `SpringApplication.run()`?",
+      "codeSnippet": null,
+      "options": [
+        "After the context is created, beans are instantiated, dependencies injected and properties bound, just before `SpringApplication.run()` returns",
+        "Before component scanning, so the runner can prepare configuration values for other beans",
+        "In parallel with bean creation on a separate thread, so `PaymentGateway` may still be null",
+        "Only when the first HTTP request reaches the application, because runners are triggered by the web server"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Runners are called at the very end of startup, once all singleton beans are ready and `@Value`/`@ConfigurationProperties` values are injected, which is why `DemoRunner` can safely call `paymentGateway.print()`. They run synchronously on the main thread, not in parallel, and need no web request; the lecture's app has no web starter at all.",
+      "source": "notes p13-p20; code: DemoRunner.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/spring-application.html"
+    }
+  ]
+}

@@ -28,6 +28,7 @@ import PausedBanner from '../components/dashboard/PausedBanner';
 import PauseModal from '../components/common/PauseModal';
 import ProgressBar from '../components/common/ProgressBar';
 import { formatDate, formatDateWithDay } from '../utils/dateUtils';
+import { QUESTION_BANK_BY_DAY, TOTAL_QUESTIONS } from '../data/questionBankData';
 
 export default function Dashboard() {
   const {
@@ -115,13 +116,13 @@ export default function Dashboard() {
             <div className="flex flex-col items-end px-2">
               <span className="text-[10px] uppercase font-semibold text-slate-400">Current Phase</span>
               <span className="text-xs font-bold text-cyan-400">
-                {currentChallengeDay <= 25 ? 'Phase 1: Core Java' : currentChallengeDay <= 55 ? 'Phase 2: Spring Boot' : 'Phase 3: Revision'}
+                {(days.find((d) => d.day === currentChallengeDay)?.phase || 'Phase 1: Core Java Mastery').replace(/ Mastery$/, '')}
               </span>
             </div>
             <button
               onClick={() => navigate('/plan')}
               className="p-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors"
-              title="View full 90-day roadmap"
+              title="View full roadmap"
             >
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
@@ -170,7 +171,7 @@ export default function Dashboard() {
           subtext={`${stats.totalQuestionsAttempted} attempted (${stats.overallQuizAccuracy}% acc)`}
           icon={HelpCircle}
           color="emerald"
-          badge="25 Qs / Day"
+          badge="10 Qs / Day"
         />
 
         <StatCard
@@ -198,7 +199,7 @@ export default function Dashboard() {
               </span>
             </div>
             <p className="text-xs text-slate-400 mb-4">
-              Real-time accuracy across all 2,425 questions (25/day) categorized by difficulty:
+              Accuracy across the {TOTAL_QUESTIONS.toLocaleString()} lecture questions you have answered, by difficulty:
             </p>
 
             <div className="space-y-3.5">
@@ -379,7 +380,7 @@ export default function Dashboard() {
                     <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-2 font-mono">
                       <span>{upDay.videos?.length || 0} video</span>
                       <span>•</span>
-                      <span>25 questions quiz</span>
+                      <span>{QUESTION_BANK_BY_DAY[upDay.day]?.totalQuestions || 0} question quiz</span>
                     </div>
                   </div>
                 );

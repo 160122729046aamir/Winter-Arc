@@ -1,0 +1,202 @@
+{
+  "day": 95,
+  "title": "Spring Lecture #38: JWT Authentication & Stateless Security",
+  "sources": [
+    "notes/Notes.pdf (44 pages)",
+    "notes/Excalidraw-Notes.pdf (7 pages)",
+    "code/springPracticalDemo (SecurityConfig, JwtService, AuthController, UserController, application.properties)"
+  ],
+  "topics": [
+    "Session vs JWT authentication",
+    "JWT structure & Base64URL",
+    "Signature: integrity & authenticity",
+    "HS256 vs RS256",
+    "JwtEncoder & JwtDecoder",
+    "JWT claim validation",
+    "JwtAuthenticationConverter & authorities",
+    "SessionCreationPolicy.STATELESS",
+    "Two authentication providers"
+  ],
+  "questions": [
+    {
+      "id": "d95_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "JWT structure & Base64URL",
+      "question": "A developer wants to put the user's phone number and a third-party API key in the JWT payload because \"the token is encoded, so nobody can read it\". What is wrong with this reasoning?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing, as long as the token is signed with HS256",
+        "Only the API key is a problem, because JWT payloads may only contain strings",
+        "The payload is encrypted with the secret key, but the key is stored in `application.properties`, so it may leak",
+        "Base64URL is encoding, not encryption: anyone holding a signed JWT can decode and read its header and payload without any key"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Header and payload are only Base64URL-encoded so the token is a compact, URL-safe string; decoding requires no secret. The signature protects against modification, not against reading. Sensitive data such as passwords, API keys or private personal information should not go into a normal signed JWT.",
+      "source": "notes p9-10, p13 (Base64URL is encoding, not encryption; custom claims)",
+      "reference": null
+    },
+    {
+      "id": "d95_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Signature: integrity & authenticity",
+      "question": "A user decodes their token `A.B.C`, changes `\"authorities\":[\"ROLE_USER\"]` to `[\"ROLE_ADMIN\"]`, re-encodes the payload as `B2` and sends `A.B2.C` to the lecture API. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "The request is accepted as ADMIN, because the header `A` is unchanged",
+        "The token is rejected: the signature `C` was computed over `A.B`, so verification of `A.B2` with the server's secret fails",
+        "The server re-signs the token with the new payload and accepts it",
+        "The request is accepted as USER, because the server ignores the modified claim"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The signature covers both the encoded header and payload. Changing the payload changes the signing input, and without the secret the attacker cannot compute a matching HMAC, so `JwtDecoder` rejects the token and the request is unauthenticated. The signature does not stop editing; it makes unauthorized edits detectable.",
+      "source": "notes p15-20 (What happens if the payload changes, tampering experiment)",
+      "reference": null
+    },
+    {
+      "id": "d95_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "JwtAuthenticationConverter & authorities",
+      "question": "The lecture's tokens carry `\"authorities\": [\"ROLE_USER\"]`. A teammate deletes the `setAuthorityPrefix(\"\")` line from the converter below. An endpoint is protected with `.hasRole(\"USER\")`. What happens when a valid token is sent?",
+      "codeSnippet": "@Bean\npublic JwtAuthenticationConverter jwtAuthenticationConverter() {\n    JwtGrantedAuthoritiesConverter authoritiesConverter =\n            new JwtGrantedAuthoritiesConverter();\n    authoritiesConverter.setAuthoritiesClaimName(\"authorities\");\n    // authoritiesConverter.setAuthorityPrefix(\"\");   <-- removed\n\n    JwtAuthenticationConverter converter = new JwtAuthenticationConverter();\n    converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);\n    return converter;\n}",
+      "options": [
+        "403: the default prefix `SCOPE_` is added, so the authority becomes `SCOPE_ROLE_USER` and `hasRole(\"USER\")` no longer matches",
+        "200: the converter only adds a prefix when the claim is named `scope`",
+        "401: without a prefix configuration the token's signature cannot be verified",
+        "200: the authority becomes `ROLE_ROLE_USER`, which still satisfies `hasRole(\"USER\")`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`JwtGrantedAuthoritiesConverter` prefixes every value with `SCOPE_` by default, whatever claim it reads. The token is still valid (authentication succeeds), but the resulting authority `SCOPE_ROLE_USER` is not `ROLE_USER`, so authorization fails with 403. The empty prefix keeps the existing `hasRole` rules compatible.",
+      "source": "code: SecurityConfig.jwtAuthenticationConverter; notes p34-36 (Map JWT authorities into Spring Security)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html"
+    },
+    {
+      "id": "d95_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "HS256 vs RS256",
+      "question": "An auth server issues tokens that are verified by separate course, payment and admin services. Why do the notes favour RS256/ES256 over HS256 in this setup?",
+      "codeSnippet": null,
+      "options": [
+        "RS256 tokens are encrypted, so the services can hide claims from clients",
+        "HS256 cannot carry an `exp` claim, so tokens would never expire",
+        "With HS256 every verifier holds the shared secret and could therefore also mint valid tokens; with RS256 the services hold only the public key, which can verify but not sign",
+        "RS256 signatures are shorter, so they fit into HTTP headers more easily"
+      ],
+      "correctAnswer": 2,
+      "explanation": "HS256 uses the same secret for signing and verification, so any service that can verify can also forge tokens, and one compromised service exposes the signing secret. Asymmetric algorithms split the roles: the private key stays with the issuer, and the public key only verifies. Neither algorithm encrypts the payload.",
+      "source": "notes p16-18 (Symmetric keys, asymmetric signing, comparison table)",
+      "reference": null
+    },
+    {
+      "id": "d95_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Signature: integrity & authenticity",
+      "question": "To avoid key management, a teammate proposes tokens of the form `Base64URL(payload) + \".\" + SHA256(payload)`; the server rejects any token whose hash does not match. Why is this insecure?",
+      "codeSnippet": null,
+      "options": [
+        "SHA-256 is reversible, so the attacker can recover the payload",
+        "SHA-256 output contains characters that are not URL-safe",
+        "The server would have to store every hash in a database",
+        "An attacker can change the payload and compute a new SHA-256 hash themselves; without a secret or private key the server cannot tell who produced the data"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A plain hash only proves that the hash matches the data, not that the trusted server created it. To give authenticity, the calculation must depend on a key the attacker doesn't have, such as the HMAC secret used by HS256 or an RSA/EC private key. SHA-256 is not reversible, so that is not the issue.",
+      "source": "notes p10-11 (Why a plain hash is not enough)",
+      "reference": null
+    },
+    {
+      "id": "d95_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "JWT claim validation",
+      "question": "With the lecture's configuration below, Aditya logs in at 10:00 and gets a token. At 10:20 he calls `GET /api/users/hello` with `Authorization: Bearer <that token>`. What happens?",
+      "codeSnippet": "# application.properties\njwt.issuer=coderarmy-api\njwt.expiry=900\n\n// JwtService.generateToken\n.issuedAt(now)\n.expiresAt(now.plusSeconds(expiry))\n\n// SecurityConfig.jwtDecoder\ndecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuer));",
+      "options": [
+        "200, because `expiry` is measured in minutes, so the token lasts 900 minutes",
+        "401: the token expired at 10:15, and the default validators check `exp`, so the client must log in again",
+        "200, because only the issuer is validated when `createDefaultWithIssuer` is used",
+        "403, because an expired token is authenticated but has no authorities"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`now.plusSeconds(900)` sets `exp` to 15 minutes after login. `JwtValidators.createDefaultWithIssuer` includes the timestamp validator (with a default 60-second clock skew) plus the issuer check, so a token 5 minutes past expiry is invalid and bearer authentication fails with 401. An invalid token never yields an authenticated principal, so this is not a 403.",
+      "source": "code: application.properties, JwtService, SecurityConfig.jwtDecoder; notes p22-23, p28-29, p33-34",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html"
+    },
+    {
+      "id": "d95_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "JWT claim validation",
+      "question": "Another internal service was given the same `jwt.secret` and mints this token (correctly signed with HS256, not expired). It is sent to the lecture API, whose decoder is configured as shown. What is the result?",
+      "codeSnippet": "// decoded payload of the incoming token\n{\n  \"iss\": \"payments-api\",\n  \"sub\": \"aditya\",\n  \"authorities\": [\"ROLE_ADMIN\"],\n  \"exp\": 1893456000\n}\n\n// lecture SecurityConfig\nNimbusJwtDecoder decoder = NimbusJwtDecoder\n        .withSecretKey(secretKey)\n        .macAlgorithm(MacAlgorithm.HS256)\n        .build();\ndecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(\"coderarmy-api\"));",
+      "options": [
+        "Accepted as ROLE_ADMIN, because the signature is valid",
+        "Accepted, but with no authorities, because the issuer differs",
+        "Rejected with 401: the signature verifies, but the issuer validator requires `iss` = `coderarmy-api`",
+        "Rejected with 403, because `ROLE_ADMIN` was not granted by this application's database"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Signature verification is only the first check; the decoder then validates claims, and `createDefaultWithIssuer` rejects any `iss` other than `coderarmy-api`, so authentication fails (401). It also shows the HS256 risk from the notes: a holder of the shared secret could mint a fully valid token simply by setting `iss` to `coderarmy-api`.",
+      "source": "code: SecurityConfig.jwtDecoder; notes p16, p33-34 (What the decoder checks)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html"
+    },
+    {
+      "id": "d95_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Session vs JWT authentication",
+      "question": "At 10:00 Rohit logs in and receives a 15-minute JWT with `\"authorities\":[\"ROLE_ADMIN\"]`. At 10:05 an admin removes `ROLE_ADMIN` from Rohit in the database. At 10:06 Rohit calls an admin endpoint with the same token. What happens in the lecture's design, and why?",
+      "codeSnippet": null,
+      "options": [
+        "The call succeeds: authorities are rebuilt from the token's claims on each request without a database lookup, so the change only takes effect when he gets a new token",
+        "The call fails, because `JwtDecoder` re-loads the user's roles through `CustomUserDetailsService`",
+        "The call fails, because changing roles in the database invalidates the token's signature",
+        "The call succeeds only if Rohit's HTTP session is still alive"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes explain that the JWT carries `sub` and `authorities`, so later requests skip the JWT -> database -> UserDetails flow; that is what makes the design stateless. The flip side is that changes in the database are not seen until the token expires, which is one reason access tokens are kept short-lived. The signature depends only on the token's contents, and STATELESS means no session is used.",
+      "source": "notes p29-30 (Why store authorities in the JWT?), p38",
+      "reference": null
+    },
+    {
+      "id": "d95_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Two authentication providers",
+      "question": "In the lecture app, which components authenticate `GET /api/users/hello` when it carries `Authorization: Bearer <JWT>`?",
+      "codeSnippet": null,
+      "options": [
+        "`DaoAuthenticationProvider`, which loads the user from the DB with `CustomUserDetailsService` and checks the token as a password",
+        "The resource-server bearer-token support: `JwtAuthenticationProvider` validates the token with the `JwtDecoder` and builds the `Authentication` with the `JwtAuthenticationConverter`",
+        "`AuthController.login`, which is called internally by Spring Security for every protected request",
+        "The `JwtEncoder`, which re-signs the token and compares the result with the incoming signature"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The app has two mechanisms: `DaoAuthenticationProvider` (behind the `AuthenticationManager` bean used in `/auth/login`) for username/password, and `oauth2ResourceServer().jwt()` for bearer tokens, where `JwtAuthenticationProvider` uses the `JwtDecoder` to verify and validate and the converter to create the `Authentication`. The `JwtEncoder` only creates tokens at login.",
+      "source": "notes p31-33, p39-41 (Two authentication providers, end-to-end flow); code: SecurityConfig, AuthController",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html"
+    },
+    {
+      "id": "d95_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "JwtEncoder & JwtDecoder",
+      "question": "A teammate replaces the lecture's secret with a short one for local testing. What happens when someone calls `POST /auth/login` with valid credentials?",
+      "codeSnippet": "# application.properties\njwt.secret=bXlzZWNyZXQ=        # Base64 of \"mysecret\" (8 bytes)\n\n// SecurityConfig (unchanged lecture code)\nbyte[] decodedKey = Base64.getDecoder().decode(secret);\nreturn new SecretKeySpec(decodedKey, \"HmacSHA256\");\n// ...\nNimbusJwtEncoder.withSecretKey(secretKey).algorithm(MacAlgorithm.HS256).build();",
+      "options": [
+        "Login works normally; HS256 accepts keys of any length",
+        "Login works, but the returned token is unsigned",
+        "Base64 decoding fails, because `bXlzZWNyZXQ=` is not valid Base64",
+        "Creating the JWT fails, because an 8-byte (64-bit) key is shorter than the 256 bits HS256 requires, so no token is issued"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`bXlzZWNyZXQ=` is valid Base64 for the 8 bytes of \"mysecret\". HMAC-SHA256 signing in Nimbus requires a secret of at least 256 bits, so encoding the token fails and the login request errors instead of returning a token. That is why the notes generate the key with `openssl rand -base64 32` (32 bytes = 256 bits).",
+      "source": "code: application.properties, SecurityConfig.jwtSecretKey/jwtEncoder; notes p22-24 (Configure the JWT secret)",
+      "reference": null
+    }
+  ]
+}

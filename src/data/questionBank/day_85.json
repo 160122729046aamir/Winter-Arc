@@ -1,0 +1,207 @@
+{
+  "day": 85,
+  "title": "Spring Lecture #28: Hibernate Fundamentals with Spring Boot",
+  "sources": [
+    "notes/Notes.pdf (30 pages)",
+    "notes/Excalidraw-Notes.pdf (2 pages)",
+    "code/hibernateDemo/pom.xml",
+    "code/hibernateDemo/application.properties",
+    "code/hibernateDemo/model/Student.java",
+    "code/hibernateDemo/model/Address.java",
+    "code/hibernateDemo/model/BooleanToStringConverter.java",
+    "code/hibernateDemo/model/StudentStatus.java",
+    "code/hibernateDemo/repository/StudentRepository.java",
+    "code/hibernateDemo/service/StudentService.java"
+  ],
+  "topics": [
+    "ORM & JPA vs Hibernate",
+    "ddl-auto schema generation",
+    "Entity & @Column mapping",
+    "Enum, BigDecimal & converters",
+    "@Embeddable / @Embedded / @AttributeOverride",
+    "@ElementCollection & entity vs value type",
+    "EntityManager CRUD"
+  ],
+  "questions": [
+    {
+      "id": "d85_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "ORM & JPA vs Hibernate",
+      "question": "The lecture's repository injects a `jakarta.persistence.EntityManager`, and the project uses `spring-boot-starter-data-jpa`. How are Jakarta Persistence (JPA) and Hibernate related?",
+      "codeSnippet": null,
+      "options": [
+        "Hibernate is the specification and JPA is one of its implementations, like EclipseLink",
+        "JPA defines the API (`@Entity`, `EntityManager`, …) and Hibernate is a provider that implements it; at runtime the `EntityManager` is backed by Hibernate",
+        "JPA and Hibernate are two unrelated libraries, and the starter makes you choose one at startup",
+        "JPA replaces JDBC entirely, so Hibernate no longer needs a JDBC driver or `DataSource`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Jakarta Persistence is a specification of contracts. Hibernate is an implementation (the provider Spring Boot uses by default), much like `List` and `ArrayList`. Hibernate still sits on top of JDBC, so it needs the MySQL driver and the `DataSource` configured from `spring.datasource.*`.",
+      "source": "notes: Introduction to Hibernate / JPA as a specification",
+      "reference": null
+    },
+    {
+      "id": "d85_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "ddl-auto schema generation",
+      "question": "A team deployed with `spring.jpa.hibernate.ddl-auto=create` to a shared test MySQL database. After every restart, all previously inserted students are gone. Which setting stops this while still letting Hibernate check that the entities match the existing tables?",
+      "codeSnippet": null,
+      "options": [
+        "`create-drop`, because it only drops tables on shutdown, not on startup",
+        "`update`, because it recreates the tables only when the mapping changes",
+        "`none`, because it validates the schema without changing it",
+        "`validate`, because it compares the mappings with the schema and never creates or modifies tables"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`create` drops and recreates the mapped schema at startup, which wipes the data. `validate` only checks that the schema matches and fails fast if it doesn't, without touching the tables. `create-drop` also recreates the schema at startup (and drops it at shutdown), and `none` does no checking at all. In production, schema changes are usually managed with Flyway or Liquibase.",
+      "source": "notes: Schema generation with ddl-auto; code: application.properties",
+      "reference": "https://docs.spring.io/spring-boot/how-to/data-initialization.html"
+    },
+    {
+      "id": "d85_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "@Embeddable / @Embedded / @AttributeOverride",
+      "question": "With Spring Boot's default naming strategy and `ddl-auto=update`, what does Hibernate generate for this mapping (the lecture's `Address` embeddable embedded once)?",
+      "codeSnippet": "@Embeddable\npublic class Address {\n    private String houseNo;\n    private String street;\n    private String city;\n    private String state;\n    private String pincode;\n    // constructors, getters, setters\n}\n\n@Entity\n@Table(name = \"students\")\npublic class Student {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    @Column(name = \"student_name\", nullable = false, length = 100)\n    private String name;\n\n    private String email;\n    private int age;\n\n    @Embedded\n    private Address address;\n}",
+      "options": [
+        "One `students` table with columns id, student_name, email, age, house_no, street, city, state, pincode",
+        "A `students` table plus a separate `address` table with a `student_id` foreign key",
+        "A `students` table whose `address` column stores the serialized `Address` object",
+        "One `students` table, but the Address columns are prefixed: address_house_no, address_street, address_city, address_state, address_pincode"
+      ],
+      "correctAnswer": 0,
+      "explanation": "An `@Embeddable` has no identity or table of its own; its fields are flattened into the owner's table. Spring Boot's default naming turns `houseNo` into `house_no`, and `@Column(name = \"student_name\")` renames the `name` column. Prefixes appear only if you add them with `@AttributeOverride`, and a separate table is what `@ElementCollection` would create.",
+      "source": "notes: @Embeddable / @Embedded; code: Address.java, Student.java",
+      "reference": null
+    },
+    {
+      "id": "d85_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Enum, BigDecimal & converters",
+      "question": "`private StudentStatus status;` was mapped WITHOUT `@Enumerated`, and thousands of rows exist. A developer adds a new constant at the top: `enum StudentStatus { PENDING, ACTIVE, INACTIVE, SUSPENDED }`. Suddenly, students who were ACTIVE show as PENDING. Why, and what is the right mapping?",
+      "codeSnippet": null,
+      "options": [
+        "`ddl-auto=update` rewrote the status column when the enum changed; switching to `validate` fixes it",
+        "Hibernate caches enum values from the first startup; clearing the second-level cache fixes it",
+        "Without `@Enumerated`, enums are stored by ORDINAL (position), so old value 0 now means PENDING; `@Enumerated(EnumType.STRING)` stores the constant name and avoids this",
+        "Enum fields must be `String` in the entity; Hibernate cannot map enums directly"
+      ],
+      "correctAnswer": 2,
+      "explanation": "JPA's default enum mapping is `EnumType.ORDINAL`, which stores the constant's position. Inserting or reordering constants silently changes the meaning of existing numbers. The lecture uses `@Enumerated(EnumType.STRING)`, which stores readable values like ACTIVE that stay stable when constants are added. (Existing ordinal data would still need a migration.)",
+      "source": "notes: Enum mapping; code: StudentStatus.java, Student.java (commented status field)",
+      "reference": null
+    },
+    {
+      "id": "d85_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@ElementCollection & entity vs value type",
+      "question": "Students belong to a department that is shared by many students, has its own head, and is often queried and updated on its own. How should `Department` be modelled relative to `Student`?",
+      "codeSnippet": null,
+      "options": [
+        "As an `@Embeddable` inside `Student`, because it is part of the student's data",
+        "As an `@ElementCollection` of Strings in `Student`, so that each student keeps its own department names",
+        "As its own `@Entity` with an `@Id`, because it has an independent identity and lifecycle and is shared",
+        "As a `@Transient` field, because department data should not be persisted with the student"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Entities have their own identity and lifecycle and can be shared and queried independently. Value types (embeddables, element collections) are owned by one entity, have no `@Id`, and cannot be fetched with `find()`. Embedding a shared department would copy its data into every student row, so updates would have to touch every copy.",
+      "source": "notes: Entity types versus value types; Entity association versus embedded value",
+      "reference": null
+    },
+    {
+      "id": "d85_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Enum, BigDecimal & converters",
+      "question": "`private Boolean isMonitor;` is mapped with `@Convert(converter = BooleanToStringConverter.class)` (the lecture's converter). A DBA manually inserted one row with `is_monitor = 'yes'` (lowercase). What does `isMonitor` contain when that row is loaded, and what is written for a student whose `isMonitor` is `null`?",
+      "codeSnippet": "public class BooleanToStringConverter implements AttributeConverter<Boolean, String> {\n    @Override\n    public String convertToDatabaseColumn(Boolean aBoolean) {\n        if (aBoolean == null) return null;\n        return aBoolean ? \"Yes\" : \"No\";\n    }\n\n    @Override\n    public Boolean convertToEntityAttribute(String s) {\n        if (s == null) return null;\n        return \"Yes\".equals(s);\n    }\n}",
+      "options": [
+        "`true`, and the string \"No\" is written for `null`",
+        "`false`, because `\"Yes\".equals(\"yes\")` is case-sensitive; SQL NULL is written for `null`",
+        "`true`, because Hibernate lower-cases values before calling the converter; SQL NULL is written for `null`",
+        "A `ConversionException`, because 'yes' is neither \"Yes\" nor \"No\""
+      ],
+      "correctAnswer": 1,
+      "explanation": "Hibernate passes the column value to `convertToEntityAttribute` unchanged, and `String.equals` is case-sensitive, so 'yes' becomes `false`, a silent data bug. For writes, the converter's explicit null check returns `null`, so SQL NULL is stored. The converter never throws for unknown values; anything other than \"Yes\" simply maps to false.",
+      "source": "code: BooleanToStringConverter.java; notes: Attribute converters",
+      "reference": null
+    },
+    {
+      "id": "d85_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@Embeddable / @Embedded / @AttributeOverride",
+      "question": "A developer uncomments both `Address` fields in the lecture's `Student` but deletes the `@AttributeOverrides` blocks, leaving the code below. What happens at startup with `ddl-auto=update`?",
+      "codeSnippet": "@Entity\n@Table(name = \"students\")\npublic class Student {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    @Embedded\n    private Address currentAddress;\n\n    @Embedded\n    private Address permanentAddress;\n}",
+      "options": [
+        "Hibernate fails to build the mapping because both embeddings map to the same columns (house_no, street, city, …), a repeated/duplicated column error",
+        "Hibernate automatically prefixes the columns with the field names (current_address_city, permanent_address_city, …)",
+        "It starts, and both addresses share the same columns, so saving one address overwrites the other",
+        "Hibernate stores the second address in a separate `permanent_address` table"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Each `@Embedded Address` contributes the same column names by default, so the entity ends up with duplicate column mappings and Hibernate rejects it when building the metadata. `@AttributeOverride` exists to give each embedding location its own column names (current_city vs parmanent_city in the lecture code). Default naming does not add prefixes automatically.",
+      "source": "notes: Multiple embedded objects / @AttributeOverride; code: Student.java (commented block)",
+      "reference": null
+    },
+    {
+      "id": "d85_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "EntityManager CRUD",
+      "question": "The entity uses `@GeneratedValue(strategy = GenerationType.IDENTITY)` with MySQL, and `spring.jpa.show-sql=true`. What is printed, in order, when this service method runs inside one transaction (first student in an empty table)?",
+      "codeSnippet": "@Transactional\npublic Long createStudent(String name, String email, Integer age) {\n    Student student = new Student(name, email, age);\n    System.out.println(\"Before: \" + student.getId());\n    entityManager.persist(student);\n    System.out.println(\"After: \" + student.getId());\n    return student.getId();\n}",
+      "options": [
+        "Before: null, After: null, and then the INSERT SQL at commit, because SQL is always deferred until flush",
+        "The INSERT SQL first, then Before: 1, After: 1, because `new` reserves an id from the database",
+        "Before: null, After: null, and no INSERT, because `persist()` without `save()` never writes",
+        "Before: null, then the INSERT SQL, then After: 1, because an IDENTITY id is only known after the database executes the INSERT, so Hibernate runs it during `persist()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "With IDENTITY, the database generates the key during the INSERT. Hibernate needs the id immediately to register the managed entity, so it executes the INSERT at `persist()` time instead of waiting for flush/commit, and the id is populated right after. A new object has a null id before `persist()`. (This is also why IDENTITY prevents JDBC batching of inserts.)",
+      "source": "notes: 5.2 Create with persist(); code: StudentRepository.save()",
+      "reference": null
+    },
+    {
+      "id": "d85_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "ddl-auto schema generation",
+      "question": "The `students` table already holds data in a `student_name` column. A developer changes the mapping from `@Column(name = \"student_name\", length = 100)` to `@Column(name = \"full_name\", length = 100)` and restarts with `ddl-auto=update`. What is the result?",
+      "codeSnippet": null,
+      "options": [
+        "Hibernate renames `student_name` to `full_name`, keeping all existing data",
+        "Hibernate adds a new `full_name` column; `student_name` stays with the old data but is no longer mapped, so existing students load with a null name",
+        "Startup fails, because `update` refuses to run when a mapped column is missing",
+        "Hibernate drops `student_name` and creates `full_name`, so all existing names are lost but no data is duplicated"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`update` only tries to ADD what is missing (tables, columns); it cannot know that a mapping was renamed, and it does not drop or rename existing columns. The old data stays in `student_name` while the entity reads the empty `full_name`. This is why the notes warn that `update` is not a production migration tool and recommend Flyway or Liquibase for renames.",
+      "source": "notes: Schema generation with ddl-auto",
+      "reference": null
+    },
+    {
+      "id": "d85_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Enum, BigDecimal & converters",
+      "question": "A field is mapped as `@Column(precision = 5, scale = 2) private BigDecimal percentage;`. Which value can NOT be stored in the generated column?",
+      "codeSnippet": null,
+      "options": [
+        "98.75",
+        "999.99",
+        "0.5",
+        "1000.00"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Precision is the total number of digits and scale is the number after the decimal point, so DECIMAL(5,2) allows 3 integer digits: the maximum is 999.99. 1000.00 needs 4 integer digits (6 in total) and is out of range. 98.75 (precision 4) and 0.5 (stored as 0.50) fit. `BigDecimal` is used instead of `double` so these decimal values stay exact.",
+      "source": "notes: @Column precision and scale",
+      "reference": null
+    }
+  ]
+}

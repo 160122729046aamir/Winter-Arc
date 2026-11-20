@@ -1,0 +1,202 @@
+{
+  "day": 20,
+  "title": "Lecture #20: Java I/O Deep Dive",
+  "sources": [
+    "notes.pdf (7 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java"
+  ],
+  "topics": [
+    "System.out, System.err, System.in",
+    "System.in.read()",
+    "Scanner nextInt and nextLine",
+    "InputStreamReader as a bridge",
+    "BufferedReader buffering and speed",
+    "Scanner vs BufferedReader",
+    "Byte and character stream hierarchy"
+  ],
+  "questions": [
+    {
+      "id": "d20_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "System.out, System.err, System.in",
+      "question": "In `System.out.println(\"Hello\")`, what exactly is `out`?",
+      "codeSnippet": null,
+      "options": [
+        "A static method of `System` that returns the console",
+        "An instance field of `System`, so you must write `new System().out`",
+        "A static field of class `System` whose type is `PrintStream`",
+        "A class inside `java.lang` that has a static `println()` method"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`System` (in `java.lang`) declares `out` and `err` as static `PrintStream` fields and `in` as a static `InputStream` field. `println()` is an instance method of `PrintStream` called on that object. Because `out` is static, you reach it through the class name; `System` cannot even be instantiated.",
+      "source": "notes p1-p2; code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/System.html"
+    },
+    {
+      "id": "d20_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "System.in.read()",
+      "question": "The user types `Aditya` and presses Enter. What does the program print?",
+      "codeSnippet": "import java.io.IOException;\n\npublic class Demo2 {\n    public static void main(String[] args) throws IOException {\n        int x = System.in.read();\n        System.out.println((char) x);\n    }\n}",
+      "options": [
+        "`A`",
+        "`65`",
+        "`Aditya`",
+        "`Ad`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`System.in.read()` reads exactly one byte from the input buffer and returns it as an `int`, here 65 for `A`. Casting that `int` to `char` prints the character `A`. Without the cast it would print `65`; the remaining bytes `ditya` are simply left unread.",
+      "source": "code: Demo2.java; notes p3",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html"
+    },
+    {
+      "id": "d20_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "System.out, System.err, System.in",
+      "question": "Your program checks `if (age < 0)` and wants to report \"Invalid age\" on the error stream, so that it can be redirected separately from normal output. Which call should it use?",
+      "codeSnippet": null,
+      "options": [
+        "`System.out.printf(\"Invalid age\")`",
+        "`System.in.write(\"Invalid age\")`",
+        "`System.out.print(\"Invalid age\")`",
+        "`System.err.println(\"Invalid age\")`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`System.err` is a separate `PrintStream` meant for error messages; the lecture's `Demo.java` uses it exactly for the invalid-age case. `print`, `println` and `printf` on `System.out` only differ in newline/formatting and still write to standard output, and `System.in` is an input stream with no `write` method.",
+      "source": "code: Demo.java; notes p1",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/System.html"
+    },
+    {
+      "id": "d20_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Scanner nextInt and nextLine",
+      "question": "The user types `21`, presses Enter, then would type `Aditya` and press Enter. What happens?",
+      "codeSnippet": "import java.util.Scanner;\n\npublic class Demo4 {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        int age = sc.nextInt();\n        String name = sc.nextLine();\n\n        System.out.println(\"age = \" + age);\n        System.out.println(\"Name = \" + name);\n    }\n}",
+      "options": [
+        "It prints `age = 21` and `Name = Aditya`",
+        "It prints `age = 21` and `Name = ` (empty) right away, without waiting for the name",
+        "It throws `InputMismatchException` because `nextLine()` finds a number",
+        "It waits for the name, then prints `age = 21` and `Name =  Aditya` with a leading space"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`nextInt()` reads only the token `21` and leaves the newline from the Enter key in the buffer. The following `nextLine()` reads up to that newline and returns an empty string, so the program prints `Name = ` and ends without ever reading `Aditya`. The usual fix is an extra `sc.nextLine()` after `nextInt()`.",
+      "source": "code: Demo4.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Scanner.html"
+    },
+    {
+      "id": "d20_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "InputStreamReader as a bridge",
+      "question": "Why does the lecture write `new BufferedReader(new InputStreamReader(System.in))` instead of just `new BufferedReader(System.in)`?",
+      "codeSnippet": null,
+      "options": [
+        "`BufferedReader` can only be created once per program, so it needs a wrapper object",
+        "`InputStreamReader` adds the buffer; `BufferedReader` only adds the `readLine()` method",
+        "`BufferedReader` works on characters (a `Reader`), while `System.in` is a byte `InputStream`; `InputStreamReader` converts the bytes into characters",
+        "`System.in` is closed by default and `InputStreamReader` reopens it"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Java has byte streams (`InputStream`/`OutputStream`) and character streams (`Reader`/`Writer`). `BufferedReader`'s constructor takes a `Reader`, and `System.in` is an `InputStream`, so passing it directly does not compile; `InputStreamReader` is the bridge that turns a stream of bytes into a stream of characters. The buffering itself comes from `BufferedReader`, not from `InputStreamReader`.",
+      "source": "notes p5-p6; code: Demo3.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStreamReader.html"
+    },
+    {
+      "id": "d20_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "BufferedReader buffering and speed",
+      "question": "A program must read one million lines of plain text from standard input as fast as possible; each line is simply stored as a `String`. Which choice and reason match the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "`BufferedReader`, because it pulls a large chunk of characters from the OS buffer into memory at once and hands out whole lines without parsing tokens",
+        "`Scanner`, because it is newer (Java 1.5) and therefore always faster than `java.io` classes",
+        "`System.in.read()` in a loop, because reading one byte at a time avoids buffering overhead",
+        "`Scanner`, because `nextLine()` makes fewer OS calls than `readLine()`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The lecture shows that reading one character at a time can mean one OS call per character, whereas `BufferedReader` reads a chunk from the OS buffer, keeps it in its own buffer, and serves the program from memory. `Scanner` adds tokenizing and parsing on top, which costs time, so for raw lines `BufferedReader` is the faster choice. Being newer does not make `Scanner` faster.",
+      "source": "notes p4-p5",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Scanner.html"
+    },
+    {
+      "id": "d20_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Scanner vs BufferedReader",
+      "question": "Which limitation of `BufferedReader` does the lecture point out, and how does `Scanner` (added in Java 1.5, `java.util`) address it?",
+      "codeSnippet": null,
+      "options": [
+        "`BufferedReader` cannot read from the keyboard; `Scanner` can",
+        "`BufferedReader` can read only one character at a time; `Scanner` reads whole lines",
+        "`BufferedReader` needs `throws IOException`; `Scanner` reads input without any buffer",
+        "`readLine()` always returns a `String`, so numbers need `Integer.parseInt(...)`; `Scanner` offers `nextInt()`, `nextDouble()`, `nextBoolean()` and tokenizes input for you"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes show `String s = br.readLine();` followed by `Integer.parseInt(s)` as the limitation: everything arrives as text. `Scanner` simplifies input by tokenizing it and providing typed methods such as `nextInt()`. `BufferedReader` reads keyboard input fine and reads whole lines with `readLine()`, so the other options misstate it.",
+      "source": "notes p6-p7",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Scanner.html"
+    },
+    {
+      "id": "d20_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "System.in.read()",
+      "question": "The input stream contains exactly the bytes for `Hi` followed by a single `\\n`. What does this program print?",
+      "codeSnippet": "import java.io.IOException;\n\npublic class ReadLoop {\n    public static void main(String[] args) throws IOException {\n        String s = \"\";\n        int c = 0;\n        while (c != '\\n') {\n            c = System.in.read();\n            s += (char) c;\n        }\n        System.out.println(s.length());\n    }\n}",
+      "options": [
+        "`2`",
+        "`3`",
+        "`4`",
+        "It does not compile, because `c` might not have been initialized"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The loop body runs before the check sees the newline: it reads `H` (s = \"H\"), then `i` (s = \"Hi\"), then `\\n` and appends it too (s = \"Hi\\n\"); only then does `c != '\\n'` become false. So the length is 3. The compile-error option would be right if `c` were declared without `= 0`, as `while (c != ...)` would read an unassigned local variable.",
+      "source": "notes p4 (read loop)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html"
+    },
+    {
+      "id": "d20_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "System.in.read()",
+      "question": "A teammate reads a quantity with `int qty = System.in.read();`. The user types `7` and presses Enter, but the program computes `qty * 2` as `110`. What is going on, and what is a correct fix?",
+      "codeSnippet": null,
+      "options": [
+        "`read()` returns the number of bytes available; use `System.in.available()` instead",
+        "`read()` adds the Enter key to the value; subtract 10 from the result",
+        "`read()` returns the byte value of the character `'7'` (55), not the number 7; read the line and parse it, or use `Scanner.nextInt()`",
+        "`read()` returns a `char` that is auto-widened incorrectly; cast the result to `byte`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`System.in` is a byte stream, and `read()` returns one byte at a time as an `int`: the code for `'7'` is 55, so `55 * 2 = 110`. To get the number, read text and convert it (`Integer.parseInt(br.readLine())`) or let `Scanner.nextInt()` parse it. Subtracting 10 just produces a different wrong number, and casting to `byte` keeps 55.",
+      "source": "notes p3; code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html"
+    },
+    {
+      "id": "d20_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Byte and character stream hierarchy",
+      "question": "Which statement about the stream classes shown in the lecture is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`System.out` and `System.err` are `PrintStream` objects, and `PrintStream` is a subclass of the abstract byte stream `OutputStream`",
+        "`System.in` is a `Reader`, so `System.in.read()` returns a full character, not a byte",
+        "`InputStream` is an interface, and `FileInputStream`, `BufferedInputStream` and `DataInputStream` implement it",
+        "`Scanner` is in `java.io` and extends `BufferedReader` to add `nextInt()`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes draw `InputStream` and `OutputStream` as abstract classes with subclasses like `FileOutputStream` and `PrintStream`, and mark `System.out` and `System.err` as `PrintStream`. `System.in` is a byte-based `InputStream`, not a `Reader`. `Scanner` lives in `java.util` (the notes cross out `java.io`) and is not a subclass of `BufferedReader`.",
+      "source": "notes p2-p3, p6",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/PrintStream.html"
+    }
+  ]
+}

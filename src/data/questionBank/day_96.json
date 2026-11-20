@@ -1,0 +1,202 @@
+{
+  "day": 96,
+  "title": "Spring Lecture #39: OAuth 2.0 & Google Social Login",
+  "sources": [
+    "notes/Notes.pdf (34 pages)",
+    "notes/Excalidraw-Notes.pdf (7 pages)",
+    "code/oauthDemo (SecurityConfig, CustomOidcUserService, UserService, UserController, User, application.properties)"
+  ],
+  "topics": [
+    "OAuth 2.0 vs OpenID Connect",
+    "OAuth roles",
+    "Access, ID & refresh tokens",
+    "Authorization Code Flow",
+    "state parameter",
+    "PKCE",
+    "Client registration & redirect URI",
+    "Linking provider identity to internal user",
+    "oauth2Login vs resource server"
+  ],
+  "questions": [
+    {
+      "id": "d96_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "OAuth 2.0 vs OpenID Connect",
+      "question": "For 'Continue with Google' login, why does the lecture request the `openid` scope and rely on OpenID Connect instead of plain OAuth 2.0?",
+      "codeSnippet": null,
+      "options": [
+        "OAuth 2.0 is mainly delegated authorization ('what can this client access?'); OIDC adds authentication and identity ('who signed in?') via the ID token",
+        "OAuth 2.0 requires the user to send their Google password to the client, while OIDC does not",
+        "OIDC replaces access tokens, so no access token is issued at all",
+        "OAuth 2.0 only works for mobile apps; OIDC is needed for Spring Boot servers"
+      ],
+      "correctAnswer": 0,
+      "explanation": "OAuth 2.0 alone answers what a client may access on the user's behalf; it is not an identity protocol. OIDC sits on top of it and adds the ID token with claims such as `sub`, `iss` and `aud` that tell the client who authenticated. In neither protocol does the user give their Google password to the client.",
+      "source": "notes p2-3, p5-6 (Delegated access, the authentication problem, ID token)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html"
+    },
+    {
+      "id": "d96_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "OAuth roles",
+      "question": "The CoderArmy productivity app wants to read a student's Google Calendar. The student signs in on Google and approves 'Read your calendar'. In OAuth terms, what role does the CoderArmy application play?",
+      "codeSnippet": null,
+      "options": [
+        "Resource owner",
+        "Resource server",
+        "Client",
+        "Authorization server"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The client is the application requesting delegated access on the user's behalf; it need not be a browser. The student is the resource owner, Google's authorization system authenticates and issues tokens (authorization server), and the Google Calendar API hosts the data and validates access tokens (resource server).",
+      "source": "notes p3-4 (The four OAuth roles)",
+      "reference": null
+    },
+    {
+      "id": "d96_q3",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Access, ID & refresh tokens",
+      "question": "Which statement about the three tokens in an OAuth 2.0 / OIDC login is correct?",
+      "codeSnippet": null,
+      "options": [
+        "The ID token is the right credential for calling Google's protected APIs, because it identifies the user",
+        "The access token is sent to the resource server, the ID token is meant for the client to learn who authenticated, and the refresh token goes only to the authorization server's token endpoint",
+        "The refresh token is sent with each API call so the resource server can renew it automatically",
+        "An access token must always be a JWT, otherwise the resource server cannot validate it"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Each token has a different audience: access token to the resource server, ID token to the client, refresh token to the authorization server's token endpoint. The notes warn not to use an ID token to call a protected API unless that API explicitly supports it, and that an access token may be opaque rather than a JWT.",
+      "source": "notes p5-7 (Access token, ID token, refresh token, token comparison)",
+      "reference": null
+    },
+    {
+      "id": "d96_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Client registration & redirect URI",
+      "question": "In Google Cloud Console the authorized redirect URI is `http://localhost:8080/login/oauth2/code/google`. A teammate runs the lecture app with `server.port=8081` and clicks 'Login with Google'. Google immediately shows an error page. What is the cause?",
+      "codeSnippet": null,
+      "options": [
+        "The client secret is tied to port 8080 and must be regenerated",
+        "Google blocks all `localhost` redirect URIs unless the app is published",
+        "The `openid` scope is not allowed on ports other than 8080",
+        "Spring now sends `http://localhost:8081/login/oauth2/code/google` as `redirect_uri`, which does not exactly match the registered URI, so Google reports `redirect_uri_mismatch`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Spring builds the redirect URI from the template `{baseUrl}/login/oauth2/code/{registrationId}`, so the base URL now includes port 8081. Google requires an exact match of scheme, host, port and path with a registered URI. Registering the 8081 URI (or running on 8080) fixes it; the secret and scopes are unrelated.",
+      "source": "notes p8, p12-13, p29-30 (redirect_uri, registering the application, authorized redirect URI)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html"
+    },
+    {
+      "id": "d96_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Linking provider identity to internal user",
+      "question": "A teammate suggests finding the internal `User` by `email` instead of `findByProviderAndProviderSubject(provider, sub)`, because \"email is more readable\". Why do the notes prefer provider + `sub`?",
+      "codeSnippet": null,
+      "options": [
+        "`sub` is the provider's stable identifier for the user, while an email can change, be missing or be unverified depending on the provider and scopes",
+        "Email cannot be stored in MySQL because it contains `@`",
+        "Google encrypts the email claim, so the application cannot read it",
+        "`sub` contains the user's Google password hash, which proves identity"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The `sub` claim is the stable subject identifier at that provider, so the pair (provider, providerSubject) is a reliable external identity key and should normally be unique. Email is useful profile data but may change or be unverified. The application never sees any Google password or hash.",
+      "source": "notes p17-18 (Why store providerSubject?); code: UserRepository, UserService",
+      "reference": null
+    },
+    {
+      "id": "d96_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Client registration & redirect URI",
+      "question": "With the lecture's `application.properties` below and `.oauth2Login(...)` in the security config, which two URLs does the login flow use on the Spring side?",
+      "codeSnippet": "spring.security.oauth2.client.registration.google.client-id=${CLIENT_ID}\nspring.security.oauth2.client.registration.google.client-secret=${CLIENT_SECRET}\nspring.security.oauth2.client.registration.google.scope=openid,profile,email",
+      "options": [
+        "Start at `/login/google`; Google calls back `/oauth2/callback`",
+        "Start at `/oauth2/google/login`; Google calls back `/profile` directly",
+        "Start at `/oauth2/authorization/google`; Google redirects the browser back to `/login/oauth2/code/google`",
+        "Start at `/login`; Google calls back `/login?success`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The registration id `google` appears in both URLs. Visiting `/oauth2/authorization/google` makes Spring build the authorization request and send a 302 to Google; Google returns the code and state to `{baseUrl}/login/oauth2/code/google`. Only after the code exchange does `defaultSuccessUrl(\"/profile\", true)` redirect to `/profile`.",
+      "source": "code: application.properties, SecurityConfig, UserController.home; notes p13, p30-32",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html"
+    },
+    {
+      "id": "d96_q7",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "state parameter",
+      "question": "What does the random `state` value in the authorization request protect against?",
+      "codeSnippet": null,
+      "options": [
+        "It proves the client's identity to Google's token endpoint, replacing the client secret",
+        "It lets the client check that the callback belongs to an authorization request it actually started, helping prevent attacks such as login CSRF",
+        "It encrypts the authorization code while it travels through the browser",
+        "It binds the token exchange to the client instance so a stolen code cannot be redeemed"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The client generates `state`, sends it with the request and verifies that the same value comes back on the callback; a callback with an unexpected `state` is rejected, so an attacker cannot inject their own authorization response into the victim's session. Authenticating the client is the client secret's job, and binding the code exchange is PKCE's job.",
+      "source": "notes p9 (state)",
+      "reference": null
+    },
+    {
+      "id": "d96_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Linking provider identity to internal user",
+      "question": "This is the lecture code's `UserService.registerOrUpdate` (no `@Transactional`), called from `CustomOidcUserService.loadUser` during Google login. Rohit already has a row with name \"Rohit\"; he renames himself on Google to \"Rohit Negi\" and logs in again. What is stored afterwards?",
+      "codeSnippet": "public User registerOrUpdate(String provider, OidcUser oidcUser) {\n    String providerSubject = oidcUser.getSubject();\n    String name = oidcUser.getClaimAsString(\"name\");\n    String email = oidcUser.getClaimAsString(\"email\");\n\n    Optional<User> existingUser =\n            userRepository.findByProviderAndProviderSubject(provider, providerSubject);\n\n    if (existingUser.isPresent()) {\n        User user = existingUser.get();\n        user.setName(name);\n        user.setEmail(email);\n        return user;\n    }\n    return userRepository.save(new User(name, email, provider, providerSubject));\n}",
+      "options": [
+        "\"Rohit Negi\", because dirty checking updates any entity returned by a repository",
+        "A second row for Rohit, because the name changed",
+        "\"Rohit Negi\", because `loadUser` runs inside Spring Security's own transaction",
+        "Still \"Rohit\": the entity is detached once the repository call's transaction ends, and nothing saves it; the notes' version marks the method `@Transactional` so dirty checking writes the change"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Dirty checking only applies to managed entities and is flushed when a transaction commits. Here the only transaction is the repository's own query; the setters run afterwards in a security filter with no surrounding transaction, so the change is lost. The notes put `@Transactional` on `registerOrUpdate` (or `save(user)` could be called). No new row is created because the lookup uses provider + subject.",
+      "source": "code: UserService.registerOrUpdate, CustomOidcUserService; notes p18-21 (Application user service)",
+      "reference": null
+    },
+    {
+      "id": "d96_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "oauth2Login vs resource server",
+      "question": "After Google login, the browser can call `/profile`. A mobile developer now copies Google's ID token and calls `GET /profile` with `Authorization: Bearer <id_token>`, but is not authenticated. Why?",
+      "codeSnippet": null,
+      "options": [
+        "The lecture app uses `oauth2Login()`, which keeps the user logged in via the HTTP session cookie; it has no bearer-token support, so protecting an API for bearer tokens needs a different setup (`oauth2ResourceServer`)",
+        "ID tokens expire after one request, so the token was already used",
+        "The mobile app must send the Google password together with the token",
+        "Bearer tokens only work when CSRF protection is disabled"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In this server-side login flow, Spring stores the authenticated `SecurityContext` in the HTTP session and the browser sends the session cookie on later requests; the ID token is never presented per request. `oauth2Login()` (log a browser user in) and `oauth2ResourceServer().jwt()` (protect an API with bearer tokens) are different use cases, and an ID token is not meant to call APIs anyway.",
+      "source": "notes p32 (What authenticates later /profile requests?), p7 (ID token is not an access token)",
+      "reference": null
+    },
+    {
+      "id": "d96_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "PKCE",
+      "question": "An OAuth client sends the authorization request below. Later an attacker steals the returned `code` (for example from a log). Why can't the attacker redeem it at the token endpoint?",
+      "codeSnippet": "GET https://accounts.google.com/o/oauth2/v2/auth\n  ?response_type=code\n  &client_id=coderarmy-app-123\n  &scope=openid%20profile%20email\n  &state=Xk9fQ2\n  &redirect_uri=http://localhost:8080/login/oauth2/code/google\n  &code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM\n  &code_challenge_method=S256",
+      "options": [
+        "Because `state` must also be sent to the token endpoint, and the attacker doesn't know it",
+        "Because `client_id` is secret and only the real client knows it",
+        "Because the token endpoint requires the `code_verifier`, whose SHA-256 must equal `code_challenge`; the verifier never travelled through the browser, so the attacker doesn't have it",
+        "Because the `code_challenge` encrypts the code, and only Google can decrypt it"
+      ],
+      "correctAnswer": 2,
+      "explanation": "With PKCE the client keeps a random `code_verifier` and sends only `BASE64URL(SHA256(verifier))` as the challenge. At the exchange, the authorization server hashes the presented verifier and compares; without it a stolen code is useless. `client_id` is a public identifier, `state` protects the callback rather than the exchange, and the challenge is a hash, not encryption.",
+      "source": "notes p10-12 (PKCE from first principles)",
+      "reference": "https://datatracker.ietf.org/doc/html/rfc7636"
+    }
+  ]
+}

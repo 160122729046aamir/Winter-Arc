@@ -1,0 +1,207 @@
+{
+  "day": 74,
+  "title": "Spring Lecture #17: Spring Boot Exception Handling: Make Your APIs Professional",
+  "sources": [
+    "Notes.pdf (57 pages)",
+    "Excalidraw-Notes.pdf (3 pages)",
+    "code/exceptionDemo/.../exception/GlobalExceptionHandler.java",
+    "code/exceptionDemo/.../exception/ResourceNotFoundException.java",
+    "code/exceptionDemo/.../exception/DuplicateResourceException.java",
+    "code/exceptionDemo/.../dto/ExceptionResponseDto.java",
+    "code/exceptionDemo/.../dto/ValidationExceptionResponseDto.java",
+    "code/exceptionDemo/.../controller/StudentController.java",
+    "code/exceptionDemo/.../service/StudentService.java",
+    "code/exceptionDemo/src/main/resources/application.properties"
+  ],
+  "topics": [
+    "HTTP status codes for CRUD",
+    "ResponseEntity status/headers",
+    "Spring Boot default error handling",
+    "@RestControllerAdvice & @ExceptionHandler",
+    "Custom exceptions",
+    "Validation error responses",
+    "Bad request exceptions"
+  ],
+  "questions": [
+    {
+      "id": "d74_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "HTTP status codes for CRUD",
+      "question": "A client posts a well-formed student whose email format is valid, but a student with that email already exists. Which status code does the lecture use?",
+      "codeSnippet": null,
+      "options": [
+        "400 Bad Request",
+        "404 Not Found",
+        "409 Conflict",
+        "500 Internal Server Error"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The request itself is valid; it conflicts with existing server data, which is what 409 Conflict means, and the code throws `DuplicateResourceException` mapped to `HttpStatus.CONFLICT`. 400 is for requests that are themselves invalid, such as a malformed email or `\"age\":\"twenty\"`.",
+      "source": "notes p11-p13, p45-p47; code: StudentService.java, GlobalExceptionHandler.java",
+      "reference": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/409"
+    },
+    {
+      "id": "d74_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@RestControllerAdvice & @ExceptionHandler",
+      "question": "Why does the lecture's `GlobalExceptionHandler` use `@RestControllerAdvice` rather than plain `@ControllerAdvice`?",
+      "codeSnippet": null,
+      "options": [
+        "It is `@ControllerAdvice` + `@ResponseBody`, so handler return values are written as the JSON response body instead of being resolved as views",
+        "It is the only annotation that lets `@ExceptionHandler` methods run at all",
+        "It makes the class handle exceptions only from `@RestController` classes in the same package",
+        "It turns every handler's status into 500 unless overridden"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes describe `@RestControllerAdvice` as a shortcut for `@ControllerAdvice` plus `@ResponseBody`, which suits REST APIs returning JSON. `@ExceptionHandler` methods also work inside a plain `@ControllerAdvice`; the difference is only how return values are treated.",
+      "source": "notes p31-p33; code: GlobalExceptionHandler.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html"
+    },
+    {
+      "id": "d74_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "ResponseEntity status/headers",
+      "question": "Your delete API removes the student successfully and there is nothing meaningful to send back. Which return statement matches the lecture's preferred REST style?",
+      "codeSnippet": null,
+      "options": [
+        "`return ResponseEntity.ok(null);`",
+        "`return ResponseEntity.status(HttpStatus.CREATED).build();`",
+        "`return ResponseEntity.notFound().build();`",
+        "`return ResponseEntity.noContent().build();`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`noContent().build()` returns 204 No Content: success with no body, which the notes say is often preferred for deletes (200 with a message is the other common option). 201 is for creating a resource, and 404 would wrongly tell the client the student did not exist.",
+      "source": "notes p15-p20; code: StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html"
+    },
+    {
+      "id": "d74_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "@RestControllerAdvice & @ExceptionHandler",
+      "question": "`GET /api/students/99` calls the service below and student 99 does not exist. The lecture's advice class has these handlers. What status does the client receive?",
+      "codeSnippet": "// Service\nStudent s = studentRepository.findById(id)\n        .orElseThrow(() -> new ResourceNotFoundException(\n                \"Student with id \" + id + \" not found\"));\n\n// ResourceNotFoundException extends RuntimeException\n\n@RestControllerAdvice\npublic class GlobalExceptionHandler {\n    @ExceptionHandler(ResourceNotFoundException.class)   // -> 404\n    ...\n    @ExceptionHandler(RuntimeException.class)            // -> 500\n    ...\n    @ExceptionHandler(Exception.class)                   // -> 500\n    ...\n}",
+      "options": [
+        "500, because the `RuntimeException` handler is declared and matches too",
+        "404, because Spring picks the handler whose exception type is closest to the thrown exception",
+        "500, because the `Exception` handler catches everything",
+        "Startup fails, because three handlers match the same exception"
+      ],
+      "correctAnswer": 1,
+      "explanation": "All three handlers could match, but Spring sorts candidates by exception depth and uses the most specific one, `ResourceNotFoundException`, giving 404 with the error DTO. Broader handlers are fallbacks only, and overlapping handler types are allowed.",
+      "source": "notes p33-p34, p37-p38; code: GlobalExceptionHandler.java, StudentService.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html"
+    },
+    {
+      "id": "d74_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "ResponseEntity status/headers",
+      "question": "Which create-API return statement sends 201 Created together with a `Location: /api/students/10` header and the saved student as the body?",
+      "codeSnippet": "Student savedStudent = studentService.createStudent(student); // id = 10\nURI location = URI.create(\"/api/students/\" + savedStudent.getId());\n\n// A\nreturn ResponseEntity.ok().header(\"Location\", location.toString()).body(savedStudent);\n// B\nreturn ResponseEntity.status(HttpStatus.CREATED).build();\n// C\nreturn ResponseEntity.created(location).body(savedStudent);\n// D\nreturn ResponseEntity.noContent().location(location).build();",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`ResponseEntity.created(location)` sets status 201 and the `Location` header in one call, and `.body(savedStudent)` adds the body. A sends 200, B has no header or body, and D is a 204 without the student, even though it sets a location.",
+      "source": "notes p20-p22",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html"
+    },
+    {
+      "id": "d74_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Spring Boot default error handling",
+      "question": "A service uses `studentRepository.findById(id).get()` and the app has no `@RestControllerAdvice`. Postman calls `GET /api/students/2` for a student that does not exist. What does it get, and what is wrong with that?",
+      "codeSnippet": null,
+      "options": [
+        "Spring Boot's default `/error` JSON with status 500 \"Internal Server Error\", which is misleading because the real situation is a missing resource (404)",
+        "404 Not Found automatically, because Spring knows `Optional` means \"not found\"",
+        "200 OK with a `null` body, because `.get()` returns null for an empty Optional",
+        "400 Bad Request, because the id does not exist"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`.get()` on an empty `Optional` throws `NoSuchElementException`; with no handler, Boot forwards to its default `/error` mapping, which reports 500. The lecture's point is that this is not a server crash but a missing student, so the service should throw `ResourceNotFoundException` and a global handler should map it to 404. Spring has no built-in rule that turns an empty Optional into 404 here.",
+      "source": "notes p8-p12",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    },
+    {
+      "id": "d74_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Spring Boot default error handling",
+      "question": "The lecture's `application.properties` contains `spring.web.error.include-message=always`, yet the notes recommend that the generic `Exception` handler return a fixed text such as \"Something went wrong. Please try again later.\" instead of `ex.getMessage()`. What is the reasoning?",
+      "codeSnippet": null,
+      "options": [
+        "Exception messages are always empty in production, so a fixed text is needed",
+        "`include-message=always` is required for `@ExceptionHandler` methods to run",
+        "Fixed texts make the response faster because no exception object is created",
+        "Boot hides exception messages by default for safety; including them helps local learning, but raw messages of unexpected errors can leak internal details in production"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes say Boot's default error response hides detailed messages, `include-message=always` shows them for learning, and internal exception messages should not be exposed in production. Hence the fallback handler should return a generic \"Something went wrong\" message. The property only affects Boot's default `/error` response, not whether your own handlers run.",
+      "source": "notes p9-p10, p56-p57; code: application.properties",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    },
+    {
+      "id": "d74_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Bad request exceptions",
+      "question": "The lecture's code (not the notes' final version) has exactly these handlers. A client posts `{\"name\":\"Amit\",\"age\":\"twenty\",...}` to `POST /api/students`. What does it receive?",
+      "codeSnippet": "@RestControllerAdvice\npublic class GlobalExceptionHandler {\n    @ExceptionHandler(ResourceNotFoundException.class)        // 404\n    @ExceptionHandler(DuplicateResourceException.class)       // 409\n    @ExceptionHandler(MethodArgumentNotValidException.class)  // 400 + fieldErrors\n    @ExceptionHandler(RuntimeException.class)                 // 500, message = ex.getMessage()\n    @ExceptionHandler(Exception.class)                        // 500\n}\n// (each annotation is on its own handler method)\n\n// Note: HttpMessageNotReadableException is a subclass of RuntimeException",
+      "options": [
+        "400 with `fieldErrors` saying age must be a number",
+        "500 from the `RuntimeException` handler, carrying a JSON parse error message",
+        "400 from Spring's default handling, because invalid JSON is always a client error",
+        "201, because Jackson converts \"twenty\" to 0"
+      ],
+      "correctAnswer": 1,
+      "explanation": "\"twenty\" cannot become an `Integer`, so Spring throws `HttpMessageNotReadableException` before validation even runs; `MethodArgumentNotValidException` is never thrown. Because that exception is a `RuntimeException` and the advice has a `RuntimeException` handler, that handler wins and returns 500. The notes fix this with a dedicated `HttpMessageNotReadableException` handler returning 400.",
+      "source": "code: GlobalExceptionHandler.java; notes p48-p51",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html"
+    },
+    {
+      "id": "d74_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Validation error responses",
+      "question": "A client sends `\"name\": \"\"`. `name` has both `@NotBlank(message = \"Name cannot be null/Empty or blank\")` and `@Size(min = 2, max = 50, message = \"Student name must be within 2 to 50 character long\")`. What does `fieldErrors` contain for `name`?",
+      "codeSnippet": "Map<String, String> fieldErrors = new HashMap<>();\nex.getBindingResult().getFieldErrors()\n        .forEach(error ->\n                fieldErrors.put(error.getField(), error.getDefaultMessage()));",
+      "options": [
+        "Both messages, stored as a list under the key `name`",
+        "Only the `@NotBlank` message, because validation stops at the first failed constraint on a field",
+        "Exactly one of the two messages: both constraints fail, but `put` with the same key overwrites, and the order of the field errors is not guaranteed",
+        "No entry, because an empty string is not null"
+      ],
+      "correctAnswer": 2,
+      "explanation": "An empty string violates `@NotBlank` and also `@Size(min = 2)`, so there are two `FieldError`s for `name`. A `Map<String, String>` keyed by field name keeps only the last `put`, and Bean Validation does not promise an order, so the surviving message is not deterministic. Collecting a `List<String>` per field would keep both.",
+      "source": "code: GlobalExceptionHandler.java, CreateStudentRequestDto.java; notes p41-p44",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    },
+    {
+      "id": "d74_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Bad request exceptions",
+      "question": "With the lecture's handler set (including `RuntimeException` and `Exception` handlers), `GET /api/students/abc` returns 500 because `\"abc\"` cannot be converted to the `Long` id. You want 400 instead. What is the right change?",
+      "codeSnippet": null,
+      "options": [
+        "Delete the `RuntimeException` handler so Spring's default 400 handling takes over",
+        "Add `@Valid` before `@PathVariable Long id`",
+        "Change the parameter type to `String` and let the repository convert it",
+        "Add an `@ExceptionHandler(MethodArgumentTypeMismatchException.class)` method returning 400 with the error DTO"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The failed conversion throws `MethodArgumentTypeMismatchException`, a `RuntimeException` subclass, so a dedicated handler for it becomes the closest match and can return 400, exactly as the notes show. Deleting the `RuntimeException` handler does not help, because the `Exception` handler would still catch it and return 500. `@Valid` checks constraints and cannot fix type conversion.",
+      "source": "notes p50-p52, p53-p55; code: GlobalExceptionHandler.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html"
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "day": 37,
+  "title": "Lecture #37: Java Lambdas & Functional Interfaces",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Behaviour passing",
+    "Comparator interface",
+    "Comparable vs Comparator",
+    "Functional interfaces",
+    "Lambda syntax",
+    "Target typing"
+  ],
+  "questions": [
+    {
+      "id": "d37_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Functional interfaces",
+      "question": "Which description of a functional interface matches the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "An interface with no methods at all, used only as a marker",
+        "An interface with exactly one abstract method; it may also contain default and static methods",
+        "An interface whose methods are all static, so they can be called without an object",
+        "Any interface that is annotated with `@FunctionalInterface`, whatever methods it has"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A functional interface has exactly one abstract method (like `compareTo` in Comparable or `compare` in Comparator); default and static methods are allowed because they already have bodies. That single abstract method is what a lambda implements. The annotation only asks the compiler to check the rule — it does not make an interface with two abstract methods functional.",
+      "source": "notes p3",
+      "reference": "https://howtodoinjava.com/java8/functional-interface-tutorial/"
+    },
+    {
+      "id": "d37_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Comparator interface",
+      "question": "Using the lecture's `Student(name, rollNo, marks)` class, what order are the names printed in?",
+      "codeSnippet": "List<Student> list = new ArrayList<>();\nlist.add(new Student(\"Aditya\", 101, 85));\nlist.add(new Student(\"Rohit\", 102, 89));\nlist.add(new Student(\"Rohan\", 103, 93));\nlist.add(new Student(\"Sonu\", 104, 98));\n\nCollections.sort(list, (s1, s2) -> s2.name.compareTo(s1.name));\n\nfor (Student s : list) {\n    System.out.println(s.name);\n}",
+      "options": [
+        "Aditya, Rohan, Rohit, Sonu",
+        "Sonu, Rohan, Rohit, Aditya",
+        "Sonu, Rohit, Rohan, Aditya",
+        "Aditya, Rohit, Rohan, Sonu"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Swapping the operands (`s2` vs `s1`) reverses the natural String order, so names come out in descending lexicographic order. \"Rohit\" and \"Rohan\" share \"Roh\"; then 'i' > 'a', so Rohit is greater and comes before Rohan in descending order. \"Aditya, Rohan, Rohit, Sonu\" is the ascending result of `s1.name.compareTo(s2.name)`.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d37_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Comparator interface",
+      "question": "The teacher wants students by marks, the admin by name and the office by roll number. `Student` is a plain class that you prefer not to change. Which call sorts by roll number using the lecture's approach?",
+      "codeSnippet": null,
+      "options": [
+        "`Collections.sort(list, new SortByRollNo());` where `SortByRollNo implements Comparator<Student>`",
+        "`Collections.sort(list);` after adding a second `compareTo` method to Student for roll numbers",
+        "`Collections.sort(new SortByRollNo());` without passing the list",
+        "`list.sortByRollNo();`, which every List provides automatically"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Comparator keeps the ordering logic outside the class: each `SortByX` class implements `compare(Student s1, Student s2)`, and you pass the one you want to `Collections.sort(list, comparator)`. A class cannot have two `compareTo(Student)` methods with the same signature, and the one-argument `Collections.sort(list)` only works with Comparable elements anyway.",
+      "source": "notes p2; code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d37_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Comparable vs Comparator",
+      "question": "Which statement correctly contrasts `Comparable` and `Comparator`?",
+      "codeSnippet": null,
+      "options": [
+        "Comparable is used by TreeSet, Comparator only by lists; otherwise they are identical",
+        "Comparator's method is `compareTo(T o)` and Comparable's is `compare(T o1, T o2)`",
+        "Comparable can be written as a lambda, Comparator cannot because it has default methods",
+        "Comparable's `compareTo(T o)` lives inside the class and defines its single natural order; Comparator's `compare(T o1, T o2)` lives outside and you can write many of them"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Comparable is implemented by the class itself (\"I know how to compare myself\"), giving one natural ordering through `compareTo(T o)`. Comparator is a separate object comparing two instances via `compare(T o1, T o2)`, so you can have SortByName, SortByMarks, SortByRollNo, etc. The second option swaps the method names, and default methods do not stop Comparator from being a functional interface.",
+      "source": "notes p2-p3",
+      "reference": "https://howtodoinjava.com/java8/functional-interface-tutorial/"
+    },
+    {
+      "id": "d37_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Lambda syntax",
+      "question": "Given the lecture's `Calculate` interface, which line does NOT compile?",
+      "codeSnippet": "interface Calculate {\n    int sum(int a, int b);\n}\n\nCalculate c1 = (a, b) -> a + b;                 // Line 1\nCalculate c2 = (a, b) -> { return a * b; };     // Line 2\nCalculate c3 = (a, b) -> { a - b; };            // Line 3\nCalculate c4 = (int a, int b) -> a / b;         // Line 4",
+      "options": [
+        "Line 1",
+        "Line 2",
+        "Line 3",
+        "Line 4"
+      ],
+      "correctAnswer": 2,
+      "explanation": "With a single expression after `->` (Line 1, Line 4) the value is returned implicitly, and explicit parameter types are allowed (Line 4). Once you use braces you write a normal method body, so a value must be returned with `return` (Line 2). Line 3 has braces but no `return`, and `a - b;` is not even a valid statement, so it fails to compile.",
+      "source": "notes p4; code: Demo2.java",
+      "reference": null
+    },
+    {
+      "id": "d37_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Target typing",
+      "question": "`Calculate c = (a, b) -> a + b;` compiles, but `Object o = (a, b) -> a + b;` does not. What explains this?",
+      "codeSnippet": null,
+      "options": [
+        "A lambda has no type of its own; it takes the type of its target, which must be a functional interface — and Object is not one",
+        "Lambdas can only be stored in local variables named after the interface method",
+        "Object is a class, and lambdas are always compiled into subclasses of the target type's interface methods only when the parameters are typed",
+        "The second line fails only because `a` and `b` have no declared types; writing `(int a, int b)` would fix it"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The compiler works out what a lambda means from the current context (target typing): the target must be a functional interface whose single abstract method the lambda implements, which also gives `a` and `b` their types. Object has no abstract method to implement, so there is nothing to map the lambda to. Adding parameter types does not help, because the target is still not a functional interface.",
+      "source": "notes p4",
+      "reference": "https://howtodoinjava.com/java8/functional-interface-tutorial/"
+    },
+    {
+      "id": "d37_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Behaviour passing",
+      "question": "A teammate has this anonymous class and wants to replace it with a lambda that behaves the same:\n\n`Collections.sort(list, new Comparator<Student>() { public int compare(Student s1, Student s2) { return s1.name.compareTo(s2.name); } });`\n\nWhich replacement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`Collections.sort(list, s -> s.name);`",
+        "`Collections.sort(list, (s1, s2) -> s1.name.compareTo(s2.name));`",
+        "`Collections.sort(list, (s1, s2) -> s1.name == s2.name);`",
+        "`Collections.sort(list, (s1, s2) -> s1.name.length() - s2.name.length());`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The lambda must match `int compare(Student, Student)`: two parameters, an int result. `(s1, s2) -> s1.name.compareTo(s2.name)` is exactly the anonymous class's body without the boilerplate. The one-parameter version has the wrong shape and `==` returns a boolean, so neither compiles; the `length()` version compiles but sorts by name length, not alphabetically.",
+      "source": "code: Demo.java; notes p3",
+      "reference": null
+    },
+    {
+      "id": "d37_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Functional interfaces",
+      "question": "A teammate writes `interface Task { void start(); void stop(); }` and then `Task t = () -> System.out.println(\"Hello\");`, which fails to compile. Which change lets the lambda line compile while keeping both methods on `Task`?",
+      "codeSnippet": null,
+      "options": [
+        "Add `@FunctionalInterface` above `Task`",
+        "Add explicit parameter types to the lambda: `(void) -> ...`",
+        "Make `Task` an abstract class instead of an interface",
+        "Give `stop()` a body by making it a `default` method, so `start()` is the only abstract method"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A lambda can only target an interface with exactly one abstract method; with `start()` and `stop()` both abstract, the compiler cannot know which one the lambda implements. A `default` method has a body and does not count, so `Task` becomes functional. `@FunctionalInterface` would just turn the problem into a compile error on the interface, and lambdas can never target abstract classes.",
+      "source": "notes p3-p4",
+      "reference": "https://howtodoinjava.com/java8/functional-interface-tutorial/"
+    },
+    {
+      "id": "d37_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Functional interfaces",
+      "question": "What does this program print?",
+      "codeSnippet": "@FunctionalInterface\ninterface Greeter {\n    String greet(String name);\n\n    default String loud(String name) {\n        return greet(name).toUpperCase();\n    }\n\n    static Greeter polite() {\n        return n -> \"Dear \" + n;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Greeter g = n -> \"Hi \" + n;\n        System.out.println(g.loud(\"ram\") + \" | \" + Greeter.polite().greet(\"Sita\"));\n    }\n}",
+      "options": [
+        "HI RAM | Dear Sita",
+        "HI RAM | Hi Sita",
+        "DEAR RAM | Dear Sita",
+        "Compilation error: a functional interface cannot have default or static methods"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Greeter has one abstract method (`greet`), so it is a valid functional interface; the default and static methods don't count. `g.loud(\"ram\")` calls g's own `greet` → \"Hi ram\" and upper-cases it → \"HI RAM\". `Greeter.polite()` returns a different lambda object, so its `greet(\"Sita\")` gives \"Dear Sita\" — each lambda carries its own implementation of `greet`, which is why \"Hi Sita\" and \"DEAR RAM\" are wrong.",
+      "source": "notes p3",
+      "reference": "https://howtodoinjava.com/java8/functional-interface-tutorial/"
+    },
+    {
+      "id": "d37_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Behaviour passing",
+      "question": "In `Collections.sort(list, (s1, s2) -> s1.marks - s2.marks);` with `list` a `List<Student>`, what actually happens?",
+      "codeSnippet": null,
+      "options": [
+        "The lambda is compiled into a new method inside the Student class, which `sort` calls by name",
+        "`s1` and `s2` are of type Object, so the code only compiles because `marks` is a public field",
+        "The lambda becomes an object implementing `Comparator<Student>` (its body is `compare`), with `s1`/`s2` inferred as Student from the context, and `sort` calls it whenever it compares two elements",
+        "The lambda runs once before sorting and its single result decides ascending or descending order"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Java passes behaviour by wrapping the \"how\" in a box — an object implementing a functional interface. The second parameter of `sort` is a Comparator, so by target typing the lambda implements `compare(Student, Student)` and the parameter types are inferred as Student. `sort` invokes that `compare` many times during the sort; it does not run once, and nothing is added to Student.",
+      "source": "notes p1-p4; code: Demo.java",
+      "reference": "https://howtodoinjava.com/java8/functional-interface-tutorial/"
+    }
+  ]
+}

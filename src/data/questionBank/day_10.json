@@ -1,0 +1,197 @@
+{
+  "day": 10,
+  "title": "Lecture #10: How Arrays work in Java",
+  "sources": [
+    "notes.pdf (6 pages)"
+  ],
+  "topics": [
+    "Array reference vs array object (stack/heap)",
+    "Random access & address formula",
+    "Data type sizes & boolean storage",
+    "Bounds checking & ArrayIndexOutOfBoundsException",
+    "2-D arrays as arrays of arrays",
+    "Arrays of Strings (arrays of references)"
+  ],
+  "questions": [
+    {
+      "id": "d10_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Array reference vs array object",
+      "question": "After `int[] arr = new int[5];` executes inside `main`, which description of memory matches the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "The five ints live on the stack inside `arr`, exactly like `int x = 4;` holds 4 directly",
+        "`arr` is a reference variable on the stack; the five-int array object is created on the heap and `arr` holds its address",
+        "Both `arr` and the five ints are on the heap; the stack only stores the method name",
+        "`arr` is on the heap and points back to five int slots reserved on the stack"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A primitive local like `int x = 4` directly holds its value, but an array is a non-primitive: `new` creates the array object on the heap and `arr` (a stack local) only stores a reference to it. The tempting first option confuses arrays with primitives; `arr` does not directly hold the array.",
+      "source": "notes p1-p2",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-10.html"
+    },
+    {
+      "id": "d10_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Random access & address formula",
+      "question": "Why can Java read `arr[3]` of a one-million-element `int[]` just as fast as `arr[0]`?",
+      "codeSnippet": null,
+      "options": [
+        "The JVM walks from index 0 but skips elements in large jumps of 1000",
+        "The JVM keeps a hidden hash table that maps every index to its value",
+        "Elements are stored contiguously with equal size, so the address is computed directly as base address + (element size * index)",
+        "Arrays are always fully copied into the CPU cache when they are created"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Because all elements are the same size and stored back-to-back, the address of `arr[i]` is a single calculation: base + size * i. That is what 'random access' means, so no traversal is needed. Hashing or walking from the start would make access cost depend on something other than this one formula.",
+      "source": "notes p2, p6",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-10.html"
+    },
+    {
+      "id": "d10_q3",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Bounds checking & ArrayIndexOutOfBoundsException",
+      "question": "What happens when this code runs?",
+      "codeSnippet": "int[] arr = {10, 20, 30, 40, 50};\nSystem.out.println(arr[arr.length - 1]);\nSystem.out.println(arr[arr.length]);",
+      "options": [
+        "Prints 50, then throws ArrayIndexOutOfBoundsException",
+        "Prints 40, then prints 50",
+        "Prints 50, then prints 0 (the slot after the array)",
+        "Fails to compile because `arr.length` cannot be used as an index"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Valid indices are 0 to length-1, so `arr[4]` prints 50 and `arr[5]` throws ArrayIndexOutOfBoundsException at run time. Java checks every access instead of reading whatever memory sits after the array, so it never prints a garbage or zero value (unlike unchecked languages).",
+      "source": "notes p3-p4",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-10.html"
+    },
+    {
+      "id": "d10_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Random access & address formula",
+      "question": "In a memory diagram, a `double[] d` starts at base address 500. Using the lecture's formula, at which address does `d[3]` begin?",
+      "codeSnippet": null,
+      "options": [
+        "503",
+        "512",
+        "532",
+        "524"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A double is 8 bytes, so the address is 500 + (8 * 3) = 524. 512 is what you get if you wrongly use the 4-byte int size; 503 ignores element size entirely, and 532 is the address of `d[4]`.",
+      "source": "notes p2",
+      "reference": null
+    },
+    {
+      "id": "d10_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Data type sizes & boolean storage",
+      "question": "What does the lecture say about the size of a `boolean`, for example in `new boolean[5]`?",
+      "codeSnippet": null,
+      "options": [
+        "The Java Language Specification fixes boolean at exactly 1 bit, so 8 booleans share one byte",
+        "The official Java docs do not fix a size; HotSpot (Oracle/OpenJDK) uses 1 byte per element, since memory is byte-addressed and this keeps base + (1 * i) simple and fast",
+        "A boolean is always 4 bytes because it is stored as an int internally in every JVM",
+        "A boolean takes 2 bytes, the same as a char, because true/false are stored as characters"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes point out that the official docs leave boolean's size unspecified, and HotSpot uses 1 byte per boolean-array element for better CPU efficiency (each element gets its own addressable byte). The '1 bit fixed by the spec' option is the common misconception: the spec only defines the values true/false, not a bit-level size.",
+      "source": "notes p2-p3",
+      "reference": null
+    },
+    {
+      "id": "d10_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Bounds checking & ArrayIndexOutOfBoundsException",
+      "question": "A teammate writes their own bounds guard for an array of length 5: `if (index < 0 || index > arr.length) throw new ArrayIndexOutOfBoundsException();`. Which index gets past this guard even though it is invalid?",
+      "codeSnippet": null,
+      "options": [
+        "-1",
+        "0",
+        "5",
+        "6"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Valid indices are 0..4, so the correct check is `index >= arr.length`. With `>`, index 5 (equal to the length) passes the guard even though it is one past the last element. -1 and 6 are still caught, and 0 is a valid index.",
+      "source": "notes p3-p4",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-10.html"
+    },
+    {
+      "id": "d10_q7",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "2-D arrays as arrays of arrays",
+      "question": "What does this print?",
+      "codeSnippet": "int[][] arr = new int[3][4];\narr[1] = new int[2];\nSystem.out.println(arr.length + \" \" + arr[0].length + \" \" + arr[1].length);",
+      "options": [
+        "3 4 4",
+        "12 4 2",
+        "3 4 2",
+        "Compile error: a row of an int[3][4] cannot be replaced"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`new int[3][4]` is an array of 3 references, each pointing to a separate int[4]. `arr[1]` is just one of those references, so it can be pointed at a new int[2]; lengths are then 3, 4 and 2. Thinking of a 2-D array as one fixed 3x4 block of 12 ints leads to the wrong '3 4 4' or '12' answers.",
+      "source": "notes p4-p5",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-10.html"
+    },
+    {
+      "id": "d10_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Arrays of Strings (arrays of references)",
+      "question": "A learner argues: \"`String[] names = {\"Aditya\", \"Abhay\", \"Rohit\"};` can't support base + size * i addressing, because the names have different lengths.\" What is the correct reply?",
+      "codeSnippet": null,
+      "options": [
+        "Right, so String arrays are searched element by element from index 0",
+        "Right, so Java pads every string to the length of the longest one",
+        "Wrong, because Java stores all strings in a single char[] and indexes by character",
+        "Wrong, because the array holds equal-sized references to String objects stored elsewhere on the heap, so names[1] is at base + (reference size * 1)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The array slots hold references (4 bytes in the lecture's diagram), not the characters, so every slot is the same size and the formula still works (e.g. 400 + 4 * 1 = 404). The actual \"Abhay\" object lives elsewhere and is reached through that reference. Padding or linear search is unnecessary.",
+      "source": "notes p6",
+      "reference": null
+    },
+    {
+      "id": "d10_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "2-D arrays as arrays of arrays",
+      "question": "Trace which inner array each outer slot refers to. What does this print?",
+      "codeSnippet": "int[][] grid = new int[2][2];\nint[] row = grid[0];\nrow[1] = 7;\ngrid[1] = row;\ngrid[1][0] = 3;\nSystem.out.println(grid[0][0] + \",\" + grid[0][1] + \",\" + grid[1][0] + \",\" + grid[1][1]);",
+      "options": [
+        "0,7,3,0",
+        "3,7,3,7",
+        "0,7,3,7",
+        "3,7,0,0"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`row` refers to the same inner array as `grid[0]`, so `row[1] = 7` makes it [0, 7]. `grid[1] = row` makes both outer slots point to that one inner array, so `grid[1][0] = 3` changes it to [3, 7], seen through both rows. Answers like '0,7,3,0' assume assignment copies the row, but it only copies the reference.",
+      "source": "notes p4-p5",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-10.html"
+    },
+    {
+      "id": "d10_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "2-D arrays as arrays of arrays",
+      "question": "For `int[][] arr = new int[3][4];` the outer array starts at 100 and its slots hold the row addresses 200, 300 and 400 (references are 4 bytes). How is the address of `arr[2][3]` found, as shown in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Read the reference at 100 + 4*2 = 108, which gives 400; then the element is at 400 + 4*3 = 412",
+        "One step: 100 + 4*(2*4 + 3) = 144, because all 12 ints are stored contiguously",
+        "Read the reference at 100 + 4*3 = 112; then the element is at 112 + 4*2 = 120",
+        "Read the reference at 108, then the element is at 108 + 4*3 = 120"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Java's 2-D array is an array of arrays: first base + 4*i locates the row reference (108, holding 400), then that row's base + 4*j gives the element (412). The single-formula answer 144 assumes C-style row-major contiguous storage, which is not how Java lays out rows. The last option wrongly adds j to the slot address instead of the row's own base address.",
+      "source": "notes p5",
+      "reference": null
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Settings,
   Calendar,
@@ -21,13 +21,14 @@ import { useTheme } from '../context/ThemeContext';
 import Modal from '../components/common/Modal';
 import PauseModal from '../components/common/PauseModal';
 import { formatDate } from '../utils/dateUtils';
-import { showSuccess } from '../utils/alerts';
+import { showSuccess, confirmAction, toast } from '../utils/alerts';
 
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function SettingsPage() {
   const {
     settings,
+    days,
     updateSettings,
     exportBackup,
     importBackup,
@@ -44,13 +45,24 @@ export default function SettingsPage() {
   // Local form state
   const [formData, setFormData] = useState({
     userName: settings.userName || 'Backend Engineer',
-    startDate: settings.startDate || new Date().toISOString().slice(0, 10),
-    challengeDuration: settings.challengeDuration || 90,
+    startDate: settings.startDate,
     dailyTargetMinutes: settings.dailyTargetMinutes || 120,
-    preferredStudyDays: settings.preferredStudyDays || DAYS_OF_WEEK,
-    recoveryModeEnabled: settings.recoveryModeEnabled !== false,
+    preferredStudyDays: settings.preferredStudyDays || DAYS_OF_WEEK.slice(0, 6),
+    autoRescheduleMissedDays: settings.autoRescheduleMissedDays !== false,
     isQuizMandatoryForDayCompletion: settings.isQuizMandatoryForDayCompletion || false
   });
+
+  // Keep the form in sync if settings change elsewhere (e.g. backup import)
+  useEffect(() => {
+    setFormData({
+      userName: settings.userName || 'Backend Engineer',
+      startDate: settings.startDate,
+      dailyTargetMinutes: settings.dailyTargetMinutes || 120,
+      preferredStudyDays: settings.preferredStudyDays || DAYS_OF_WEEK.slice(0, 6),
+      autoRescheduleMissedDays: settings.autoRescheduleMissedDays !== false,
+      isQuizMandatoryForDayCompletion: settings.isQuizMandatoryForDayCompletion || false
+    });
+  }, [settings]);
 
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -67,10 +79,28 @@ export default function SettingsPage() {
     });
   };
 
-  const handleSaveSettings = (e) => {
+  const handleSaveSettings = async (e) => {
     e.preventDefault();
-    updateSettings(formData);
+    if (formData.preferredStudyDays.length === 0) {
+      toast('Pick at least one study day', { icon: 'error' });
+      return;
+    }
+    if (!formData.startDate) {
+      toast('Choose a start date', { icon: 'error' });
+      return;
+    }
+    if (formData.startDate !== settings.startDate) {
+      const ok = await confirmAction({
+        title: 'Change the start date?',
+        text: 'Every lecture will be rescheduled from the new start date. Your progress is kept.',
+        confirmText: 'Reschedule',
+        icon: 'warning'
+      });
+      if (!ok) return;
+    }
+    updateSettings({ ...formData, userName: formData.userName.trim() || 'Backend Engineer' });
     setSavedSuccess(true);
+    toast('Settings saved');
     setTimeout(() => setSavedSuccess(false), 2500);
   };
 
@@ -213,7 +243,7 @@ export default function SettingsPage() {
                 className="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
               />
               <p className="text-[11px] text-slate-500 mt-1">
-                Recalculates scheduled dates for all 90 days (Sundays excluded as rest days).
+                Recalculates scheduled dates for all {days.length} days (non-study days are skipped).
               </p>
             </div>
 
@@ -221,16 +251,11 @@ export default function SettingsPage() {
               <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Challenge Duration (Days)
               </label>
-              <input
-                type="number"
-                min="30"
-                max="120"
-                value={formData.challengeDuration}
-                onChange={(e) => setFormData({ ...formData, challengeDuration: Number(e.target.value) })}
-                className="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
-              />
+              <div className="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 font-mono">
+                {days.length} days
+              </div>
               <p className="text-[11px] text-slate-500 mt-1">
-                Standard Winter Arc: 90 days (1 video/day).
+                Set by the curriculum: one lecture per study day.
               </p>
             </div>
           </div>
@@ -285,10 +310,10 @@ export default function SettingsPage() {
             <div>
               <p className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
                 <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
-                Require Daily 25-Question Quiz for Day Completion
+                Require the daily quiz for day completion
               </p>
               <p className="text-[11px] text-slate-400">
-                When enabled, a day will only be marked 100% complete once all 25 daily questions are answered.
+                When enabled, a day only counts as complete once every question in that day's quiz is answered.
               </p>
             </div>
             <input
@@ -303,16 +328,16 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between p-3.5 rounded-lg bg-slate-900/60 border border-slate-800">
             <div>
               <p className="text-xs font-bold text-slate-200">
-                Intelligent Missed-Day Recovery Mode
+                Auto-reschedule missed days
               </p>
               <p className="text-[11px] text-slate-400">
-                Detects missed days and provides seamless task transfers without breaking challenge morale.
+                On: an unfinished day rolls forward to today and later lectures shift with it. Off: the calendar stays fixed and missed days appear in the Recovery panel on the Dashboard.
               </p>
             </div>
             <input
               type="checkbox"
-              checked={formData.recoveryModeEnabled}
-              onChange={(e) => setFormData({ ...formData, recoveryModeEnabled: e.target.checked })}
+              checked={formData.autoRescheduleMissedDays}
+              onChange={(e) => setFormData({ ...formData, autoRescheduleMissedDays: e.target.checked })}
               className="custom-checkbox"
             />
           </div>

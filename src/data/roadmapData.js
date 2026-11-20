@@ -3514,8 +3514,8 @@ export const INITIAL_ROADMAP_DAYS = [
   },
   {
     "day": 91,
-    "phase": "Phase 2: Spring Boot Mastery",
-    "phaseId": "phase-2",
+    "phase": "Phase 3: Security & Enterprise Persistence",
+    "phaseId": "phase-3",
     "week": 13,
     "title": "Spring Lecture #34: Transactional Propagation & Isolation",
     "topic": "Spring Boot",

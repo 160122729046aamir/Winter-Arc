@@ -289,7 +289,15 @@ export default function RoadmapPage() {
 
                   {isCompleted ? (
                     <button
-                      onClick={() => markDayIncomplete(dayItem.day)}
+                      onClick={async () => {
+                        const ok = await confirmAction({
+                          title: `Re-open Day ${dayItem.day}?`,
+                          text: 'The day is marked unfinished and its checklist is cleared. Notes, quiz answers and logged time are kept.',
+                          confirmText: 'Re-open Day',
+                          icon: 'warning'
+                        });
+                        if (ok) markDayIncomplete(dayItem.day);
+                      }}
                       title="Mark as Incomplete"
                       className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 transition-colors flex items-center gap-1.5"
                     >

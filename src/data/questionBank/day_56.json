@@ -1,0 +1,204 @@
+{
+  "day": 56,
+  "title": "Lecture #56: Executor Framework Deep Dive",
+  "sources": [
+    "notes/Notes.pdf (45 pages)",
+    "notes/slides.pdf (10 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java"
+  ],
+  "topics": [
+    "Why thread pools",
+    "execute() vs submit()",
+    "Callable & Future",
+    "Executor lifecycle & shutdown",
+    "ThreadPoolExecutor decision flow",
+    "Work queues & factory pools",
+    "Rejection policies",
+    "Scheduled execution"
+  ],
+  "questions": [
+    {
+      "id": "d56_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Why thread pools",
+      "question": "A server handles each request with `new Thread(() -> process(request)).start();`. What is the main advantage of submitting these tasks to an `ExecutorService` thread pool instead?",
+      "codeSnippet": null,
+      "options": [
+        "Each task finishes faster, because pool threads get higher CPU priority",
+        "Tasks always run in the order they were submitted",
+        "Worker threads are reused and their number is bounded, so you avoid creating a thread per task and running out of resources under load",
+        "Pooled tasks never need synchronization, because the pool runs one task at a time"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Creating a thread per task pays the creation cost every time and has no upper limit, which can exhaust memory and cause heavy context switching. A pool keeps a bounded set of workers and reuses them for many tasks. It also separates task submission from execution policy. Pools don't raise priority, and with more than one worker they don't guarantee order or remove the need for synchronization.",
+      "source": "notes p1-4; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/pools.html"
+    },
+    {
+      "id": "d56_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "execute() vs submit()",
+      "question": "What does main print? (This is `Demo3` from the lecture.)",
+      "codeSnippet": "ExecutorService executor = Executors.newFixedThreadPool(2);\n\nFuture<Integer> f1 = executor.submit(() -> {\n    return (10 / 0);\n});\n\ntry {\n    System.out.println(f1.get());\n} catch (Exception e) {\n    System.out.println(\"Catched submit() exception\");\n}",
+      "options": [
+        "Nothing from main; the worker thread prints an `ArithmeticException` stack trace",
+        "Catched submit() exception",
+        "Infinity",
+        "0, because a failed task's `Future` returns the default value"
+      ],
+      "correctAnswer": 1,
+      "explanation": "With `submit()`, the task's exception is stored in the `Future` instead of escaping on the worker thread. `f1.get()` then throws an `ExecutionException` whose cause is the `ArithmeticException`, and the catch block prints the message. Integer division by zero throws, it never gives Infinity. The worker printing a stack trace is what happens with `execute()`, not `submit()`.",
+      "source": "code: Demo3.java; notes p15-17",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Future.html#get()"
+    },
+    {
+      "id": "d56_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "ThreadPoolExecutor decision flow",
+      "question": "This is `Demo4`: `corePoolSize` 2, `maximumPoolSize` 5, and a queue of capacity 2. Each task sleeps 2 seconds, and all 5 are submitted before any of them finishes. What happens?",
+      "codeSnippet": "ThreadPoolExecutor executor = new ThreadPoolExecutor(\n        2, 5, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(2));\n\nfor (int i = 1; i <= 5; i++) {\n    int taskId = i;\n    executor.execute(() -> {\n        System.out.println(\"Task \" + taskId + \" by \" + Thread.currentThread().getName());\n        try { Thread.sleep(2000); } catch (Exception e) {}\n    });\n}\nexecutor.shutdown();",
+      "options": [
+        "Tasks 1 and 2 get the two core workers, tasks 3 and 4 wait in the queue, and task 5 makes the pool create a third worker, so task 5 can start before tasks 3 and 4",
+        "The pool never grows past its core size; task 5 waits behind 3 and 4, and the tasks run in order 1–5",
+        "Task 5 is rejected with `RejectedExecutionException`, because the queue is full",
+        "The pool creates 5 workers right away, one per task, because `maximumPoolSize` is 5"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A `ThreadPoolExecutor` first fills its core workers (tasks 1 and 2), then the queue (tasks 3 and 4). Only when the queue is full does it create extra workers, up to the maximum, so task 5 gets a third worker and starts immediately. Tasks 3 and 4 are still waiting at that point. Rejection would happen only if the pool were already at 5 workers with a full queue.",
+      "source": "code: Demo4.java; notes p22-26",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html"
+    },
+    {
+      "id": "d56_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Callable & Future",
+      "question": "Which statement about `execute()`, `submit()`, `Runnable` and `Callable` is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`execute()` returns a `Future<Void>`, and `submit()` returns the task's result directly",
+        "A `Callable` can be passed to `execute()` as long as its result is ignored",
+        "`Runnable.run()` can declare checked exceptions, but `Callable.call()` cannot",
+        "`submit()` accepts a `Runnable` or a `Callable` and returns a `Future`; `execute()` takes only a `Runnable` and returns nothing"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`execute(Runnable)` is fire-and-forget: it gives you no handle, so you cannot get a result or cancel the task, and exceptions go to the worker's uncaught-exception handler. `submit()` returns a `Future`, which you can use to get the result, check completion or cancel. For a `Runnable`, `get()` returns null. `Callable.call()` returns a value and can throw checked exceptions, while `Runnable.run()` cannot.",
+      "source": "notes p9-12",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html"
+    },
+    {
+      "id": "d56_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Executor lifecycle & shutdown",
+      "question": "Running `Demo2` prints `10` after about 3 seconds, but the program never exits. It creates `newFixedThreadPool(2)`, submits a `Callable`, and prints `f1.get()`. Why does it keep running?",
+      "codeSnippet": null,
+      "options": [
+        "`f1.get()` keeps blocking even after it has returned the result",
+        "The executor is never shut down, and its worker threads are non-daemon threads that stay idle, waiting for more tasks, which keeps the JVM alive",
+        "The `Callable` is still sleeping, because `Thread.sleep(3000)` runs again for every `get()` call",
+        "A fixed thread pool always runs until `System.exit()` is called, even after `shutdown()`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Pool workers are normally non-daemon threads, and after finishing a task they wait for the next one. The JVM does not exit while non-daemon threads are alive. Calling `executor.shutdown()`, ideally in a `finally` block, lets the workers finish their accepted work and then terminate. `get()` returned the value once, so it is not the cause.",
+      "source": "code: Demo2.java; notes p17",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ExecutorService.html#shutdown()"
+    },
+    {
+      "id": "d56_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Work queues & factory pools",
+      "question": "An order service uses `Executors.newFixedThreadPool(10)`. During a traffic spike lasting hours, requests arrive faster than they finish. Latency keeps climbing and heap usage grows until an `OutOfMemoryError`. What is the root cause, and what is a good fix?",
+      "codeSnippet": null,
+      "options": [
+        "The pool keeps creating threads beyond 10; set `maximumPoolSize` to 10",
+        "The 10 workers deadlock under load; switch to `newCachedThreadPool()`",
+        "The fixed pool uses an unbounded `LinkedBlockingQueue`, so pending tasks pile up without limit; use a `ThreadPoolExecutor` with a bounded queue and an explicit rejection policy",
+        "Fixed pools drop tasks silently when busy, so clients keep retrying"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`newFixedThreadPool(n)` is conceptually core = max = n with an unbounded queue. It never adds threads; instead, waiting tasks pile up in memory, which only hides the overload until memory runs out. A bounded queue plus a rejection policy (abort, or caller-runs for backpressure) limits the overload and makes it visible. A cached pool would instead create a huge number of threads.",
+      "source": "notes p27-30, p38-39",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Executors.html#newFixedThreadPool(int)"
+    },
+    {
+      "id": "d56_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Scheduled execution",
+      "question": "A task takes 5 seconds to run and is scheduled with an initial delay of 0 and a period/delay of 2 seconds. When does its second execution start under `scheduleAtFixedRate` and under `scheduleWithFixedDelay`?",
+      "codeSnippet": null,
+      "options": [
+        "Fixed rate: at 2 s, overlapping the first run; fixed delay: at 7 s",
+        "Fixed rate: at about 5 s (late, because runs of the same task never overlap); fixed delay: at about 7 s (2 s after the first run ends)",
+        "Both at about 7 s",
+        "Fixed rate: at about 7 s; fixed delay: at about 5 s"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Fixed rate aims for start times of 0, 2, 4, … seconds. Because runs of the same periodic task never overlap, the second run starts as soon as the first ends, at about 5 seconds, already behind schedule. Fixed delay measures the gap from the end of the previous run: 5 + 2 = about 7 seconds. The first option wrongly assumes fixed-rate runs can overlap.",
+      "source": "notes p32-34",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html"
+    },
+    {
+      "id": "d56_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "ThreadPoolExecutor decision flow",
+      "question": "Each task sleeps for 5 seconds. What does the last line print right after the loop? Assume no task has finished yet.",
+      "codeSnippet": "ThreadPoolExecutor executor = new ThreadPoolExecutor(\n        2, 4, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>());\n\nfor (int i = 1; i <= 10; i++) {\n    executor.execute(() -> {\n        try { Thread.sleep(5000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }\n    });\n}\nSystem.out.println(executor.getPoolSize() + \" \" + executor.getQueue().size());",
+      "options": [
+        "4 6",
+        "2 8",
+        "4 8",
+        "10 0"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The first two tasks each create a core worker and run on it directly, so they are never queued. After that, an unbounded `LinkedBlockingQueue` always accepts tasks, so the pool never reaches the 'queue full' step that creates extra workers. The pool stays at 2 threads with 8 tasks queued, and `maximumPoolSize` = 4 is never used. '4 6' assumes the pool grows while the queue still has room.",
+      "source": "notes p23-25, p28-29",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html"
+    },
+    {
+      "id": "d56_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Rejection policies",
+      "question": "A log-ingestion service uses a `ThreadPoolExecutor` with a bounded queue. Under overload, no event may be lost, and the upstream threads calling `execute()` should be slowed down automatically. Which rejection policy fits?",
+      "codeSnippet": null,
+      "options": [
+        "`ThreadPoolExecutor.CallerRunsPolicy`",
+        "`ThreadPoolExecutor.DiscardPolicy`",
+        "`ThreadPoolExecutor.DiscardOldestPolicy`",
+        "`ThreadPoolExecutor.AbortPolicy` with no handling at the call site"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`CallerRunsPolicy` runs a rejected task on the thread that called `execute()`. The task is not lost (unless the executor is already shut down), and the producer is kept busy, which creates natural backpressure. `DiscardPolicy` drops new tasks silently, and `DiscardOldestPolicy` drops the oldest queued task. The default `AbortPolicy` throws `RejectedExecutionException`, which loses the event if the caller doesn't handle it.",
+      "source": "notes p35-37",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.CallerRunsPolicy.html"
+    },
+    {
+      "id": "d56_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Scheduled execution",
+      "question": "A metrics job is registered with `scheduler.scheduleAtFixedRate(this::collect, 0, 10, TimeUnit.SECONDS)`. After a brief database outage, `collect()` threw one `SQLException` (wrapped in a `RuntimeException`). Since then, metrics have stopped completely, even though the database is back and no error is being logged. What happened, and how do you prevent it?",
+      "codeSnippet": null,
+      "options": [
+        "The scheduler thread died and is never replaced; schedule the job on two threads instead of one",
+        "The exception paused the schedule until the next JVM restart; call `scheduler.shutdown()` and reschedule",
+        "Fixed-rate tasks retry failed runs forever, so the job is stuck retrying the old run; switch to `scheduleWithFixedDelay`",
+        "An uncaught exception in a periodic task cancels all its later runs (the exception is stored in the returned `ScheduledFuture`); catch and log expected failures inside `collect()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "If any run of a periodic task throws, later runs are suppressed, and the exception goes into the `ScheduledFuture`, which nobody checks, so nothing appears in the logs. Wrapping the body in try/catch, as the notes show, keeps the schedule alive after expected failures. Switching to fixed delay has the same suppression rule, so it would not help.",
+      "source": "notes p35",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html#scheduleAtFixedRate(java.lang.Runnable,long,long,java.util.concurrent.TimeUnit)"
+    }
+  ]
+}

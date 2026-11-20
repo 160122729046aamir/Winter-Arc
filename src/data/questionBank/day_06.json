@@ -1,0 +1,202 @@
+{
+  "day": 6,
+  "title": "Lecture #6: Java Operators",
+  "sources": [
+    "notes.pdf (11 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java"
+  ],
+  "topics": [
+    "Arithmetic & compound assignment",
+    "Pre/post increment",
+    "Relational operators",
+    "Bitwise operators (& | ^ ~)",
+    "Shift operators (<< >> >>>)",
+    "Logical operators & short-circuiting",
+    "Operator precedence"
+  ],
+  "questions": [
+    {
+      "id": "d6_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Relational operators",
+      "question": "With `int a = 5; int b = 10;`, what is the difference between `a == b` and `a = b`?",
+      "codeSnippet": null,
+      "options": [
+        "They are identical; both check whether a equals b",
+        "`a == b` copies b into a, while `a = b` compares them",
+        "`a == b` asks \"is a equal to b?\" and gives a boolean (false here); `a = b` assigns the value of b to a",
+        "`a == b` compares memory addresses, while `a = b` compares values"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes contrast the relational operator `==` (a question whose answer is true/false) with the assignment operator `=` (store b's value in a). Swapping their meanings is the classic beginner bug; for two int primitives, `==` compares the values themselves, not addresses.",
+      "source": "notes p1",
+      "reference": null
+    },
+    {
+      "id": "d6_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Bitwise operators (& | ^ ~)",
+      "question": "What does this snippet from the lecture's Demo3.java print?",
+      "codeSnippet": "int a = 2; // ...0010\nint b = 3; // ...0011\nint c = a & b;\nint d = a | b;\nint e = a ^ b;\nSystem.out.println(c + \" , \" + d + \" , \" + e);",
+      "options": [
+        "3 , 2 , 1",
+        "2 , 3 , 1",
+        "2 , 3 , 8",
+        "true , true , false"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Bit by bit: 10 & 11 = 10 (2), 10 | 11 = 11 (3), and 10 ^ 11 = 01 (1) because XOR gives 1 only where the bits differ. `^` is XOR, not exponent, so 2^3 is not 8; and on ints these operators produce ints, not booleans.",
+      "source": "code: Demo3.java; notes p3",
+      "reference": null
+    },
+    {
+      "id": "d6_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Bitwise operators (& | ^ ~)",
+      "question": "According to the truth table in the notes, when does a bit of `A ^ B` (XOR) equal 1?",
+      "codeSnippet": null,
+      "options": [
+        "Only when the two bits are different (one is 0 and the other is 1)",
+        "Only when both bits are 1",
+        "When at least one of the bits is 1",
+        "Only when both bits are 0"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The truth table gives A ^ B = 0, 1, 1, 0 for inputs 00, 01, 10, 11, i.e. 1 exactly when the bits differ. 'At least one is 1' describes OR (`|`), which also gives 1 for the input 11, where XOR gives 0.",
+      "source": "notes p3",
+      "reference": null
+    },
+    {
+      "id": "d6_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Relational operators",
+      "question": "A teammate writes `int c = (a < b);` to store whether a is less than b, and it does not compile. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Remove the parentheses: `int c = a < b;`",
+        "Cast the result: `int c = (int) (a < b);`",
+        "Use `<=` instead of `<`, because `<` returns a char",
+        "Declare c as boolean: `boolean c = (a < b);`, because a relational expression produces true/false"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Relational operators (==, !=, <, >, <=, >=) produce a boolean, as in the lecture's `boolean c = (a == b);`. A boolean can never be converted to int, not even with a cast, so the cast option still fails, and removing parentheses changes nothing about the type.",
+      "source": "notes p1-p2; code: Demo2.java",
+      "reference": null
+    },
+    {
+      "id": "d6_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Pre/post increment",
+      "question": "What does this snippet (from the lecture's Demo.java) print?",
+      "codeSnippet": "int j = 7;\nj++;\n++j;\nint k = j++;\nSystem.out.println(j + \" , \" + k);\nint l = ++j;\nSystem.out.println(j + \" , \" + l);",
+      "options": [
+        "10 , 10\n11 , 11",
+        "9 , 9\n10 , 11",
+        "10 , 9\n11 , 11",
+        "10 , 9\n11 , 10"
+      ],
+      "correctAnswer": 2,
+      "explanation": "j becomes 8 then 9. `k = j++` is postfix: k gets the old value 9, then j becomes 10. `l = ++j` is prefix: j becomes 11 first, then l gets 11. The '11 , 10' option wrongly treats prefix like postfix.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d6_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Bitwise operators (& | ^ ~)",
+      "question": "In the lecture's code, `int a = 2; int f = ~a;` gives f = -3, not 1 or -2. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`~` flips all 32 bits of the int: 00...0010 becomes 11...1101, which in 2's complement is -3",
+        "`~` flips only the bits after the leading 1, so 10 becomes 01 and then the sign is added",
+        "`~` negates the number and subtracts 2 as a fixed rule for even numbers",
+        "`~` is the same as unary minus, but the JVM rounds the result down"
+      ],
+      "correctAnswer": 0,
+      "explanation": "An int is 32 bits, so NOT turns all the leading zeros into ones; MSB = 1 makes it negative, and decoding 11...1101 (flip -> 00...0010, +1 -> 3) gives -3. In general ~x = -x - 1. Thinking only of the two visible bits (10 -> 01 = 1) ignores the other 30 bits.",
+      "source": "code: Demo3.java",
+      "reference": null
+    },
+    {
+      "id": "d6_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Logical operators & short-circuiting",
+      "question": "With `int count = 0; int total = 50;`, a teammate writes `boolean ok = (count != 0) & (total / count > 10);` and the program crashes. Changing one character fixes it. What is going on?",
+      "codeSnippet": null,
+      "options": [
+        "`&` has lower precedence than `!=`, so the expression is grouped wrongly; adding parentheses fixes it",
+        "`&` does not short-circuit, so `total / count` still runs and throws ArithmeticException (/ by zero); with `&&` the right side is skipped because the left side is already false",
+        "Division inside a boolean expression is illegal; using `||` makes it legal",
+        "`&` only works on ints, so the boolean operands cause a runtime type error; `&&` fixes the types"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes stress that `&` and `|` evaluate both sides ('does not do short-circuiting'), while `&&` stops as soon as the left side is false. `&` is legal on booleans (it compiles), so the crash is the division by zero, not a type error.",
+      "source": "notes p10-p11; code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/op2.html"
+    },
+    {
+      "id": "d6_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Operator precedence",
+      "question": "With `int b = 2, c = 3, d = 4;` a teammate wants to add b and c first and then multiply by d, but writes `int a = b + c * d;`. What value does a get, and how should it be fixed?",
+      "codeSnippet": null,
+      "options": [
+        "20; the code is already correct because Java evaluates left to right",
+        "20; but only because + and * have equal precedence",
+        "24; it should be written as `(b * c) * d`",
+        "14, because * binds tighter than +; write `(b + c) * d` to get 20"
+      ],
+      "correctAnswer": 3,
+      "explanation": "In the precedence table * is above +, so `b + c * d` = 2 + 12 = 14. Parentheses have the highest precedence, so `(b + c) * d` = 20, exactly the fix shown in the notes. Strict left-to-right evaluation only applies between operators of the same precedence.",
+      "source": "notes p11",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/op2.html"
+    },
+    {
+      "id": "d6_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Shift operators (<< >> >>>)",
+      "question": "What does this program print?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        int g = 1;\n        g = g << 33;\n        byte h = 1;\n        h = (byte) (h << 7);\n        int x = -128 >> 8;\n        System.out.println(g + \" \" + h + \" \" + x);\n    }\n}",
+      "options": [
+        "2 -128 -1",
+        "0 128 0",
+        "0 -128 -1",
+        "2 128 0"
+      ],
+      "correctAnswer": 0,
+      "explanation": "For an int, only the low 5 bits of the shift distance are used, so `<< 33` acts like `<< 1` and g = 2 (not 0). `h << 7` is the int 128 (10000000), and casting to byte makes the MSB a sign bit, giving -128. `>>` is a signed right shift that copies the sign bit in, so -128 >> 8 = -1, as the notes show.",
+      "source": "code: Demo3.java, Demo4.java; notes p5-p7",
+      "reference": "https://wiki.sei.cmu.edu/confluence/spaces/java/pages/88487381/NUM14-J.+Use+shift+operators+correctly"
+    },
+    {
+      "id": "d6_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Shift operators (<< >> >>>)",
+      "question": "For the int value -1 (all 32 bits set), what do `-1 >> 28` and `-1 >>> 28` evaluate to?",
+      "codeSnippet": null,
+      "options": [
+        "-1 and -1",
+        "-1 and 15",
+        "15 and 15",
+        "15 and -1"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`>>` fills the vacated left bits with copies of the sign bit (1s here), so the result stays all ones = -1. `>>>` is the unsigned 'right shift with zeros' from the notes, so 28 zeros come in from the left and only the low 4 ones remain: 1111 = 15.",
+      "source": "notes p6-p8",
+      "reference": "https://wiki.sei.cmu.edu/confluence/spaces/java/pages/88487381/NUM14-J.+Use+shift+operators+correctly"
+    }
+  ]
+}

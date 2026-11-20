@@ -1,0 +1,200 @@
+{
+  "day": 46,
+  "title": "Lecture #46: Java Heap Memory Deep Dive",
+  "sources": [
+    "notes.pdf (6 pages)",
+    "code/Demo.java (empty)"
+  ],
+  "topics": [
+    "Heap structure (Young: Eden, S0, S1; Old generation; String pool)",
+    "Minor GC, object ageing & promotion",
+    "Major GC",
+    "Static vs instance data in memory",
+    "Reference types (strong, soft, weak, phantom)",
+    "GC algorithms (Mark & Sweep, Mark & Compact, Copying)",
+    "Stop-the-world, System.gc(), Serial vs Parallel GC",
+    "OutOfMemoryError & heap dump"
+  ],
+  "questions": [
+    {
+      "id": "d46_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Heap structure",
+      "question": "Following the notes' heap layout, where is a brand-new object such as `Student s1 = new Student();` normally allocated?",
+      "codeSnippet": null,
+      "options": [
+        "Directly in the Old generation, because objects are meant to live long",
+        "In Eden, part of the Young generation, where allocation is very fast",
+        "In Survivor space S1, because S0 is reserved for the String pool",
+        "On the stack, next to the reference `s1`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Ordinary new objects are allocated in Eden (Young generation), and the notes stress that this allocation is very fast. They reach the survivor spaces only after surviving a minor GC, and the Old generation only after ageing (or in special cases such as very large objects). The reference `s1` is on the stack, but the object is not.",
+      "source": "notes p1",
+      "reference": "https://blog.gceasy.io/understanding-generational-gc-young-old-promotion/"
+    },
+    {
+      "id": "d46_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Static vs instance data in memory",
+      "question": "This is based on the notes' Student/Main walkthrough. What does it print?",
+      "codeSnippet": "class Student {\n    String name;\n    int age;\n    static String college = \"IIT G\";\n\n    public Student(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n\n    public void markAttendance() {\n        System.out.println(name + \" is present\");\n    }\n\n    public static void changeCollege(String newCollege) {\n        college = newCollege;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student s1 = new Student(\"Aditya\", 28);\n        Student s2 = new Student(\"Rohit\", 25);\n        s1.markAttendance();\n        Student.changeCollege(\"IIT Bombay\");\n        System.out.println(s2.college);\n    }\n}",
+      "options": [
+        "Aditya is present\nIIT G",
+        "Rohit is present\nIIT Bombay",
+        "It does not compile, because the static field `college` cannot be read through `s2`",
+        "Aditya is present\nIIT Bombay"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`name` and `age` are per-object data in each Student on the heap. `college` is class-level: there is one copy for the whole class (the notes draw it with the class data), so changing it through the static method is visible through every reference, including `s2`. Reading a static field through an instance compiles (at most with a warning); it still resolves to the class's single field.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    },
+    {
+      "id": "d46_q3",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Minor GC, object ageing & promotion",
+      "question": "In the notes, `[ob2]` survives one minor GC after another. What happens to it each time, and when does it reach the Old generation?",
+      "codeSnippet": null,
+      "options": [
+        "Each minor GC copies it between survivor spaces (S0 and S1) and increments its age; once its age reaches the threshold (15 in the notes), it is promoted to the Old generation",
+        "It stays in Eden permanently, and only a major GC can move it",
+        "It is promoted to the Old generation on the very first minor GC it survives",
+        "Each minor GC moves it back into Eden, and it is promoted only when Eden is completely full"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Live young objects alternate between S0 and S1 (\"ping-pong\") and get older each time they survive. When the age reaches the tenuring threshold (15 by default in HotSpot, as in the notes' counter), the object is promoted. Promotion on the first survival is not the normal case; it can happen early only for reasons such as survivor-space overflow.",
+      "source": "notes p2",
+      "reference": "https://blog.gceasy.io/understanding-generational-gc-young-old-promotion/"
+    },
+    {
+      "id": "d46_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "GC algorithms",
+      "question": "The heap holds `[A] [B] [C] [D] [E]`, and B and D are garbage. What is the key difference between the results of Mark & Sweep and Mark & Compact?",
+      "codeSnippet": null,
+      "options": [
+        "Mark & Sweep moves A, C and E together, while Mark & Compact leaves gaps where B and D were",
+        "Mark & Sweep frees only B, while Mark & Compact frees both B and D",
+        "Mark & Sweep leaves free gaps where B and D were (fragmentation); Mark & Compact also slides A, C and E together, so there is no fragmentation, but moving objects costs extra time",
+        "Both produce the same layout; they differ only in which thread runs them"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Both algorithms first mark the live objects. Sweep just reclaims the dead slots in place, leaving `[A] [ ] [C] [ ] [E]` and a fragmented heap. Compact additionally moves the survivors next to each other (`[A] [C] [E]`), which removes fragmentation, but, as the notes say, moving objects is costly. The first option swaps the two.",
+      "source": "notes p5",
+      "reference": "https://opensource.com/article/22/6/garbage-collection-java-virtual-machine"
+    },
+    {
+      "id": "d46_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Reference types",
+      "question": "You are building an in-memory cache of decoded images. Entries should stay as long as memory is plentiful but be released before the JVM would throw `OutOfMemoryError`. Which reference type from the lecture fits?",
+      "codeSnippet": null,
+      "options": [
+        "A strong reference, because the GC will clear it automatically when memory is low",
+        "`SoftReference`, because softly reachable objects are cleared only when the JVM is under memory pressure",
+        "`WeakReference`, because weakly reachable objects are kept until memory is almost full",
+        "`PhantomReference`, because `get()` returns the image until it is collected"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Soft references are the memory-sensitive option: the GC clears them only when it needs space, which makes them suitable for caches. Weak references are cleared at the next GC once no strong reference remains, which is too eager for this cache. Strong references are never cleared while they are reachable, and a phantom reference's `get()` always returns null.",
+      "source": "notes p4",
+      "reference": "https://dzone.com/articles/weak-soft-and-phantom-references-in-java-and-why-they-matter"
+    },
+    {
+      "id": "d46_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "GC eligibility",
+      "question": "After the last line of this method runs (the method has not returned yet), how many Student objects are eligible for garbage collection?",
+      "codeSnippet": "class Student {\n    String name;\n    Student(String name) { this.name = name; }\n}\n\npublic class Gc {\n    public static void main(String[] args) {\n        Student a = new Student(\"A\");   // object #1\n        Student b = new Student(\"B\");   // object #2\n        Student c = a;\n        a = null;\n        b = new Student(\"C\");           // object #3\n        c = b;\n    }\n}",
+      "options": [
+        "2",
+        "1",
+        "3",
+        "0"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Object #2 lost its only reference when `b` was reassigned. Object #1 was still held by `c` after `a = null`, but loses it when `c = b`. Only object #3 is reachable (through both `b` and `c`), so #1 and #2 are eligible. Answering 1 misses that `c = b` drops the last link to #1. Eligibility is certain here, but when the GC actually runs is not.",
+      "source": "notes p4 (strong references), Day 45 notes p7",
+      "reference": "https://howtodoinjava.com/java/garbage-collection/java-memory-model/"
+    },
+    {
+      "id": "d46_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Stop-the-world, System.gc(), Serial vs Parallel GC",
+      "question": "To \"keep memory clean\", a teammate added `System.gc();` at the end of every HTTP request handler. Response times have become spiky. What is the best assessment?",
+      "codeSnippet": null,
+      "options": [
+        "It is correct, because `System.gc()` immediately and cheaply frees exactly the objects created by that request",
+        "It helps, because explicit GC calls prevent stop-the-world pauses later",
+        "It has no effect at all, because the JVM always ignores `System.gc()`",
+        "Remove it: `System.gc()` only requests a collection, and when honoured it typically triggers a full, stop-the-world GC that pauses application threads, which explains the latency spikes"
+      ],
+      "correctAnswer": 3,
+      "explanation": "GC pauses the application (stop the world), and `System.gc()` usually asks for a full collection, so calling it on every request adds frequent long pauses. It is only a hint, so it is neither guaranteed to run nor targeted at specific objects. Saying it is always ignored is also wrong: by default, HotSpot honours it.",
+      "source": "notes p6",
+      "reference": "https://docs.oracle.com/en/java/javase/17/gctuning/garbage-collector-implementation.html"
+    },
+    {
+      "id": "d46_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Reference types",
+      "question": "What does this program print?",
+      "codeSnippet": "import java.lang.ref.*;\n\nclass Student { }\n\npublic class Refs {\n    public static void main(String[] args) {\n        Student s = new Student();\n        WeakReference<Student> w = new WeakReference<>(s);\n        PhantomReference<Student> p =\n                new PhantomReference<>(s, new ReferenceQueue<>());\n\n        System.gc();\n\n        System.out.println(w.get() == s);\n        System.out.println(p.get());\n    }\n}",
+      "options": [
+        "false\nnull",
+        "true, followed by the Student object's default `toString()` text",
+        "true\nnull",
+        "It cannot be predicted, because it depends on whether the GC actually ran"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`s` is still a strong reference to the object and is used afterwards, so the object is strongly reachable. The weak reference cannot be cleared, so `w.get() == s` is true whether or not the GC ran. `PhantomReference.get()` always returns null by design; phantom references only signal collection through their queue. Neither line depends on GC timing.",
+      "source": "notes p4",
+      "reference": "https://dzone.com/articles/weak-soft-and-phantom-references-in-java-and-why-they-matter"
+    },
+    {
+      "id": "d46_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Minor GC, object ageing & promotion",
+      "question": "A report service repeatedly allocates short-lived `int[10_000_000]` buffers (about 40 MB each). Although each buffer is used for only a moment, GC logs show frequent, expensive major GCs. Based on the lecture's list of promotion reasons, what is the most likely cause?",
+      "codeSnippet": null,
+      "options": [
+        "Such large objects can be placed straight into the Old generation (or overflow the survivor spaces), so they are reclaimed only by major GCs, even though they die young",
+        "Arrays of primitives are always stored in the String pool, which is cleaned only by a major GC",
+        "Large arrays are stored on the stack, and stack cleanup counts as a major GC",
+        "The objects are promoted only after surviving 15 minor GCs, which is what makes each major GC expensive"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes list three exceptions to age-based promotion: survivor-space overflow, dynamic age determination, and large objects such as `new int[10_000_000]`. A big buffer may bypass Eden or be promoted prematurely, so the short-lived data ends up in the Old generation, which only the costly major GC cleans. These buffers die long before reaching the age of 15, so the normal ageing path is not the cause.",
+      "source": "notes p2",
+      "reference": "https://blog.gceasy.io/understanding-generational-gc-young-old-promotion/"
+    },
+    {
+      "id": "d46_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Stop-the-world, System.gc(), Serial vs Parallel GC",
+      "question": "The notes contrast a sequential (single-threaded) GC with a Parallel GC that uses multiple threads. What does using Parallel GC change about stop-the-world (STW) pauses?",
+      "codeSnippet": null,
+      "options": [
+        "It removes STW pauses completely, because the application and the GC threads run side by side",
+        "Application threads are still paused during collection, but several GC threads share the work, so each pause is usually shorter on multi-core machines",
+        "It makes pauses longer, because the GC threads must coordinate with one another",
+        "It only changes the Young generation, while the Old generation can no longer be collected"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The Parallel collector is still a stop-the-world collector: it pauses the application, but it uses multiple threads to collect, so it finishes faster and improves throughput. Running alongside the application (concurrent collection) is a different design. Parallel GC collects both generations.",
+      "source": "notes p6",
+      "reference": "https://docs.oracle.com/en/java/javase/17/gctuning/garbage-collector-implementation.html"
+    }
+  ]
+}

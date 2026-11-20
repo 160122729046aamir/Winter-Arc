@@ -1,0 +1,203 @@
+{
+  "day": 51,
+  "title": "Lecture #51: Monitor Locks in Java",
+  "sources": [
+    "notes/Notes.pdf (24 pages)",
+    "notes/slides.pdf (3 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java"
+  ],
+  "topics": [
+    "Monitor lock of synchronized methods",
+    "Synchronized blocks",
+    "Custom lock objects",
+    "Static synchronization",
+    "Reentrancy",
+    "Common synchronization mistakes"
+  ],
+  "questions": [
+    {
+      "id": "d51_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Monitor lock of synchronized methods",
+      "question": "Which monitor does a thread acquire when it calls the synchronized instance method `void show()` on an object `test`?",
+      "codeSnippet": null,
+      "options": [
+        "A private lock that belongs only to the `show()` method",
+        "The monitor of `test` (the `this` object), the same one used by every other synchronized instance method of `test`",
+        "The monitor of `Test.class`, shared by all `Test` objects",
+        "A global JVM lock that pauses all other threads while `show()` runs"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Locks belong to objects, not to methods. A synchronized instance method is equivalent to wrapping its body in `synchronized (this) { ... }`. So every synchronized instance method of the same object competes for the same monitor. `ClassName.class` is used only by static synchronized methods, and synchronization never pauses unrelated threads.",
+      "source": "notes p5-8; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/locksync.html"
+    },
+    {
+      "id": "d51_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Monitor lock of synchronized methods",
+      "question": "In `Demo2`, `Test` has two synchronized instance methods, `m1()` and `m2()`, and each one sleeps for 2 seconds. Thread-1 is inside `test.m1()` when Thread-2 calls `test.m2()` on the SAME object. What happens to Thread-2?",
+      "codeSnippet": null,
+      "options": [
+        "It enters `m2()` at once, because `m2()` is a different method from `m1()`",
+        "It enters `m2()` at once, because Thread-1 is sleeping and a sleeping thread gives up its lock",
+        "It waits (BLOCKED) until Thread-1 leaves `m1()`, because both methods need the monitor of `test`",
+        "It throws `IllegalMonitorStateException`, because the monitor is already owned"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Different synchronized instance methods on the same object share one monitor, so Thread-2 is blocked until Thread-1 releases it by leaving `m1()`. `sleep()` does not release the monitor. A blocked thread just waits for the monitor and no exception is thrown.",
+      "source": "notes p8; code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html"
+    },
+    {
+      "id": "d51_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Common synchronization mistakes",
+      "question": "Two threads call `b1.m1()` on the same `Bank` object at about the same time. What happens?",
+      "codeSnippet": "class Bank {\n    void m1() {\n        synchronized (new Object()) {\n            System.out.println(Thread.currentThread().getName() + \" Entered m1\");\n            try { Thread.sleep(2000); } catch (Exception e) {}\n            System.out.println(Thread.currentThread().getName() + \" Exiting m1\");\n        }\n    }\n}",
+      "options": [
+        "Both threads can be inside the block at the same time, because each call locks a brand-new object",
+        "Only one thread can be inside at a time, because the block is synchronized",
+        "The code does not compile, because `synchronized` needs a field or `this`",
+        "The second thread deadlocks, because the first thread's lock object is never released"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Threads only exclude each other if they synchronize on the SAME object. `new Object()` makes a different monitor on every call, so each thread acquires its own lock right away. Both 'Entered' lines can print before either 'Exiting' line. The fix is a single shared `private final Object lock`. Any object expression is legal inside `synchronized(...)`.",
+      "source": "notes p14-15; code: Demo3.java",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-14.html#jls-14.19"
+    },
+    {
+      "id": "d51_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Static synchronization",
+      "question": "`t1` runs `test.m1()` and `t2` runs `test.m2()` on the same `test` object. Can the output be `m1 entered`, `m2 entered`, `m1 exit`, `m2 exit`?",
+      "codeSnippet": "class Test {\n    static void m1() {\n        synchronized (Test.class) {\n            System.out.println(\"m1 entered\");\n            try { Thread.sleep(2000); } catch (Exception e) {}\n            System.out.println(\"m1 exit\");\n        }\n    }\n\n    void m2() {\n        synchronized (this) {\n            System.out.println(\"m2 entered\");\n            try { Thread.sleep(2000); } catch (Exception e) {}\n            System.out.println(\"m2 exit\");\n        }\n    }\n}",
+      "options": [
+        "Yes: `m1()` locks the `Test.class` object and `m2()` locks the `test` object, which are different monitors",
+        "No: `m1()` is called through `test`, so it locks `test` like `m2()` does",
+        "No: a class lock also locks every instance of that class",
+        "Yes, but only when `t2` is started before `t1`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Test.class` is a separate object from any `Test` instance, so it has its own monitor. Calling a static method through an instance reference does not change that, because there is still no `this`. The two methods therefore do not block each other and their output can interleave. A class-level lock does not lock instances.",
+      "source": "notes p16-18; code: Demo5.java",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.3.6"
+    },
+    {
+      "id": "d51_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Reentrancy",
+      "question": "In `class Service { synchronized void methodA() { methodB(); } synchronized void methodB() { ... } }`, a thread calls `service.methodA()`. What happens when it reaches the call to `methodB()`?",
+      "codeSnippet": null,
+      "options": [
+        "It deadlocks on itself, because it is waiting for a monitor it already holds",
+        "It releases the monitor first, then re-acquires it for `methodB()`, so another thread can slip in between",
+        "It throws `IllegalMonitorStateException`, because a monitor can be held only once",
+        "It enters `methodB()` immediately, because monitors are reentrant; the JVM counts the holds and releases the monitor after both methods exit"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Java monitors are reentrant. A thread that already owns `this`'s monitor can acquire it again, and the JVM increments a hold count instead of blocking. The monitor is fully released only after the outermost synchronized region exits. Without reentrancy, the first option (self-deadlock) would happen.",
+      "source": "notes p20-21",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/locksync.html"
+    },
+    {
+      "id": "d51_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Static synchronization",
+      "question": "`OrderService` has `private static int totalOrders;` and a method `synchronized void record() { totalOrders++; }`. Each worker thread creates its own `new OrderService()` and calls `record()`. The total still comes out too low. What is the correct fix?",
+      "codeSnippet": null,
+      "options": [
+        "Mark `totalOrders` as `final`, so that it cannot be overwritten",
+        "Make `record()` `static synchronized` (or lock on `OrderService.class`), so every thread uses the same class monitor",
+        "Add a second `synchronized` keyword inside `record()` to lock it twice",
+        "Call `Thread.yield()` after `totalOrders++` so the threads take turns"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A synchronized instance method locks `this`. Each thread uses a different `OrderService` object, so each thread gets a different monitor and nothing stops them from running at the same time. Static state needs a lock that all instances share, such as the `OrderService.class` monitor used by static synchronized methods. `final` would stop the field from being incremented at all.",
+      "source": "notes p9, p16-18; code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/locksync.html"
+    },
+    {
+      "id": "d51_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Custom lock objects",
+      "question": "Why should a dedicated lock object usually be declared as `private final Object lock = new Object();`?",
+      "codeSnippet": null,
+      "options": [
+        "`private` stops outside code from synchronizing on it and blocking the class; `final` stops the reference from being replaced, which would split threads across different monitors",
+        "`private final` objects are created in a special memory area where locking is faster",
+        "`final` makes every field the lock protects immutable, so no other synchronization is needed",
+        "Without `private final`, the JVM refuses to use the object as a monitor"
+      ],
+      "correctAnswer": 0,
+      "explanation": "If the lock were public, any outside code could hold it and stall the class. If the field were not final, reassigning it (for example `lock = new Object()`) could leave some threads locking the old object and others the new one, with no mutual exclusion between them. `final` applies only to the lock reference, not to the protected data, and any object can serve as a monitor.",
+      "source": "notes p11-12, p21-22",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/locksync.html"
+    },
+    {
+      "id": "d51_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Custom lock objects",
+      "question": "You review two classes. `Bank` has `deposit()` doing `balance += amount` under `synchronized (depositLock)`, and `withdraw()` doing `balance -= amount` under `synchronized (withdrawLock)`. `AccountManager` has `updateBalance()` doing `balance += amount` under `synchronized (accountLock)`, and `recordAuditEntry()` doing `auditEntries++` under `synchronized (auditLock)`. Which assessment is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Both are correct, because every method that touches shared state is synchronized",
+        "Both are broken, because a class should never use more than one lock object",
+        "`Bank` is broken, because `deposit` and `withdraw` change the same `balance` under different locks; `AccountManager` is fine, because its two locks guard independent fields",
+        "`AccountManager` is broken, because two locks can run at the same time; `Bank` is fine, because deposits and withdrawals are different operations"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Data that is part of the same consistency rule must be guarded by the same lock. In `Bank`, a deposit and a withdrawal can run at the same time and overwrite each other's update to `balance`. `AccountManager`'s two locks protect unrelated fields, so letting those methods run concurrently is safe and reduces contention. Having a `synchronized` keyword on every method is not enough; what matters is which monitor guards which data.",
+      "source": "notes p12-14; code: Demo3.java (deposit/withdraw)",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/locksync.html"
+    },
+    {
+      "id": "d51_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Static synchronization",
+      "question": "Two threads each call `Counter.increment()` once at about the same time. What is printed, and roughly how long does it take before both lines appear?",
+      "codeSnippet": "class Counter {\n    static int count = 0;\n\n    static void increment() {\n        synchronized (Counter.class) {\n            try { Thread.sleep(2000); } catch (Exception e) {}\n            count++;\n            System.out.println(count);\n        }\n    }\n}",
+      "options": [
+        "`1` then `1`, both after about 2 seconds, because the threads sleep in parallel",
+        "`2` then `2`, after about 2 seconds, because both increment before either prints",
+        "`1` then `2`, after about 2 seconds, because `sleep()` releases the class lock",
+        "`1` then `2`, with the second line about 2 seconds after the first (about 4 seconds in total)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Both threads need the single `Counter.class` monitor, so the whole block, including the sleep, runs one thread at a time. The first thread sleeps, increments to 1 and prints 1. Then the second thread acquires the lock, sleeps again, increments to 2 and prints 2. `sleep()` keeps the monitor, so the two 2-second sleeps happen one after the other, not in parallel.",
+      "source": "code: Demo4.java; notes p16-18",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.3.6"
+    },
+    {
+      "id": "d51_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Monitor lock of synchronized methods",
+      "question": "Thread-1 is inside `synchronized (lock) { ... }` when its code throws an uncaught `RuntimeException`. Thread-2 is waiting to enter a block synchronized on the same `lock`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "Thread-2 stays BLOCKED forever, because Thread-1 died without releasing the monitor",
+        "The JVM releases the monitor as the exception propagates out of the block, so Thread-2 can acquire it",
+        "The exception is passed on to Thread-2, because it is waiting on the same monitor",
+        "The monitor is released only when garbage collection reclaims Thread-1's `Thread` object"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A monitor is released whenever execution leaves a synchronized region, whether it completes normally or ends with an exception. This automatic release is a key advantage of `synchronized` over manual `lock()`/`unlock()`, where forgetting a `finally` can leave the lock held forever. Exceptions are never passed to other threads.",
+      "source": "notes p20",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-14.html#jls-14.19"
+    }
+  ]
+}

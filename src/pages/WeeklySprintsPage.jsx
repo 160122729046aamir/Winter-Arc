@@ -151,7 +151,7 @@ const SPRINTS_METADATA = [
   {
     week: 11,
     title: 'Sprint 11: Spring MVC, DTOs & Aspect-Oriented Programming',
-    daysRange: [71, 78],
+    daysRange: [72, 78],
     phase: 'Phase 2: Spring Boot',
     objectives: [
       'Servlets, Embedded Tomcat, and DispatcherServlet request flow',
@@ -236,7 +236,7 @@ export default function WeeklySprintsPage() {
           Weekly Sprints & Objectives
         </h1>
         <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-          The 90-day challenge decomposed into 13 high-impact weekly sprints with 1 YouTube video per day and weekly retrospectives.
+          The challenge decomposed into weekly sprints with 1 YouTube video per day and weekly retrospectives.
         </p>
       </div>
 
@@ -255,7 +255,7 @@ export default function WeeklySprintsPage() {
           // Video and exercise totals
           const totalVideos = sprintDays.reduce((acc, d) => acc + (d.videos?.length || 0), 0);
           const watchedVideos = sprintDays.reduce((acc, d) => {
-            return acc + Object.keys(d.checkedVideos || {}).filter(k => d.checkedVideos[k]).length;
+            return acc + (d.videos || []).filter((v) => d.checkedVideos?.[v.id]).length;
           }, 0);
 
           return (

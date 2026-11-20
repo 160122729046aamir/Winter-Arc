@@ -1,0 +1,202 @@
+{
+  "day": 82,
+  "title": "Spring Lecture #25: Custom Annotations in Spring AOP",
+  "sources": [
+    "notes/Notes.pdf (30 pages)",
+    "notes/Excalidraw-Notes.pdf (1 page)",
+    "code/aopDemo/annotation/TrackExecutionTime.java",
+    "code/aopDemo/aspect/SimpleAspect.java",
+    "code/aopDemo/service/StudentService.java",
+    "code/aopDemo/controller/StudentController.java"
+  ],
+  "topics": [
+    "@Target & @Retention",
+    "Marker vs configured annotations",
+    "@annotation() type matching vs binding",
+    "BeanPostProcessor & proxy creation",
+    "Aspect ordering with @Order",
+    "Proxy boundaries (self-invocation, private methods)"
+  ],
+  "questions": [
+    {
+      "id": "d82_q1",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "@Target & @Retention",
+      "question": "You declare `@Target(ElementType.METHOD) public @interface Audit {}` (no `@Retention`) and an aspect with `@Before(\"@annotation(com.app.Audit)\")`. Methods annotated with `@Audit` are never advised. What is the most likely cause?",
+      "codeSnippet": null,
+      "options": [
+        "`@Target(ElementType.METHOD)` hides the annotation from Spring; it must be `ElementType.TYPE`",
+        "Custom annotations must extend `java.lang.annotation.Annotation` explicitly",
+        "Without `@Retention`, the default is `CLASS`: the annotation is in the .class file but not visible through runtime reflection, so Spring cannot detect it",
+        "`@Before` cannot be used with `@annotation()`; only `@Around` supports annotation pointcuts"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Java's default retention is `RetentionPolicy.CLASS`, which keeps the annotation in bytecode but not at runtime. Spring AOP needs `@Retention(RetentionPolicy.RUNTIME)` to see it. `@Target(METHOD)` is correct for method-level AOP, and every advice type can use `@annotation()`.",
+      "source": "notes p5-6",
+      "reference": null
+    },
+    {
+      "id": "d82_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@Target & @Retention",
+      "question": "The lecture's `TrackExecutionTime` is declared with `@Target(ElementType.METHOD)`. What happens if a developer writes `@TrackExecutionTime` on the `StudentService` class declaration?",
+      "codeSnippet": null,
+      "options": [
+        "Compilation fails, because `@Target(METHOD)` only allows the annotation on methods",
+        "It compiles, and Spring applies the timing advice to every method of the class",
+        "It compiles, but Spring logs a warning and ignores the annotation at runtime",
+        "It compiles only if `@Documented` is removed from the annotation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`@Target` defines where an annotation may legally appear, and the compiler enforces it, so placing a METHOD-only annotation on a class is a compile-time error. To allow both, use `@Target({ElementType.TYPE, ElementType.METHOD})`. `@Documented` only affects Javadoc.",
+      "source": "notes p4-5; code: TrackExecutionTime.java",
+      "reference": null
+    },
+    {
+      "id": "d82_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Marker vs configured annotations",
+      "question": "The controller calls `studentService.getStudent(\"All Student Data\")` on the proxied bean. What does the console show?",
+      "codeSnippet": "// StudentService\n@TrackExecutionTime(warnAfter = 1500, operation = \"Get Student Data\")\npublic String getStudent(String s) {\n    try { Thread.sleep(2000); } catch (Exception e) {}\n    System.out.println(s);\n    return s;\n}\n\n// SimpleAspect\n@Around(\"@annotation(trackExecutionTime)\")\npublic Object measureExecutionTime(ProceedingJoinPoint joinPoint,\n                                   TrackExecutionTime trackExecutionTime) throws Throwable {\n    long startTime = System.currentTimeMillis();\n    try {\n        return joinPoint.proceed();\n    } finally {\n        long duration = System.currentTimeMillis() - startTime;\n        String operation = trackExecutionTime.operation();\n        if (operation.isBlank()) {\n            operation = joinPoint.getSignature().getName();\n        }\n        if (duration >= trackExecutionTime.warnAfter()) {\n            System.out.println(\"SLOW OPERATION ALERT : Time Taken by \" + operation + \": \" + duration);\n        } else {\n            System.out.println(\"Time Taken by \" + operation + \": \" + duration);\n        }\n    }\n}",
+      "options": [
+        "`Time Taken by Get Student Data: <~2000>` and then `All Student Data`",
+        "`All Student Data` and then `SLOW OPERATION ALERT : Time Taken by Get Student Data: <~2000>`",
+        "`All Student Data` and then `SLOW OPERATION ALERT : Time Taken by getStudent: <~2000>`",
+        "`All Student Data` and then `Time Taken by Get Student Data: <~2000>`, because the annotation's default `warnAfter` of 2000 is used"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The target runs inside `proceed()` and prints its argument first; the `finally` block runs afterwards. The bound annotation instance carries the values written on the method (`warnAfter = 1500`, `operation = \"Get Student Data\"`), not the defaults. A sleep of at least 2000 ms exceeds 1500, so the SLOW branch prints with the configured operation name.",
+      "source": "code: StudentService.java, SimpleAspect.java, TrackExecutionTime.java",
+      "reference": null
+    },
+    {
+      "id": "d82_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@annotation() type matching vs binding",
+      "question": "What is the difference between `@annotation(com.app.TrackExecutionTime)` and `@annotation(trackExecutionTime)` with an advice parameter `TrackExecutionTime trackExecutionTime`?",
+      "codeSnippet": null,
+      "options": [
+        "The first matches class-level annotations; the second matches method-level annotations",
+        "The first works only with `@Before`; the second works only with `@Around`",
+        "There is no difference; the lowercase form is just shorthand that skips the package name",
+        "The first only checks that the method has the annotation; the second also passes the annotation instance to the advice so it can read properties like `operation()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "With a fully qualified type name, `@annotation()` is pure type matching. With a parameter name, it both matches (using that parameter's type) and binds the actual annotation object, so the advice can read values such as `operation()` and `warnAfter()`. Both forms are method-level and work with any advice type.",
+      "source": "notes p8-9",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d82_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Aspect ordering with @Order",
+      "question": "Three aspects each have an `@Around` advice matching `generateReport()`. Each prints `<X>-in` before `proceed()` and `<X>-out` after it. The target prints `target`. What is the output?",
+      "codeSnippet": "@Aspect @Component @Order(2)\npublic class LoggingAspect { /* prints L-in / L-out */ }\n\n@Aspect @Component @Order(3)\npublic class PerformanceAspect { /* prints P-in / P-out */ }\n\n@Aspect @Component @Order(1)\npublic class SecurityAspect { /* prints S-in / S-out */ }",
+      "options": [
+        "P-in, L-in, S-in, target, S-out, L-out, P-out",
+        "S-in, L-in, P-in, target, S-out, L-out, P-out",
+        "S-in, L-in, P-in, target, P-out, L-out, S-out",
+        "L-in, P-in, S-in, target, S-out, P-out, L-out"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A lower `@Order` value means higher precedence, which makes it the OUTER layer: Security(1) wraps Logging(2), which wraps Performance(3). Calls enter outer to inner and unwind in reverse, like nested method calls. The order in which the classes are declared does not matter.",
+      "source": "notes p25-27",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d82_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Proxy boundaries (self-invocation, private methods)",
+      "question": "A teammate puts `@TrackExecutionTime` on a `private StudentReport createReport()` helper in `ReportService`, but no timing is ever logged, even though the public method that calls it is invoked from a controller. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Spring AOP intercepts calls that pass through the proxy; a private method can't be overridden or exposed by the proxy, and it is called internally anyway",
+        "Private methods are intercepted only when the aspect uses `@Before` instead of `@Around`",
+        "The annotation must be repeated on the controller method for the private helper to be advised",
+        "`@TrackExecutionTime` needs `@Target(ElementType.PRIVATE)` to apply to private methods"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Proxy-based AOP works by intercepting external calls on the proxy. Private methods can't be overridden by a CGLIB subclass and aren't part of any interface, and here the call is made from inside the target object as well. Put the annotation on a non-private method that is invoked from another bean. `ElementType.PRIVATE` does not exist.",
+      "source": "notes p27-28",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    },
+    {
+      "id": "d82_q7",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Proxy boundaries (self-invocation, private methods)",
+      "question": "In `ReportService`, the public `generateAllReports()` (not annotated) calls `generateAnnualReport()`, which is public and annotated with `@TrackExecutionTime`. The controller calls `reportService.generateAllReports()`. No timing is logged. Which change makes the advice run for the annual report?",
+      "codeSnippet": null,
+      "options": [
+        "Change the call to `this.generateAnnualReport()`, so it explicitly targets the current bean",
+        "Have the controller (or another bean) call `generateAnnualReport()` through the injected `ReportService` reference, or move it to a separate bean",
+        "Make `generateAnnualReport()` `final`, so the proxy can't skip it",
+        "Add `@Order(1)` to the aspect so it is applied before the internal call"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The controller calls the proxy, which delegates to the target's `generateAllReports()`. From then on, the internal call goes to `this`, the raw target, and never re-enters the proxy (self-invocation). Writing `this.` explicitly changes nothing. Calling through the injected proxy (or moving the method to another bean) works. A `final` method actually cannot be intercepted by a CGLIB proxy.",
+      "source": "notes p27-28",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    },
+    {
+      "id": "d82_q8",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "BeanPostProcessor & proxy creation",
+      "question": "`ReportService` has a `@PostConstruct void warmUp()` that calls `generateAnnualReport()` (annotated with `@TrackExecutionTime`). During startup, no timing is logged for that call, yet later calls from the controller are timed. What explains this?",
+      "codeSnippet": null,
+      "options": [
+        "Advice never runs during application startup; Spring enables aspects only after the first HTTP request",
+        "`@PostConstruct` methods run on a background thread that aspects cannot see",
+        "The aspect bean is always created after every other bean, so its advice cannot apply until all beans exist",
+        "`@PostConstruct` runs on the raw target before `postProcessAfterInitialization`, where the auto-proxy creator wraps the bean, and the call is a self-invocation that never goes through a proxy"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Spring creates the target, injects dependencies and runs initialization callbacks such as `@PostConstruct`; only after that does the AOP auto-proxy creator (a BeanPostProcessor) return a proxy. The `warmUp()` call is made on the target itself, so no proxy is involved. Later callers receive the injected proxy, so their calls are advised. Advice is not deferred until the first HTTP request.",
+      "source": "notes p20-23",
+      "reference": null
+    },
+    {
+      "id": "d82_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@annotation() type matching vs binding",
+      "question": "A developer renames the advice parameter in the lecture's aspect as shown and leaves the pointcut unchanged. What is the result?",
+      "codeSnippet": "@Around(\"@annotation(trackExecutionTime)\")\npublic Object measureExecutionTime(ProceedingJoinPoint joinPoint,\n                                   TrackExecutionTime tracker) throws Throwable {\n    long start = System.currentTimeMillis();\n    try {\n        return joinPoint.proceed();\n    } finally {\n        System.out.println(tracker.operation() + \": \" + (System.currentTimeMillis() - start));\n    }\n}",
+      "options": [
+        "It works unchanged, because Spring binds the annotation by its TYPE, so the parameter name is irrelevant",
+        "It compiles and starts, but `tracker` is always `null`, so the first advised call throws `NullPointerException`",
+        "It works, but the advice now matches every method, because `trackExecutionTime` is treated as a wildcard",
+        "The aspect configuration fails: the name in `@annotation(...)` must match an advice parameter, and here `tracker` is left unbound (an error raised when Spring builds the advisor)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "In the binding form, the identifier inside `@annotation(...)` must be the advice parameter's name. That is how Spring knows which parameter receives the annotation and which annotation type to match. With `trackExecutionTime` not matching any parameter, `tracker` stays unbound and Spring rejects the advice when it builds the advisor. Rename the parameter or change the pointcut to `@annotation(tracker)`.",
+      "source": "code: SimpleAspect.java; notes p9",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"
+    },
+    {
+      "id": "d82_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@annotation() type matching vs binding",
+      "question": "To time every method of a class, the team widens the annotation to `@Target({ElementType.TYPE, ElementType.METHOD})` and puts `@TrackExecutionTime` on the `ReportService` class only. The aspect still uses `@Around(\"@annotation(trackExecutionTime)\")`. Nothing is timed. What should change?",
+      "codeSnippet": null,
+      "options": [
+        "Also match class-level annotations, for example `@within(trackExecutionTime)` (bound to the same parameter) or `@within(...) || @annotation(...)`",
+        "Add `@Inherited` to the annotation, so `@annotation()` sees the class annotation on each method",
+        "Change the retention to `RetentionPolicy.CLASS`, so the annotation is stored on the class file",
+        "Annotate the aspect with `@Order(Ordered.HIGHEST_PRECEDENCE)` so it scans class annotations first"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`@annotation()` checks only the annotation on the executing METHOD. Class-level annotations are matched by `@within()` (declaring type) or `@target()` (runtime target class). `@Inherited` only affects class-to-subclass inheritance, not class-to-method, and `CLASS` retention would make the annotation invisible at runtime.",
+      "source": "notes p4-5, p8; Lecture 24 notes (@within/@target)",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    }
+  ]
+}

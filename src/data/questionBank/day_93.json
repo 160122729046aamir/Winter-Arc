@@ -1,0 +1,200 @@
+{
+  "day": 93,
+  "title": "Spring Lecture #36: DB Authentication & Password Security",
+  "sources": [
+    "notes/Notes.pdf (25 pages)",
+    "notes/Excalidraw-Notes.pdf (4 pages)",
+    "code/springPracticalDemo (User, Role, UserRepository, AuthService, UserController, SecurityConfig)"
+  ],
+  "topics": [
+    "Source of truth & UserDetails",
+    "Account status flags",
+    "Hashing vs encryption",
+    "Adaptive hashing (BCrypt)",
+    "Salt & matches()",
+    "Registration flow",
+    "Validation vs encoding"
+  ],
+  "questions": [
+    {
+      "id": "d93_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Hashing vs encryption",
+      "question": "Why do the notes reject encrypting stored passwords and choose a one-way hash instead?",
+      "codeSnippet": null,
+      "options": [
+        "Encryption makes the password column too long for MySQL",
+        "The application never needs the original password back, and reversible encryption means anyone with the database and the key can recover every password",
+        "Encrypted passwords cannot be compared with `PasswordEncoder.matches()` at all, so login would be impossible",
+        "Encryption is slower than hashing, which makes login too slow"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Login only has to check whether the entered password matches the registered one, so the original never needs to be recovered. Encryption is reversible: if the database and key leak together, all passwords are exposed. Speed is not the argument; in fact, password hashing is deliberately made slow.",
+      "source": "notes p14-15 (Why password encryption is not the right solution)",
+      "reference": "https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html"
+    },
+    {
+      "id": "d93_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Salt & matches()",
+      "question": "What does this code print?",
+      "codeSnippet": "PasswordEncoder encoder = new BCryptPasswordEncoder();\nString a = encoder.encode(\"secret123\");\nString b = encoder.encode(\"secret123\");\n\nSystem.out.println(a.equals(b) + \" \"\n        + encoder.matches(\"secret123\", a) + \" \"\n        + encoder.matches(\"secret123\", b));",
+      "options": [
+        "true true true",
+        "false false false",
+        "false true true",
+        "true true false"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Each `encode()` call uses a new random salt, so the two encoded strings differ and `equals` is false. `matches()` reads the salt and cost from the stored value and verifies the raw password with them, so both checks return true.",
+      "source": "notes p18-19 (Salt and BCrypt, practical demonstration)",
+      "reference": "https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html"
+    },
+    {
+      "id": "d93_q3",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Adaptive hashing (BCrypt)",
+      "question": "SHA-256 is a secure one-way cryptographic hash. Why is it still a poor choice for storing passwords?",
+      "codeSnippet": null,
+      "options": [
+        "It is designed to be fast, so an attacker with a stolen hash database can test huge numbers of guesses offline; adaptive functions like BCrypt make every guess expensive",
+        "SHA-256 output can be decrypted with the server's private key",
+        "SHA-256 produces different output every time for the same input, so logins fail randomly",
+        "SHA-256 is not supported by Java, so it needs an external library"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The weakness is speed: modern hardware computes billions of SHA-256 hashes per second, which makes offline guessing cheap. Adaptive password functions have a tunable work factor so each guess costs real computation. SHA-256 is deterministic and not reversible, so the other options describe it wrongly.",
+      "source": "notes p16 (Why a fast hash such as SHA-256 is not enough)",
+      "reference": "https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html"
+    },
+    {
+      "id": "d93_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Salt & matches()",
+      "question": "A teammate rewrites the lecture's login check like this. Users registered through `register()` (which stores `passwordEncoder.encode(raw)`) now report that login fails even with the correct password. Why?",
+      "codeSnippet": "private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();\n\npublic Boolean login(UserRegisterRequestDto dto) {\n    User user = userRepository.findByUsername(dto.getUsername()).orElseThrow();\n    String reEncoded = passwordEncoder.encode(dto.getPassword());\n    return reEncoded.equals(user.getPassword());\n}",
+      "options": [
+        "`findByUsername` returns the user without the password column loaded",
+        "`equals` is case-sensitive, and BCrypt output uses mixed case",
+        "BCrypt cannot encode the same password twice in one JVM",
+        "Re-encoding uses a fresh random salt, so the new string never equals the stored one; it must use `passwordEncoder.matches(dto.getPassword(), user.getPassword())`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Every `encode()` generates a new salt, so comparing two encodings with `equals` is false even for the right password. `matches()` is the correct operation: it takes the salt and parameters from the stored value and verifies the raw password against it, exactly as the lecture's `AuthService.login` does.",
+      "source": "notes p19 (How does matches() work); code: AuthService.login",
+      "reference": null
+    },
+    {
+      "id": "d93_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Source of truth & UserDetails",
+      "question": "Your company's users live in an `employees` table with columns `corporate_email`, `credential_hash` and `active`. How does Spring Security authenticate against this table, according to the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Rename the table to `users` and the columns to `username`/`password`, because Spring Security reads those names directly",
+        "Provide a `UserDetailsService` that loads the employee through a repository and adapts it to `UserDetails` (email as the username, hash as the password, `active` as enabled)",
+        "Make the `Employee` entity extend `InMemoryUserDetailsManager`",
+        "Spring Security cannot use custom tables; you must use LDAP or an external identity provider"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Spring Security does not depend on any table design; it works with the `UserDetails` abstraction. A `UserDetailsService` is the bridge that loads the application's own entity and adapts it, and the 'username' can be any unique login identifier such as an email. Renaming the schema is unnecessary.",
+      "source": "notes p3-5, p12-13 (UserDetails, missing bridge UserDetailsService)",
+      "reference": null
+    },
+    {
+      "id": "d93_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Account status flags",
+      "question": "Company policy: passwords must be changed every 90 days, but the account itself stays valid. Rohit's password is 95 days old. Which `UserDetails` method should return `false` for him?",
+      "codeSnippet": null,
+      "options": [
+        "`isEnabled()`",
+        "`isAccountNonExpired()`",
+        "`isCredentialsNonExpired()`",
+        "`isAccountNonLocked()`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Credentials-expired means the account is still valid but its credential must be renewed. `isAccountNonExpired()` is for the account itself ending (e.g. a contract), `isAccountNonLocked()` for temporary blocks such as after repeated failed logins, and `isEnabled()` for an account that is deactivated altogether.",
+      "source": "notes p6-8 (Disabled vs locked, account and credential expiration)",
+      "reference": null
+    },
+    {
+      "id": "d93_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Registration flow",
+      "question": "This is the lecture's `AuthService.login` (exposed as `POST /api/users/login`, returning `ResponseEntity.ok(loggedIn)`). How do the responses differ for an unknown username and for a known username with a wrong password, and why does that matter?",
+      "codeSnippet": "public Boolean login(UserRegisterRequestDto registerRequestDto) {\n    Optional<User> userOptional =\n            userRepository.findByUsername(registerRequestDto.getUsername());\n    User user = userOptional.get();\n    String encodedPassword = user.getPassword();\n    return passwordEncoder.matches(\n            registerRequestDto.getPassword(),\n            encodedPassword\n    );\n}",
+      "options": [
+        "Unknown username: `Optional.get()` throws `NoSuchElementException`, giving a 500 error; wrong password: 200 with `false`. The difference tells an attacker which usernames exist, so both cases should return the same failure",
+        "Both return 200 with `false`, because `Optional.get()` returns null for an empty Optional",
+        "Both return 401, because Spring Security intercepts failed `matches()` calls",
+        "Unknown username: 200 with `false`; wrong password: 500, because `matches()` throws on a mismatch"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Optional.get()` on an empty Optional throws `NoSuchElementException`, which becomes a server error, while a wrong password just makes `matches()` return false. Responding differently leaks account existence, the enumeration problem from the previous lecture. A safer version treats 'not found' and 'wrong password' identically.",
+      "source": "code: AuthService.login, UserController.login",
+      "reference": null
+    },
+    {
+      "id": "d93_q8",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Salt & matches()",
+      "question": "During a migration review, someone proposes adding a `password_salt` column next to the BCrypt `password` column \"so that matches() can find each user's salt\". What is the correct response?",
+      "codeSnippet": null,
+      "options": [
+        "Agree: without a salt column every user shares the same salt",
+        "Agree: `matches()` takes the salt as a third argument",
+        "Disagree, because BCrypt does not use salts; it relies only on its work factor",
+        "Disagree: the standard BCrypt string (e.g. `$2a$10$...`) already embeds the algorithm version, cost and salt, and `matches()` reads them from it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "BCrypt is salted, and its encoded output carries the version, cost factor and salt together with the hash. That is why `matches(raw, stored)` needs only two arguments and why a separate salt column is not required. Each user still gets a unique random salt generated at `encode()` time.",
+      "source": "notes p17-19 (Salt and BCrypt)",
+      "reference": "https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html"
+    },
+    {
+      "id": "d93_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Registration flow",
+      "question": "Using the lecture's `User` entity (`@Column(nullable = false, unique = true) private String username;`, schema created by `ddl-auto=update`) and its `register` method below, `POST /api/users/register` is called twice with username `aditya`. What happens on the second call?",
+      "codeSnippet": "public UserRegisterResponseDto register(UserRegisterRequestDto dto) {\n    User user = new User();\n    user.setUsername(dto.getUsername());\n    user.setPassword(passwordEncoder.encode(dto.getPassword()));\n    user.setEnabled(true);\n    userRepository.save(user);\n\n    UserRegisterResponseDto response = new UserRegisterResponseDto();\n    response.setUsername(user.getUsername());\n    response.setMessage(\"User saved Successfully\");\n    return response;\n}",
+      "options": [
+        "A second `aditya` row is inserted, because the passwords hash differently",
+        "The INSERT violates the unique constraint on `username`, so `save()` fails with a data-integrity exception and the client gets an error instead of a clean message; the notes add an `existsByUsername` check first",
+        "Spring Data's `save()` sees the same username and updates the existing user's password",
+        "The request succeeds with \"User saved Successfully\" but nothing is written"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`save()` on a new entity (null id) calls `persist`, which inserts a row; the database rejects the duplicate `username` because of the unique constraint, and Spring surfaces it as a `DataIntegrityViolationException`. `save()` decides insert vs merge by the id, not by the username. The notes' `AuthService` checks `existsByUsername` first to fail with a clear message.",
+      "source": "code: AuthService.register, User.java; notes p4-5, p21-23 (Registration service)",
+      "reference": null
+    },
+    {
+      "id": "d93_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Validation vs encoding",
+      "question": "To enforce 'minimum 8 characters', a developer puts `@Size(min = 8)` on the `password` field of the `User` entity instead of on the registration DTO. Users registering with the password `abc` are accepted. Why?",
+      "codeSnippet": null,
+      "options": [
+        "The entity stores the BCrypt-encoded value (about 60 characters), so any password passes the length check; validation must be applied to the raw password in the request DTO before encoding",
+        "`@Size` only works on `List` fields, not on `String`",
+        "BCrypt pads short passwords to 8 characters before hashing",
+        "Bean Validation is disabled whenever Spring Security is on the classpath"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes separate validation (is the submitted password acceptable?) from encoding (protecting the stored representation). By the time the entity is validated it holds the encoded hash, which always has a fixed long length. The rule belongs on the raw value, e.g. `@NotBlank @Size(min = 8)` in `RegisterRequest`.",
+      "source": "notes p21 (Registration DTO: validation vs encoding)",
+      "reference": null
+    }
+  ]
+}

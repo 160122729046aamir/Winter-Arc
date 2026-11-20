@@ -3,15 +3,17 @@
   "title": "Lecture #4: How Java Stores Negative & Floating Point Numbers",
   "topic": "Core Java",
   "totalQuestions": 25,
+  "codeFilesFound": 1,
+  "pdfNotesAnalyzed": false,
   "topicsCovered": [
-    "2's Complement representation of signed integers",
-    "Why 2's Complement is used over 1's complement or sign-magnitude",
-    "Bit-level negation (invert bits and add 1)",
-    "Integer ranges: -2^(n-1) to 2^(n-1)-1",
-    "Integer overflow and underflow wrapping semantics",
-    "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
-    "Floating point representation limitations and precision issues",
-    "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal"
+    "Syntax & rules of How Java Stores Negative & Floating Point Numbers",
+    "Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers",
+    "Design & architectural pattern of How Java Stores Negative & Floating Point Numbers",
+    "Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers",
+    "Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers",
+    "Exception handling & failure states in How Java Stores Negative & Floating Point Numbers",
+    "Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers",
+    "Testing & verification of How Java Stores Negative & Floating Point Numbers"
   ],
   "questions": {
     "easy": [
@@ -21,18 +23,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes '2's Complement representation of signed integers' as explained in Lecture #4?",
-        "codeSnippet": null,
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Syntax & rules of How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
+        "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        float f = 0.7f;\n\n        System.out.printf(\"%.20f%n\",f);\n    }\n}\n...",
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for 2's complement representation of signed integers.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, '2's Complement representation of signed integers' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "2's Complement representation of signed integers",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Syntax & rules of How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Syntax & rules of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_2",
@@ -40,18 +42,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Why 2's Complement is used over 1's complement or sign-magnitude' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for why 2's complement is used over 1's complement or sign-magnitude.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Why 2's Complement is used over 1's complement or sign-magnitude' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Why 2's Complement is used over 1's complement or sign-magnitude",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_3",
@@ -59,18 +61,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Bit-level negation (invert bits and add 1)' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Design & architectural pattern of How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for bit-level negation (invert bits and add 1).",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Bit-level negation (invert bits and add 1)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Bit-level negation (invert bits and add 1)",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Design & architectural pattern of How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Design & architectural pattern of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_4",
@@ -78,18 +80,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Integer ranges: -2^(n-1) to 2^(n-1)-1' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for integer ranges: -2^(n-1) to 2^(n-1)-1.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Integer ranges: -2^(n-1) to 2^(n-1)-1' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Integer ranges: -2^(n-1) to 2^(n-1)-1",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_5",
@@ -97,18 +99,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Integer overflow and underflow wrapping semantics' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for integer overflow and underflow wrapping semantics.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Integer overflow and underflow wrapping semantics' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Integer overflow and underflow wrapping semantics",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_6",
@@ -116,18 +118,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Exception handling & failure states in How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for ieee 754 floating-point standard (sign, exponent, mantissa).",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Exception handling & failure states in How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Exception handling & failure states in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_7",
@@ -135,18 +137,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Floating point representation limitations and precision issues' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for floating point representation limitations and precision issues.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Floating point representation limitations and precision issues' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Floating point representation limitations and precision issues",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_8",
@@ -154,18 +156,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Testing & verification of How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for why 0.1 + 0.2 != 0.3 in ieee 754 and when to use bigdecimal.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Testing & verification of How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Testing & verification of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_9",
@@ -173,18 +175,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes '2's Complement representation of signed integers' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Syntax & rules of How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for 2's complement representation of signed integers.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, '2's Complement representation of signed integers' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "2's Complement representation of signed integers",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Syntax & rules of How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Syntax & rules of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_e_10",
@@ -192,18 +194,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Which statement accurately describes 'Why 2's Complement is used over 1's complement or sign-magnitude' as explained in Lecture #4?",
+        "question": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, what is the primary role of 'Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers' (demonstrated in Demo)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for why 2's complement is used over 1's complement or sign-magnitude.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of How Java Stores Negative & Floating Point Numbers.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, 'Why 2's Complement is used over 1's complement or sign-magnitude' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Why 2's Complement is used over 1's complement or sign-magnitude",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "In Lecture #4: How Java Stores Negative & Floating Point Numbers, understanding 'Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers' is essential for mastering the core rules and syntax of How Java Stores Negative & Floating Point Numbers.",
+        "concept": "Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       }
     ],
     "medium": [
@@ -213,18 +215,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Bit-level negation (invert bits and add 1)' in production backend execution?",
+        "question": "During the execution of 'Design & architectural pattern of How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Bit-level negation (invert bits and add 1)' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Bit-level negation (invert bits and add 1)",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_2",
@@ -232,18 +234,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Integer ranges: -2^(n-1) to 2^(n-1)-1' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Integer ranges: -2^(n-1) to 2^(n-1)-1' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Integer ranges: -2^(n-1) to 2^(n-1)-1",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_3",
@@ -251,18 +253,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Integer overflow and underflow wrapping semantics' in production backend execution?",
+        "question": "During the execution of 'Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Integer overflow and underflow wrapping semantics' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Integer overflow and underflow wrapping semantics",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_4",
@@ -270,18 +272,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' in production backend execution?",
+        "question": "During the execution of 'Exception handling & failure states in How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Exception handling & failure states in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_5",
@@ -289,18 +291,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Floating point representation limitations and precision issues' in production backend execution?",
+        "question": "During the execution of 'Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Floating point representation limitations and precision issues' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Floating point representation limitations and precision issues",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_6",
@@ -308,18 +310,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' in production backend execution?",
+        "question": "During the execution of 'Testing & verification of How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Testing & verification of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_7",
@@ -327,18 +329,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during '2's Complement representation of signed integers' in production backend execution?",
+        "question": "During the execution of 'Syntax & rules of How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of '2's Complement representation of signed integers' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "2's Complement representation of signed integers",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Syntax & rules of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_8",
@@ -346,18 +348,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Why 2's Complement is used over 1's complement or sign-magnitude' in production backend execution?",
+        "question": "During the execution of 'Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Why 2's Complement is used over 1's complement or sign-magnitude' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Why 2's Complement is used over 1's complement or sign-magnitude",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Memory & stack/heap execution in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_9",
@@ -365,18 +367,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Bit-level negation (invert bits and add 1)' in production backend execution?",
+        "question": "During the execution of 'Design & architectural pattern of How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Bit-level negation (invert bits and add 1)' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Bit-level negation (invert bits and add 1)",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_m_10",
@@ -384,18 +386,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "Under the hood, what occurs during 'Integer ranges: -2^(n-1) to 2^(n-1)-1' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Integer ranges: -2^(n-1) to 2^(n-1)-1' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Integer ranges: -2^(n-1) to 2^(n-1)-1",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Runtime execution for How Java Stores Negative & Floating Point Numbers relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       }
     ],
     "hard": [
@@ -405,18 +407,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Integer overflow and underflow wrapping semantics'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Integer overflow and underflow wrapping semantics'.",
-        "concept": "Integer overflow and underflow wrapping semantics",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Boundary conditions & defensive checks in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_h_2",
@@ -424,18 +426,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Exception handling & failure states in How Java Stores Negative & Floating Point Numbers' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)'.",
-        "concept": "IEEE 754 Floating-Point standard (Sign, Exponent, Mantissa)",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Exception handling & failure states in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_h_3",
@@ -443,18 +445,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Floating point representation limitations and precision issues'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Floating point representation limitations and precision issues'.",
-        "concept": "Floating point representation limitations and precision issues",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Thread-safety & concurrency in How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_h_4",
@@ -462,18 +464,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Testing & verification of How Java Stores Negative & Floating Point Numbers' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal'.",
-        "concept": "Why 0.1 + 0.2 != 0.3 in IEEE 754 and when to use BigDecimal",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Testing & verification of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       },
       {
         "id": "d4_h_5",
@@ -481,18 +483,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Core Java",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with '2's Complement representation of signed integers'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Syntax & rules of How Java Stores Negative & Floating Point Numbers' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for '2's Complement representation of signed integers'.",
-        "concept": "2's Complement representation of signed integers",
-        "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Syntax & rules of How Java Stores Negative & Floating Point Numbers",
+        "reference": "https://github.com/adityatandon15/Java-Full-Course/tree/main/Lecture%2004"
       }
     ]
   }

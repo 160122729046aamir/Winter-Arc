@@ -1,0 +1,199 @@
+{
+  "day": 70,
+  "title": "Spring Lecture #13: Spring Boot CRUD Project with Soft Delete",
+  "sources": [
+    "Notes.pdf (7 pages)",
+    "code/crudSpringBootDemo/.../controller/StudentController.java",
+    "code/crudSpringBootDemo/.../service/StudentService.java",
+    "code/crudSpringBootDemo/.../repository/StudentRepository.java",
+    "code/crudSpringBootDemo/.../entity/Student.java"
+  ],
+  "topics": [
+    "Soft delete vs hard delete",
+    "PATCH for partial update",
+    "Derived query methods",
+    "Soft delete edge cases"
+  ],
+  "questions": [
+    {
+      "id": "d70_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Soft delete vs hard delete",
+      "question": "What happens to the student's row in MySQL when the lecture's soft delete API is called, compared with hard delete?",
+      "codeSnippet": null,
+      "options": [
+        "Both remove the row; soft delete just does it later in a background job",
+        "Soft delete moves the row to a separate `deleted_students` table; hard delete removes it",
+        "Soft delete keeps the row and sets its deleted flag to true; hard delete removes the row permanently",
+        "Soft delete clears all columns except the id; hard delete removes the row"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Soft delete only updates one field (`deleted`/`isDeleted` = true) so the record stays in the table but is hidden from normal APIs, while hard delete (`deleteById`) removes the row. The lecture does not move or blank any data: the full row remains, which is what makes soft-deleted data recoverable.",
+      "source": "notes p1-p2, p7",
+      "reference": null
+    },
+    {
+      "id": "d70_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "PATCH for partial update",
+      "question": "Why does the lecture expose soft delete as `PATCH /api/students/delete-soft?id=1` instead of using `DELETE`?",
+      "codeSnippet": null,
+      "options": [
+        "Because soft delete only changes one field of an existing record, which is a partial update, and PATCH is meant for partial updates",
+        "Because browsers cannot send DELETE requests, so PATCH is used as a workaround",
+        "Because PATCH automatically restores the record after 30 days",
+        "Because DELETE requests cannot carry a query parameter such as `id`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes reason that soft delete is technically a partial update (only `isDeleted` changes), so PATCH fits; DELETE is reserved for the API that actually removes the row. DELETE requests can carry query parameters, as the lecture's own hard-delete endpoint `/delete?id=` shows.",
+      "source": "notes p1-p2; code: StudentController.java",
+      "reference": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/PATCH"
+    },
+    {
+      "id": "d70_q3",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Derived query methods",
+      "question": "The `student` table has these rows: (1, Rahul, deleted=false), (2, Priya, deleted=true), (3, Aman, deleted=false). What does `GET /api/students/getAll` return?",
+      "codeSnippet": "// StudentRepository\nList<Student> findByDeletedIsFalse();\n\n// StudentService\npublic List<Student> getAllStudent() {\n    return studentRepository.findByDeletedIsFalse();\n}\n\n// StudentController\n@GetMapping(\"/getAll\")\npublic ResponseEntity<List<Student>> getAllStudent() {\n    List<Student> studentList = studentService.getAllStudent();\n    if (studentList.isEmpty()) {\n        return ResponseEntity.notFound().build();\n    }\n    return ResponseEntity.ok(studentList);\n}",
+      "options": [
+        "200 OK with Rahul, Priya and Aman",
+        "200 OK with only Priya",
+        "404 Not Found, because one of the rows is deleted",
+        "200 OK with Rahul and Aman"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Spring Data derives `... where deleted = false` from `findByDeletedIsFalse`, so only the two active students are returned and the list is non-empty, giving 200. Returning all three would be the behaviour of `findAll()`, which ignores the soft-delete flag.",
+      "source": "notes p2-p4; code: StudentRepository.java, StudentService.java",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d70_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Derived query methods",
+      "question": "The lecture's entity names the flag `private Boolean deleted;` (getter `getDeleted()`). A student copies a method name from the notes, which used a field called `isDeleted`. Which repository method makes the application fail at startup?",
+      "codeSnippet": "@Entity\npublic class Student {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private Boolean deleted;\n    // getters and setters\n}\n\npublic interface StudentRepository extends JpaRepository<Student, Long> {\n    // which one of these breaks startup?\n}",
+      "options": [
+        "`List<Student> findByDeletedFalse();`",
+        "`List<Student> findByIsDeletedFalse();`",
+        "`List<Student> findByDeletedIsFalse();`",
+        "`Optional<Student> findByIdAndDeletedIsFalse(Long id);`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Derived queries are built from entity property names: in `findByIsDeletedFalse`, the property part is `IsDeleted`, and `Student` has no property `isDeleted`, so creating the repository fails with a property-not-found error. `False` and `IsFalse` are both accepted keywords, so `findByDeletedFalse` and `findByDeletedIsFalse` are valid, and `IdAndDeletedIsFalse` combines two valid conditions.",
+      "source": "notes p3-p6; code: Student.java, StudentRepository.java",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d70_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Soft delete edge cases",
+      "question": "Priya (id 2) was soft deleted and correctly disappears from `/getAll`. But QA reports that `GET /api/students/get?id=2` still returns Priya with 200. The service's `getStudent` calls `studentRepository.findById(id)`. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Change the controller mapping from `@GetMapping` to `@PatchMapping`",
+        "Call `deleteById(2L)` so the row is also physically removed",
+        "Use `findByIdAndDeletedIsFalse(id)` in `getStudent`, since `findById` returns any existing row regardless of the flag",
+        "Add `@Column(name = \"is_deleted\")` so `findById` starts filtering deleted rows"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`findById` only matches the primary key, and a soft-deleted row still exists, so it is returned. The notes introduce `findByIdAndDeletedIsFalse`/`findByIdAndIsDeletedFalse` exactly for get-by-id APIs. `@Column` only renames the column and adds no filtering, and hard-deleting would defeat the purpose of soft delete.",
+      "source": "notes p4-p6; code: StudentService.java",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d70_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Soft delete edge cases",
+      "question": "Student 1 is active. Postman sends `PATCH /api/students/delete-soft?id=1` twice in a row. What are the two responses?",
+      "codeSnippet": "public Boolean deleteStudentSoftly(Long id) {\n    Optional<Student> existingStudent =\n            studentRepository.findByIdAndDeletedIsFalse(id);\n    if (existingStudent.isEmpty()) {\n        return false;\n    }\n    Student studentToSave = existingStudent.get();\n    studentToSave.setDeleted(true);\n    studentRepository.save(studentToSave);\n    return true;\n}\n\n@PatchMapping(\"/delete-soft\")\npublic ResponseEntity<String> deleteStudentSoftly(@RequestParam Long id) {\n    Boolean isDeleted = studentService.deleteStudentSoftly(id);\n    if (!isDeleted) {\n        return ResponseEntity.notFound().build();\n    }\n    return ResponseEntity.ok(\"Record deleted\");\n}",
+      "options": [
+        "200 \"Record deleted\", then 404 Not Found",
+        "200 \"Record deleted\" both times",
+        "404 Not Found both times",
+        "200 \"Record deleted\", then 500 because the row is already deleted"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The first call finds the active student, sets `deleted=true` and saves, returning 200. On the second call `findByIdAndDeletedIsFalse(1L)` finds nothing because the flag is now true, so the service returns false and the controller sends 404. No exception occurs; the empty Optional is handled explicitly.",
+      "source": "code: StudentService.java, StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html"
+    },
+    {
+      "id": "d70_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Soft delete vs hard delete",
+      "question": "Student 3 was soft deleted. The admin then calls the hard delete API `DELETE /api/students/delete?id=3`, which checks `existsById(id)` before `deleteById(id)`. Why does this call succeed with 200?",
+      "codeSnippet": null,
+      "options": [
+        "Because hard delete first restores soft-deleted rows and then deletes them",
+        "Because `deleteById` only works on rows whose deleted flag is already true",
+        "Because the controller ignores the result of `existsById` for DELETE requests",
+        "Because `existsById` only checks the primary key; the soft-deleted row still exists, so it returns true and the row is removed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Built-in JpaRepository methods like `existsById`, `findById` and `findAll` know nothing about the soft-delete flag: the row is physically present, so `existsById(3L)` is true and `deleteById` removes it. Only custom derived methods such as `findByIdAndDeletedIsFalse` filter on the flag.",
+      "source": "notes p4-p5, p7; code: StudentService.java",
+      "reference": "https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html"
+    },
+    {
+      "id": "d70_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Soft delete edge cases",
+      "question": "The table already had 50 students before you added `private Boolean deleted;` to the entity. With `ddl-auto=update`, Hibernate added the new column, and new students are created with `setDeleted(false)`. Now `/getAll` returns only the students created after the change. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`ddl-auto=update` deleted the old rows when it altered the table",
+        "The old rows have NULL in the new column, and `deleted = false` is not true for NULL, so `findByDeletedIsFalse` skips them",
+        "`findByDeletedIsFalse` only returns rows inserted after the repository method was declared",
+        "Hibernate caches the first 50 rows and never returns them again"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`update` adds the column without deleting data, but existing rows get NULL for it, since no value was ever set. In SQL, `NULL = false` is not true, so the derived `where deleted = false` filters those rows out. That is why the notes initialise the field (`private Boolean isDeleted = false;`) and the code sets it on create; old rows need a one-time `UPDATE ... SET deleted = false`.",
+      "source": "notes p2; code: Student.java, StudentService.java",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d70_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Derived query methods",
+      "question": "You need a new API that returns only the active (not soft-deleted) students of a given subject. Following the lecture's \"findBy + fieldName + condition\" convention, which repository method declaration is correct for the `Student` entity (fields `subject`, `deleted`)?",
+      "codeSnippet": null,
+      "options": [
+        "`List<Student> findBySubjectAndDeletedIsFalse(String subject);`",
+        "`List<Student> findByDeletedIsFalseSubject(String subject);`",
+        "`List<Student> findAllWhereSubjectAndNotDeleted(String subject);`",
+        "`List<Student> findBySubjectDeletedFalse(String subject, Boolean deleted);`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Each condition is a property name plus an optional keyword, and conditions are joined with `And`, exactly like `findByIdAndDeletedIsFalse`. `Subject` takes the method parameter while `DeletedIsFalse` needs none. The other names either miss the `And` connector, use words that are not property names, or add a parameter that no condition consumes, so Spring Data cannot derive a query from them.",
+      "source": "notes p3-p6; code: StudentRepository.java",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d70_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Soft delete edge cases",
+      "question": "An admin wants to undo the soft delete of student 2. Since the lecture's `updateStudent` ends with `studentToSave.setDeleted(false)`, they call `PUT /api/students/update?id=2` with the full student body. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "The student is restored, because `updateStudent` always sets `deleted` to false",
+        "A new active copy of student 2 is inserted with a new id",
+        "The update succeeds but `deleted` stays true, because `setDeleted` is ignored by `save()`",
+        "404 Not Found: `updateStudent` looks the student up with `findByIdAndDeletedIsFalse`, which finds nothing, so `setDeleted(false)` never runs"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The service returns null as soon as `findByIdAndDeletedIsFalse(2L)` is empty, and the controller turns null into `ResponseEntity.notFound()`. The `setDeleted(false)` line is only reached for students that are already active, so it cannot restore anyone; a restore feature would need its own lookup (e.g. `findById`) and endpoint.",
+      "source": "code: StudentService.java, StudentController.java",
+      "reference": null
+    }
+  ]
+}

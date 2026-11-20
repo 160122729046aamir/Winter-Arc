@@ -1,0 +1,199 @@
+{
+  "day": 39,
+  "title": "Lecture #39: Introduction to Java Streams",
+  "sources": [
+    "notes.pdf (6 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "Why streams (data processing vs storing)",
+    "Stream pipeline architecture",
+    "Lazy evaluation & vertical processing",
+    "Short-circuiting",
+    "Single-use streams",
+    "Stream sources (Collection, Arrays, Stream.of, iterate, generate)",
+    "Primitive streams, mapToInt & boxed"
+  ],
+  "questions": [
+    {
+      "id": "d39_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Stream pipeline architecture",
+      "question": "In the pipeline `list.stream().filter(x -> x > 10).map(x -> x * 2).toList()`, which call is the terminal operation, and what do `filter()` and `map()` return?",
+      "codeSnippet": null,
+      "options": [
+        "`list.stream()` is the terminal operation; `filter()` and `map()` each return a `List`",
+        "`filter()` is the terminal operation; `map()` returns a `Stream`",
+        "`toList()` is the terminal operation; `filter()` and `map()` each return a new `Stream`",
+        "`map()` is the terminal operation, because it produces the final values; `filter()` returns a `Stream`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A pipeline is source (`list.stream()`), then zero or more intermediate operations, then one terminal operation. Intermediate operations like `filter` and `map` return a Stream so they can be chained; `toList()` ends the pipeline and produces the result. `map()` transforms values, but it is still intermediate because it returns a Stream and does nothing on its own.",
+      "source": "notes p3",
+      "reference": "https://open-exam-prep.com/study-guides/oracle-java-se17/the-stream-api/stream-lifecycle-and-creation"
+    },
+    {
+      "id": "d39_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Stream pipeline architecture",
+      "question": "What does this program print?",
+      "codeSnippet": "import java.util.*;\n\npublic class Demo {\n    public static void main(String[] args) {\n        List<Integer> list = new ArrayList<>(List.of(5, 12, 7, 14));\n\n        list.stream()\n            .filter(x -> x > 10)\n            .map(x -> x * 2)\n            .forEach(System.out::println);\n    }\n}",
+      "options": [
+        "24\n28",
+        "10\n24\n14\n28",
+        "12\n14",
+        "28\n24"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Only 12 and 14 pass `x > 10`. They are doubled to 24 and 28 and printed in encounter order. \"10 24 14 28\" would mean every element was doubled and the filter ignored.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d39_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Stream pipeline architecture",
+      "question": "You are replacing the lecture's loop (collect the names of employees with salary > 50000, then `Collections.sort(result)`) with a stream that produces a `List<String>`. `Employee` does not implement `Comparable`. Which pipeline is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`employees.stream().map(Employee::getName).filter(e -> e.getSalary() > 50000).sorted().toList()`",
+        "`employees.stream().filter(e -> e.getSalary() > 50000).map(Employee::getName).sorted().toList()`",
+        "`employees.stream().filter(e -> e.getSalary() > 50000).sorted().map(Employee::getName).toList()`",
+        "`employees.stream().filter(e -> e.getSalary() > 50000).map(Employee::getName).sorted()`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The pipeline has to filter on the Employee, map to the name String, sort the Strings, and then end with a terminal `toList()`. Mapping first leaves Strings, which have no `getSalary()`. Sorting the Employees fails at runtime because they are not Comparable. The last option has no terminal operation, so it returns a Stream rather than a List.",
+      "source": "notes p1",
+      "reference": null
+    },
+    {
+      "id": "d39_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Lazy evaluation & vertical processing",
+      "question": "Note that the pipeline below has no terminal operation. What does this program print?",
+      "codeSnippet": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Lazy {\n    public static void main(String[] args) {\n        List<Integer> list = List.of(5, 12, 7, 20);\n        Stream<Integer> s = list.stream()\n            .filter(x -> {\n                System.out.println(\"filter \" + x);\n                return x > 10;\n            });\n        System.out.println(\"done\");\n    }\n}",
+      "options": [
+        "filter 5\nfilter 12\nfilter 7\nfilter 20\ndone",
+        "done\nfilter 5\nfilter 12\nfilter 7\nfilter 20",
+        "filter 12\nfilter 20\ndone",
+        "done"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Intermediate operations are lazy: `filter` only records the step, and nothing runs until a terminal operation is called. This code never calls one, so the lambda never executes and only \"done\" is printed. Expecting the four \"filter\" lines is the classic misconception that `filter()` runs immediately, the way a loop would.",
+      "source": "notes p4",
+      "reference": "https://dzone.com/articles/understanding-lazy-evaluation-in-java-streams"
+    },
+    {
+      "id": "d39_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Stream sources: iterate vs generate",
+      "question": "You need the first 10 powers of two (1, 2, 4, 8, ...) as a stream, where each value depends on the previous one. Which source from the lecture is the right choice?",
+      "codeSnippet": null,
+      "options": [
+        "`Stream.iterate(1, x -> x * 2).limit(10)`, because `iterate` passes the previous value into the next-function",
+        "`Stream.generate(() -> x * 2).limit(10)`, because `generate` remembers the last value it produced",
+        "`Stream.of(1, x -> x * 2).limit(10)`, because `Stream.of` can take a seed and a function",
+        "`Stream.iterate(1, x -> x * 2)` without `limit`, because `iterate` stops by itself at `Integer.MAX_VALUE`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Stream.iterate(seed, nextFn)` builds each element from the previous one, which is what the notes mean by \"depends on prev value\". `Stream.generate(Supplier)` has no dependence on earlier elements, because the Supplier takes no argument, so it cannot compute \"previous times two\". Both are infinite, so `limit(10)` is required.",
+      "source": "notes p5",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html"
+    },
+    {
+      "id": "d39_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Why streams (data processing vs storing)",
+      "question": "The notes say streams are for \"data processing\", not \"collecting data\". After `List<Integer> doubled = numbers.stream().map(x -> x * 2).toList();`, what is true about `numbers`?",
+      "codeSnippet": null,
+      "options": [
+        "`numbers` now holds the doubled values, because `map` writes the results back into the source",
+        "`numbers` becomes empty, because the stream consumed (removed) its elements",
+        "`numbers` is unchanged; the stream read from it and `toList()` built a separate new list",
+        "`numbers` and `doubled` are the same object, because `toList()` returns the source list"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A stream does not store elements and does not modify its source. It pulls values through the pipeline, and the terminal operation builds a new result. Thinking that `map` updates the list in place confuses streams with loops that call `list.set(...)`.",
+      "source": "notes p2",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/package-summary.html"
+    },
+    {
+      "id": "d39_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Single-use streams",
+      "question": "A teammate stores `Stream<Integer> s = list.stream();` in a variable, calls `s.forEach(System.out::println);`, and then calls `s.forEach(System.out::println);` again. What happens on the second call, and what is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "It prints the elements a second time, because a stream can be replayed from the start",
+        "It throws `IllegalStateException`, because a stream can be consumed only once; create a new stream from the source for each pipeline",
+        "It prints nothing and returns normally, because the stream is just empty now",
+        "It fails to compile, because `forEach` can appear only once per variable"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Once a terminal operation has run, the stream is consumed. Any further operation throws `IllegalStateException` (\"stream has already been operated upon or closed\"). The fix is to call `list.stream()` again, or keep a `Supplier<Stream<Integer>>`. The program does compile; the failure only appears at runtime.",
+      "source": "notes p4",
+      "reference": "https://www.baeldung.com/java-stream-operated-upon-or-closed-exception"
+    },
+    {
+      "id": "d39_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Short-circuiting",
+      "question": "This is the lecture's `findFirst()` example with prints added. What is the output?",
+      "codeSnippet": "import java.util.*;\n\npublic class Vertical {\n    public static void main(String[] args) {\n        List<Integer> list = List.of(5, 12, 7, 20);\n        Optional<Integer> r = list.stream()\n            .filter(x -> { System.out.print(\"F\" + x + \" \"); return x > 10; })\n            .map(x -> { System.out.print(\"M\" + x + \" \"); return x * 2; })\n            .findFirst();\n        System.out.println(r.get());\n    }\n}",
+      "options": [
+        "F5 F12 M12 24",
+        "F5 F12 F7 F20 M12 M20 24",
+        "F5 F12 F7 F20 M12 24",
+        "F12 M12 24"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Streams process one element at a time through the whole pipeline (vertical processing). 5 fails the filter; 12 passes and is mapped to 24, and `findFirst()` short-circuits, so 7 and 20 are never examined. The \"F5 F12 F7 F20 ...\" options assume horizontal processing, where every filter call runs before any map call.",
+      "source": "notes p4",
+      "reference": "https://dzone.com/articles/understanding-lazy-evaluation-in-java-streams"
+    },
+    {
+      "id": "d39_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Primitive streams, mapToInt & boxed",
+      "question": "You need the sum of a `List<Integer> list`, but `int total = list.stream().sum();` does not compile. What is the reason, and which fix is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`sum()` exists, but it returns `Integer`; write `Integer total = list.stream().sum();`",
+        "`Stream<Integer>` has to be boxed first; write `list.stream().boxed().sum()`",
+        "`IntStream.of` accepts a collection; write `IntStream.of(list).sum()`",
+        "`Stream<T>` has no `sum()` because T may not be numeric; convert with `list.stream().mapToInt(x -> x).sum()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Numeric operations like `sum()` live on the primitive streams (`IntStream`, `LongStream`, `DoubleStream`). `mapToInt` converts object to primitive, as in the notes. `boxed()` goes the other way (IntStream to Stream<Integer>), so it does not help here and does not exist on Stream<Integer> anyway.",
+      "source": "notes p6",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/IntStream.html"
+    },
+    {
+      "id": "d39_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Stream sources: iterate vs generate",
+      "question": "`Stream.iterate(1, x -> x + 1).filter(x -> x < 5).forEach(System.out::println);` prints 1, 2, 3, 4 and then appears to hang instead of finishing. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`iterate` is implemented recursively, so the program is stuck building a huge call stack before it fails",
+        "`forEach` buffers every element before printing, so the program hangs while the buffer fills",
+        "The source is infinite and `filter` cannot know that no later element will pass, so nothing ever ends the pipeline",
+        "`filter` turns the stream into a parallel stream, which waits forever for its worker threads"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`filter` checks each element on its own and never stops the stream. With an infinite source and no short-circuiting operation such as `limit(4)`, elements are pulled forever. After about 2 billion steps the int even wraps around to negative values, which pass the filter, so it never ends cleanly. Elements are printed as they arrive, which is why 1 to 4 appear; nothing is buffered first.",
+      "source": "notes p5",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html"
+    }
+  ]
+}

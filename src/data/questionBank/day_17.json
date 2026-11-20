@@ -1,0 +1,201 @@
+{
+  "day": 17,
+  "title": "Lecture #17: Abstraction & Polymorphism in Depth",
+  "sources": [
+    "notes.pdf (8 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Abstraction (what vs how)",
+    "Abstract classes",
+    "Interfaces as contracts/capabilities",
+    "Abstract class vs interface",
+    "Compile-time vs run-time polymorphism",
+    "Method overriding & dynamic dispatch",
+    "Static, final, private methods & fields (no polymorphism)"
+  ],
+  "questions": [
+    {
+      "id": "d17_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Abstraction (what vs how)",
+      "question": "Which definition of abstraction matches the lecture (think of an ATM's deposit, withdraw and check-balance buttons)?",
+      "codeSnippet": null,
+      "options": [
+        "Bundling data and methods in one class and making the fields private",
+        "Letting a child class reuse its parent's code with `extends`",
+        "Focusing on what something does while ignoring how it does it, so users can use it without knowing the internal workings",
+        "Giving one method many forms by changing its parameters"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Abstraction is the process of focusing on what something does while ignoring how; an ATM user only sees deposit/withdraw/check balance. The notes contrast it with encapsulation, whose second point is data security through access modifiers, which is what the first option describes. The other options are inheritance and overloading.",
+      "source": "notes p1-p2, p6",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    },
+    {
+      "id": "d17_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Abstract class vs interface",
+      "question": "How does the lecture contrast an interface with an abstract class?",
+      "codeSnippet": null,
+      "options": [
+        "Interface: pure WHAT, a contract of capabilities/roles (e.g. Flyable); abstract class: partial WHAT and HOW for a family of similar objects (e.g. Car with FuelCar/ElectricCar)",
+        "Interface: a blueprint you can instantiate with `new`; abstract class: a contract that cannot have any methods with bodies",
+        "Interface: used only for a single class; abstract class: shared by unrelated classes like Bird and Aeroplane",
+        "There is no difference; `interface` is just a shorter keyword for `abstract class`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes describe an interface as pure abstraction, a contract of responsibilities/capabilities that unrelated classes can sign up for, and an abstract class as partial what-and-how shared by a family (Car's concrete `start()` plus abstract `accelerate()`/`brake()`). Neither can be instantiated, and abstract classes may contain methods with bodies.",
+      "source": "notes p4-p5",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    },
+    {
+      "id": "d17_q3",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Abstract classes",
+      "question": "What does this program print?",
+      "codeSnippet": "abstract class Car {\n    void start() {\n        System.out.println(\"Car started\");\n    }\n    abstract void accelerate();\n    abstract void brake();\n}\n\nclass FuelCar extends Car {\n    @Override\n    void accelerate() {\n        System.out.println(\"Fuel car is accelerating\");\n    }\n    @Override\n    void brake() {\n        System.out.println(\"Fuel car is stopping\");\n    }\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        Car car = new FuelCar();\n        car.start();\n        car.accelerate();\n        car.brake();\n    }\n}",
+      "options": [
+        "Compile error: `start()` must also be abstract because Car is abstract",
+        "Car started\nFuel car is accelerating\nFuel car is stopping",
+        "Fuel car is accelerating\nFuel car is stopping",
+        "Compile error: an abstract-class reference cannot hold a FuelCar"
+      ],
+      "correctAnswer": 1,
+      "explanation": "An abstract class may mix concrete methods (`start()`, inherited as is) with abstract ones that each subclass must implement. A `Car` reference can point to a `FuelCar` object, and calls run FuelCar's implementations of `accelerate()` and `brake()`. Only `new Car()` itself would be illegal.",
+      "source": "code: Demo.java; notes p4",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    },
+    {
+      "id": "d17_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Abstract classes",
+      "question": "With `abstract class Car` and `class FuelCar extends Car` from the previous Demo, and `interface Flyable { void fly(); }`, which line fails to compile?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        Car c1 = new FuelCar();     // line 1\n        FuelCar f = new FuelCar();  // line 2\n        Flyable fl;                 // line 3\n        Car c2 = new Car();         // line 4\n    }\n}",
+      "options": [
+        "Line 1: the variable type must match the object type exactly",
+        "Line 2: FuelCar is incomplete because its parent is abstract",
+        "Line 3: a variable of an interface type cannot be declared",
+        "Line 4: an abstract class cannot be instantiated"
+      ],
+      "correctAnswer": 3,
+      "explanation": "An abstract class is incomplete (it has abstract methods with no body), so `new Car()` is not allowed. A concrete subclass that implements every abstract method (FuelCar) can be instantiated, and abstract-class or interface types are perfectly fine as variable/reference types, as in `Car car = new FuelCar();`.",
+      "source": "code: Demo.java, Demo2.java; notes p4",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    },
+    {
+      "id": "d17_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Interfaces as contracts/capabilities",
+      "question": "Your app has `class Bird extends Animal` and `class Aeroplane extends Vehicle`, and both must support `fly()` so a scheduler can treat them uniformly. Following the lecture, what is the best design?",
+      "codeSnippet": null,
+      "options": [
+        "Make Aeroplane extend Animal as well, so both inherit a `fly()` from Animal",
+        "Create an abstract class `FlyingThing` and make both classes extend it in addition to their current parents",
+        "Define `interface Flyable { void fly(); }` and have both classes implement it, keeping their existing parent classes",
+        "Copy a `fly()` method into both classes with no shared type"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Flying is a capability/role shared by unrelated classes, which is exactly what interfaces model (Flyable, Walkable, Runnable in the notes). A class can extend only one class but implement many interfaces, so `extends FlyingThing` on top of an existing parent is impossible. Copying the method gives no common type for the scheduler to use.",
+      "source": "notes p5-p6",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    },
+    {
+      "id": "d17_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Static, final, private methods & fields (no polymorphism)",
+      "question": "Based on Demo3 (\"fields cannot be polymorphic\"), what does this print?",
+      "codeSnippet": "class A {\n    int x = 10;\n    int getX() {\n        return x;\n    }\n}\n\nclass B extends A {\n    int x = 20;\n    int getX() {\n        return x;\n    }\n}\n\npublic class Demo3 {\n    public static void main(String[] args) {\n        A a = new B();\n        System.out.println(a.x + \" \" + a.getX());\n    }\n}",
+      "options": [
+        "10 20",
+        "20 20",
+        "10 10",
+        "20 10"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Field access is decided by the reference type at compile time, so `a.x` (reference type A) reads A's field: 10. The method call is overridden and dispatched at run time on the actual object (B), and B's `getX()` returns B's x: 20. Expecting '20 20' assumes fields are polymorphic like methods.",
+      "source": "code: Demo3.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/override.html"
+    },
+    {
+      "id": "d17_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Compile-time vs run-time polymorphism",
+      "question": "The notes pick an Animal at run time: `Animal a; if (type is duck) a = new Duck(); else a = new Human(); a.run();`. Which statement about polymorphism is correct?",
+      "codeSnippet": null,
+      "options": [
+        "This is compile-time polymorphism: the compiler picks Duck's or Human's `run()` from the variable type Animal",
+        "This is run-time polymorphism (method overriding): the `run()` executed depends on the actual object created, which is only known while the program runs",
+        "This is method overloading, because Duck and Human each have a `run()` with different parameters",
+        "Polymorphism only works when the variable is declared as `Duck` or `Human`, not `Animal`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Overriding gives run-time polymorphism: the call `a.run()` is bound to the real object's method (Duck or Human) at run time. Compile-time polymorphism is overloading, like `run()` vs `run(boolean isDogBehind)` in Human, chosen by the parameter list. A parent-type reference is exactly what makes run-time polymorphism useful.",
+      "source": "notes p7-p8",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/override.html"
+    },
+    {
+      "id": "d17_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Static, final, private methods & fields (no polymorphism)",
+      "question": "What does this print?",
+      "codeSnippet": "class A {\n    static void fun() {\n        System.out.print(\"Hello \");\n    }\n    void show() {\n        System.out.print(\"A-show \");\n    }\n}\n\nclass B extends A {\n    static void fun() {\n        System.out.print(\"Bye \");\n    }\n    void show() {\n        System.out.print(\"B-show \");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        A a = new B();\n        a.fun();\n        a.show();\n    }\n}",
+      "options": [
+        "Bye B-show ",
+        "Hello A-show ",
+        "Bye A-show ",
+        "Hello B-show "
+      ],
+      "correctAnswer": 3,
+      "explanation": "Static methods belong to the class and cannot be overridden; B's `fun()` only hides A's, and a static call is resolved from the reference type (A), so it prints 'Hello'. `show()` is an instance method that B overrides, so it is dispatched on the actual object (B) and prints 'B-show'. Calling a static method through a reference compiles, with only a warning.",
+      "source": "code: Demo3.java; notes p8",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/override.html"
+    },
+    {
+      "id": "d17_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Static, final, private methods & fields (no polymorphism)",
+      "question": "In Demo3's commented code, class A has `private void fun2()` and `final void fun3()`. In `class B extends A`, a teammate writes `void fun2() { ... }` and `void fun3() { ... }`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "Both compile and override A's methods, so `A a = new B(); a.fun3();` runs B's version",
+        "`fun3()` causes a compile error because final methods cannot be overridden; `fun2()` compiles, but it is a brand-new method in B, not an override (A's private method is not inherited)",
+        "`fun2()` causes a compile error because private methods cannot be redeclared; `fun3()` compiles and overrides A's version",
+        "Both cause compile errors, because a subclass may not declare any method whose name exists in its parent"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The lecture lists static, final and private methods as not overridable. Redeclaring a final method is a compile error, while a private method is invisible to B, so B's `fun2()` is just an unrelated new method (adding `@Override` to it would fail to compile). Reusing a parent's method name is allowed in general; that is what overriding is.",
+      "source": "code: Demo3.java comments; notes p8",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/override.html"
+    },
+    {
+      "id": "d17_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Interfaces as contracts/capabilities",
+      "question": "In Demo2, `FuelCar implements Car` declares `public void start()`. A teammate removes `public` to get `void start() { ... }` (package-private), arguing that the interface method `void start();` has no modifier either. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles, because both declarations now have the same default access",
+        "It compiles, but `car.start()` throws an exception at run time when called through the `Car` reference",
+        "Compile error: interface methods are implicitly public, and an implementation cannot assign weaker access than the method it overrides",
+        "Compile error: interfaces cannot declare `start()` without the `abstract` keyword"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Abstract methods declared in an interface are implicitly public (and abstract), so the implementing method overrides a public method. An overriding method may keep or widen access but never narrow it, so package-private `start()` is rejected; that is why every method in Demo2's FuelCar and ElectricCar is `public`. Writing `abstract` in an interface is optional.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/override.html"
+    }
+  ]
+}

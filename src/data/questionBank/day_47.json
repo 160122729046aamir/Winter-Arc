@@ -1,0 +1,199 @@
+{
+  "day": 47,
+  "title": "Lecture #47: Introduction to Multithreading in Java",
+  "sources": [
+    "notes/Notes.pdf (28 pages)",
+    "notes/slides.pdf (6 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "Program vs process vs thread",
+    "Shared vs per-thread memory",
+    "JVM runtime memory areas",
+    "Context switching",
+    "Concurrency vs parallelism",
+    "Multitasking vs multithreading"
+  ],
+  "questions": [
+    {
+      "id": "d47_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Program vs process vs thread",
+      "question": "You compile `Demo.java` and the file `Demo.class` now sits on disk. You have not run it yet. What is `Demo.class` at this moment?",
+      "codeSnippet": null,
+      "options": [
+        "A process, because it holds bytecode that the JVM can run",
+        "A thread, because it holds the code for the `main()` method",
+        "A program: passive stored instructions that are not running",
+        "A JVM instance waiting in memory for the scheduler"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A program is a passive set of stored instructions. Bytecode in a `.class` file is still a program until a JVM loads and runs it. A process exists only after `java Demo` launches it, so calling the file a process mixes up the stored form with the running instance.",
+      "source": "notes p2-3",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/procthread.html"
+    },
+    {
+      "id": "d47_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Shared vs per-thread memory",
+      "question": "Two threads run inside the same Java process. Which pair of items does EACH thread get its own private copy of?",
+      "codeSnippet": null,
+      "options": [
+        "Its Java stack (frames with local variables) and its program counter",
+        "Heap objects and static variables",
+        "Loaded class metadata and the runtime constant pool",
+        "Files and network sockets opened by the process"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Every JVM thread has its own Java stack and PC register, because each one runs its own methods at its own position. Heap objects, static data, loaded classes and open resources belong to the process and are shared by all its threads. That sharing is why the notes describe multithreading as 'private execution stacks + shared process memory'.",
+      "source": "notes p7-8, p13-14",
+      "reference": "https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html"
+    },
+    {
+      "id": "d47_q3",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Concurrency vs parallelism",
+      "question": "A machine has ONE CPU core. A Java process on it has a main thread and two worker threads, and all three make progress over the same second. Which statement is accurate?",
+      "codeSnippet": null,
+      "options": [
+        "This is parallelism, because three threads are progressing during the same second",
+        "This is concurrency without parallelism, because the core interleaves the threads and runs only one at any exact instant",
+        "This is neither, because one core can only finish one thread before starting the next",
+        "This is both, because the JVM gives each thread its own virtual core"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Concurrency means tasks make progress in overlapping time periods, which one core can do by interleaving threads. Parallelism needs tasks running at the same physical instant on separate processing units, which one core cannot do. Progress within the same second is not the same as running at the same instant, so the first option confuses the two ideas.",
+      "source": "notes p17-22",
+      "reference": "https://inside.java/2021/11/30/on-parallelism-and-concurrency/"
+    },
+    {
+      "id": "d47_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Multitasking vs multithreading",
+      "question": "Your team builds a desktop app that loads third-party plugins. A buggy plugin must not be able to crash the main app or read its memory directly. Which design best meets this requirement?",
+      "codeSnippet": null,
+      "options": [
+        "Run each plugin in its own thread inside the main app's process",
+        "Run each plugin in its own thread and mark the plugin's fields `private`",
+        "Run each plugin as a separate process that talks to the app through IPC (for example, sockets)",
+        "Run all plugins on the main thread, so they never run at the same time as the app"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Processes have separate address spaces, and one process crashing does not normally take down another, so a separate process gives the isolation the requirement asks for. The cost is that communication must go through IPC. Threads share the process address space, and a serious failure in one can affect the whole process, so a per-plugin thread gives fast communication but weak isolation.",
+      "source": "notes p5-6, p23-24",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/procthread.html"
+    },
+    {
+      "id": "d47_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "JVM runtime memory areas",
+      "question": "At the moment line `// HERE` runs, what does the main thread's Java stack contain, from top to bottom?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        methodA();\n    }\n\n    static void methodA() {\n        methodB();\n    }\n\n    static void methodB() {\n        int x = 10; // HERE\n    }\n}",
+      "options": [
+        "main() frame, methodA() frame, methodB() frame",
+        "methodB() frame, methodA() frame, main() frame",
+        "Only the methodB() frame, because finished calls are removed",
+        "methodB() frame only, plus methodA() and main() stored on the heap"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Each call pushes a new frame onto the calling thread's stack. A frame is popped only when its method returns. While `methodB()` runs, neither `methodA()` nor `main()` has returned, so the stack from top to bottom is methodB, methodA, main. The first option lists the same frames in reverse: `main()` is at the bottom because it was pushed first.",
+      "source": "notes p13, p16",
+      "reference": "https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html"
+    },
+    {
+      "id": "d47_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Shared vs per-thread memory",
+      "question": "In a Spring Boot app, many request threads call the same singleton `ReportService`. Inside its `generate()` method, it builds a `StringBuilder sb = new StringBuilder();` in a local variable, and also adds one to an instance field `private int generatedCount;`. Which of these can be corrupted when requests run at the same time?",
+      "codeSnippet": null,
+      "options": [
+        "Only `sb`, because every thread writes into the same `StringBuilder`",
+        "Both, because all objects live on the shared heap",
+        "Neither, because each HTTP request runs in its own process",
+        "Only `generatedCount`, because it is a field of the one shared service object"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Each call to `generate()` gets its own stack frame, so each thread creates and holds its own `StringBuilder`. No other thread has a reference to it, even though it lives on the heap. `generatedCount` belongs to the single shared service object, so concurrent request threads update the same variable. Living on the heap only matters when another thread can reach the object, which is why 'both' is wrong.",
+      "source": "notes p8, p24-25",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/procthread.html"
+    },
+    {
+      "id": "d47_q7",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Program vs process vs thread",
+      "question": "What does this program print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        calculate();\n    }\n\n    static void calculate() {\n        System.out.println(Thread.currentThread().getName());\n    }\n}",
+      "options": [
+        "main",
+        "Thread-0",
+        "calculate",
+        "Nothing; no thread exists until one is started explicitly"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The JVM calls `main()` on a thread named \"main\". Calling `calculate()` directly just pushes another frame on that same thread's stack, so `currentThread()` is still the main thread. No new thread is created here, so `Thread-0` (the default name of a new unnamed thread) cannot appear.",
+      "source": "notes p9, p15-16",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/procthread.html"
+    },
+    {
+      "id": "d47_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Context switching",
+      "question": "A CPU-bound image-processing job runs on a 4-core server. A teammate raises the number of worker threads from 4 to 400, expecting about a 100x speed-up. The job instead gets slightly slower. What is the most likely explanation?",
+      "codeSnippet": null,
+      "options": [
+        "Each extra thread gets its own copy of the heap, so memory use grows 100x",
+        "Java can run at most one thread per process at a time, so the extra threads only wait",
+        "At most 4 threads can run at any instant, so the extra threads mostly add context-switch cost (saving/restoring state, cache disruption) without adding throughput",
+        "Threads only run in parallel when each is started in a separate JVM"
+      ],
+      "correctAnswer": 2,
+      "explanation": "On 4 cores, at most 4 threads execute at any instant. For CPU-bound work, the other 396 threads add no throughput. They make the scheduler switch between threads more, and each switch saves and restores state and disturbs caches. The notes warn that too many threads can reduce performance this way. The heap-copy option is wrong because threads share one heap and only stacks are per-thread.",
+      "source": "notes p18-20",
+      "reference": "https://howtodoinjava.com/interview-questions/java-concurrency-interview-questions/"
+    },
+    {
+      "id": "d47_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "JVM runtime memory areas",
+      "question": "Which statement about JVM memory and the operating system is accurate?",
+      "codeSnippet": null,
+      "options": [
+        "The JVM method area is exactly the OS code segment, and the Java heap is the OS data segment",
+        "The JVM runs as a separate child process inside the Java application's process",
+        "During a context switch, the OS copies all CPU register values into the thread's top Java stack frame",
+        "The OS sees one process with virtual memory regions; inside them, the JVM manages its own areas (heap, class metadata, thread stacks, code cache)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "JVM memory areas and OS memory segments are different layers of abstraction. The OS process memory holds the regions the JVM uses for its heap, metaspace, stacks and JIT code cache. Mapping the method area to the OS code segment is the misconception the notes explicitly correct. Saved native register state goes into OS- and runtime-managed structures, not into Java stack frames.",
+      "source": "notes p6-7, p14-15, p19",
+      "reference": "https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html"
+    },
+    {
+      "id": "d47_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Shared vs per-thread memory",
+      "question": "Both threads run the same `Runnable` object. Which statement about `local` and `shared` is correct?",
+      "codeSnippet": "public class Main {\n    static int shared = 0;\n\n    public static void main(String[] args) {\n        Runnable task = () -> {\n            int local = 0;\n            local++;\n            shared++;\n        };\n        Thread t1 = new Thread(task);\n        Thread t2 = new Thread(task);\n        t1.start();\n        t2.start();\n    }\n}",
+      "options": [
+        "`local` is shared, because both threads run the same `Runnable` object; `shared` is private to each thread",
+        "Each thread has its own `local` in its own stack frame; there is only one `shared`, and both threads update it",
+        "Both variables are copied into each thread's stack, so the threads never affect each other",
+        "Both variables live on the heap, so both are equally exposed to the other thread"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Running the lambda's body creates a new stack frame on the thread that runs it, so each thread gets its own `local`. A static field belongs to the class, and there is one copy for the whole JVM that every thread can access, so both threads update the same `shared`. Sharing one `Runnable` object does not make its local variables shared. Locals are created per call, per thread.",
+      "source": "notes p7-8, p16-17",
+      "reference": "https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html"
+    }
+  ]
+}

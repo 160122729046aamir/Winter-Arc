@@ -1,0 +1,200 @@
+{
+  "day": 3,
+  "title": "Lecture #3: Java Variables & Data Types Explained",
+  "sources": [
+    "notes.pdf (9 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "Variables, identifiers and literals",
+    "Integer types and ranges",
+    "Number systems (binary, octal, hex) in literals",
+    "Underscores in numeric literals",
+    "float vs double",
+    "char and Unicode",
+    "Declaration vs definition",
+    "Keywords"
+  ],
+  "questions": [
+    {
+      "id": "d3_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Variables, identifiers and literals",
+      "question": "In the statement `int firstNum = 10;`, which description of each part matches the lecture's terminology?",
+      "codeSnippet": null,
+      "options": [
+        "`int` is the identifier, `firstNum` is the literal, and `10` is the data type",
+        "`int` is the data type, `firstNum` is the identifier (name of the container), and `10` is the literal stored in it",
+        "`int` is a literal, `firstNum` is a keyword, and `10` is the identifier",
+        "`firstNum` is the data type, `int` is the identifier, and `10` is the literal"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes describe a variable as a named container in memory: the name (`firstNum`) is the identifier, the value placed in the container (`10`) is a literal, and `int` is the data type that decides what the container can hold. `int` is a reserved keyword naming a type, so it can never be an identifier.",
+      "source": "notes p2, p7",
+      "reference": null
+    },
+    {
+      "id": "d3_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "char and Unicode",
+      "question": "Why is Java's `char` 16 bits wide instead of the 7/8 bits that ASCII needs?",
+      "codeSnippet": null,
+      "options": [
+        "Because a char also stores the string length alongside the character",
+        "Because Java stores every character twice for error checking",
+        "Because Java chars use Unicode, which covers characters beyond English (such as Hindi letters), not just ASCII's 0-127",
+        "Because 16 bits makes char arithmetic faster than int arithmetic"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes contrast ASCII (0 to 127: a-z, A-Z, 0-9, punctuation) with Unicode, which Java uses so a char can hold characters from many languages, e.g. Hindi letters; hence char = 16 bits. Nothing about length or duplication is stored in a char; it simply holds one UTF-16 code unit.",
+      "source": "notes p6",
+      "reference": null
+    },
+    {
+      "id": "d3_q3",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Number systems in literals",
+      "question": "What does this program print?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        byte b1 = 0b101;  // binary\n        byte b2 = 07;     // octal\n        byte b3 = 0XA;    // hexadecimal\n        System.out.println(b1 + \" \" + b2 + \" \" + b3);\n    }\n}",
+      "options": [
+        "5 7 10",
+        "101 07 0XA",
+        "5 7 A",
+        "101 7 10"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The prefix only tells the compiler how to read the literal: 0b101 is binary for 5, 07 is octal for 7, and 0XA is hexadecimal for 10. The values are stored as ordinary numbers, and println always prints them in decimal, so the prefixes and the letter A never appear in the output.",
+      "source": "code: Demo.java",
+      "reference": "https://howtodoinjava.com/java/underscores_formatted_literal/"
+    },
+    {
+      "id": "d3_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Integer types and ranges",
+      "question": "You need a variable to hold the current world population (about 8,100,000,000). Which integer type from the lecture's table is the smallest one that can hold it?",
+      "codeSnippet": null,
+      "options": [
+        "byte",
+        "short",
+        "int",
+        "long"
+      ],
+      "correctAnswer": 3,
+      "explanation": "int is 32 bits with a maximum of 2,147,483,647 (about 2.1 billion), so 8.1 billion does not fit; long (64 bits, up to about 9.2 x 10^18) does. int is the tempting answer because it is the default integer type, but its range is far too small here.",
+      "source": "notes p4",
+      "reference": null
+    },
+    {
+      "id": "d3_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Underscores in numeric literals",
+      "question": "This snippet is adapted from the lecture's Demo.java. What does it print?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        long l = 3412__56_789;\n        float f = 10.5_4f;\n        double d = 6.02____2e23;\n        System.out.println(l + \" | \" + f + \" | \" + d);\n    }\n}",
+      "options": [
+        "3412__56_789 | 10.5_4 | 6.02____2e23",
+        "Compile error: consecutive underscores are not allowed in a literal",
+        "341256789 | 10.54 | 6.022E23",
+        "341256789 | 10.54 | 602200000000000000000000"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Underscores between digits are only for readability; the compiler ignores them, and any number of consecutive underscores is legal as long as they sit between digits. A double this large is printed in scientific notation (6.022E23), not as a long string of zeros.",
+      "source": "code: Demo.java",
+      "reference": "https://howtodoinjava.com/java/underscores_formatted_literal/"
+    },
+    {
+      "id": "d3_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Integer types and ranges",
+      "question": "With 8 bits you can write 2^8 = 256 patterns, so the largest unsigned value is 2^8 - 1 = 255. Why, then, is the range of a Java `byte` -128 to +127?",
+      "codeSnippet": null,
+      "options": [
+        "Because one bit of every byte is reserved by the JVM for garbage collection",
+        "Because every integer type in Java is signed, so the 256 patterns are split between negative and non-negative values",
+        "Because Java bytes are actually 7 bits wide",
+        "Because the value 128 is reserved to mark the end of a byte array"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes stress that every number is signed in Java: the 256 patterns cover -128..-1 and 0..127, i.e. -2^7 to 2^7 - 1. A byte really is 8 bits wide (see the width table), so the reduced positive maximum comes from signedness, not from fewer bits.",
+      "source": "notes p3-p4",
+      "reference": null
+    },
+    {
+      "id": "d3_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Declaration vs definition",
+      "question": "Inside `main`, a teammate writes `int x;` and on the next line `System.out.println(x);`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "Compile error: variable x might not have been initialized, because it was only declared, never given a value",
+        "It prints 0, because int variables always start at 0",
+        "It prints a random leftover value from memory, like in C",
+        "It throws a NullPointerException at runtime"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`int x;` is only a declaration (a 32-bit container is reserved); a definition such as `x = 4;` puts a value in it. Java refuses to compile a read of a local variable that has no value yet, so it neither prints 0 (that default applies to fields, not locals) nor exposes garbage memory like C.",
+      "source": "notes p8",
+      "reference": null
+    },
+    {
+      "id": "d3_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "float vs double",
+      "question": "A teammate writes `float price = 5.23;` and gets a compile error. What is the cause and a correct fix?",
+      "codeSnippet": null,
+      "options": [
+        "float cannot hold decimals; use int price = 5.23 instead",
+        "The value is too large for 32 bits; use long price = 5.23L",
+        "A semicolon is not allowed after a decimal literal; remove it",
+        "A decimal literal like 5.23 is a double by default; write 5.23f (single precision) or declare price as double"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Real-number literals default to double (64-bit, double precision), and putting a double into a 32-bit float could lose precision, so Java demands the f suffix, exactly as the lecture's code does with 10.5_4f. 5.23 is tiny compared with float's range, so size is not the problem.",
+      "source": "notes p5; code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d3_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Underscores in numeric literals",
+      "question": "Exactly one of these declarations fails to compile. Which one?",
+      "codeSnippet": "int a = 1___000;            // Line 1\nbyte b = 0b0111_1111;       // Line 2\ndouble d = 6.02_2e23;       // Line 3\nlong l = 3412_56_789_L;     // Line 4",
+      "options": [
+        "Line 1",
+        "Line 2",
+        "Line 3",
+        "Line 4"
+      ],
+      "correctAnswer": 3,
+      "explanation": "An underscore must sit between two digits, so placing one right before the L suffix (789_L) is illegal. Line 1 is fine (several underscores in a row are allowed), and Line 2 is binary 0111 1111 = 127, which fits in a byte's -128..127 range.",
+      "source": "code: Demo.java",
+      "reference": "https://howtodoinjava.com/java/underscores_formatted_literal/"
+    },
+    {
+      "id": "d3_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Keywords",
+      "question": "Keywords are words reserved by Java. Which of these declarations compiles?",
+      "codeSnippet": null,
+      "options": [
+        "`int goto = 5;`",
+        "`int const = 5;`",
+        "`int Class = 5;`",
+        "`int void = 5;`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Java is case-sensitive, so `Class` is just an ordinary identifier, while `void` is a keyword. `goto` and `const` are the trap: the notes point out they are reserved keywords even though Java never uses them, so they still cannot be variable names.",
+      "source": "notes p8",
+      "reference": null
+    }
+  ]
+}

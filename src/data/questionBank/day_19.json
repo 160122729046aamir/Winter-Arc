@@ -1,0 +1,204 @@
+{
+  "day": 19,
+  "title": "Lecture #19: Java Nested Classes",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java"
+  ],
+  "topics": [
+    "Static nested class",
+    "Inner class instantiation",
+    "Shadowing and Outer.this",
+    "Effectively final in local classes",
+    "Anonymous classes",
+    "Use cases of static nested classes",
+    "Choosing a nested class type",
+    "Inner class memory link",
+    "Static members in inner classes"
+  ],
+  "questions": [
+    {
+      "id": "d19_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Inner class instantiation",
+      "question": "In `main`, you already have `Outer outer = new Outer();`. `Inner` is a non-static inner class of `Outer`. Which statement correctly creates an `Inner` object?",
+      "codeSnippet": null,
+      "options": [
+        "`Outer.Inner inner = new Outer.Inner();`",
+        "`Outer.Inner inner = outer.new Inner();`",
+        "`Outer.Inner inner = new Inner();`",
+        "`Outer.Inner inner = new Inner(outer);`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "An inner class object must be tied to a specific Outer object, so it is created with the `outerRef.new Inner()` syntax (or `new Outer().new Inner()`). `new Outer.Inner()` is how you create a static nested class; for an inner class it fails because no enclosing Outer instance is supplied.",
+      "source": "notes p2; code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"
+    },
+    {
+      "id": "d19_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Static nested class",
+      "question": "A static nested class `Inner` is declared inside `Outer`, which has a `private static int x` and an instance field `int y`. According to the lecture, how can code inside `Inner` read `y`?",
+      "codeSnippet": null,
+      "options": [
+        "Directly as `y`, because a nested class can see every member of its outer class",
+        "As `Outer.this.y`, because every nested class keeps a hidden reference to the outer object",
+        "Only through a reference to an `Outer` object, such as `outer.y`",
+        "It cannot read `y` at all, because `y` is not static"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A static nested class is not tied to any Outer instance, so it can directly use only Outer's static members (like `x`, even though it is private). To reach an instance member such as `y` it needs an explicit Outer reference, which is exactly what `Demo.java` does with its `Outer outer` field and `outer.y`. `Outer.this` only exists inside inner (non-static) classes.",
+      "source": "notes p2 (key properties); code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"
+    },
+    {
+      "id": "d19_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Use cases of static nested classes",
+      "question": "In `BankAccount`, the interest formula lives in a `private static class InterestCalculator` with a static method `calculateYearly(...)`. A teammate asks why it isn't simply a separate top-level class. What is the best justification?",
+      "codeSnippet": null,
+      "options": [
+        "It is a helper used only by `BankAccount`, so nesting it as private groups it logically and hides it from the rest of the code",
+        "Static nested classes run faster than top-level classes because they are loaded together with the outer class",
+        "Only nested classes are allowed to declare static methods, so a top-level class could not hold `calculateYearly`",
+        "Making it private and static lets it read the instance fields of every `BankAccount` without a reference"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The lecture lists \"helper class for an outer class\" as a main use case: nesting gives logical grouping and the `private` modifier hides the helper from outside code. Top-level classes can of course have static methods, and a static nested class still cannot touch instance fields without an object reference.",
+      "source": "code: Demo.java (BankAccount, use-case comment); notes p1",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"
+    },
+    {
+      "id": "d19_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Effectively final in local classes",
+      "question": "What happens when this code (from the lecture) is compiled and run?",
+      "codeSnippet": "public class Demo3 {\n    public static void main(String[] args) {\n        new Outer().greet();\n    }\n}\n\nclass Outer {\n    void greet() {\n        int y = 5;\n        y++;\n\n        class Local {\n            void sayHello() {\n                System.out.println(y);\n            }\n        }\n\n        Local local = new Local();\n        local.sayHello();\n    }\n}",
+      "options": [
+        "It prints `6`",
+        "It prints `5`, because the local class captured `y` before the increment",
+        "It does not compile, because `y` is used inside the local class but is not effectively final",
+        "It compiles but throws an exception when `sayHello()` runs"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A local class may only use local variables of the enclosing method that are final or effectively final. `y++` reassigns `y`, so `y` is no longer effectively final and the compiler reports an error at `System.out.println(y)`. Nothing is printed, because the program never compiles.",
+      "source": "code: Demo3.java; notes p4",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/localclasses.html"
+    },
+    {
+      "id": "d19_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Shadowing and Outer.this",
+      "question": "What is printed?",
+      "codeSnippet": "class Outer {\n    int x = 10;\n\n    class Inner {\n        int x = 20;\n\n        void show(int x) {\n            System.out.println(x + \" \" + this.x + \" \" + Outer.this.x);\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Outer outer = new Outer();\n        Outer.Inner inner = outer.new Inner();\n        inner.show(30);\n    }\n}",
+      "options": [
+        "`10 20 30`",
+        "`30 30 10`",
+        "`20 20 10`",
+        "`30 20 10`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Inside `show`, the plain name `x` means the closest declaration, the parameter (30). `this.x` is the Inner object's own field (20), and `Outer.this.x` reaches the field of the enclosing Outer object (10). Picking `30 30 10` assumes `this.x` also sees the parameter, but `this.x` always means a field.",
+      "source": "notes p3 (Outer.this.x); code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"
+    },
+    {
+      "id": "d19_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Anonymous classes",
+      "question": "This is the lecture's anonymous-class example with one extra line added at the end of `main`. What is the result?",
+      "codeSnippet": "class Person {\n    void introduce() {\n        System.out.println(\"Hi, I am a person\");\n    }\n}\n\npublic class Demo4 {\n    public static void main(String[] args) {\n        Person p2 = new Person() {\n            String name = \"Aditya\";\n\n            @Override\n            void introduce() {\n                greet();\n                System.out.println(\"Hi, I am \" + name);\n            }\n\n            void greet() {\n                System.out.println(\"Hello\");\n            }\n        };\n\n        p2.introduce();\n        p2.greet();   // added line\n    }\n}",
+      "options": [
+        "It prints `Hello`, `Hi, I am Aditya`, then `Hello`",
+        "It does not compile: `greet()` cannot be called through a `Person` reference",
+        "It prints `Hi, I am a person` and then `Hello`",
+        "It compiles, but `p2.greet()` throws an exception at runtime"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The anonymous class may add its own field and methods, but `p2` is declared as `Person`, and the compiler only lets you call methods that `Person` declares. `Person` has no `greet()`, so `p2.greet()` is a compile error, while `p2.introduce()` alone would print `Hello` and `Hi, I am Aditya`. Extra methods of an anonymous class can only be used from inside its own body.",
+      "source": "code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/anonymousclasses.html"
+    },
+    {
+      "id": "d19_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Choosing a nested class type",
+      "question": "You are writing an `ApiClient` class and want to group its `Request` and `Response` DTOs inside it. Callers must be able to build a `Request` on its own, without first creating an `ApiClient`. Which declaration fits?",
+      "codeSnippet": null,
+      "options": [
+        "`public static class Request { ... }` inside `ApiClient`",
+        "`public class Request { ... }` (non-static inner class) inside `ApiClient`",
+        "A local class `Request` declared inside an `ApiClient` method",
+        "An anonymous subclass of `Object` assigned to a field in `ApiClient`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A static nested class needs no instance of the outer class and can be created like a normal class (`new ApiClient.Request()`), which is why the lecture lists Request/Response DTOs and the Builder pattern as its use cases. A non-static inner class would force callers to write `client.new Request()`, and local or anonymous classes cannot be named from outside the method at all.",
+      "source": "code: Demo.java (use-case comment); notes p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"
+    },
+    {
+      "id": "d19_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Inner class memory link",
+      "question": "A `Report` object holds a 50 MB array and has a non-static inner class `Row`. A long-lived cache stores only `Row` objects; the `Report` objects are no longer referenced anywhere else. Memory keeps growing. What is the most likely cause and fix?",
+      "codeSnippet": null,
+      "options": [
+        "`Row` objects are stored on the stack, so they are never collected; move them to the heap with `new`",
+        "The cache must call `System.gc()` after storing rows; the inner class itself is not the issue",
+        "Inner classes cannot be garbage-collected until the JVM exits; convert `Row` into a local class",
+        "Each `Row` keeps a hidden reference to its `Report`, keeping every array alive; make `Row` a static nested class"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Every inner class object stores an implicit reference to the outer object that created it (the arrow from Inner to Outer in the lecture's heap diagram). While the cache holds a `Row`, its `Report` and its large array stay reachable. A static nested class has no such link, so the reports can be collected; calling `System.gc()` does not help because the reports are still reachable.",
+      "source": "notes p2-p3 (heap diagrams of Outer/Inner objects)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"
+    },
+    {
+      "id": "d19_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Static members in inner classes",
+      "question": "The lecture notes say an inner class cannot have static members, yet `Demo2.java` declares `static int x` and `static void fun2()` inside a non-static inner class and calls `Outer.Inner.fun2()`. On Java 17, what is accurate?",
+      "codeSnippet": null,
+      "options": [
+        "The code does not compile on any Java version; only `static final` constants are ever allowed in inner classes",
+        "It compiles only because `fun2()` never uses an Outer instance; `static int x` alone would be an error",
+        "It compiles: since Java 16 inner classes may declare static members; before that only compile-time constant fields were allowed",
+        "It compiles, but each Outer object gets its own copy of `Inner.x`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Before Java 16, an inner class could only declare static fields that were compile-time constants (`static final` with a constant value), which is the rule the notes describe. Java 16 (the records JEP) lifted this restriction, so on Java 17 the static field and static method compile. A static field still belongs to the class `Outer.Inner`, so there is one copy shared by all objects, not one per Outer object.",
+      "source": "notes p3; code: Demo2.java",
+      "reference": "https://openjdk.org/jeps/395"
+    },
+    {
+      "id": "d19_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Effectively final in local classes",
+      "question": "In the notes, `greet()` declares `int y = 10`, defines a local class that prints `y`, and returns the local object. Later, after `greet()` has returned, the object's method still prints `10`. Why does Java require `y` to be effectively final for this to be allowed?",
+      "codeSnippet": null,
+      "options": [
+        "Because local variables are stored in the heap, and only final heap variables can be shared between objects",
+        "Because the local object can outlive the method's stack frame, so it keeps its own copy of `y`; that copy is only safe if `y` never changes",
+        "Because local classes are static, and static code may only read final variables",
+        "Because `y` is moved into the class's constant pool when the method finishes, and only final values fit there"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Local variables live in the method's stack frame, which disappears when `greet()` returns, but the local class object lives on the heap and may be used later. The compiler therefore copies the value of `y` into the object (the `y = 10` box inside the heap object in the notes). If `y` could change afterwards, the copy and the original would disagree, so Java only allows capture of final or effectively final variables.",
+      "source": "notes p4",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/localclasses.html"
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "day": 66,
+  "title": "Spring Lecture #9: Spring Boot Core",
+  "sources": [
+    "notes/Notes.pdf (25 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/SpringCoreDemo/pom.xml",
+    "code/SpringCoreDemo/src/main/java/in/strikes/*.java"
+  ],
+  "topics": [
+    "Spring Core vs Spring Boot startup",
+    "spring-boot-starter-parent & starters",
+    "@SpringBootApplication",
+    "Component scanning in Boot",
+    "CommandLineRunner",
+    "Auto-configuration & conditions",
+    "Classpath-based decisions"
+  ],
+  "questions": [
+    {
+      "id": "d66_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@SpringBootApplication",
+      "question": "`@SpringBootApplication` is a combination annotation. Which three annotations does it roughly combine?",
+      "codeSnippet": null,
+      "options": [
+        "`@Component`, `@Autowired` and `@Bean`",
+        "`@RestController`, `@GetMapping` and `@Configuration`",
+        "`@SpringBootConfiguration`, `@EnableAutoConfiguration` and `@ComponentScan`",
+        "`@Configuration`, `@Lazy` and `@Scope`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`@SpringBootConfiguration` marks the main configuration class (Boot's version of `@Configuration`), `@ComponentScan` finds your components from the main class's package downward, and `@EnableAutoConfiguration` applies Boot's ready-made configuration. Web annotations like `@RestController` are not part of it - Spring Boot is not only for web apps.",
+      "source": "notes p9-10; excalidraw p2",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html"
+    },
+    {
+      "id": "d66_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "spring-boot-starter-parent & starters",
+      "question": "What is the main benefit of using `spring-boot-starter-parent` as the `<parent>` of a Spring Boot project?",
+      "codeSnippet": null,
+      "options": [
+        "It provides compatible dependency and plugin versions plus build defaults, so you do not pick every version yourself",
+        "It starts the embedded Tomcat server when the project is built",
+        "It replaces Spring Core so that no IoC container is needed",
+        "It downloads Spring Initializr into the project"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The parent supplies managed versions of dependencies and plugins, the Java version setting, encoding and other build defaults, which reduces version-mismatch problems when you add libraries like Jackson or Hibernate. Starting a server is the job of a web starter plus auto-configuration at runtime, and Spring Boot always builds on Spring Core.",
+      "source": "notes p3-4",
+      "reference": null
+    },
+    {
+      "id": "d66_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "CommandLineRunner",
+      "question": "You are converting the lecture's Spring Core `Main` (which called `context.getBean(OrderService.class).placeOrder()`) into a Spring Boot console app. What is the idiomatic way to call `placeOrder()` once the application has started?",
+      "codeSnippet": null,
+      "options": [
+        "Call `new OrderService(new PaymentService()).placeOrder()` inside `main`",
+        "Put the call in `OrderService`'s constructor so it runs when the bean is created",
+        "Annotate `placeOrder()` with `@SpringBootApplication`",
+        "Create a `@Component` that implements `CommandLineRunner`, inject `OrderService` through its constructor, and call it in `run()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`CommandLineRunner.run()` is called after the application context is created and ready, and the runner gets `OrderService` by normal dependency injection. Creating objects with `new` bypasses Spring, and doing work in a constructor runs it while the context is still being built.",
+      "source": "notes p7-8; code: SpringCoreDemo/Main.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/spring-application.html"
+    },
+    {
+      "id": "d66_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Component scanning in Boot",
+      "question": "The classes below are in the packages shown in the comments. What happens when the application starts?",
+      "codeSnippet": "// package in.strikes.app\n@SpringBootApplication\npublic class ShopApplication {\n    public static void main(String[] args) {\n        SpringApplication.run(ShopApplication.class, args);\n    }\n}\n\n// package in.strikes.app.order\n@Component\npublic class OrderService {\n    public OrderService(PaymentService paymentService) { }\n}\n\n// package in.strikes.service\n@Component\npublic class PaymentService { }",
+      "options": [
+        "It starts normally, because all classes share the root `in.strikes`",
+        "Startup fails: `PaymentService` is outside `in.strikes.app` and its sub-packages, so it is not scanned and `OrderService` cannot get its dependency",
+        "It starts, but `OrderService` receives `null` for `paymentService`",
+        "It starts only if `PaymentService` is renamed to end with `Service` in its bean name"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The `@ComponentScan` inside `@SpringBootApplication` starts at the main class's package (`in.strikes.app`) and covers its sub-packages only, so `in.strikes.service` is skipped. Constructor injection then has no `PaymentService` bean and startup fails. Fix it by moving the main class to the root package `in.strikes` (best practice) or using `scanBasePackages = \"in.strikes\"`.",
+      "source": "notes p11-13",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html"
+    },
+    {
+      "id": "d66_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "CommandLineRunner",
+      "question": "Ignoring Spring Boot's log lines, what does this console application print? (`PaymentService.pay()` prints \"Payment completed\".)",
+      "codeSnippet": "@SpringBootApplication\npublic class DemoApplication {\n    public static void main(String[] args) {\n        System.out.println(\"Starting\");\n        SpringApplication.run(DemoApplication.class, args);\n        System.out.println(\"Main finished\");\n    }\n}\n\n@Component\npublic class OrderService {\n    private final PaymentService paymentService;\n    public OrderService(PaymentService paymentService) {\n        this.paymentService = paymentService;\n    }\n    public void placeOrder() {\n        paymentService.pay();\n        System.out.println(\"Order placed\");\n    }\n}\n\n@Component\npublic class AppRunner implements CommandLineRunner {\n    private final OrderService orderService;\n    public AppRunner(OrderService orderService) {\n        this.orderService = orderService;\n    }\n    @Override\n    public void run(String... args) {\n        orderService.placeOrder();\n    }\n}",
+      "options": [
+        "Starting\nPayment completed\nOrder placed\nMain finished",
+        "Starting\nMain finished\nPayment completed\nOrder placed",
+        "Payment completed\nOrder placed\nStarting\nMain finished",
+        "Starting\nMain finished"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`SpringApplication.run()` builds the context and calls all `CommandLineRunner`s just before it returns, so the runner's output appears between \"Starting\" and \"Main finished\". The runner is a scanned `@Component`, so it definitely runs; nothing executes before `main` starts.",
+      "source": "notes p7-9",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/spring-application.html"
+    },
+    {
+      "id": "d66_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Auto-configuration & conditions",
+      "question": "What is the difference between `@ComponentScan` and `@EnableAutoConfiguration` in a Spring Boot application?",
+      "codeSnippet": null,
+      "options": [
+        "`@ComponentScan` applies Boot's default beans, while `@EnableAutoConfiguration` finds your `@Component` classes",
+        "They do the same thing; `@EnableAutoConfiguration` is just the newer name",
+        "`@ComponentScan` is only for web controllers, while `@EnableAutoConfiguration` is for services",
+        "`@ComponentScan` finds your own annotated classes; `@EnableAutoConfiguration` applies Boot's pre-written configuration when its conditions match"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Component scanning discovers your code (`@Component`, `@Service`, `@Repository`, `@Controller`...). Auto-configuration applies configuration classes shipped by Spring Boot or starters, based on the classpath, existing beans and properties. The first option swaps the two roles, and scanning is not limited to controllers.",
+      "source": "notes p13-14, 24",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/auto-configuration.html"
+    },
+    {
+      "id": "d66_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Classpath-based decisions",
+      "question": "A new Spring Boot project has only `spring-boot-starter` as a dependency. It starts, runs its `CommandLineRunner`, and then exits; no \"Tomcat started on port 8080\" ever appears. A teammate thinks the project is broken. What is actually happening?",
+      "codeSnippet": null,
+      "options": [
+        "Tomcat crashed silently; the port is probably blocked by another program",
+        "No web classes are on the classpath, so auto-configuration treats it as a console app; adding the web starter would bring in web classes and an embedded server",
+        "Spring Boot only supports web applications, so the project is misconfigured",
+        "`@SpringBootApplication` must be given `web = true` to start a server"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Auto-configuration decides from the classpath: with no web server or Spring MVC classes, Boot does not configure a web server, and the app behaves like a normal console program that finishes when its work is done. Spring Boot is not only for web APIs. Adding the web starter changes the classpath, and Boot then starts an embedded server such as Tomcat.",
+      "source": "notes p16-18",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/auto-configuration.html"
+    },
+    {
+      "id": "d66_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Auto-configuration & conditions",
+      "question": "Assume `PaymentAutoConfiguration` is shipped by a starter and registered as an auto-configuration, and `PaymentGateway` is an interface on the classpath. What does the runner print?",
+      "codeSnippet": "// provided by the starter\n@AutoConfiguration\n@ConditionalOnClass(PaymentGateway.class)\npublic class PaymentAutoConfiguration {\n    @Bean\n    @ConditionalOnMissingBean\n    public PaymentGateway paymentGateway() {\n        return new DefaultPaymentGateway();\n    }\n}\n\n// your code\n@Configuration\npublic class MyConfig {\n    @Bean\n    public PaymentGateway myGateway() {\n        return new RazorpayGateway();\n    }\n}\n\n@Component\npublic class AppRunner implements CommandLineRunner {\n    private final PaymentGateway gateway;\n    public AppRunner(PaymentGateway gateway) {\n        this.gateway = gateway;\n    }\n    @Override\n    public void run(String... args) {\n        System.out.println(gateway.getClass().getSimpleName());\n    }\n}",
+      "options": [
+        "DefaultPaymentGateway",
+        "Nothing - startup fails because two `PaymentGateway` beans exist",
+        "RazorpayGateway",
+        "DefaultPaymentGateway, because auto-configured beans always override user beans"
+      ],
+      "correctAnswer": 2,
+      "explanation": "User-defined beans are registered before auto-configuration is evaluated. `@ConditionalOnClass` matches, but `@ConditionalOnMissingBean` sees that a `PaymentGateway` bean (`myGateway`) already exists, so the default is not created. Only one candidate remains, so there is no ambiguity - this is how Boot lets your configuration win.",
+      "source": "notes p14-15, 18-21, 23",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/auto-configuration.html"
+    },
+    {
+      "id": "d66_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Spring Core vs Spring Boot startup",
+      "question": "Migrating the lecture's `SpringCoreDemo` to Spring Boot, a teammate adds `@SpringBootApplication` to a main class in `in.strikes` and deletes the whole `AppConfig` class (which had `@ComponentScan(\"in.strikes\")` and a `@Bean` method returning `new UserService()`; `UserService` has no annotations). Later, injecting `UserService` fails with \"no qualifying bean\". Why?",
+      "codeSnippet": null,
+      "options": [
+        "`@SpringBootApplication` does not perform component scanning, so `OrderService` and `PaymentService` were also lost",
+        "Spring Boot requires every bean to be declared in `application.properties`",
+        "Auto-configuration only creates `UserService` when a web starter is present",
+        "Scanning still finds the `@Component` classes, but `UserService` was only registered by the deleted `@Bean` method; auto-configuration never creates your own classes, so the `@Bean` method must be kept (e.g. in a `@Configuration` class or the main class)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`@SpringBootApplication` replaces the manual `@ComponentScan`, so `OrderService` and `PaymentService` are still found. But a plain class registered via `@Bean` is not a component, and auto-configuration only applies Boot's own pre-written configurations. Keep the `@Bean` method in a `@Configuration` class, or in the main class, which works because it carries `@SpringBootConfiguration`.",
+      "source": "notes p5-6, 10-12, 21-22; code: SpringCoreDemo/AppConfig.java, UserService.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html"
+    },
+    {
+      "id": "d66_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Auto-configuration & conditions",
+      "question": "Which statement best describes how Spring Boot auto-configuration decides what to configure?",
+      "codeSnippet": null,
+      "options": [
+        "It applies every auto-configuration class it knows about, then removes beans that fail at startup",
+        "It applies pre-written configuration only when conditions match - e.g. a class is on the classpath, a bean is missing, or a property is enabled",
+        "It reads your source code and generates configuration classes for it at compile time",
+        "It replaces any bean you define with Boot's own default implementation"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Auto-configuration is \"pre-written configuration + condition-based activation\": checks like `@ConditionalOnClass` and `@ConditionalOnMissingBean` decide whether each configuration or bean applies. That is why adding a dependency changes behaviour without code changes, and why your own beans normally take precedence instead of being replaced.",
+      "source": "notes p14-17, 19-22",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/auto-configuration.html"
+    }
+  ]
+}

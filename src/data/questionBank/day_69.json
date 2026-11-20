@@ -1,0 +1,203 @@
+{
+  "day": 69,
+  "title": "Spring Lecture #12: Spring Boot CRUD Project with MySQL",
+  "sources": [
+    "Notes.pdf (21 pages)",
+    "Excalidraw-Notes.pdf (1 page)",
+    "code/crudSpringBootDemo/.../controller/StudentController.java",
+    "code/crudSpringBootDemo/.../service/StudentService.java",
+    "code/crudSpringBootDemo/.../repository/StudentRepository.java",
+    "code/crudSpringBootDemo/.../entity/Student.java",
+    "code/crudSpringBootDemo/src/main/resources/application.properties"
+  ],
+  "topics": [
+    "MySQL datasource configuration",
+    "ddl-auto",
+    "JPA entity mapping",
+    "JpaRepository methods",
+    "ResponseEntity status codes",
+    "Request parameters"
+  ],
+  "questions": [
+    {
+      "id": "d69_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "MySQL datasource configuration",
+      "question": "With `spring.datasource.url=jdbc:mysql://localhost:3306/student_crud_db` and `spring.jpa.hibernate.ddl-auto=update`, what must you create manually in MySQL before the first run?",
+      "codeSnippet": null,
+      "options": [
+        "Both the database and the `students` table with all its columns",
+        "Only the database `student_crud_db`; Hibernate can create the table from the entity",
+        "Nothing; Hibernate creates the database and the table automatically",
+        "Only the `students` table; the database name in the URL is created by the driver"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes stress that Hibernate can create or update tables, but the database itself must already exist, so you run `CREATE DATABASE student_crud_db;` once. The table is then generated from the `@Entity` class because of `ddl-auto=update`. Expecting Hibernate to create the database too is the common mistake.",
+      "source": "notes p1-p3",
+      "reference": "https://docs.spring.io/spring-boot/how-to/data-initialization.html"
+    },
+    {
+      "id": "d69_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "JpaRepository methods",
+      "question": "In `public interface StudentRepository extends JpaRepository<Student, Long> {}`, what do the two type arguments mean?",
+      "codeSnippet": null,
+      "options": [
+        "`Student` is the table name and `Long` is the number of rows it can hold",
+        "`Student` is the DTO returned to the client and `Long` is the response status type",
+        "`Student` is the service class and `Long` is the type of the database port",
+        "`Student` is the entity type managed by the repository and `Long` is the type of its primary key (`id`)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`JpaRepository<T, ID>` needs the entity class and the type of its `@Id` field; the lecture's `Student` has `private Long id`. Methods like `findById(Long id)` and `existsById(Long id)` take this ID type, which is why it must match the entity's id field.",
+      "source": "notes p9-p10; code: StudentRepository.java",
+      "reference": "https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html"
+    },
+    {
+      "id": "d69_q3",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "ResponseEntity status codes",
+      "question": "The table has students with ids 1 and 2 only. Postman calls `GET /api/students/get?id=99`. What does it receive?",
+      "codeSnippet": "// StudentService\npublic Student getStudent(Long id) {\n    Optional<Student> studentResp = studentRepository.findById(id);\n    if (studentResp.isPresent()) {\n        return studentResp.get();\n    }\n    return null;\n}\n\n// StudentController\n@GetMapping(\"/get\")\npublic ResponseEntity<Student> getStudent(@RequestParam Long id) {\n    Student studentResp = studentService.getStudent(id);\n    if (studentResp == null) {\n        return ResponseEntity.notFound().build();\n    }\n    return ResponseEntity.ok(studentResp);\n}",
+      "options": [
+        "404 Not Found with an empty body",
+        "200 OK with body `null`",
+        "500 Internal Server Error caused by `NoSuchElementException`",
+        "204 No Content"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`findById(99L)` returns an empty `Optional`, the service returns `null`, and the controller builds `ResponseEntity.notFound().build()`, which is 404 with no body. A `NoSuchElementException` would only occur if the code called `.get()` on the empty Optional without checking `isPresent()` first.",
+      "source": "notes p13, p17-p19; code: StudentService.java, StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html"
+    },
+    {
+      "id": "d69_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "ddl-auto",
+      "question": "You inserted 20 students through the API. After every restart of the application, the `students` table is empty again, though its structure is fine. Which `application.properties` line most likely causes this?",
+      "codeSnippet": null,
+      "options": [
+        "`spring.jpa.show-sql=true`",
+        "`spring.jpa.hibernate.ddl-auto=validate`",
+        "`spring.jpa.hibernate.ddl-auto=create`",
+        "`spring.jpa.properties.hibernate.format_sql=true`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`create` drops the old tables and creates fresh ones every time the app starts, so the data disappears on each restart; `update` would keep existing rows. `validate` only checks that tables match the entities and never deletes data, and the two SQL-logging properties only affect console output.",
+      "source": "notes p3-p5",
+      "reference": "https://docs.spring.io/spring-boot/how-to/data-initialization.html"
+    },
+    {
+      "id": "d69_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "JpaRepository methods",
+      "question": "Both `createStudent` and `updateStudent` end with `studentRepository.save(...)`. Why does the call in `updateStudent` update the existing row instead of inserting a new one?",
+      "codeSnippet": null,
+      "options": [
+        "Because the object was loaded with `findById` and already has a non-null id, so `save()` treats it as an existing entity",
+        "Because `save()` compares the student's name and email with every row and updates the matching one",
+        "Because the method name `updateStudent` tells Spring Data to generate an UPDATE statement",
+        "Because `PUT` requests always make the repository run UPDATE instead of INSERT"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`save()` decides between insert and update based on whether the entity is new; for a generated id that means checking whether the id is null. An entity loaded via `findById` carries its id, so saving it updates that row. Spring Data does not look at service method names or HTTP verbs, and it never matches rows by name or email.",
+      "source": "notes p11; code: StudentService.java",
+      "reference": "https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html"
+    },
+    {
+      "id": "d69_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "JpaRepository methods",
+      "question": "Student 1 is stored as name=Rahul, email=rahul@example.com, rollNo=101, age=22, subject=Spring Boot. Postman sends `PUT /api/students/update?id=1` with body `{\"name\":\"Rahul Sharma\",\"age\":23}`. What is stored afterwards?",
+      "codeSnippet": "public Student updateStudent(Long id, Student studentReq) {\n    Optional<Student> existingStudent = studentRepository.findById(id);\n    if (existingStudent.isEmpty()) {\n        return null;\n    }\n    Student studentToSave = existingStudent.get();\n    studentToSave.setName(studentReq.getName());\n    studentToSave.setRollNo(studentReq.getRollNo());\n    studentToSave.setSubject(studentReq.getSubject());\n    studentToSave.setEmail(studentReq.getEmail());\n    studentToSave.setAge(studentReq.getAge());\n    return studentRepository.save(studentToSave);\n}\n\n// Student fields: Long id; String name; int age; String email; int rollNo; String subject;",
+      "options": [
+        "name=Rahul Sharma, age=23; email, rollNo and subject keep their old values",
+        "name=Rahul Sharma, age=23, email=null, rollNo=0, subject=null",
+        "A second row is inserted for Rahul Sharma and row 1 is unchanged",
+        "The request fails with 400 because the body is missing required fields"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Fields missing from the JSON stay at their Java defaults in `studentReq` (null for `String`, 0 for `int`), and the service copies every field unconditionally, so it overwrites email, rollNo and subject. This is PUT's replace behaviour: the client is expected to send the full object. Nothing validates the body yet, so no 400 occurs, and the loaded entity has id 1, so no new row is inserted.",
+      "source": "code: StudentService.java",
+      "reference": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/PUT"
+    },
+    {
+      "id": "d69_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "JpaRepository methods",
+      "question": "A new teammate sees `StudentRepository` is an interface with no `@Repository` annotation (it is commented out) and no implementing class. They plan to write `StudentRepositoryImpl` implementing `save`, `findAll`, `findById` and `deleteById` with JDBC. What should you tell them?",
+      "codeSnippet": null,
+      "options": [
+        "That is required, because Spring cannot inject an interface without a class annotated `@Repository`",
+        "They only need to add `@Repository` back; Spring then generates SQL from the annotation",
+        "They must annotate the interface with `@Service` so that it is scanned as a bean",
+        "It is unnecessary: Spring Data JPA detects interfaces extending `JpaRepository` and creates their implementation at runtime"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Spring Data JPA scans for repository interfaces and generates a proxy implementation (backed by `SimpleJpaRepository`) at runtime, registering it as a bean, so `@Repository` is optional and no implementing class is needed. Writing the methods by hand would duplicate what `JpaRepository` already provides.",
+      "source": "notes p9-p11; code: StudentRepository.java",
+      "reference": "https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html"
+    },
+    {
+      "id": "d69_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Request parameters",
+      "question": "Using the lecture's controller, Postman sends `GET /api/students/get` with no query string at all. What happens?",
+      "codeSnippet": "@GetMapping(\"/get\")\npublic ResponseEntity<Student> getStudent(@RequestParam Long id) {\n    Student studentResp = studentService.getStudent(id);\n    if (studentResp == null) {\n        return ResponseEntity.notFound().build();\n    }\n    return ResponseEntity.ok(studentResp);\n}",
+      "options": [
+        "404 Not Found, because the service returns null for a null id",
+        "500 Internal Server Error, because `findById(null)` throws `IllegalArgumentException`",
+        "400 Bad Request, because `@RequestParam` is required by default and the method is never called",
+        "200 OK with the first student in the table"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`@RequestParam` parameters are required unless you set `required = false` or use `Optional`, so Spring MVC rejects the request with 400 before invoking the method. The 500 option describes what would happen only if a null id actually reached `findById`, which requires the parameter to be optional.",
+      "source": "code: StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestparam.html"
+    },
+    {
+      "id": "d69_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "JPA entity mapping",
+      "question": "In the lecture's code the entity is declared as below (no `@GeneratedValue`). Postman sends `POST /api/students/create` with `{\"name\":\"Rahul\",\"age\":22}` (no id). The service calls `studentRepository.save(studentReq)`. What happens?",
+      "codeSnippet": "@Entity\npublic class Student {\n    @Id\n    private Long id;\n    private String name;\n    private int age;\n    // other fields, getters and setters\n}",
+      "options": [
+        "MySQL auto-increments the id, so the row is inserted with id 1",
+        "Saving fails with an error that the identifier must be manually assigned, and the client gets a 500",
+        "The row is inserted with id 0, the default value",
+        "Hibernate silently skips the insert and returns the object unchanged with status 201"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Without `@GeneratedValue`, Hibernate treats the id as application-assigned, so persisting an entity whose id is null fails (Hibernate reports the id must be manually assigned) and the request ends in a server error. Adding `@GeneratedValue(strategy = GenerationType.IDENTITY)`, as the notes show, lets MySQL's auto-increment column supply the id. A `Long` id is null, not 0, when unset.",
+      "source": "notes p7-p9; code: Student.java",
+      "reference": null
+    },
+    {
+      "id": "d69_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "JpaRepository methods",
+      "question": "To simplify `deleteStudent`, a teammate removes the `existsById` check and always runs `studentRepository.deleteById(id); return true;`. A client now calls `DELETE /api/students/delete?id=500` for an id that does not exist. What is the result (Spring Data 3+)?",
+      "codeSnippet": null,
+      "options": [
+        "200 OK with \"Record deleted\", because `deleteById` silently ignores a missing id, so the client is misled",
+        "404 Not Found, because `deleteById` returns false when nothing is deleted",
+        "500, because `deleteById` throws `EmptyResultDataAccessException` for a missing id",
+        "The whole table is deleted, because no matching row was found"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Current Spring Data documents that if the entity is not found, `deleteById` is silently ignored (it returns void). The method then returns true and the controller replies 200 \"Record deleted\" for a student that never existed, which is why the lecture checks `existsById` first. Throwing `EmptyResultDataAccessException` was the behaviour of older Spring Data versions, not of the Boot 4 stack used here.",
+      "source": "notes p13-p14; code: StudentService.java",
+      "reference": "https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html"
+    }
+  ]
+}

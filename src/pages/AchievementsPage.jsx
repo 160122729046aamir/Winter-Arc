@@ -137,7 +137,7 @@ export default function AchievementsPage() {
             <span className="text-xs font-mono font-semibold uppercase">Days Conquered</span>
           </div>
           <div className="text-2xl font-bold font-mono text-slate-100">
-            {stats.completedDaysCount} / {days.length || 90}
+            {stats.completedDaysCount} / {stats.totalDays}
           </div>
           <span className="text-[11px] text-slate-400">Winter Arc Days</span>
         </div>

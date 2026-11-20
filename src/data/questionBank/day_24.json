@@ -1,0 +1,208 @@
+{
+  "day": 24,
+  "title": "Lecture #24: Java Interfaces Deep Dive",
+  "sources": [
+    "notes.pdf (3 pages)",
+    "code/Java notes.pdf (overview copy of the notes)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java",
+    "code/Demo6.java",
+    "code/Demo7.java"
+  ],
+  "topics": [
+    "Variables in interfaces",
+    "Default and private interface methods",
+    "Interfaces as contracts",
+    "Default method resolution rules",
+    "Diamond problem with interfaces",
+    "Static interface methods",
+    "Interface vs abstract class",
+    "Why default methods exist",
+    "Functional interfaces"
+  ],
+  "questions": [
+    {
+      "id": "d24_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Variables in interfaces",
+      "question": "In `interface MathConstant { double PI_VALUE = 3.14; }`, how is `PI_VALUE` treated by the compiler?",
+      "codeSnippet": null,
+      "options": [
+        "As an instance field that each implementing class gets its own copy of",
+        "As a `private` field visible only inside the interface",
+        "As `public static final`: a constant accessed as `MathConstant.PI_VALUE` that cannot be reassigned",
+        "As a local variable that must be initialised again in every implementing class"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Every field declared in an interface is implicitly `public static final`, which is why the notes say interfaces have no real fields (no per-object state). You read it through the interface name, as `Demo2.java` does, and any attempt to assign a new value is a compile error.",
+      "source": "code: Demo2.java; notes p2 (static & final variables, Fields (X))",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/interfaceDef.html"
+    },
+    {
+      "id": "d24_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Default and private interface methods",
+      "question": "What does this program print?",
+      "codeSnippet": "interface Vehicle {\n    default void drive() {\n        System.out.println(\"Vehicle is driving\");\n        accelerate();\n    }\n\n    static void brake() {\n        System.out.println(\"Vehicle is applying brake\");\n    }\n\n    private void accelerate() {\n        System.out.println(\"Vehicle is Accelerating\");\n    }\n}\n\nclass Car implements Vehicle { }\n\npublic class Demo5 {\n    public static void main(String[] args) {\n        Vehicle v = new Car();\n        v.drive();\n    }\n}",
+      "options": [
+        "`Vehicle is driving` then `Vehicle is Accelerating`",
+        "`Vehicle is driving` only",
+        "Nothing; it does not compile because `Car` does not implement `drive()`",
+        "Nothing; it does not compile because a `default` method cannot call a `private` method"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`Car` inherits the `default` implementation of `drive()`, so it does not have to override anything. `drive()` prints its message and then calls the interface's `private` helper `accelerate()` (allowed since Java 9), which prints the second line. Private interface methods exist precisely so default methods can share code.",
+      "source": "code: Demo5.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html"
+    },
+    {
+      "id": "d24_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Interfaces as contracts",
+      "question": "Checkout code works with `Payment p` and calls `p.pay()`; `CreditCard` and `DebitCard` implement `Payment`. You must add UPI payments. What is the cleanest change?",
+      "codeSnippet": null,
+      "options": [
+        "Add an `if (type.equals(\"UPI\"))` branch inside every class that calls `pay()`",
+        "Create `class Upi implements Payment` with its own `pay()`; the checkout code stays unchanged",
+        "Make `DebitCard` extend `CreditCard` and add a UPI flag",
+        "Turn `Payment` into a concrete class with a `pay()` method that handles all three types"
+      ],
+      "correctAnswer": 1,
+      "explanation": "An interface is a contract that says what an object can do without saying how. Any new class that implements `Payment` can be passed where a `Payment` is expected, and `p.pay()` runs its version through runtime polymorphism. Type checks or a single class handling every type would mean editing existing code each time a payment method is added.",
+      "source": "code: Demo.java; notes p1 (interface = contract)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/interfaceDef.html"
+    },
+    {
+      "id": "d24_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Default method resolution rules",
+      "question": "This is `Demo7.java` with `C`'s own override removed. What happens?",
+      "codeSnippet": "interface A {\n    default void fun() {\n        System.out.println(\"Inside A interface\");\n    }\n}\n\nclass B {\n    public void fun() {\n        System.out.println(\"Inside B class\");\n    }\n}\n\nclass C extends B implements A { }\n\npublic class Demo7 {\n    public static void main(String[] args) {\n        C c = new C();\n        c.fun();\n    }\n}",
+      "options": [
+        "It prints `Inside A interface`, because interfaces are checked before superclasses",
+        "It does not compile, because `C` inherits two different `fun()` methods",
+        "It does not compile, because `C` must override `fun()` from `A`",
+        "It prints `Inside B class`, because a method inherited from a class beats an interface default"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The resolution rule is \"class wins\": a concrete method inherited from a superclass takes priority over a `default` method with the same signature. `B.fun()` is public and concrete, so it satisfies `A` and is the one called. There is no conflict error here; that only happens between two unrelated interface defaults.",
+      "source": "code: Demo7.java (resolution priority rule)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/override.html"
+    },
+    {
+      "id": "d24_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Diamond problem with interfaces",
+      "question": "This is `Demo6.java` with `D`'s override of `fun()` removed. What is the result?",
+      "codeSnippet": "interface A {\n    void fun();\n}\n\ninterface B extends A {\n    default void fun() { System.out.println(\"B\"); }\n}\n\ninterface C extends A {\n    default void fun() { System.out.println(\"C\"); }\n}\n\nclass D implements B, C { }\n\npublic class Demo6 {\n    public static void main(String[] args) {\n        D d = new D();\n        d.fun();\n    }\n}",
+      "options": [
+        "It prints `B`, because `B` is listed first after `implements`",
+        "It prints `C`, because the last interface listed wins",
+        "It does not compile: `D` inherits two unrelated defaults for `fun()` and must override it",
+        "It compiles, but `d.fun()` throws an exception because the call is ambiguous at runtime"
+      ],
+      "correctAnswer": 2,
+      "explanation": "When a class inherits two `default` methods with the same signature from interfaces that do not override each other, Java does not pick one; the compiler reports an error and forces the class to override the method. That is how interfaces avoid the diamond problem that multiple class inheritance would create. Inside the override you could still call `B.super.fun()` or `C.super.fun()`.",
+      "source": "code: Demo6.java; notes p1 (diamond problem)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/override.html"
+    },
+    {
+      "id": "d24_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Static interface methods",
+      "question": "In `Demo5.java`, `Vehicle` declares `static void brake()`, and `Car implements Vehicle`. With `Vehicle v = new Car();`, which call compiles?",
+      "codeSnippet": null,
+      "options": [
+        "`v.brake();`",
+        "`Vehicle.brake();`",
+        "`Car.brake();`",
+        "`new Car().brake();`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Static methods in an interface belong to the interface itself and are not inherited by implementing classes. They must be called through the interface name, `Vehicle.brake()`. Calling them through an instance or through the implementing class (`Car.brake()`) is a compile error, unlike static methods of a superclass.",
+      "source": "code: Demo5.java (//Vehicle.brake())",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html"
+    },
+    {
+      "id": "d24_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Interface vs abstract class",
+      "question": "You are modelling `Dog`, `Duck` and `Elephant`, which share fields like `name` and `age`, a constructor, and some common code. Separately, many unrelated classes (`Order`, `Invoice`, `Subscription`) need a `pay()` capability. What fits the lecture's guidance?",
+      "codeSnippet": null,
+      "options": [
+        "An abstract class `Animal` for the family (an IS-A relationship with shared state), and an interface `Payable` for the capability (a CAN-DO role)",
+        "An interface `Animal` with instance fields and a constructor, and an abstract class `Payable`",
+        "Interfaces for both, because abstract classes cannot have constructors",
+        "Abstract classes for both, because `Order` can extend `Payable` as well as its own superclass"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Abstract classes suit families of similar classes that share state and constructors (Animal for Dog/Duck/Elephant). Interfaces suit roles or capabilities that unrelated classes can take on (Runnable, Walkable, Payable), and a class can implement many of them. Interfaces cannot have instance fields or constructors, and a class can extend only one class, so the other options break those rules.",
+      "source": "notes p2 (Interface: contract/roles, CAN-DO; Abstract class: families, IS-A)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    },
+    {
+      "id": "d24_q8",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Why default methods exist",
+      "question": "The comment in `Demo5.java` mentions adding something like `pushBack()` to the `List` interface. Why did Java 8 introduce `default` methods?",
+      "codeSnippet": null,
+      "options": [
+        "To let interfaces declare instance fields that hold state",
+        "To make interfaces faster by avoiding dynamic dispatch",
+        "To allow a class to extend more than one class",
+        "To add new methods to an existing interface without breaking every class that already implements it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Before Java 8, adding an abstract method to a widely used interface like `List` would force every implementing class everywhere to add that method or stop compiling. A `default` method ships an implementation inside the interface, so old implementers inherit it automatically and can override it if they want. Interfaces still cannot hold instance state, and classes still extend only one class.",
+      "source": "code: Demo5.java (List interface comment); notes p2 (Java 8/9 interface features)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html"
+    },
+    {
+      "id": "d24_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Functional interfaces",
+      "question": "Which of these interfaces is a valid functional interface (usable as the target of a lambda expression)?",
+      "codeSnippet": null,
+      "options": [
+        "One abstract method `void fun();` plus two `default` methods and one `static` method",
+        "An empty interface with no methods, like `Cloneable`",
+        "Two abstract methods, `void fun();` and `void fun2();`",
+        "An interface that extends `interface A { void fun(); }` and adds another abstract method `void bark();`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A functional interface has exactly one abstract method; `default` and `static` methods do not count, so the first option qualifies (like `Comparator` or `Predicate`). An empty marker interface has zero abstract methods, and the other two have two abstract methods each (the inherited `fun()` counts as well), so none of them can be the target of a lambda.",
+      "source": "notes p2 (functional interfaces, lambda, Comparable, Predicate); notes p3 (marker interfaces)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/FunctionalInterface.html"
+    },
+    {
+      "id": "d24_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Default and private interface methods",
+      "question": "Two `default` methods in your `Vehicle` interface repeat the same 10 lines of setup code. You want to share that code without letting implementing classes or callers see or override it. What should you use (Java 9+)?",
+      "codeSnippet": null,
+      "options": [
+        "A `protected` method in the interface",
+        "A `public static` helper method in the interface",
+        "A `private` method in the interface, called from both default methods",
+        "A new abstract method that every implementing class must write"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Since Java 9, interfaces can declare `private` methods, which only the interface's own default (and static) methods can call, exactly like `accelerate()` in `Demo5.java`. `protected` is not allowed on interface members at all. A `public static` helper would be visible to everyone, and an abstract method would push the duplicated work onto every implementer.",
+      "source": "code: Demo5.java (private accelerate()); notes p2 (methods: public/private)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html"
+    }
+  ]
+}

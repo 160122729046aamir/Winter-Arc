@@ -1,0 +1,202 @@
+{
+  "day": 26,
+  "title": "Lecture #26: Java Strings Part 2",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Length and emptiness checks",
+    "Searching and extraction methods",
+    "String methods return new strings",
+    "StringBuilder capacity",
+    "StringBuilder methods",
+    "Comparing StringBuilders",
+    "StringBuilder vs StringBuffer",
+    "replace() vs replaceAll()"
+  ],
+  "questions": [
+    {
+      "id": "d26_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Length and emptiness checks",
+      "question": "For a string containing exactly three spaces, `String s = \"   \";`, what do `s.isEmpty()` and `s.isBlank()` return?",
+      "codeSnippet": null,
+      "options": [
+        "`true` and `true`",
+        "`true` and `false`",
+        "`false` and `true`",
+        "`false` and `false`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`isEmpty()` is true only when `length()` is 0, and this string has length 3, so it is false. `isBlank()` (Java 11) is true when the string is empty or contains only whitespace, so it is true here. Use `isBlank()` when validating user input such as names that might be just spaces.",
+      "source": "notes p1 (length/emptiness); code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d26_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Searching and extraction methods",
+      "question": "What three values does this program print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        String s1 = \"Aditya\";\n\n        System.out.println(s1.substring(1));\n        System.out.println(s1.indexOf(\"ity\"));\n        System.out.println(s1.compareTo(\"abc\") < 0);\n    }\n}",
+      "options": [
+        "`ditya`, `2`, `true`",
+        "`Aditya`, `3`, `false`",
+        "`ditya`, `3`, `true`",
+        "`dity`, `2`, `false`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`substring(1)` returns everything from index 1 to the end, so \"ditya\". `indexOf(\"ity\")` is 0-based: A=0, d=1, i=2, so it returns 2. `compareTo` compares character codes, and `'A'` (65) comes before `'a'` (97), so the result is negative and the check prints `true`.",
+      "source": "code: Demo2.java (substring, indexOf, compareTo)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d26_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "String methods return new strings",
+      "question": "A teammate writes `String code = \"abc\"; code.toUpperCase(); System.out.println(code);` and is surprised that `abc` is printed. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Call `code.toUpperCase(true)` so the change is applied in place",
+        "Assign the result: `code = code.toUpperCase();`, because String methods return a new String and never change the original",
+        "Use `code.equalsIgnoreCase(\"ABC\")` before printing",
+        "Declare `code` as `final` so the method can modify it"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Strings are immutable, so transformation methods like `toUpperCase()`, `trim()` or `replace()` build and return a new String; the notes show `s` pointing to a new \"HELLO\" object while \"Hello\" stays as it was. If the result is not stored, it is simply lost. `final` has nothing to do with it, and there is no in-place variant.",
+      "source": "notes p2 (Strings -> immutable, Hello/HELLO diagram)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d26_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "StringBuilder capacity",
+      "question": "What are the initial capacities of `new StringBuilder()`, `new StringBuilder(50)` and `new StringBuilder(\"java\")`?",
+      "codeSnippet": null,
+      "options": [
+        "`16`, `16`, `4`",
+        "`0`, `50`, `4`",
+        "`16`, `66`, `16`",
+        "`16`, `50`, `20`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The no-argument constructor reserves 16 slots, and the `int` constructor uses exactly the capacity you pass (50). The `String` constructor reserves 16 extra slots on top of the text's length, so \"java\" gives 4 + 16 = 20, as the notes show. Capacity is the reserved space; `length()` is how many characters are actually stored.",
+      "source": "notes p2-p3 (count/capacity, 16 + 4 = 20)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/StringBuilder.html"
+    },
+    {
+      "id": "d26_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "StringBuilder methods",
+      "question": "What does this sequence of `StringBuilder` calls print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        StringBuilder sb = new StringBuilder(\"Aditya\");\n\n        sb.insert(2, 'o');\n        sb.delete(0, 2);\n        sb.replace(1, 3, \"XY\");\n\n        System.out.println(sb);\n    }\n}",
+      "options": [
+        "`Adoitya`",
+        "`oitya`",
+        "`oXYya`",
+        "`AXYitya`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`insert(2, 'o')` gives \"Adoitya\". `delete(0, 2)` removes indices 0 and 1 (end is exclusive), leaving \"oitya\". `replace(1, 3, \"XY\")` replaces indices 1 and 2 (\"it\") with \"XY\", giving \"oXYya\". The same builder object is modified at each step, unlike String methods.",
+      "source": "code: Demo3.java (insert, delete, replace)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/StringBuilder.html"
+    },
+    {
+      "id": "d26_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Comparing StringBuilders",
+      "question": "With `StringBuilder sb1 = new StringBuilder(\"Aditya\");` and `StringBuilder sb2 = new StringBuilder(\"Aditya\");`, why does `sb1.equals(sb2)` return `false`?",
+      "codeSnippet": null,
+      "options": [
+        "Because `StringBuilder.equals()` also compares capacities, which differ",
+        "Because `StringBuilder` does not override `equals()`, so it uses `Object.equals()`, which compares references",
+        "Because `equals()` on a mutable object always returns `false` to be safe",
+        "Because the two builders were created in different threads"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`StringBuilder` inherits `equals()` from `Object`, which only checks whether both references point to the same object; these are two separate objects. To compare contents, use `sb1.toString().equals(sb2.toString())` or, since Java 11, `sb1.compareTo(sb2) == 0`. The notes mark `sb1.equals(sb2)` as \"true X\" for exactly this reason.",
+      "source": "notes p4 (equals() on StringBuilder)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/StringBuilder.html"
+    },
+    {
+      "id": "d26_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "StringBuilder vs StringBuffer",
+      "question": "A single-threaded batch job builds a 100,000-line CSV text with `+=` on a `String` and is slow. Which replacement best matches the lecture's guidance?",
+      "codeSnippet": null,
+      "options": [
+        "`StringBuilder`, because it is mutable (appends go into one growing buffer) and has no synchronization overhead",
+        "`StringBuffer`, because it is always the faster of the two mutable classes",
+        "`String.join` inside the loop on every iteration, because it avoids creating new objects",
+        "`new String(...)` around each `+=`, so every piece goes to the heap instead of the pool"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`StringBuilder` appends into an internal array that grows as needed, so it avoids creating a new String per step. `StringBuffer` offers the same API but its methods are synchronized, which adds overhead that a single-threaded job does not need; the notes call `StringBuilder` faster and the usual choice. Wrapping in `new String(...)` just creates even more objects.",
+      "source": "notes p2, p4 (StringBuilder thread safe X, StringBuffer thread safe; StringBuilder faster)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/StringBuilder.html"
+    },
+    {
+      "id": "d26_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "StringBuilder capacity",
+      "question": "What length and capacity does this program print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        StringBuilder sb = new StringBuilder(\"java\");\n        sb.append(\"is cool and fast!\");   // 17 characters\n\n        System.out.println(sb.length() + \" \" + sb.capacity());\n    }\n}",
+      "options": [
+        "`21 21`",
+        "`21 42`",
+        "`21 20`",
+        "`21 36`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The builder starts with capacity 16 + 4 = 20. Appending 17 characters needs room for 21, which exceeds 20, so it grows to (old capacity * 2) + 2 = 42, the same rule that turns 16 into 34 in `Demo3.java`. The length is the number of characters actually stored: 4 + 17 = 21.",
+      "source": "code: Demo3.java (capacity 34); notes p3 ((34*2)+2 = 70, 16 + 4 = 20)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/StringBuilder.html"
+    },
+    {
+      "id": "d26_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "replace() vs replaceAll()",
+      "question": "Given `String v = \"1.5\";`, why does `v.replace(\".\", \"-\")` return `\"1-5\"` while `v.replaceAll(\".\", \"-\")` returns `\"---\"`?",
+      "codeSnippet": null,
+      "options": [
+        "Because `replaceAll` also replaces digits, while `replace` only replaces punctuation",
+        "Because `replace` stops after the first match, while `replaceAll` replaces every match",
+        "Because `replaceAll` works on the `byte[]` value while `replace` works on characters",
+        "Because `replaceAll` treats its first argument as a regular expression, and `.` in a regex matches any character"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`replace(CharSequence, CharSequence)` replaces every literal occurrence of the text, so only the dot changes. `replaceAll` (and `split`) take a regex, in which `.` means \"any character\", so every character is replaced. To match a literal dot in a regex you escape it, e.g. `replaceAll(\"\\\\.\", \"-\")`. Both methods replace all matches; `replace` does not stop after the first.",
+      "source": "code: Demo2.java (replace, replaceAll, split)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d26_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "StringBuilder vs StringBuffer",
+      "question": "Two threads append to the same shared `StringBuilder sb = new StringBuilder(\"Hello\")`: thread 1 runs `sb.append('A')` and thread 2 runs `sb.append('B')`. Occasionally the result is corrupted (a character is lost or overwritten). What is the right explanation and fix?",
+      "codeSnippet": null,
+      "options": [
+        "`StringBuilder` is immutable, so concurrent appends create copies that overwrite each other; use `String` instead",
+        "The JVM only allows one `append` per object; call `ensureCapacity()` first",
+        "`StringBuilder` methods are not synchronized, so the appends can interleave (a race condition); use `StringBuffer`, whose methods are synchronized",
+        "The two `char` values are promoted to `int` and added together; use `append(String.valueOf(c))`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`StringBuilder` is not thread-safe: both appends can read the same `count` and write into the same slot, which is the race condition in the notes. `StringBuffer` synchronizes its methods, so each append completes fully before the other starts, giving \"HelloAB\" or \"HelloBA\" but never a corrupted value. Which letter comes first still depends on thread scheduling.",
+      "source": "notes p4 (StringBuffer: mutable + thread safety, race condition example)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/StringBuffer.html"
+    }
+  ]
+}

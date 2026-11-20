@@ -1,0 +1,196 @@
+{
+  "day": 1,
+  "title": "Lecture #1: JAVA Full Course",
+  "sources": [
+    "notes.pdf (7 pages)"
+  ],
+  "topics": [
+    "Why Java was created (C/C++ limitations)",
+    "Platform = processor + OS",
+    "Instruction Set Architecture & machine code",
+    "Bytecode, JVM and WORA",
+    "Security: no pointers, sandbox model"
+  ],
+  "questions": [
+    {
+      "id": "d1_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Platform",
+      "question": "In the lecture, what exactly does the word \"platform\" mean when we say C/C++ programs are platform dependent?",
+      "codeSnippet": null,
+      "options": [
+        "The IDE or text editor used to write the source code",
+        "The combination of the processor (e.g. Intel x86, ARM) and the operating system (e.g. Windows, Mac)",
+        "Only the operating system installed on the computer, regardless of CPU",
+        "The programming language version the compiler supports"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes define a platform as Processor + OS, e.g. P1 = Intel x86 + Windows and P2 = ARM + Mac. Thinking of the platform as only the OS is the common mistake: the same OS on a different CPU still needs different machine code because the instruction sets differ.",
+      "source": "notes p2",
+      "reference": "https://www.scaler.com/topics/why-java-is-platform-independent/"
+    },
+    {
+      "id": "d1_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Bytecode and JVM",
+      "question": "You save the program below as `Hello.java` and run `javac Hello.java`. What does the compiler produce?",
+      "codeSnippet": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"Hello world\");\n    }\n}",
+      "options": [
+        "Hello.exe containing native machine code for your current processor and OS",
+        "Nothing on disk; javac runs the program directly and prints Hello world",
+        "Hello.class containing bytecode that any machine with a JVM can run",
+        "Hello.obj containing assembly instructions that must be linked per platform"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The Java compiler turns Hello.java into Hello.class, which holds platform-neutral bytecode; the JVM on each machine then executes it. Producing a native .exe is what a C/C++ compiler does, which is exactly why those programs are tied to one platform.",
+      "source": "notes p5",
+      "reference": "https://www.scaler.com/topics/why-java-is-platform-independent/"
+    },
+    {
+      "id": "d1_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Platform dependence of C/C++",
+      "question": "You compiled a C++ program on your Intel x86 + Windows laptop. Your friend has an ARM + Mac laptop and wants to run the same program. What do they need to do?",
+      "codeSnippet": null,
+      "options": [
+        "Just copy the compiled executable; machine code is the same on every computer",
+        "Recompile the source code with a compiler for ARM + Mac to get new machine code",
+        "Install a JVM on the Mac so it can run the Windows executable",
+        "Rename the executable's extension so the Mac recognises it"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A C/C++ compiler produces machine code for one specific platform (MC1 for P1, MC2 for P2), so the source must be recompiled for the target platform. A JVM cannot help here because it runs Java bytecode, not native Windows executables.",
+      "source": "notes p1-p3",
+      "reference": "https://www.scaler.com/topics/why-java-is-platform-independent/"
+    },
+    {
+      "id": "d1_q4",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Why Java was created",
+      "question": "According to the lecture, which three weaknesses of C/C++ was Java mainly designed to address?",
+      "codeSnippet": null,
+      "options": [
+        "Slow execution speed, lack of loops, and missing data types",
+        "Lack of low-level hardware access, small libraries, and no compiler",
+        "Platform dependence (portability), complexity (simplicity), and security",
+        "Poor graphics support, no networking, and no string type"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes list C/C++ problems as platform dependence, simplicity and security, and Java answers them by being portable, simple and secure. Speed was not the issue: the notes actually praise C/C++ as fast and close to hardware.",
+      "source": "notes p3-p4",
+      "reference": null
+    },
+    {
+      "id": "d1_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Instruction Set Architecture",
+      "question": "Why does the machine code for the same \"add two numbers\" program differ between an Intel x86 processor and an ARM processor?",
+      "codeSnippet": null,
+      "options": [
+        "Each processor family has its own Instruction Set Architecture, so instructions like ADD, LOAD, STORE, JUMP are encoded differently",
+        "ARM processors use decimal digits internally while Intel processors use binary",
+        "Intel processors have transistors but ARM processors do not",
+        "The source code is stored differently on each processor's hard disk"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes show Program -> ISA -> Processor: every processor understands only its own instruction set, so compiled machine code is ISA-specific. Both families are built from billions of transistors working with 1/0 (on/off), so binary vs decimal is not the difference.",
+      "source": "notes p3",
+      "reference": null
+    },
+    {
+      "id": "d1_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Platform dependence of C/C++",
+      "question": "This C++ program prints using a Windows-only system library call. It was compiled on P1 (Intel x86 + Windows). What happens if you want it on P2 (ARM + Mac)?",
+      "codeSnippet": "#include <windows.h>\n\nint main() {\n    // Windows system library call to print to the console\n    WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), \"Hello world\", 11, NULL, NULL);\n    return 0;\n}",
+      "options": [
+        "Copying the P1 executable to P2 works, because printing is the same on every OS",
+        "Recompiling for ARM is enough; the Windows call will be translated automatically",
+        "Only the call needs changing; the P1 executable's machine code already runs on ARM",
+        "Both must change: the code must be recompiled for ARM, and the Windows-only print call replaced with the Mac system library's equivalent"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes show two sources of platform dependence: the processor (machine code differs per ISA) and the OS (print, file read/write and memory allocation go through OS-specific system libraries, e.g. writeToConsole() on Windows vs a different call on Mac). Recompiling alone fixes only the processor half; the Windows-only call still does not exist on Mac.",
+      "source": "notes p2",
+      "reference": null
+    },
+    {
+      "id": "d1_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Bytecode and JVM",
+      "question": "Your company ships one `Hello.class` file to a Windows x86 server and to an ARM Mac. Using the lecture's \"translator\" analogy, what must be present on each machine for it to run?",
+      "codeSnippet": null,
+      "options": [
+        "A separate copy of Hello.class compiled on that machine",
+        "A JVM built for that machine's platform, which translates the bytecode into its machine code",
+        "The original Hello.java source code and a C++ compiler",
+        "Nothing extra, because bytecode is native machine code for every processor"
+      ],
+      "correctAnswer": 1,
+      "explanation": "In the analogy the Indian traveller (bytecode) takes a translator (JVM) along, so the same .class file can be understood in China or Spain (any platform). Recompiling per machine is the C/C++ approach that Java avoids, and bytecode is not native code for any real processor.",
+      "source": "notes p4-p5",
+      "reference": "https://www.scaler.com/topics/why-java-is-platform-independent/"
+    },
+    {
+      "id": "d1_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Security and sandbox model",
+      "question": "In the early internet days, a bank website let users download a small Java loan calculator into their browser. Why was it reasonably safe for users to run this code from a stranger's server?",
+      "codeSnippet": null,
+      "options": [
+        "The bytecode ran inside the JVM's secured sandbox environment instead of directly on the OS",
+        "The browser converted the program to C++ before running it",
+        "Java programs are always digitally signed by the bank's government",
+        "The loan calculator ran on the bank's server, so no code ever reached the user's machine"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes show bytecode going into the JVM, a secured environment (sandbox model), so frontend applets running in the browser could not freely touch the user's machine. The last option describes servlets (backend), not applets, which were downloaded and executed on the client.",
+      "source": "notes p6",
+      "reference": null
+    },
+    {
+      "id": "d1_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Security: no pointers",
+      "question": "The C snippet below writes directly to an arbitrary memory address. Which Java design choice from the lecture makes this kind of code impossible to write in Java?",
+      "codeSnippet": "#include <stdlib.h>\n\nint main() {\n    int *p = malloc(sizeof(int));\n    p = p + 1000;      // pointer arithmetic\n    *p = 42;           // write to memory we do not own\n    free(p);           // manual deallocation of the wrong address\n    return 0;\n}",
+      "options": [
+        "Java checks every pointer at compile time and rejects arithmetic beyond 1000 bytes",
+        "Java allows pointers but only inside the main method",
+        "Java removes explicit pointers and manual memory allocation/deallocation, so programs cannot reach raw memory addresses",
+        "Java converts pointer arithmetic into array indexing automatically"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes list pointers, multiple inheritance and manual memory alloc/dealloc as C/C++ features Java dropped for simplicity and security. Without explicit pointers there is no syntax to compute or write a raw address, so the 'compile-time check of pointers' option describes something that does not exist in Java.",
+      "source": "notes p6",
+      "reference": null
+    },
+    {
+      "id": "d1_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Bytecode and JVM",
+      "question": "In a code review a teammate writes: \"Java is platform independent, so the JVM is the same download on Windows, Mac and Linux.\" Which correction is accurate?",
+      "codeSnippet": null,
+      "options": [
+        "Correct as written; the JVM itself is written in bytecode so it runs everywhere",
+        "Wrong; Java bytecode is platform dependent, and the JVM makes it independent by recompiling the .java file on each machine",
+        "Wrong; both the .class file and the JVM must be rebuilt for every platform",
+        "Wrong; the bytecode (.class) is platform independent, but each platform needs its own platform-specific JVM"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Portability comes from bytecode: the same .class runs anywhere because every platform has a JVM built for it (JVM for x86 + Windows, JVM for ARM + Mac in the notes). The second option inverts the roles: the JVM never needs the .java source; it executes the already-compiled bytecode.",
+      "source": "notes p5",
+      "reference": "https://www.scaler.com/topics/why-java-is-platform-independent/"
+    }
+  ]
+}

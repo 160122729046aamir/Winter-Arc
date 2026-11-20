@@ -22,6 +22,58 @@ import { QUESTION_BANK_BY_DAY } from '../../data/questionBankData';
 import ProgressBar from '../common/ProgressBar';
 import { confirmAction, toast } from '../../utils/alerts';
 
+// Deterministic per-question option order. The bank stores the correct option
+// first for every question, so options are shuffled with a seed derived from the
+// question id: stable across renders/reloads, different between questions.
+// Indexes saved in answers always refer to the ORIGINAL option positions.
+function optionOrder(questionId, count) {
+  let h = 2166136261;
+  for (let i = 0; i < questionId.length; i++) {
+    h ^= questionId.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  let seed = h >>> 0;
+  const rand = () => {
+    seed = (seed + 0x6d2b79f5) >>> 0;
+    let t = seed;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const order = Array.from({ length: count }, (_, i) => i);
+  for (let i = count - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return order;
+}
+
+// Renders `backtick` spans in question/option/explanation text as inline code.
+function RichText({ text }) {
+  if (!text) return null;
+  const parts = String(text).split(/(`[^`\n]+`)/g);
+  return parts.map((part, i) =>
+    part.length > 2 && part.startsWith('`') && part.endsWith('`') ? (
+      <code
+        key={i}
+        className="px-1 py-0.5 rounded-md bg-slate-800/80 text-cyan-300 font-mono text-[0.9em] whitespace-pre-wrap"
+      >
+        {part.slice(1, -1)}
+      </code>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    )
+  );
+}
+
+function referenceLabel(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return 'Reference';
+  }
+}
+
 export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
   const {
     quizState,
@@ -32,7 +84,7 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
     days
   } = usePlanner();
 
-  const [activeTab, setActiveTab] = useState('basic'); // 'basic' | 'medium' | 'hard'
+  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'basic' | 'medium' | 'hard'
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
@@ -40,6 +92,7 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
   const [filterMode, setFilterMode] = useState('all'); // 'all' | 'incorrect' | 'bookmarked' | 'review'
 
   const dayQuestionsData = QUESTION_BANK_BY_DAY[dayNumber] || {
+    all: [],
     basic: [],
     medium: [],
     hard: []
@@ -92,14 +145,10 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
 
   const isCurrentSubmitted = Boolean(existingAnswer || isAnswerSubmitted);
 
-  // Stats across all 25 questions of the day
-  const allDayQuestions = [
-    ...(dayQuestionsData.basic || []),
-    ...(dayQuestionsData.medium || []),
-    ...(dayQuestionsData.hard || [])
-  ];
+  // Stats across all of the day's questions
+  const allDayQuestions = dayQuestionsData.all || [];
 
-  const totalQuestions = allDayQuestions.length || 25;
+  const totalQuestions = allDayQuestions.length;
   const attemptedCount = Object.keys(dayQuizState.answers || {}).length;
   const correctCount = Object.values(dayQuizState.answers || {}).filter((a) => a.isCorrect).length;
   const incorrectCount = attemptedCount - correctCount;
@@ -116,11 +165,18 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
   const hardAttempted = (dayQuestionsData.hard || []).filter((q) => dayQuizState.answers?.[q.id]).length;
   const hardCorrect = (dayQuestionsData.hard || []).filter((q) => dayQuizState.answers?.[q.id]?.isCorrect).length;
 
+  const tierCounts = {
+    basic: (dayQuestionsData.basic || []).length,
+    medium: (dayQuestionsData.medium || []).length,
+    hard: (dayQuestionsData.hard || []).length
+  };
+  const pctOf = (n, d) => (d > 0 ? Math.round((n / d) * 100) : 0);
+
   // Handling answer submission
   const handleSubmitAnswer = () => {
     if (selectedOption === null || !currentQ) return;
     const isCorrect = selectedOption === currentQ.correctAnswer;
-    submitQuizAnswer(dayNumber, activeTab, currentQ.id, selectedOption, isCorrect, currentQ.topic);
+    submitQuizAnswer(dayNumber, currentQ.difficulty, currentQ.id, selectedOption, isCorrect, currentQ.topic);
     setIsAnswerSubmitted(true);
   };
 
@@ -176,6 +232,18 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
   const isBookmarked = currentQ && (dayQuizState.bookmarked || []).includes(currentQ.id);
   const isMarkedReview = currentQ && (dayQuizState.markedForReview || []).includes(currentQ.id);
 
+  if (totalQuestions === 0) {
+    return (
+      <div className="arc-card p-10 text-center space-y-2">
+        <HelpCircle className="w-8 h-8 text-slate-500 mx-auto" />
+        <h3 className="text-base font-bold text-slate-100">No quiz for Day {dayNumber} yet</h3>
+        <p className="text-xs text-slate-400 max-w-md mx-auto">
+          Questions for this lecture haven't been added yet. Work through the notes and tasks; the quiz appears here once it's written.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="arc-card p-5 sm:p-6 space-y-6">
       {/* Top Header: Quiz Info & Overall Metrics */}
@@ -186,7 +254,7 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
               DAY {dayNumber} QUESTION BANK
             </span>
             <span className="text-xs text-slate-400 font-mono">
-              25 Curated Questions
+              {totalQuestions} questions from the lecture notes &amp; code
             </span>
             {dayQuizState.status === 'completed' && (
               <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
@@ -240,9 +308,23 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
         </div>
       </div>
 
-      {/* Difficulty Tabs: Basic (10), Medium (10), Hard (5) */}
+      {/* Difficulty Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => handleTabChange('all')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+              activeTab === 'all'
+                ? 'bg-slate-100 text-slate-900 shadow-md'
+                : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+            }`}
+          >
+            <span>All ({totalQuestions})</span>
+            <span className="text-[10px] opacity-80 font-mono">
+              {correctCount}/{attemptedCount}
+            </span>
+          </button>
+
           <button
             onClick={() => handleTabChange('basic')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
@@ -251,7 +333,7 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
                 : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
             }`}
           >
-            <span>Basic (10)</span>
+            <span>Easy ({tierCounts.basic})</span>
             <span className="text-[10px] opacity-80 font-mono">
               {basicCorrect}/{basicAttempted}
             </span>
@@ -265,7 +347,7 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
                 : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
             }`}
           >
-            <span>Medium (10)</span>
+            <span>Medium ({tierCounts.medium})</span>
             <span className="text-[10px] opacity-80 font-mono">
               {mediumCorrect}/{mediumAttempted}
             </span>
@@ -279,7 +361,7 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
                 : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
             }`}
           >
-            <span>Hard (5)</span>
+            <span>Hard ({tierCounts.hard})</span>
             <span className="text-[10px] opacity-80 font-mono">
               {hardCorrect}/{hardAttempted}
             </span>
@@ -319,11 +401,16 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
                 Question {safeIndex + 1} of {activeQuestions.length}
               </span>
               <span className="text-cyan-400 font-medium">{currentQ.topic}</span>
-              <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold uppercase ${
+              <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
                 currentQ.difficulty === 'basic' ? 'text-cyan-400 bg-cyan-950/40' : currentQ.difficulty === 'medium' ? 'text-indigo-400 bg-indigo-950/40' : 'text-rose-400 bg-rose-950/40'
               }`}>
-                {currentQ.difficulty}
+                {currentQ.difficulty === 'basic' ? 'easy' : currentQ.difficulty}
               </span>
+              {currentQ.kindLabel && (
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase text-amber-300 bg-amber-950/40">
+                  {currentQ.kindLabel}
+                </span>
+              )}
             </div>
 
             {/* Bookmark & Review Toggles */}
@@ -358,8 +445,8 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
 
           {/* Question Text */}
           <div className="space-y-3">
-            <h4 className="text-base font-semibold text-slate-100 leading-relaxed">
-              {currentQ.question}
+            <h4 className="text-base font-semibold text-slate-100 leading-relaxed whitespace-pre-line">
+              <RichText text={currentQ.question} />
             </h4>
 
             {/* Code Snippet (if present) */}
@@ -389,7 +476,8 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
 
           {/* Options List */}
           <div className="space-y-2.5 pt-2">
-            {currentQ.options.map((opt, idx) => {
+            {optionOrder(String(currentQ.id), currentQ.options.length).map((idx, position) => {
+              const opt = currentQ.options[idx];
               const isSelected = effectiveSelectedOption === idx;
               const isCorrectAnswer = currentQ.correctAnswer === idx;
 
@@ -416,10 +504,10 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
                   className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-all ${optionStyle}`}
                 >
                   <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-mono font-bold flex-shrink-0 mt-0.5 bg-slate-800/80 text-slate-300">
-                    {String.fromCharCode(65 + idx)}
+                    {String.fromCharCode(65 + position)}
                   </span>
-                  <span className="text-xs sm:text-sm leading-relaxed flex-1">
-                    {opt}
+                  <span className="text-xs sm:text-sm leading-relaxed flex-1 whitespace-pre-wrap break-words">
+                    <RichText text={opt} />
                   </span>
                   {isCurrentSubmitted && isCorrectAnswer && (
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -459,23 +547,26 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
                     <XCircle className="w-4 h-4" /> Incorrect
                   </span>
                 )}
-                <span className="text-xs text-slate-500 font-mono">• Concept: {currentQ.concept}</span>
+                <span className="text-xs text-slate-500 font-mono">• Topic: {currentQ.concept}</span>
+                {currentQ.source && (
+                  <span className="text-xs text-slate-500 font-mono">• From: {currentQ.source}</span>
+                )}
               </div>
 
               <p className="text-xs text-slate-300 leading-relaxed font-mono">
-                {currentQ.explanation}
+                <RichText text={currentQ.explanation} />
               </p>
 
               {currentQ.reference && (
                 <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-500 font-mono">Technical Reference:</span>
+                  <span className="text-slate-500 font-mono">Further reading:</span>
                   <a
                     href={currentQ.reference}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-cyan-400 hover:underline flex items-center gap-1"
                   >
-                    <span>Official Guide / Baeldung</span>
+                    <span>{referenceLabel(currentQ.reference)}</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
@@ -534,26 +625,26 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
             <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
               <div className="flex justify-between items-center mb-1">
-                <span className="text-cyan-400 font-bold">Basic</span>
-                <span>{basicCorrect} / 10 ({Math.round((basicCorrect / 10) * 100)}%)</span>
+                <span className="text-cyan-400 font-bold">Easy</span>
+                <span>{basicCorrect} / {tierCounts.basic} ({pctOf(basicCorrect, tierCounts.basic)}%)</span>
               </div>
-              <ProgressBar value={(basicCorrect / 10) * 100} size="xs" color="cyan" />
+              <ProgressBar value={pctOf(basicCorrect, tierCounts.basic)} size="xs" color="cyan" />
             </div>
 
             <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-indigo-400 font-bold">Medium</span>
-                <span>{mediumCorrect} / 10 ({Math.round((mediumCorrect / 10) * 100)}%)</span>
+                <span>{mediumCorrect} / {tierCounts.medium} ({pctOf(mediumCorrect, tierCounts.medium)}%)</span>
               </div>
-              <ProgressBar value={(mediumCorrect / 10) * 100} size="xs" color="indigo" />
+              <ProgressBar value={pctOf(mediumCorrect, tierCounts.medium)} size="xs" color="indigo" />
             </div>
 
             <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-rose-400 font-bold">Hard</span>
-                <span>{hardCorrect} / 5 ({Math.round((hardCorrect / 5) * 100)}%)</span>
+                <span>{hardCorrect} / {tierCounts.hard} ({pctOf(hardCorrect, tierCounts.hard)}%)</span>
               </div>
-              <ProgressBar value={(hardCorrect / 5) * 100} size="xs" color="rose" />
+              <ProgressBar value={pctOf(hardCorrect, tierCounts.hard)} size="xs" color="rose" />
             </div>
           </div>
 
@@ -568,9 +659,9 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
               <div className="space-y-1.5 max-h-40 overflow-y-auto">
                 {incorrectQuestionsForDay.map((q) => (
                   <div key={q.id} className="p-2 rounded bg-slate-950 border border-slate-800 text-xs">
-                    <p className="font-medium text-slate-200 truncate">{q.question}</p>
+                    <p className="font-medium text-slate-200 truncate"><RichText text={q.question} /></p>
                     <p className="text-[11px] text-slate-400 font-mono mt-0.5">
-                      Correct Answer: <span className="text-emerald-400">{q.options[q.correctAnswer]}</span> • Topic: {q.topic}
+                      Correct Answer: <span className="text-emerald-400"><RichText text={q.options[q.correctAnswer]} /></span> • Topic: {q.topic}
                     </p>
                   </div>
                 ))}

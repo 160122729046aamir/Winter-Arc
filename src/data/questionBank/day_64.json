@@ -1,0 +1,201 @@
+{
+  "day": 64,
+  "title": "Spring Lecture #7: Bean Lifecycle Explained",
+  "sources": [
+    "notes/Notes.pdf (30 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/BeanLifeCycleDemo/pom.xml",
+    "code/BeanLifeCycleDemo/src/main/java/in/strikes/*.java"
+  ],
+  "topics": [
+    "Lifecycle phases",
+    "Aware interfaces",
+    "Initialization callbacks",
+    "Destruction callbacks",
+    "Prototype lifecycle",
+    "@Lazy and lifecycle",
+    "@PostConstruct and circular dependency"
+  ],
+  "questions": [
+    {
+      "id": "d64_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Initialization callbacks",
+      "question": "When does Spring call a method annotated with `@PostConstruct`?",
+      "codeSnippet": null,
+      "options": [
+        "Before the constructor, so the object can prepare its fields",
+        "Once, after the object is created and its dependencies are injected",
+        "Every time another bean calls a method on this bean",
+        "Only when the application context is being closed"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@PostConstruct` belongs to the initialization phase: Spring first instantiates the object (constructor), injects dependencies, runs Aware callbacks, and then calls the method once so it can, for example, fill a cache. Running at context close is what `@PreDestroy` does.",
+      "source": "notes p9-12; code: CartService.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    },
+    {
+      "id": "d64_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Aware interfaces",
+      "question": "A bean implements `BeanNameAware`. What does its `setBeanName(String name)` method represent?",
+      "codeSnippet": null,
+      "options": [
+        "A callback in which Spring gives the bean the name it is registered under",
+        "A method the bean must call to register itself with the container",
+        "A setter you can call from `main` to rename the bean inside the container",
+        "A method that runs only when the bean is destroyed"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Aware interfaces are callbacks where information flows from the container to the bean, which is why the method is a setter. If you call `setBeanName(\"userBean2\")` yourself, as in the lecture's commented code, it is just an ordinary method call and does not change the name registered in the container.",
+      "source": "notes p8-9; code: UserService.java, Main.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    },
+    {
+      "id": "d64_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Initialization callbacks",
+      "question": "In a plain Spring 7 project that only depends on `spring-context` (no Spring Boot), `import jakarta.annotation.PostConstruct;` does not compile. What is the fix used in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Change the import to `javax.annotation.PostConstruct`, which is built into the JDK",
+        "Replace `@PostConstruct` with `@Bean` on the method",
+        "Add the `jakarta.annotation:jakarta.annotation-api` dependency to `pom.xml`",
+        "Upgrade `spring-context` to a Spring Boot starter version"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Spring 6/7 uses the `jakarta.annotation` package, and without Spring Boot you may need to add `jakarta.annotation-api` yourself, exactly as the lecture's `pom.xml` does (version 3.0.0). The old `javax.annotation` classes are not part of modern JDKs and are not what Spring 6+ expects; `@Bean` registers beans, it is not an init callback.",
+      "source": "notes p10; code: BeanLifeCycleDemo/pom.xml",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    },
+    {
+      "id": "d64_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@Lazy and lifecycle",
+      "question": "A singleton bean is marked `@Lazy` and nothing eager depends on it. What happens to it during container startup?",
+      "codeSnippet": null,
+      "options": [
+        "It is instantiated, but dependency injection and `@PostConstruct` wait until first use",
+        "It is fully created and initialized, but its `@PreDestroy` is disabled",
+        "Nothing at all - Spring does not even read its bean definition until it is requested",
+        "Only its BeanDefinition is registered; instantiation, injection and initialization all happen when it is first requested"
+      ],
+      "correctAnswer": 3,
+      "explanation": "For a lazy singleton, Spring reads and registers the bean definition at startup but delays the whole object journey - creation, dependency injection, Aware and init callbacks - until someone asks for the bean. Spring must know the definition up front, otherwise it could not create it on demand.",
+      "source": "notes p25-26",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-lazy-init.html"
+    },
+    {
+      "id": "d64_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Initialization callbacks",
+      "question": "A bean uses all three initialization mechanisms at once. What is printed?",
+      "codeSnippet": "public class PaymentService implements InitializingBean {\n    public PaymentService() {\n        System.out.println(\"constructor\");\n    }\n\n    @PostConstruct\n    public void init() {\n        System.out.println(\"postConstruct\");\n    }\n\n    @Override\n    public void afterPropertiesSet() {\n        System.out.println(\"afterPropertiesSet\");\n    }\n\n    public void start() {\n        System.out.println(\"start\");\n    }\n}\n\n@Configuration\npublic class AppConfig {\n    @Bean(initMethod = \"start\")\n    public PaymentService paymentService() {\n        return new PaymentService();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new AnnotationConfigApplicationContext(AppConfig.class);\n        System.out.println(\"ready\");\n    }\n}",
+      "options": [
+        "constructor\npostConstruct\nafterPropertiesSet\nstart\nready",
+        "constructor\nstart\nafterPropertiesSet\npostConstruct\nready",
+        "constructor\nafterPropertiesSet\npostConstruct\nstart\nready",
+        "constructor\nready\npostConstruct\nafterPropertiesSet\nstart"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The documented order is `@PostConstruct`, then `InitializingBean.afterPropertiesSet()`, then the custom `initMethod`. All of them run during startup because the bean is an eager singleton, so \"ready\" comes last. In real projects you would pick just one mechanism.",
+      "source": "notes p10-12; code: AppConfig.java (commented initMethod), CartService.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    },
+    {
+      "id": "d64_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Destruction callbacks",
+      "question": "A singleton `PaymentService` has a `@PreDestroy` method that prints \"Cleaning up\". `main` does `ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);`, uses the bean and returns, but \"Cleaning up\" never appears. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Make the bean prototype, because only prototypes get destruction callbacks",
+        "Use a `ConfigurableApplicationContext` (or `AnnotationConfigApplicationContext`) reference and call `context.close()` (or register a shutdown hook)",
+        "Move the cleanup code into the constructor",
+        "Call `System.gc()` so the garbage collector triggers `@PreDestroy`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Destruction callbacks run when the container shuts down, and in a plain (non-web) Spring program nothing closes it unless you do. The `ApplicationContext` interface has no `close()`, which is why the lecture declares `ConfigurableApplicationContext` and calls `context.close()`. Garbage collection is unrelated to Spring's callbacks, and prototypes are the beans that do NOT get destroyed.",
+      "source": "notes p12-14, 19-21; code: Main.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    },
+    {
+      "id": "d64_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Initialization callbacks",
+      "question": "Why is `@PostConstruct` or a custom `initMethod` usually preferred over implementing `InitializingBean.afterPropertiesSet()`?",
+      "codeSnippet": null,
+      "options": [
+        "Because `afterPropertiesSet()` runs before dependencies are injected",
+        "Because `InitializingBean` only works for prototype beans",
+        "Because `afterPropertiesSet()` is called on every method invocation",
+        "Because implementing `InitializingBean` ties the class to a Spring-specific interface"
+      ],
+      "correctAnswer": 3,
+      "explanation": "All three run after dependency injection, but `InitializingBean` forces the class to implement a Spring interface, coupling business code to the framework. `@PostConstruct` is a standard Jakarta annotation, and `initMethod` keeps the class a plain object. `afterPropertiesSet()` runs once, for any scope.",
+      "source": "notes p11-12",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    },
+    {
+      "id": "d64_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Prototype lifecycle",
+      "question": "This is the lecture's `CartService` (prototype) with the commented lines in `Main` enabled. What is printed?",
+      "codeSnippet": "@Component\n@Scope(\"prototype\")\npublic class CartService implements BeanNameAware, ApplicationContextAware {\n    Map<Integer, String> mp;\n\n    public CartService() {\n        mp = new HashMap<>();\n        System.out.println(\"CartService constructor called\");\n    }\n    @Override\n    public void setBeanName(String name) {\n        System.out.println(\"Bean name is \" + name);\n    }\n    @Override\n    public void setApplicationContext(ApplicationContext ctx) {\n        System.out.println(\"Context: \" + ctx.getClass().getSimpleName());\n    }\n    @PostConstruct\n    public void start2() {\n        System.out.println(\"Bean is Ready\");\n        mp.put(1, \"Aditya\");\n        mp.put(2, \"Rohit\");\n    }\n    public String getValue(int key) { return mp.get(key); }\n\n    @PreDestroy\n    public void stop() {\n        mp.clear();\n        System.out.println(\"Bean is getting destroyed\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ConfigurableApplicationContext context =\n                new AnnotationConfigApplicationContext(AppConfig.class);\n        CartService cart = context.getBean(CartService.class);\n        System.out.println(cart.getValue(1));\n        context.close();\n    }\n}",
+      "options": [
+        "CartService constructor called\nBean is Ready\nBean name is cartService\nContext: AnnotationConfigApplicationContext\nAditya",
+        "CartService constructor called\nBean name is cartService\nContext: AnnotationConfigApplicationContext\nBean is Ready\nAditya\nBean is getting destroyed",
+        "CartService constructor called\nBean name is cartService\nContext: AnnotationConfigApplicationContext\nBean is Ready\nAditya",
+        "CartService constructor called\nBean name is cartService\nContext: AnnotationConfigApplicationContext\nBean is Ready\nnull"
+      ],
+      "correctAnswer": 2,
+      "explanation": "On `getBean` the prototype goes through constructor -> Aware callbacks (bean name, then context) -> `@PostConstruct`, which fills the map, so `getValue(1)` is \"Aditya\". Spring hands prototype instances to the caller and does not track them, so `context.close()` does not call `@PreDestroy` on it. The default bean name of `CartService` is `cartService`.",
+      "source": "code: CartService.java, Main.java; notes p8-9, 21-24",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+    },
+    {
+      "id": "d64_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Prototype lifecycle",
+      "question": "A prototype bean `PaymentSession` opens a network connection in `@PostConstruct` and closes it in `@PreDestroy`. In production you see connections leaking even though the app calls `context.close()` on shutdown. Why, and what should you do?",
+      "codeSnippet": null,
+      "options": [
+        "Spring does not track prototype instances after handing them out, so `@PreDestroy` is not called; the caller must release the resource itself (e.g. explicit close / try-with-resources)",
+        "`@PreDestroy` only runs if the bean also implements `DisposableBean`; implement it as well",
+        "`context.close()` only destroys lazy beans; remove `@Lazy` from the configuration",
+        "The garbage collector runs `@PreDestroy` later, so the leak is temporary and needs no fix"
+      ],
+      "correctAnswer": 0,
+      "explanation": "For prototypes Spring manages the beginning of the lifecycle (create, inject, initialize) but not the end; keeping references to every instance would itself leak memory. So destruction callbacks are not called, and expensive resources must be released by the code using the object. Garbage collection never invokes Spring's destruction callbacks.",
+      "source": "notes p21-25",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+    },
+    {
+      "id": "d64_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "@PostConstruct and circular dependency",
+      "question": "The lecture breaks an A <-> B dependency with `@PostConstruct`. Both classes are scanned components in package `in.strikes`, and `Main` is in the same package. What happens?",
+      "codeSnippet": "@Component\npublic class A {\n    B b;\n\n    public A(B b) {\n        this.b = b;\n    }\n\n    @PostConstruct\n    public void setB() {\n        b.setA(this);\n    }\n}\n\n@Component\npublic class B {\n    A a;\n\n    public void setA(A a) {\n        this.a = a;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);\n        A a = context.getBean(A.class);\n        B b = context.getBean(B.class);\n        System.out.println(b.a == a);\n    }\n}",
+      "options": [
+        "Startup fails with a circular-dependency exception",
+        "It prints `true`",
+        "It prints `false`, because B received a different A instance",
+        "A `NullPointerException` in `setB()`, because `b` is not injected yet when `@PostConstruct` runs"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Only A needs B at construction time; B has a no-arg constructor, so Spring creates B, then A with B injected. `@PostConstruct` runs after injection, so `b` is set and `b.setA(this)` hands B the very A singleton the container holds - `true`. There is no constructor cycle, so nothing fails.",
+      "source": "code: A.java, B.java; notes p26-28",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    }
+  ]
+}

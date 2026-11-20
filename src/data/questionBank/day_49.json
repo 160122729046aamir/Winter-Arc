@@ -1,0 +1,206 @@
+{
+  "day": 49,
+  "title": "Lecture #49: Thread Methods",
+  "sources": [
+    "notes/Notes.pdf (30 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java",
+    "code/Demo6.java",
+    "code/Demo7.java",
+    "code/Demo8.java"
+  ],
+  "topics": [
+    "sleep()",
+    "join()",
+    "yield()",
+    "Interruption",
+    "isInterrupted() vs interrupted()",
+    "Daemon threads",
+    "Thread priority"
+  ],
+  "questions": [
+    {
+      "id": "d49_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "join()",
+      "question": "The main thread runs `t1.join();`. Which thread waits, and until when?",
+      "codeSnippet": null,
+      "options": [
+        "`t1` pauses until the main thread finishes",
+        "Both threads pause until the scheduler picks one of them",
+        "The main thread waits until `t1` terminates, while `t1` keeps running",
+        "The main thread waits until `t1` calls `notify()`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`join()` pauses the thread that calls it, here main, until the target thread terminates. The target keeps running normally. A common mistake is to think `join()` pauses the thread it is called on, which is the first option. `join()` does not wait for a `notify()` call.",
+      "source": "notes p5-7; code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/join.html"
+    },
+    {
+      "id": "d49_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "sleep()",
+      "question": "This code compiles (with a warning). Which thread pauses for about 2 seconds at the `t1.sleep(2000)` line?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) throws InterruptedException {\n        Thread t1 = new Thread(() -> System.out.println(\"t1 done\"));\n        t1.start();\n        t1.sleep(2000);\n        System.out.println(\"main done\");\n    }\n}",
+      "options": [
+        "The main thread, because `sleep()` is static and always pauses the thread that runs the call",
+        "`t1`, because `sleep()` is called through the `t1` reference",
+        "Both threads, because `t1` was started by main",
+        "Neither; it throws `IllegalThreadStateException` because `t1` is already running"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`sleep()` is a static method of `Thread`. Calling it through an instance reference is the same as calling `Thread.sleep(2000)` on whichever thread executes the line, here main. `t1` is not affected at all. This is why the notes say to always write `Thread.sleep(...)`.",
+      "source": "notes p2-3",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/sleep.html"
+    },
+    {
+      "id": "d49_q3",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "join()",
+      "question": "In `Demo2`, the worker sleeps for 2 seconds and then prints \"Thread-0 starts\". Main calls `t1.join(1000)` and then prints \"Main thread ends\". What happens when the 1-second join timeout expires?",
+      "codeSnippet": null,
+      "options": [
+        "The worker is stopped, so \"Thread-0 starts\" is never printed",
+        "`join(1000)` throws a timeout exception, because the worker has not finished",
+        "Main keeps waiting until the worker finishes, because the timeout is only a hint",
+        "Main stops waiting and continues; the worker keeps running and later prints its line, and the JVM stays alive until it finishes"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A timed `join()` only limits how long the calling thread waits. When the timeout expires, it returns normally and does not stop the target thread. The worker is a non-daemon (user) thread, so it carries on, prints its line, and keeps the JVM alive until it terminates. `join()` throws only `InterruptedException`, never a timeout exception.",
+      "source": "notes p7-8; code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.html#join(long)"
+    },
+    {
+      "id": "d49_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "sleep()",
+      "question": "To 'give other threads a turn', a teammate adds `Thread.sleep(5000);` inside a `synchronized` method of a shared `Inventory` object. While one thread sleeps there, other threads call the same synchronized method on that object. What happens to them?",
+      "codeSnippet": null,
+      "options": [
+        "They enter the method immediately, because a sleeping thread releases its monitor",
+        "They stay BLOCKED for about 5 seconds, because `sleep()` does not release the monitor",
+        "They throw `InterruptedException`, because the monitor's owner is asleep",
+        "They enter one by one while the first thread sleeps, then the first thread re-enters"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`sleep()` pauses the current thread but keeps every monitor it holds. Other threads that need the same object's monitor wait in the BLOCKED state until the sleeper leaves the method. Only `wait()` releases a monitor, and only the one it is called on. So sleeping inside synchronized code makes contention worse instead of sharing turns.",
+      "source": "notes p3-4",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/sleep.html"
+    },
+    {
+      "id": "d49_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "isInterrupted() vs interrupted()",
+      "question": "What does this code print, running on the main thread?",
+      "codeSnippet": "Thread.currentThread().interrupt();\nSystem.out.println(Thread.currentThread().isInterrupted());\nSystem.out.println(Thread.interrupted());\nSystem.out.println(Thread.interrupted());\nSystem.out.println(Thread.currentThread().isInterrupted());",
+      "options": [
+        "true, true, true, true",
+        "true, false, false, false",
+        "true, true, false, false",
+        "false, true, false, false"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The thread interrupts itself, so its status is true. `isInterrupted()` reads the status without changing it, so the first line prints true. The static `Thread.interrupted()` returns the current status (true) and then clears it. So the second call and the final `isInterrupted()` both see false. The 'true, false, …' option wrongly assumes `isInterrupted()` clears the flag.",
+      "source": "notes p15-16; code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html"
+    },
+    {
+      "id": "d49_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Interruption",
+      "question": "A worker runs `while (true) { process(nextItem()); }`, and none of this code ever sleeps, waits, or checks interruption. At shutdown, main calls `worker.interrupt()`, but the worker keeps running. What is the correct explanation and fix?",
+      "codeSnippet": null,
+      "options": [
+        "`interrupt()` is only a request that sets a flag; the loop must check it, e.g. `while (!Thread.currentThread().isInterrupted())`",
+        "`interrupt()` works only on daemon threads; call `setDaemon(true)` on the running worker",
+        "`interrupt()` must be called twice, once to set the flag and once to stop the thread",
+        "`interrupt()` stops a thread only after it calls `yield()`, so add `Thread.yield()` to the loop"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Interruption is cooperative. `interrupt()` sets the target's interrupted status (or wakes it from `sleep`/`wait`/`join` with an exception), but it never kills the thread. A loop that never checks the status will never notice. `setDaemon()` cannot be called after `start()`, and calling `yield()` has nothing to do with interruption.",
+      "source": "notes p11-13; code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html"
+    },
+    {
+      "id": "d49_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "yield()",
+      "question": "Which statement about `Thread.yield()` is correct?",
+      "codeSnippet": null,
+      "options": [
+        "It moves the current thread to TIMED_WAITING for one time slice",
+        "It releases any monitors the current thread holds, so others can enter",
+        "It guarantees that another runnable thread of the same priority runs next",
+        "It is only a hint; the scheduler may ignore it, and the thread stays RUNNABLE"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`yield()` tells the scheduler that the current thread is willing to give up the CPU. The scheduler may switch threads, keep running the same one, or ignore the hint completely. The thread never leaves RUNNABLE and does not release locks. That is why `yield()` must never be used for correctness or to enforce an order.",
+      "source": "notes p8-11; code: Demo3.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.html#yield()"
+    },
+    {
+      "id": "d49_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Interruption",
+      "question": "Main calls `worker.interrupt()` while the worker is inside `Thread.sleep(1000)`. The worker prints \"caught\" and then keeps looping forever instead of printing \"stopped\". What is the bug, and what is the best fix?",
+      "codeSnippet": "Thread worker = new Thread(() -> {\n    while (!Thread.currentThread().isInterrupted()) {\n        try {\n            Thread.sleep(1000);\n        } catch (InterruptedException e) {\n            System.out.println(\"caught\");\n        }\n    }\n    System.out.println(\"stopped\");\n});",
+      "options": [
+        "`isInterrupted()` clears the flag on every check; replace it with `Thread.interrupted()`",
+        "Throwing `InterruptedException` cleared the interrupted status; restore it in the catch block with `Thread.currentThread().interrupt()`",
+        "`sleep()` cannot be interrupted, so the interrupt was lost; use `yield()` instead of `sleep()`",
+        "The loop needs `synchronized` so it can see the flag set by main; make `run()` synchronized"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When `sleep()` is interrupted, it throws `InterruptedException` and clears the interrupted status. The catch block swallows the exception, so the loop condition sees false and starts sleeping again. Restoring the flag with `Thread.currentThread().interrupt()` (or breaking/returning) lets the loop exit and print \"stopped\". `isInterrupted()` does not clear the flag, and `Thread.interrupted()` is the method that does.",
+      "source": "notes p13-15",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html"
+    },
+    {
+      "id": "d49_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Daemon threads",
+      "question": "A service starts an `audit-flusher` thread with `setDaemon(true)`. The thread writes buffered audit entries to disk in a loop and has a `finally` block that flushes the file. After `main()` returns at shutdown, the last few audit entries are often missing. What is happening?",
+      "codeSnippet": null,
+      "options": [
+        "Daemon threads run at `MIN_PRIORITY`, so the flusher rarely gets CPU time",
+        "Daemon threads cannot do file I/O, so the writes are silently dropped",
+        "When the last non-daemon thread ends, the JVM can exit and stop daemon threads abruptly, without running their remaining code or `finally` blocks",
+        "`main()` returning interrupts every thread, and the flusher ignores the interrupt"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The JVM keeps running only while at least one non-daemon thread is alive. Once only daemon threads remain, it may exit and stop them mid-work, with no guarantee that their `finally` blocks or flushes run. Work that must complete reliably should run on a user thread, or be coordinated before shutdown. Being a daemon does not change a thread's priority.",
+      "source": "notes p24-27; code: Demo8.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.html#setDaemon(boolean)"
+    },
+    {
+      "id": "d49_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "join()",
+      "question": "A worker thread writes `result = compute();` to a plain (non-volatile) field and then finishes. After `worker.join()` returns normally, the main thread reads `result`. What does the Java Memory Model guarantee?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing; main may see a stale value unless `result` is `volatile`",
+        "Main is guaranteed to see the value the worker wrote, because thread termination happens-before a successful return from `join()`",
+        "Main sees the value only if it also calls `worker.isAlive()` after `join()`",
+        "Main sees the value only if the worker's priority is higher than main's"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes point out that `join()` creates a happens-before relationship. Everything the joined thread did becomes visible to a thread that returns successfully from `join()` on it, so no `volatile` is needed here. The 'stale value' option would be true without `join()` or another synchronization point. `isAlive()` and priority have no effect on visibility.",
+      "source": "notes p8 (join creates happens-before)",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-17.html#jls-17.4.5"
+    }
+  ]
+}

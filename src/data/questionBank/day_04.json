@@ -1,0 +1,198 @@
+{
+  "day": 4,
+  "title": "Lecture #4: How Java Stores Negative & Floating Point Numbers",
+  "sources": [
+    "notes.pdf (8 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "Two's complement for negative numbers",
+    "MSB as sign bit",
+    "Single zero and the -128..127 range",
+    "IEEE 754 float layout (sign, exponent, mantissa)",
+    "Exponent bias (127 for float, 1023 for double)",
+    "Precision loss and BigDecimal"
+  ],
+  "questions": [
+    {
+      "id": "d4_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "MSB as sign bit",
+      "question": "When Java stores a value in a `byte`, what does the most significant bit (MSB, the leftmost bit) tell you?",
+      "codeSnippet": null,
+      "options": [
+        "Whether the number is even (0) or odd (1)",
+        "Whether the byte has been initialised (1) or not (0)",
+        "The sign: MSB = 0 means a positive number, MSB = 1 means a negative number",
+        "Nothing; the MSB is always 0 and is unused"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes state MSB = 1 => negative number and MSB = 0 => positive number, which is why 11010110 is -42 while 00101010 is +42. Even/odd is decided by the least significant bit (LSB), not the MSB.",
+      "source": "notes p2",
+      "reference": null
+    },
+    {
+      "id": "d4_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Two's complement for negative numbers",
+      "question": "Which 8-bit pattern does Java store in memory for `b`?",
+      "codeSnippet": "byte b = -42;",
+      "options": [
+        "11010110",
+        "10101010",
+        "11010101",
+        "00101010"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Start from +42 = 00101010, take the 1's complement (flip every bit) = 11010101, then add 1 to get the 2's complement 11010110. 11010101 is only the 1's complement (one step short), and 10101010 is a sign-magnitude guess that Java does not use.",
+      "source": "notes p1-p2",
+      "reference": null
+    },
+    {
+      "id": "d4_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "IEEE 754 float layout",
+      "question": "How are the 32 bits of a Java `float` divided under the IEEE 754 format shown in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "16 bits for the integer part and 16 bits for the fraction",
+        "1 sign bit, 11 exponent bits, 20 mantissa bits",
+        "8 sign bits, 8 exponent bits, 16 mantissa bits",
+        "1 sign bit, 8 exponent bits, 23 mantissa bits"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A float is 1 sign bit + 8 exponent bits + 23 mantissa bits = 32 bits. The 11-bit exponent belongs to double (1 + 11 + 52 = 64 bits); and floats are not stored as a fixed integer/fraction split, which is what 'floating' point avoids.",
+      "source": "notes p4, p8",
+      "reference": "https://introcs.cs.princeton.edu/java/91float/"
+    },
+    {
+      "id": "d4_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Precision loss and BigDecimal",
+      "question": "You are writing billing code and a value like 0.7 must be stored and calculated exactly, with no tiny binary rounding errors. What does the lecture recommend?",
+      "codeSnippet": null,
+      "options": [
+        "Use float, because it uses fewer bits and therefore rounds less",
+        "Use BigDecimal, which represents 0.7 exactly as 0.7",
+        "Use double, because doubles store every decimal fraction exactly",
+        "Use a byte and multiply by 10, since bytes hold up to 1000"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Both float and double store 0.7 only approximately (the notes show 0.7f is really 0.69999998807...); double is closer but still not exact. The notes end with BigDecimal: 0.7 -> 0.7, exact. A byte only goes up to 127, so the last option cannot even hold the scaled values.",
+      "source": "notes p7-p8",
+      "reference": "https://introcs.cs.princeton.edu/java/91float/"
+    },
+    {
+      "id": "d4_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Single zero and the -128..127 range",
+      "question": "Why is a Java byte's range -128 to +127 instead of a symmetric -127 to +127?",
+      "codeSnippet": null,
+      "options": [
+        "Because 2's complement has only one zero: -0 becomes 00000000 again, so the pattern 10000000 is free to represent -128",
+        "Because the JVM reserves +128 to signal overflow errors",
+        "Because negative numbers are stored with one extra bit compared to positive numbers",
+        "Because +128 would need a decimal point, which bytes cannot store"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In the notes, -0 is computed as 1's complement 11111111 + 1 = 1 00000000; the carry is dropped, giving 00000000, the same as +0. With no wasted '-0' pattern, 10000000 represents -128, giving 128 negative values and 128 non-negative values (0..127). No extra bit is used: every value is exactly 8 bits.",
+      "source": "notes p2-p3",
+      "reference": null
+    },
+    {
+      "id": "d4_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Precision loss and BigDecimal",
+      "question": "This is the lecture's Demo.java. What kind of value does it print?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        float f = 0.7f;\n        System.out.printf(\"%.20f%n\", f);\n    }\n}",
+      "options": [
+        "Exactly 0.70000000000000000000",
+        "A value slightly less than 0.7 (beginning 0.69999998...), because 0.7 has no exact binary form in a float",
+        "A value slightly greater than 0.7 (beginning 0.70000001...)",
+        "Nothing; it is a compile error because %f needs a double, not a float"
+      ],
+      "correctAnswer": 1,
+      "explanation": "0.7 in binary is 0.1011001100110... repeating forever, so the 23-bit mantissa must cut it off; the notes decode the stored bits back to 0.69999998807907..., just below 0.7. println(f) would show 0.7 because it prints the shortest decimal that identifies the float, which is why printing 20 decimals is needed to reveal the error. %f accepts a float argument without a compile error.",
+      "source": "code: Demo.java; notes p6-p7",
+      "reference": "https://introcs.cs.princeton.edu/java/91float/"
+    },
+    {
+      "id": "d4_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Two's complement for negative numbers",
+      "question": "A byte you read from a file contains the bits `11111111`. A teammate expected Java to print 255, but it printed -1. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Java reads files backwards, so the bits were reversed",
+        "The value overflowed while printing and wrapped to -1",
+        "Java's println prints bytes in octal",
+        "A byte is signed: MSB = 1 means negative, and taking the 2's complement (00000000 + 1 = 00000001) gives magnitude 1, so the value is -1"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Every number in Java is signed. To read a negative pattern, flip the bits (00000000) and add 1 (00000001): magnitude 1, so 11111111 = -1. 255 would only be correct for an unsigned 8-bit type, which Java's byte is not; no overflow happens during printing.",
+      "source": "notes p2-p3",
+      "reference": null
+    },
+    {
+      "id": "d4_q8",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Exponent bias",
+      "question": "Following the lecture's steps for `float f = 8.125f;` (8.125 = 1000.001 in binary = 1.000001 x 2^3), which 8 bits are stored in the exponent field?",
+      "codeSnippet": null,
+      "options": [
+        "10000010 (3 + 127 = 130)",
+        "00000011 (the raw exponent 3)",
+        "10000011 (3 + 128 = 131)",
+        "01111111 (the bias 127 itself)"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The stored exponent is the real exponent plus the float bias of 127: 3 + 127 = 130 = 10000010. Storing the raw 3 skips the bias step; the bias exists so negative exponents (like -1 for 0.7) can be stored as an unsigned 8-bit field. The bias is 2^(8-1) - 1 = 127, not 128.",
+      "source": "notes p4-p5, p8",
+      "reference": "https://introcs.cs.princeton.edu/java/91float/"
+    },
+    {
+      "id": "d4_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Precision loss and BigDecimal",
+      "question": "What does this program print?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        float f = 0.7f;\n        double d = 0.7;\n        System.out.println(f == d);\n        System.out.println(f == 0.7f);\n        System.out.println(8.125f == 8.125);\n    }\n}",
+      "options": [
+        "true\ntrue\ntrue",
+        "false\nfalse\nfalse",
+        "false\ntrue\ntrue",
+        "false\ntrue\nfalse"
+      ],
+      "correctAnswer": 2,
+      "explanation": "0.7 cannot be stored exactly: the float keeps a 23-bit approximation and the double a closer 52-bit one, so after the float is widened to double the two differ (false); comparing the float with the same float literal is true. 8.125 = 1000.001 in binary is exactly representable in both types, so 8.125f == 8.125 is true, which is why the last line is not false.",
+      "source": "notes p4-p8",
+      "reference": "https://introcs.cs.princeton.edu/java/91float/"
+    },
+    {
+      "id": "d4_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Exponent bias",
+      "question": "A teammate is hand-encoding `double d = 32.4186;` (32.4186 = 1.0130... x 2^5) and writes 132 into the exponent field, using the float bias. What value should the 11-bit exponent field actually hold?",
+      "codeSnippet": null,
+      "options": [
+        "132, because the bias is 127 for every floating-point type",
+        "1028, because a double's bias is 2^(11-1) - 1 = 1023 and 5 + 1023 = 1028",
+        "1023, because the bias alone is stored and the real exponent goes in the mantissa",
+        "5, because doubles have enough exponent bits to skip the bias"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes generalise the bias as 2^(exp bits - 1) - 1: 127 for float's 8 bits and 1023 for double's 11 bits. So the stored exponent is 5 + 1023 = 1028. Using 127 is the classic mistake of applying the float rule to a double.",
+      "source": "notes p8",
+      "reference": "https://introcs.cs.princeton.edu/java/91float/"
+    }
+  ]
+}

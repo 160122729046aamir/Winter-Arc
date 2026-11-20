@@ -1,0 +1,201 @@
+{
+  "day": 18,
+  "title": "Lecture #18: AutoBoxing, Abstract classes & POJOs",
+  "sources": [
+    "notes.pdf (5 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java"
+  ],
+  "topics": [
+    "Wrapper classes",
+    "Autoboxing & unboxing",
+    "Integer cache & == vs equals",
+    "One public class per file",
+    "Abstract class rules",
+    "POJO: anemic vs rich domain model"
+  ],
+  "questions": [
+    {
+      "id": "d18_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Autoboxing & unboxing",
+      "question": "For `int x = 10; Integer y = x;` and later `int z = y;`, what does the compiler actually do, per the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Both lines copy the raw int; Integer is just another name for int",
+        "`Integer y = x` becomes `Integer.valueOf(x)` (autoboxing) and `int z = y` becomes `y.intValue()` (unboxing)",
+        "`Integer y = x` becomes `y.intValue()` (unboxing) and `int z = y` becomes `Integer.valueOf(y)` (autoboxing)",
+        "Both lines are compile errors without an explicit cast like `(Integer) x`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Integer is a wrapper class whose object holds an int `value`. Converting a primitive to its wrapper is autoboxing (compiled as `Integer.valueOf(x)`, the newer replacement for `new Integer(x)`), and extracting the primitive is unboxing (`intValue()`). The compiler inserts both automatically, so no casts are needed.",
+      "source": "notes p1-p2; code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/data/autoboxing.html"
+    },
+    {
+      "id": "d18_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Autoboxing & unboxing",
+      "question": "Demo2 lists three places where boxing/unboxing happens: assignments, method calls and arithmetic. What does this print?",
+      "codeSnippet": "public class Demo2 {\n    public static void main(String[] args) {\n        Integer a = 10;\n        Integer b = 20;\n        int sum = a + b;\n        printInteger(sum);\n    }\n\n    static void printInteger(Integer x) {\n        System.out.println(x + 1);\n    }\n}",
+      "options": [
+        "Compile error: `+` cannot be applied to two Integer objects",
+        "Compile error: an int cannot be passed to a parameter of type Integer",
+        "31",
+        "301"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`a + b` unboxes both Integers (arithmetic), giving 30; passing `sum` to `printInteger(Integer)` autoboxes it (method call); `x + 1` unboxes again and adds numerically, printing 31. No String is involved, so there is no concatenation like '301'.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/data/autoboxing.html"
+    },
+    {
+      "id": "d18_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "One public class per file",
+      "question": "The lecture's Demo.java contains `public class Demo` plus `class Sample {}` and `class Sample2 {}`. Which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles into Demo.class, Sample.class and Sample2.class; only Demo may be public, because a public class must be in a file with its own name, so the JVM can find `Demo.main()` from Demo.java",
+        "It fails to compile, because a .java file may contain only one class",
+        "It compiles into a single Demo.class that contains all three classes",
+        "It would also compile if Sample were made public, as long as Demo stays public"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A file may hold several top-level classes, and each gets its own .class file, but at most one may be public and it must match the file name (Demo.java -> Demo). That rule is what lets the tools map file to class, as the comment `Demo.java -> Demo.main()` hints. Making Sample public too would require a file named Sample.java.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d18_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Autoboxing & unboxing",
+      "question": "What happens when this part of Demo2 runs?",
+      "codeSnippet": "public class Demo2 {\n    public static void main(String[] args) {\n        Integer x = null;\n        int y = x;\n        System.out.println(y);\n    }\n}",
+      "options": [
+        "Prints 0, because null unboxes to the int default value",
+        "Prints null",
+        "Compile error: null cannot be assigned to an Integer",
+        "Throws NullPointerException at `int y = x;`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A wrapper reference may be null, so `Integer x = null` compiles. Unboxing compiles to `x.intValue()`, and calling a method on null throws NullPointerException at run time. Java never silently converts null to 0, and an int can never hold null.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/data/autoboxing.html"
+    },
+    {
+      "id": "d18_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Abstract class rules",
+      "question": "In Demo4, `abstract class Animal` has a constructor `Animal(String name)`, yet `new Animal(...)` is not allowed. Which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "The constructor is useless and is silently ignored by the compiler",
+        "The constructor runs when a subclass constructor calls it, e.g. `Dog(String name) { super(name); }`, to initialize the inherited `name` field",
+        "Abstract classes cannot declare constructors, so Demo4 does not compile",
+        "The constructor makes Animal instantiable as long as it has a parameter"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Demo4's Q&A says abstract classes can have constructors. They are never used directly with `new`, but every subclass object is partly an Animal, so `super(name)` in Dog runs Animal's constructor to set the shared state. Having parameters does not make the class instantiable; `abstract` alone forbids `new Animal(...)`.",
+      "source": "code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    },
+    {
+      "id": "d18_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "POJO: anemic vs rich domain model",
+      "question": "Your `Student` POJO has only fields, a constructor and getters/setters. A teammate adds a `markAttendance()` method that applies attendance rules inside the class. In the lecture's terms, what changed?",
+      "codeSnippet": null,
+      "options": [
+        "It moved from an anemic model (data + getters/setters only) to a rich domain model (also contains business logic)",
+        "It moved from a rich domain model to an anemic model, because it now has more methods",
+        "It stopped being a class and became an interface",
+        "Nothing; any class with methods is called an anemic model"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes split POJOs into the anemic model (getters/setters, constructors, fields only) and the rich domain model, which also carries business logic such as `markAttendance()`. Adding behaviour with rules is what makes it 'rich'; it is still an ordinary plain Java class.",
+      "source": "notes p4-p5",
+      "reference": null
+    },
+    {
+      "id": "d18_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Integer cache & == vs equals",
+      "question": "A teammate compares two `Integer` order IDs with `if (id1 == id2)`. All tests with IDs 1 to 100 pass, but in production two orders with ID 5000 are reported as different. What is the cause and fix?",
+      "codeSnippet": null,
+      "options": [
+        "Integer overflows above 127; switch the IDs to `long`",
+        "`==` on Integer compares values only up to 1000; use `>=` and `<=` instead",
+        "`==` compares references; autoboxed values from -128 to 127 come from a shared cache (same object), larger ones are separate objects; compare with `id1.equals(id2)`",
+        "The JVM randomly reuses objects; the comparison must be wrapped in a try/catch"
+      ],
+      "correctAnswer": 2,
+      "explanation": "As the lecture shows, `Integer.valueOf` returns cached objects for -128..127, so `==` happens to be true for small values, while 200 (or 5000) creates distinct objects and `==` gives false. `equals()` compares the wrapped int values (`this.value == y.value`). Integer does not overflow at 127; that is the byte range.",
+      "source": "notes p2-p3; code: Demo3.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/data/autoboxing.html"
+    },
+    {
+      "id": "d18_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Integer cache & == vs equals",
+      "question": "With default JVM settings, what does this print?",
+      "codeSnippet": "Integer a = 127, b = 127;\nInteger c = 128, d = 128;\nint e = 128;\nSystem.out.println((a == b) + \" \" + (c == d) + \" \" + (c == e) + \" \" + c.equals(d));",
+      "options": [
+        "true true true true",
+        "true false false true",
+        "false false true true",
+        "true false true true"
+      ],
+      "correctAnswer": 3,
+      "explanation": "127 is inside the -128..127 cache, so a and b are the same object (true); 128 is outside, so c and d are different objects (false). In `c == e` one side is a primitive int, so c is unboxed and the values are compared numerically (true). `equals` compares values (true). Treating `c == e` as a reference comparison gives the tempting wrong 'false'.",
+      "source": "notes p2-p3; code: Demo3.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/data/autoboxing.html"
+    },
+    {
+      "id": "d18_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Wrapper classes",
+      "question": "Old code in your project creates wrappers with `new Integer(x)`, while the lecture marks `Integer.valueOf(x)` as the new way. A teammate asks what actually differs. What is the best answer?",
+      "codeSnippet": null,
+      "options": [
+        "`valueOf` may return a shared cached object (always for -128..127), saving memory and allocation, while `new Integer(x)` always creates a fresh object, so `new Integer(5) == new Integer(5)` is false (the constructor is deprecated)",
+        "There is no difference: both always return a brand-new object, so `==` behaves the same",
+        "`new Integer(x)` uses the cache, while `valueOf` always creates a new object, so `valueOf` is slower",
+        "`valueOf` returns a primitive int, while `new Integer(x)` returns an object"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Autoboxing compiles to `Integer.valueOf`, which hands out cached Integer objects for -128..127 (the stack/heap diagram in the notes shows several variables pointing to the same cached 100). The `new` operator always allocates a new object, so two of them are never `==`; the constructor has been deprecated since Java 9 for this reason. `valueOf` returns an Integer object, not a primitive.",
+      "source": "notes p1-p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/data/autoboxing.html"
+    },
+    {
+      "id": "d18_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Abstract class rules",
+      "question": "A variation of Demo4 calls an overridable method from the abstract class's constructor. What does `new Dog(\"Bruno\");` print?",
+      "codeSnippet": "abstract class Animal {\n    String name;\n\n    Animal(String name) {\n        this.name = name;\n        System.out.print(\"Animal \");\n        makeSound();\n    }\n\n    void makeSound() {\n        System.out.print(\"sound \");\n    }\n}\n\nclass Dog extends Animal {\n    Dog(String name) {\n        super(name);\n        System.out.print(\"Dog \");\n    }\n\n    @Override\n    void makeSound() {\n        System.out.print(name + \"-bark \");\n    }\n}",
+      "options": [
+        "Animal sound Dog ",
+        "Animal Bruno-bark Dog ",
+        "Dog Animal Bruno-bark ",
+        "Animal null-bark Dog "
+      ],
+      "correctAnswer": 1,
+      "explanation": "`super(name)` runs Animal's constructor first: it sets `name` to \"Bruno\", prints 'Animal', then calls `makeSound()`. The object being built is a Dog, so the overridden Dog version runs even from inside the parent constructor, printing 'Bruno-bark' (name was already assigned). Then Dog's constructor body prints 'Dog'. 'sound' would require calls inside constructors to ignore overriding, which they do not.",
+      "source": "code: Demo4.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    }
+  ]
+}

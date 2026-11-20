@@ -1,0 +1,201 @@
+{
+  "day": 7,
+  "title": "Lecture #7: Java Conditional Statements",
+  "sources": [
+    "notes.pdf (5 pages)",
+    "Practice Qurestions.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Flow of control (selection, iteration, jumps)",
+    "if / if-else / nested if / if-else-if ladder",
+    "switch statement and break / fall-through",
+    "switch selector types",
+    "switch vs if-else-if ladder",
+    "Jump tables (tableswitch vs lookupswitch)",
+    "Nested switch"
+  ],
+  "questions": [
+    {
+      "id": "d7_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Flow of control",
+      "question": "The lecture splits Java's flow-of-control statements into three groups. Which grouping is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Selection (if, if-else, switch), Iteration (loops), and Jumps (e.g. break)",
+        "Selection (loops), Iteration (if-else), and Jumps (switch)",
+        "Declaration, Definition, and Initialization",
+        "Arithmetic, Relational, and Logical"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Normally statements run one after another from top to bottom; the notes list Selection, Iteration and Jumps as the ways to change that flow, with if(), if-else and switch under Selection. Arithmetic/relational/logical are kinds of operators (Day 6), not control-flow statements.",
+      "source": "notes p1",
+      "reference": null
+    },
+    {
+      "id": "d7_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "if / if-else / nested if / if-else-if ladder",
+      "question": "For the practice bonus question, a year is a leap year if it is divisible by 400, OR divisible by 4 but not by 100. Which condition implements this correctly for an int `year`?",
+      "codeSnippet": null,
+      "options": [
+        "`year % 4 == 0 || year % 100 != 0`",
+        "`year % 4 == 0 && year % 100 != 0 && year % 400 != 0`",
+        "`year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)`",
+        "`year / 4 == 0 || year / 400 == 0`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The rule is 'A OR (B AND NOT C)', which maps directly to `||` and `&&` with `%` for divisibility. The first option would call 1900 a leap year (divisible by 4), and `/` gives a quotient, not a remainder, so it cannot test divisibility.",
+      "source": "practice p4 (bonus question)",
+      "reference": null
+    },
+    {
+      "id": "d7_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "switch vs if-else-if ladder",
+      "question": "For practice Question 9 you must print the day name for a number 1-7 (1 -> Monday, ..., 7 -> Sunday). Which construct fits this best, according to the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "Seven separate, unrelated if statements with no else, so every one is always checked",
+        "A switch on the number, with one case per day and a default for invalid input",
+        "A nested if inside every other if, seven levels deep",
+        "No conditional at all; Java converts numbers to day names automatically"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Each branch compares one int against a fixed constant (equality), which is exactly what switch is designed for, and the notes call switch a more optimized alternative to a long if-else-if ladder. Separate ifs work but keep testing after a match is found, and deep nesting only hurts readability.",
+      "source": "practice p3-p4; notes p2-p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/switch.html"
+    },
+    {
+      "id": "d7_q4",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "if / if-else / nested if / if-else-if ladder",
+      "question": "What must the expression inside `if ( ... )` evaluate to in Java?",
+      "codeSnippet": null,
+      "options": [
+        "Any int; 0 means false and any other number means true",
+        "A String containing \"true\" or \"false\"",
+        "Any value at all; Java converts it automatically",
+        "A boolean (true or false); with `boolean b`, writing `if (b)` is the same as `if (b == true)`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes show `if (expression)` where the expression yields True/False, i.e. a boolean, and point out that `if (b == true)` can simply be written `if (b)`. Unlike C/C++, Java never treats an int as a condition, so `if (1)` does not compile.",
+      "source": "notes p2",
+      "reference": null
+    },
+    {
+      "id": "d7_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "if / if-else / nested if / if-else-if ladder",
+      "question": "This is the lecture's Demo.java with `age = 50`. What does it print?",
+      "codeSnippet": "int age = 50;\n\nif (age > 80) {\n    System.out.println(\"You are very old\");\n}\nif (age > 60) {\n    System.out.println(\"You are old\");\n}\nif (age > 40) {\n    System.out.println(\"You are becoming old\");\n}\nif (age > 20) {\n    System.out.println(\"You are young\");\n}\nelse {\n    System.out.println(\"You are a child\");\n}",
+      "options": [
+        "You are becoming old",
+        "You are becoming old\nYou are young",
+        "You are becoming old\nYou are young\nYou are a child",
+        "You are young"
+      ],
+      "correctAnswer": 1,
+      "explanation": "These are four independent if statements, not an if-else-if ladder, so every condition is checked: 50 > 40 and 50 > 20 are both true, giving two lines. The else belongs only to the last if, so 'You are a child' is skipped. Stopping after the first match would require `else if`.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d7_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "switch vs if-else-if ladder",
+      "question": "Practice Question 5 classifies temperature: < 10 -> \"Very Cold\", 10 to 24 -> \"Moderate\", >= 25 -> \"Hot\". A teammate tries to solve it with a plain switch on the temperature and gets stuck. Why is an if-else-if ladder the right tool here?",
+      "codeSnippet": null,
+      "options": [
+        "A switch can only test equality against constant case values, while these categories are ranges that need < and >= comparisons",
+        "A switch cannot have more than two case labels",
+        "A switch only works on String values, not ints",
+        "An if-else-if ladder is always faster than a switch"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes' first difference between switch and if-else-if: switch can only test equality, while if-else can test both equality and inequality. Ranges such as 'temperature < 10' are inequalities. Speed is not the reason; the notes actually say switch is usually more efficient.",
+      "source": "notes p3; practice p2",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/switch.html"
+    },
+    {
+      "id": "d7_q7",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "switch statement and break / fall-through",
+      "question": "A teammate forgot some `break` statements. What does this snippet print?",
+      "codeSnippet": "int i = 2;\nswitch (i) {\n    case 1:\n        System.out.println(\"one\");\n    case 2:\n        System.out.println(\"two\");\n    case 3:\n        System.out.println(\"three\");\n        break;\n    default:\n        System.out.println(\"other\");\n}",
+      "options": [
+        "two",
+        "one\ntwo\nthree",
+        "two\nthree\nother",
+        "two\nthree"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Execution jumps to the matching label `case 2` and then falls through into the following cases until a `break` is reached, so it prints two and three, then the break exits the switch before default. Earlier cases (case 1) are never run, because the switch starts at the matching label, not at the top.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/switch.html"
+    },
+    {
+      "id": "d7_q8",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "switch selector types",
+      "question": "According to the lecture's Demo2.java comments, which of these variable types can NOT be used as the expression of a classic `switch(...)`?",
+      "codeSnippet": null,
+      "options": [
+        "char",
+        "String (since JDK 7)",
+        "long",
+        "byte"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The code comments list byte, short, int, char and enumerations, plus String after JDK 7. long (like float, double and boolean) is not allowed, so `switch (someLong)` fails to compile. String is the tempting wrong answer because it was not allowed before Java 7.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/switch.html"
+    },
+    {
+      "id": "d7_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Nested switch",
+      "question": "This nested switch comes from the lecture's Demo2.java. What does it print?",
+      "codeSnippet": "int j = 5;\nint k = 1;\nswitch (j) {\n    case 4:\n        System.out.println(\"j is 4\");\n        break;\n    case 5:\n        switch (k) {\n            case 1:\n                switch (j) {\n                }\n            case 2:\n                break;\n        }\n    default:\n        System.out.println(\"j is not 4 && 5\");\n        break;\n}",
+      "options": [
+        "Nothing is printed",
+        "j is not 4 && 5",
+        "j is 4\nj is not 4 && 5",
+        "It does not compile because a switch block cannot be empty"
+      ],
+      "correctAnswer": 1,
+      "explanation": "j = 5 enters case 5; the inner switch(k) matches case 1, runs the (legal) empty switch, falls through to case 2, and that `break` exits only the inner switch(k). Back in the outer switch, case 5 has no break of its own, so it falls through into default and prints the message. The trap is assuming the inner break also ends the outer switch.",
+      "source": "code: Demo2.java; notes p5",
+      "reference": null
+    },
+    {
+      "id": "d7_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Jump tables (tableswitch vs lookupswitch)",
+      "question": "Your switch has only three labels: `case 1`, `case 1000` and `case 100000`. A teammate assumes the compiler will build a jump table indexed directly by the value. Based on the lecture, what actually happens and why?",
+      "codeSnippet": null,
+      "options": [
+        "A direct jump table is always built, so this switch uses a 100,000-entry table",
+        "The code does not compile, because case values must be consecutive",
+        "The switch is silently rewritten as an if-else-if ladder that tests every case in source order",
+        "Because the values are sparse, a direct-index table (table-switch) would be mostly empty, so a lookup-switch that stores only the existing case values is used instead"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes say jump tables are not always efficient: with sparse values, a table-switch would need slots for every number between the smallest and largest case, almost all of them empty. A lookup-switch keeps just the (value, target) pairs and searches them, which saves space. Case values do not need to be consecutive, only unique (duplicate cases are a compile error).",
+      "source": "notes p3-p4",
+      "reference": "https://www.oreilly.com/library/view/the-java-virtual/9780133260496/ch03lev1sec10.html"
+    }
+  ]
+}

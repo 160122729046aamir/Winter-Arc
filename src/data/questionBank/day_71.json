@@ -1,0 +1,205 @@
+{
+  "day": 71,
+  "title": "Spring Lecture #14: How Java Web Apps Actually Work",
+  "sources": [
+    "Notes.pdf (38 pages)",
+    "Excalidraw-Notes.pdf (6 pages)",
+    "code/ServletCrudDemo/pom.xml",
+    "code/ServletCrudDemo/.../servlet/HelloServlet.java",
+    "code/ServletCrudDemo/.../servlet/UserServlet.java",
+    "code/ServletCrudDemo/.../service/UserService.java",
+    "code/ServletCrudDemo/.../model/User.java"
+  ],
+  "topics": [
+    "Tomcat as servlet container",
+    "WAR & external Tomcat",
+    "provided scope",
+    "Servlet lifecycle",
+    "HttpServlet method dispatch",
+    "Servlet thread safety",
+    "Embedded Tomcat & DispatcherServlet",
+    "Servlet request handling"
+  ],
+  "questions": [
+    {
+      "id": "d71_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Tomcat as servlet container",
+      "question": "A browser opens `http://localhost:8080/hello`, and `HelloServlet` is mapped with `@WebServlet(\"/hello\")`. Which statement matches the lecture's mental model?",
+      "codeSnippet": null,
+      "options": [
+        "Tomcat listens on port 8080, turns the HTTP text into request/response objects and calls the servlet mapped to `/hello`",
+        "`HelloServlet` opens a `ServerSocket` on port 8080 and waits for the browser itself",
+        "The browser loads the `HelloServlet` class and calls `doGet()` directly",
+        "The JVM's `main()` method receives every HTTP request and forwards it to `HelloServlet`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes call \"Servlet is listening on port 8080\" a common beginner mistake: Tomcat is the long-running process that listens, parses HTTP, builds `HttpServletRequest`/`HttpServletResponse` and calls the matching servlet. The browser only speaks HTTP and knows nothing about Java classes.",
+      "source": "notes p1, p7-p12; Excalidraw p1-p3",
+      "reference": "https://tomcat.apache.org/tomcat-10.0-doc/servletapi/jakarta/servlet/http/HttpServlet.html"
+    },
+    {
+      "id": "d71_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "provided scope",
+      "question": "Why does the lecture's `pom.xml` declare `jakarta.servlet-api` with `<scope>provided</scope>`?",
+      "codeSnippet": null,
+      "options": [
+        "Because the Servlet API is only needed for unit tests, not for the application code",
+        "Because `provided` downloads the newest Servlet API automatically at runtime",
+        "Because the code needs it to compile, but Tomcat already supplies the Servlet API at runtime, so it must not be packaged in the WAR",
+        "Because WAR projects cannot contain any dependencies with the default scope"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`provided` means: available on the compile (and test) classpath, but expected from the container at runtime, so it is not bundled into `crud-app.war`. Tomcat's `lib` folder already has these classes. It is not test-only: `HttpServlet` is used by main code, which is exactly why compile access is required.",
+      "source": "notes p20-p21; code: pom.xml",
+      "reference": "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html"
+    },
+    {
+      "id": "d71_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "WAR & external Tomcat",
+      "question": "The project has `<packaging>war</packaging>` and `<finalName>crud-app</finalName>`, and `UserServlet` is annotated `@WebServlet(\"/users\")`. You copy `target/crud-app.war` into Tomcat's `webapps` folder and start Tomcat on 8080. Which URL reaches `UserServlet`?",
+      "codeSnippet": null,
+      "options": [
+        "`http://localhost:8080/users`",
+        "`http://localhost:8080/ServletCrudDemo/users`",
+        "`http://localhost:8080/webapps/crud-app/users`",
+        "`http://localhost:8080/crud-app/users`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "One external Tomcat can host several apps, so each WAR gets its own context path, taken from the WAR file name: `crud-app.war` is extracted to `webapps/crud-app` and served under `/crud-app`. The servlet mapping `/users` is appended after it. The artifactId is not used because `finalName` renamed the WAR, and `webapps` is a folder name, not part of the URL.",
+      "source": "notes p14-p19; Excalidraw p4-p5; code: pom.xml, UserServlet.java",
+      "reference": null
+    },
+    {
+      "id": "d71_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Servlet lifecycle",
+      "question": "Tomcat starts with the default configuration (no load-on-startup). Then a browser sends `GET /hello` three times, and finally Tomcat is shut down. What does the console show from this servlet?",
+      "codeSnippet": "@WebServlet(\"/hello\")\npublic class HelloServlet extends HttpServlet {\n    public HelloServlet() {\n        System.out.println(\"HelloServlet Constructor called\");\n    }\n    @Override\n    public void init() {\n        System.out.println(\"init() method called\");\n    }\n    @Override\n    public void doGet(HttpServletRequest request,\n                      HttpServletResponse response) throws IOException {\n        response.setStatus(200);\n        response.setContentType(\"text/plain\");\n        response.getWriter().write(\"Hello\");\n    }\n    @Override\n    public void destroy() {\n        System.out.println(\"Destroy method called\");\n    }\n}",
+      "options": [
+        "Constructor and init() printed when Tomcat starts, nothing per request, Destroy at shutdown",
+        "Constructor and init() printed once on the first request, then Destroy once at shutdown",
+        "Constructor and init() printed three times (once per request), then Destroy once",
+        "Constructor and init() printed three times, and Destroy printed after each request"
+      ],
+      "correctAnswer": 1,
+      "explanation": "By default Tomcat creates the servlet lazily on the first matching request, calls `init()` once, and reuses that single object for later requests (only `service()`/`doGet()` run again, which print nothing here). `destroy()` runs once when the servlet is taken out of service, e.g. on shutdown. Creation at startup happens only if load-on-startup is configured.",
+      "source": "notes p13, p22-p28; code: HelloServlet.java; Excalidraw p5",
+      "reference": "https://tomcat.apache.org/tomcat-10.0-doc/servletapi/jakarta/servlet/http/HttpServlet.html"
+    },
+    {
+      "id": "d71_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "HttpServlet method dispatch",
+      "question": "`HelloServlet` extends `HttpServlet` and overrides only `doGet()` (plus `init`/`destroy`). Postman sends `POST /crud-app/hello`. What happens and why?",
+      "codeSnippet": null,
+      "options": [
+        "`doGet()` runs, because a servlet with only one handler uses it for every HTTP method",
+        "Tomcat returns 404, because no servlet is mapped to `/hello` for POST",
+        "Tomcat throws an error at startup, because every `doXxx()` method must be overridden",
+        "`HttpServlet.service()` sees POST and calls the inherited default `doPost()`, which replies 405 Method Not Allowed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`service()` runs for every request, checks the HTTP method and forwards to the matching `doXxx()`. Since `doPost()` is not overridden, the base implementation answers 405 Method Not Allowed. The URL mapping exists, so it is not a 404; mappings are by path, and the method check happens inside `service()`.",
+      "source": "notes p24-p26; Excalidraw p5",
+      "reference": "https://tomcat.apache.org/tomcat-10.0-doc/servletapi/jakarta/servlet/http/HttpServlet.html"
+    },
+    {
+      "id": "d71_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Servlet thread safety",
+      "question": "`UserServlet` has `private UserService userService = new UserService();` and `UserService` stores users in a plain `HashMap`. Under a load test with many simultaneous `POST /users` requests, some users go missing. What is the underlying cause?",
+      "codeSnippet": null,
+      "options": [
+        "Tomcat uses one `UserServlet` instance for all requests and runs them on different threads, so the shared non-thread-safe `HashMap` is modified concurrently",
+        "Tomcat creates a new `UserServlet` per request, so each request writes to a different empty map",
+        "`HashMap` silently drops entries once it contains more than 16 users",
+        "The `provided` scope removes `UserService` from the WAR under heavy load"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes stress \"one Servlet object -> many requests\" and warn about instance variables. Each concurrent request runs on its own container thread against the same servlet and therefore the same `userDB` map, and `HashMap` is not safe for concurrent writes. A new instance per request is the misconception the lecture corrects; `HashMap` grows beyond its initial capacity of 16.",
+      "source": "notes p27; code: UserServlet.java, UserService.java",
+      "reference": "https://tomcat.apache.org/tomcat-10.0-doc/servletapi/jakarta/servlet/http/HttpServlet.html"
+    },
+    {
+      "id": "d71_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Embedded Tomcat & DispatcherServlet",
+      "question": "A teammate says: \"Spring Boot apps run with `java -jar` and serve requests on port 8080 without any Tomcat installed, so Spring Boot must have replaced servlets with its own HTTP server.\" How should you correct them?",
+      "codeSnippet": null,
+      "options": [
+        "They are right: Spring controllers open port 8080 themselves using `ServerSocket`",
+        "They are right: Spring Boot only uses servlets when the app is packaged as a WAR",
+        "Spring Boot embeds Tomcat inside the application (via the web starter); the servlet container still exists, it just starts from `main()`",
+        "Spring Boot converts each controller into a separate WAR that the JVM deploys automatically"
+      ],
+      "correctAnswer": 2,
+      "explanation": "With external Tomcat the application goes inside the server; with Spring Boot the server starts inside the application when `SpringApplication.run()` runs. The notes say Spring Boot did not remove the servlet container concept, it made it easier to use: Tomcat is still there internally, and controllers never listen on ports themselves.",
+      "source": "notes p28-p30",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    },
+    {
+      "id": "d71_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Servlet request handling",
+      "question": "Postman sends `POST /crud-app/users?name=Rahul&email=r@test.com&mobile=999` but forgets the `id` parameter. What does the client receive from the lecture's `doPost`?",
+      "codeSnippet": "@Override\npublic void doPost(HttpServletRequest request,\n                   HttpServletResponse response) throws IOException {\n    Integer id = Integer.parseInt(request.getParameter(\"id\"));\n    String name = request.getParameter(\"name\");\n    String email = request.getParameter(\"email\");\n    String mobile = request.getParameter(\"mobile\");\n\n    if (id == null || email == null ||\n            name == null || mobile == null) {\n        response.setStatus(400);\n        response.setContentType(\"application/json\");\n        response.getWriter().write(\"{ \\\"message\\\" : \\\"Some fields are missing\\\" }\");\n    }\n    // ... create user, set 201, write success message\n}",
+      "options": [
+        "400 with `Some fields are missing`, because `id` is null",
+        "A 500 error: `Integer.parseInt(null)` throws `NumberFormatException` before the null check runs",
+        "201, because the user is created with id 0",
+        "201, because the user is created with a null id"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`getParameter(\"id\")` returns null, and `Integer.parseInt(null)` throws `NumberFormatException` on the very first line. The exception escapes `doPost`, so Tomcat sends a 500 error page. The `id == null` check can never be true because parsing happens first; to fix it, read the raw string, check it for null, then parse.",
+      "source": "code: UserServlet.java",
+      "reference": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html"
+    },
+    {
+      "id": "d71_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Servlet request handling",
+      "question": "Now Postman sends `POST /crud-app/users?id=5&email=r@test.com&mobile=999` (no `name`). Assume nothing has been flushed to the client yet. What is the result?",
+      "codeSnippet": "Integer id = Integer.parseInt(request.getParameter(\"id\"));\nString name = request.getParameter(\"name\");\nString email = request.getParameter(\"email\");\nString mobile = request.getParameter(\"mobile\");\n\nif (id == null || email == null ||\n        name == null || mobile == null) {\n    response.setStatus(400);\n    response.setContentType(\"application/json\");\n    response.getWriter().write(\"{\\\"message\\\":\\\"Some fields are missing\\\"}\");\n}\n\nUser user = new User(id, name, email, mobile);\nUser createdUser = userService.createUser(user);\n\nresponse.setStatus(201);\nresponse.setContentType(\"application/json\");\nresponse.getWriter().write(\"{\\\"message\\\":\\\"User Added successfully\\\"}\");",
+      "options": [
+        "400 with only the \"Some fields are missing\" message; the user is not stored",
+        "500, because `new User(...)` rejects a null name",
+        "400 with both messages; the user is stored with a null name",
+        "201 with both messages in the body, and user 5 is stored with a null name"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The `if` block writes the error but has no `return`, so execution continues: the user (name null) is put in the map, then `setStatus(201)` overwrites the 400 because the response is not yet committed, and the success JSON is appended after the error JSON. Adding `return;` after the 400 branch fixes it. The `User` constructor just assigns fields, so null is accepted.",
+      "source": "code: UserServlet.java, UserService.java, User.java",
+      "reference": null
+    },
+    {
+      "id": "d71_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Embedded Tomcat & DispatcherServlet",
+      "question": "In the servlet project, `/users`, `/products` and `/orders` would need `UserServlet`, `ProductServlet` and `OrderServlet`. In a Spring MVC app, three `@RestController` classes handle the same paths. Which servlet(s) does Tomcat call for these requests?",
+      "codeSnippet": null,
+      "options": [
+        "One central `DispatcherServlet` for all of them, which then picks the matching controller method",
+        "Three servlets that Spring generates automatically, one per `@RestController` class",
+        "No servlet at all: Spring MVC bypasses the servlet API and calls controllers from Tomcat's connector",
+        "One servlet per `@GetMapping`/`@PostMapping` method, created when the method is first called"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Spring MVC is built on the servlet API: Tomcat calls a single front servlet, `DispatcherServlet`, for incoming requests, and it checks Spring MVC's mappings to choose the controller method. Controllers are ordinary beans, not servlets, so Spring does not generate a servlet per controller or per method.",
+      "source": "notes p30-p35; Excalidraw p6",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html"
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "day": 62,
+  "title": "Spring Lecture #5: Spring IOC Container",
+  "sources": [
+    "notes/Notes.pdf (35 pages)",
+    "notes/Excalidraw-notes.pdf (4 pages)",
+    "code/SpringCoreDemo/pom.xml",
+    "code/SpringCoreDemo/src/main/java/in/coderarmy/AppConfig.java",
+    "code/SpringCoreDemo/src/main/java/in/coderarmy/Main.java",
+    "code/SpringCoreDemo/src/main/java/in/coderarmy/OrderService.java",
+    "code/SpringCoreDemo/src/main/java/in/coderarmy/User.java",
+    "code/SpringCoreDemo/src/main/java/in/coderarmy/payment/*.java",
+    "code/SpringCoreDemo2/src/main/java/in/strikes/CartService.java"
+  ],
+  "topics": [
+    "ApplicationContext",
+    "@Component & @ComponentScan",
+    "@Configuration & @Bean",
+    "Bean names & getBean()",
+    "Constructor, setter & field injection",
+    "Bean ambiguity: @Primary & @Qualifier",
+    "BeanDefinition & startup flow"
+  ],
+  "questions": [
+    {
+      "id": "d62_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@Component & @ComponentScan",
+      "question": "What is the difference between `@Component` and `@ComponentScan`?",
+      "codeSnippet": null,
+      "options": [
+        "`@Component` creates the container, while `@ComponentScan` creates the beans",
+        "They are interchangeable; either one alone makes a class a bean",
+        "`@Component` marks a class as eligible to become a bean; `@ComponentScan` tells Spring which packages to search for such classes",
+        "`@ComponentScan` goes on each bean class, while `@Component` goes on the configuration class"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`@Component` is a class-level marker saying \"this class may be a Spring bean\"; `@ComponentScan` (typically on the `@Configuration` class) tells Spring where to look - the given package and its sub-packages. Writing `@Component` alone is not enough if no scan covers that package.",
+      "source": "notes p5-9",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html"
+    },
+    {
+      "id": "d62_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "ApplicationContext",
+      "question": "Why does `ApplicationContext context = new ApplicationContext();` fail to compile, and what does the lecture use instead?",
+      "codeSnippet": null,
+      "options": [
+        "`ApplicationContext` is an interface, so you instantiate an implementation such as `new AnnotationConfigApplicationContext(AppConfig.class)`",
+        "Its constructor is private; you must call `ApplicationContext.getInstance()`",
+        "It needs the `spring-boot` dependency; plain Spring has no container",
+        "It is an abstract annotation; you must annotate `Main` with `@ApplicationContext`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`ApplicationContext` is an interface representing the IoC container, and interfaces cannot be instantiated. For annotation-based configuration the lecture uses its implementation `AnnotationConfigApplicationContext`, passing the configuration class. `spring-context` alone is enough - no Spring Boot needed.",
+      "source": "notes p6-7; code: Main.java",
+      "reference": null
+    },
+    {
+      "id": "d62_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "@Configuration & @Bean",
+      "question": "You want Spring to manage an `EmailClient` object from a third-party JAR. You cannot edit that class, and its constructor needs an API key string. How do you register it?",
+      "codeSnippet": null,
+      "options": [
+        "Add `@Component` to `EmailClient` in your copy of the JAR",
+        "Add the library's package to `@ComponentScan`; Spring will guess the API key",
+        "Call `new EmailClient(key)` in `main()`; Spring registers every created object automatically",
+        "Write a `@Bean` method in your `@Configuration` class that returns `new EmailClient(key)`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`@Bean` is for exactly this case: classes you cannot annotate (external libraries) or whose creation needs custom values. Spring calls the method and registers the returned object as a bean. Scanning cannot help because the class has no `@Component` and Spring would not know what string to pass; objects created with `new` are not beans.",
+      "source": "notes p26-28; code: AppConfig.java (createCartService)",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/java/bean-annotation.html"
+    },
+    {
+      "id": "d62_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Bean ambiguity: @Primary & @Qualifier",
+      "question": "This is the lecture's configuration (`CardPayment` is also annotated with `@Component` and lies inside `in.coderarmy`). What does `Main` print?",
+      "codeSnippet": "@Configuration\n@ComponentScan(\"in.coderarmy\")\npublic class AppConfig {\n\n    @Bean\n    @Qualifier(\"cp\")\n    public PaymentService createCardPayment() {\n        return new CardPayment();          // pay() prints \"Paying via card\"\n    }\n\n    @Bean\n    @Qualifier(\"upi\")\n    public PaymentService createUpiPayment() {\n        return new UpiPayment();           // pay() prints \"Paying by UPI\"\n    }\n\n    @Bean\n    public OrderService createOrderService(@Qualifier(\"cp\") PaymentService paymentService) {\n        return new OrderService(paymentService);\n    }\n}\n\n// OrderService.placeOrder(): paymentService.pay(); then System.out.println(\"Order placed\");\n\npublic class Main {\n    public static void main(String[] args) {\n        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);\n        OrderService order = context.getBean(OrderService.class);\n        order.placeOrder();\n    }\n}",
+      "options": [
+        "Order placed\nPaying via card",
+        "Paying via card\nOrder placed",
+        "Paying by UPI\nOrder placed",
+        "Startup fails: three `PaymentService` beans make the injection ambiguous"
+      ],
+      "correctAnswer": 1,
+      "explanation": "There are three `PaymentService` beans (scanned `cardPayment`, `createCardPayment`, `createUpiPayment`), but `@Qualifier(\"cp\")` narrows the candidates to the one bean carrying that qualifier, `createCardPayment`, so there is no ambiguity. `placeOrder()` calls `pay()` before printing, giving \"Paying via card\" then \"Order placed\".",
+      "source": "code: AppConfig.java, Main.java, OrderService.java, CardPayment.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html"
+    },
+    {
+      "id": "d62_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Bean names & getBean()",
+      "question": "Given this configuration, which lookup returns the `User` bean?",
+      "codeSnippet": "@Configuration\n@ComponentScan(\"in.coderarmy\")\npublic class AppConfig {\n\n    @Bean\n    public User createUser() {\n        return new User(\"Aditya\", 28);\n    }\n}\n\n// User is a plain class (no @Component)\nApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);",
+      "options": [
+        "`context.getBean(\"user\")`",
+        "`context.getBean(\"createUser\")`",
+        "`context.getBean(\"userBean\")`",
+        "`context.getBean(\"appConfig.createUser\")`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "For `@Bean` methods the default bean name is the method name, so the bean is called `createUser`. The class-name-based name `user` is what you would get from `@Component` on `User`, which is not used here. A custom name would need `@Bean(\"user\")`; `getBean(User.class)` would also work by type.",
+      "source": "code: AppConfig.java, User.java; notes p28-31",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/java/bean-annotation.html"
+    },
+    {
+      "id": "d62_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "@Component & @ComponentScan",
+      "question": "`AppConfig` has `@ComponentScan(\"in.coderarmy\")`. A teammate adds `@Component public class UpiPayment implements PaymentService` in package `com.thirdparty.pay`, and `OrderService` (a `@Component` in `in.coderarmy`) needs a `PaymentService`. Startup fails with \"No qualifying bean of type 'PaymentService' available\". What is the cause?",
+      "codeSnippet": null,
+      "options": [
+        "`com.thirdparty.pay` is outside the scanned package, so `UpiPayment` was never registered as a bean",
+        "`@Component` cannot be used on classes that implement an interface",
+        "`OrderService` must use field injection to find beans in other packages",
+        "Interfaces need their own `@Component`, so `PaymentService` must be annotated too"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Component scanning covers only the given package and its sub-packages; `com.thirdparty.pay` is not under `in.coderarmy`, so the class is never found and no `PaymentService` bean exists. Fix it by adding that package to `@ComponentScan` or registering the object with a `@Bean` method. The injection style does not change which beans exist.",
+      "source": "notes p8-10, 20-21",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html"
+    },
+    {
+      "id": "d62_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Constructor, setter & field injection",
+      "question": "Why does the lecture discourage `@Autowired private PaymentService paymentService;` (field injection) for required dependencies?",
+      "codeSnippet": null,
+      "options": [
+        "Because field injection only works for `public` fields",
+        "Because Spring cannot use reflection to set private fields",
+        "Because field injection creates a new `PaymentService` for every method call",
+        "Because the dependency is hidden, the field cannot be `final`, and the class is hard to create in a plain unit test without Spring"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Field injection works - Spring sets even private fields via reflection - but the dependency is invisible from the constructor, the field cannot be `final`, the object can exist half-initialized, and tests need Spring (or reflection) to fill it. Constructor injection avoids all of that, which is why it is preferred for mandatory dependencies.",
+      "source": "notes p11-14; excalidraw p2",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    },
+    {
+      "id": "d62_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Bean ambiguity: @Primary & @Qualifier",
+      "question": "Both payment classes are in a scanned package. What is printed when `orderService.placeOrder()` is called?",
+      "codeSnippet": "@Primary\n@Component\npublic class UPIPaymentService implements PaymentService {\n    public void pay() { System.out.println(\"UPI payment done\"); }\n}\n\n@Component\npublic class CardPaymentService implements PaymentService {\n    public void pay() { System.out.println(\"Card payment done\"); }\n}\n\n@Component\npublic class OrderService {\n    private final PaymentService paymentService;\n\n    public OrderService(@Qualifier(\"cardPaymentService\") PaymentService paymentService) {\n        this.paymentService = paymentService;\n    }\n\n    public void placeOrder() {\n        paymentService.pay();\n        System.out.println(\"Order placed\");\n    }\n}",
+      "options": [
+        "UPI payment done\nOrder placed",
+        "Nothing - startup fails because `@Primary` and `@Qualifier` conflict",
+        "Card payment done\nOrder placed",
+        "Nothing - startup fails because no bean is named `cardPaymentService`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`CardPaymentService` gets the default bean name `cardPaymentService`, so the qualifier matches it. `@Primary` is only a default choice; `@Qualifier` is a specific choice and wins, so the card implementation is injected. Using both is legal and does not cause a startup failure.",
+      "source": "notes p21-25",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html"
+    },
+    {
+      "id": "d62_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@Configuration & @Bean",
+      "question": "`CardPayment` is annotated with `@Component` and is in the scanned package. A teammate also adds `@Bean public PaymentService createCardPayment() { return new CardPayment(); }` to `AppConfig` (no qualifiers anywhere). `OrderService` is a `@Component` with constructor `OrderService(PaymentService paymentService)`. What happens at startup?",
+      "codeSnippet": null,
+      "options": [
+        "Spring notices both describe `CardPayment` and silently keeps only one bean",
+        "The `@Bean` method is ignored because component scanning always takes priority",
+        "`OrderService` receives a new `CardPayment` created by calling the constructor directly",
+        "Two `PaymentService` beans exist (`cardPayment` and `createCardPayment`), so injecting by type is ambiguous and startup fails"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Registering the same class via `@Component` and via a `@Bean` method with a different name produces two separate beans. With two candidates and no `@Primary`/`@Qualifier` (and no bean named `paymentService`), Spring cannot choose and fails with a no-unique-bean error. The clean rule from the notes: register a bean with either `@Component` or `@Bean`, not both.",
+      "source": "notes p31-32",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html"
+    },
+    {
+      "id": "d62_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "BeanDefinition & startup flow",
+      "question": "During startup, Spring builds `BeanDefinition`s before creating any bean objects. What is a `BeanDefinition`, and why does Spring do this first?",
+      "codeSnippet": null,
+      "options": [
+        "It is the first instance of each bean, kept as a template to clone other instances from",
+        "It is the compiled `.class` file of the bean, loaded early so the JVM can verify it",
+        "It is metadata (class, name, scope, dependencies, creation strategy) that lets Spring know every bean and its needs before resolving dependencies and creating objects",
+        "It is a log entry recording that a bean was created, used later for debugging"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A `BeanDefinition` is not the object but information about how to create and manage it. Because Spring manages a whole application, it first collects which beans exist, their classes, scopes and dependencies, and only then creates objects in a workable order and injects dependencies. It is not an instance or a template copy.",
+      "source": "notes p15-19; excalidraw p2",
+      "reference": null
+    }
+  ]
+}

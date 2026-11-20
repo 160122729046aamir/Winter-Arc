@@ -1,0 +1,202 @@
+{
+  "day": 92,
+  "title": "Spring Lecture #35: Spring Security Fundamentals",
+  "sources": [
+    "notes/Notes.pdf (54 pages)",
+    "notes/Excalidraw-Notes.pdf (10 pages)",
+    "code/springSecurityDemo (StudentController, application.properties)"
+  ],
+  "topics": [
+    "Authentication vs authorization",
+    "Trust boundaries",
+    "Authentication object & authorities",
+    "SecurityContext & SecurityContextHolder",
+    "Stateful vs stateless authentication",
+    "Session cookie as bearer credential",
+    "Spring Boot security auto-configuration",
+    "Default user",
+    "CSRF 403"
+  ],
+  "questions": [
+    {
+      "id": "d92_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Authentication vs authorization",
+      "question": "A security guard checks Aditya's employee card and lets him into the training room, but stops him at the finance department door. Which mapping to Spring Security concepts is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Checking the card is authorization; stopping him at finance is authentication",
+        "Both steps are authentication, because they both involve Aditya's identity",
+        "Checking the card is authentication (verifying the identity claim); deciding which rooms he may enter is authorization",
+        "Both steps are authorization; authentication only happens when a password is typed"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Authentication answers 'who are you, and what evidence proves it?', which is the card check. Authorization answers 'what is this identity allowed to do?', which is the room-by-room decision. Authentication is about evidence, not specifically passwords, so a card counts too.",
+      "source": "notes p8-13 (Authentication, Authorization)",
+      "reference": null
+    },
+    {
+      "id": "d92_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Trust boundaries",
+      "question": "The React frontend shows the 'Delete' button only when `user.role === \"ADMIN\"`. A teammate says the backend `DELETE /api/students` therefore doesn't need any role check. Why is this wrong?",
+      "codeSnippet": null,
+      "options": [
+        "The browser is outside the server's trust boundary: any user can call the endpoint directly with curl or Postman, so authorization must be enforced on the server",
+        "Hiding the button is fine, but the role check must be duplicated in JavaScript on every page",
+        "It is only wrong in production; during development the frontend check is enough",
+        "The frontend check is safe only if the JavaScript bundle is minified"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Users control their browsers: they can edit JavaScript, replay requests or call hidden endpoints directly. A UI check improves the interface but provides no security, so authorization must be decided on the server for every request. More JavaScript checks or minification do not change who controls the client.",
+      "source": "notes p7-8 (Why is the browser untrusted?)",
+      "reference": null
+    },
+    {
+      "id": "d92_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Default user",
+      "question": "The lecture's `application.properties` contains the lines below and there is no custom security configuration. Which role authorities does the in-memory `UserDetails` that Spring Boot creates for `aditya` carry?",
+      "codeSnippet": "spring.security.user.name=aditya\nspring.security.user.password=secret123\nspring.security.user.roles=USER,ADMIN",
+      "options": [
+        "`USER` and `ADMIN`",
+        "Only `ROLE_USER`, because the default user always has exactly one role",
+        "Nothing, because properties-based users have no authorities",
+        "`ROLE_USER` and `ROLE_ADMIN`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The values are role names, and Spring Security stores roles as granted authorities with the `ROLE_` prefix, so the in-memory user gets `ROLE_USER` and `ROLE_ADMIN`. The notes contrast 'role name: USER' with 'granted authority: ROLE_USER'. Under the default `anyRequest().authenticated()` rule these authorities do not matter yet, but they will once role-based rules are added.",
+      "source": "code: application.properties; notes p51-52 (Default role, configuring the default user)",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/spring-security.html"
+    },
+    {
+      "id": "d92_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Authentication vs authorization",
+      "question": "Your login API returns \"Username exists, but password is incorrect\" for a known user and \"No such user\" for unknown ones. A security review flags it. What is the problem and the usual fix?",
+      "codeSnippet": null,
+      "options": [
+        "The messages are too long; shorter messages reduce bandwidth for brute-force attacks",
+        "The different messages let an attacker discover which accounts exist; return one generic message such as \"Invalid username or password\" and keep the precise reason in internal logs",
+        "The messages should be returned with 403 instead of 401 so attackers cannot read them",
+        "The API should lock the account after the first wrong password to stop enumeration"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Distinct messages reveal whether an account exists, which helps brute-force and credential-stuffing attacks. The notes recommend a generic external message while logging precise internal diagnostics (user not found, password mismatch, account disabled). Changing the status code or locking after one failure does not address the information leak.",
+      "source": "notes p14-16 (Authentication failures vs. security attacks)",
+      "reference": null
+    },
+    {
+      "id": "d92_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Authentication object & authorities",
+      "question": "A registration endpoint accepts `{\"username\":\"rohit\",\"password\":\"...\",\"role\":\"ADMIN\"}` and stores whatever `role` the client sends. Which principle from the lecture does this violate?",
+      "codeSnippet": null,
+      "options": [
+        "Roles must always be written in lowercase in JSON",
+        "Authorities should only be stored in the HTTP session, never in a database",
+        "Authorities must be granted by a trusted process (trusted database, verified token, identity provider or authentication provider), never accepted just because the client claimed them",
+        "Registration endpoints must be stateless, so they cannot assign roles"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes distinguish granted authorities from claimed ones: a client must not become an administrator merely by sending `\"role\":\"ADMIN\"`. Authorities used for authorization should come from a trusted source and be placed in the `Authentication` by the trusted authentication infrastructure. Case and storage location are irrelevant to that rule.",
+      "source": "notes p18-19 (Granted versus claimed authority)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html"
+    },
+    {
+      "id": "d92_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Authentication object & authorities",
+      "question": "`Authentication` plays two roles in Spring Security. Which pair of states correctly describes a username/password login before and after successful verification?",
+      "codeSnippet": null,
+      "options": [
+        "Before: principal = \"aditya\", credentials = raw password, no authorities, not authenticated. After: principal = a `UserDetails`, credentials cleared, authorities like `ROLE_USER`, authenticated",
+        "Before: principal = a `UserDetails` loaded from the DB. After: principal = the username string, with the password kept for later requests",
+        "Before and after are the same object; only `isAuthenticated()` changes from false to true",
+        "Before: authorities copied from the request body. After: authorities removed because they were already checked"
+      ],
+      "correctAnswer": 0,
+      "explanation": "An `Authentication` can be an authentication request (claimed principal plus credentials, `isAuthenticated() == false`) or the representation of an accepted principal after the `AuthenticationManager` verifies it. The authenticated version usually holds a `UserDetails` principal, granted authorities, and has its credentials erased so the password is not kept longer than needed.",
+      "source": "notes p19-23 (Authentication, Authentication transformation)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html"
+    },
+    {
+      "id": "d92_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "SecurityContext & SecurityContextHolder",
+      "question": "A user authenticated as `aditya` calls this endpoint. The `SecurityContextHolder` strategy has not been changed. What does it return?",
+      "codeSnippet": "@GetMapping(\"/whoami\")\npublic String whoAmI() throws InterruptedException {\n    String main = SecurityContextHolder.getContext()\n            .getAuthentication().getName();\n\n    String[] other = new String[1];\n    Thread worker = new Thread(() -> {\n        Authentication a = SecurityContextHolder.getContext().getAuthentication();\n        other[0] = (a == null) ? \"none\" : a.getName();\n    });\n    worker.start();\n    worker.join();\n\n    return main + \"/\" + other[0];\n}",
+      "options": [
+        "\"aditya/aditya\", because the context is stored per user, not per thread",
+        "\"aditya/anonymousUser\", because new threads get an anonymous token",
+        "A `NullPointerException` in the request thread, because `join()` clears the context",
+        "\"aditya/none\", because the default strategy is a plain `ThreadLocal`, so the new thread sees an empty context"
+      ],
+      "correctAnswer": 3,
+      "explanation": "By default `SecurityContextHolder` uses `MODE_THREADLOCAL`: the context belongs to the thread handling the request. A manually created thread gets a new, empty context, so `getAuthentication()` returns null there. Anonymous tokens are added by a filter only to request threads, and only `MODE_INHERITABLETHREADLOCAL` would copy the context to child threads.",
+      "source": "notes p24-27 (SecurityContextHolder, default ThreadLocal strategy)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html"
+    },
+    {
+      "id": "d92_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Spring Boot security auto-configuration",
+      "question": "In the lecture app, a teammate adds a `@Bean SecurityFilterChain` that permits `GET /api/students` and requires authentication for everything else. They are surprised that `aditya / secret123` from `application.properties` still logs in successfully. Why?",
+      "codeSnippet": null,
+      "options": [
+        "A custom `SecurityFilterChain` is ignored as long as `spring.security.user.*` properties are present",
+        "A custom `SecurityFilterChain` replaces only the default web-security rules; the auto-configured in-memory user remains until you define your own `UserDetailsService`, `AuthenticationProvider` or `AuthenticationManager` bean",
+        "Spring Boot copies the property-based user into the database on startup, so it survives configuration changes",
+        "The browser cached the old session; the user would fail after a restart"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Spring Boot backs off separately for the two problems: a `SecurityFilterChain` bean replaces how requests are secured, while the `UserDetailsService` auto-configuration stays until a user-store or authentication bean is defined. The properties user lives in memory (`InMemoryUserDetailsManager`), not in a database.",
+      "source": "notes p45-50 (Spring Boot security auto-configuration, default user)",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/spring-security.html"
+    },
+    {
+      "id": "d92_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "CSRF 403",
+      "question": "The lecture app runs with only Spring Boot's default security (no custom configuration) and the properties user `aditya / secret123`. What status codes do these three curl commands return, in order?",
+      "codeSnippet": "# 1\ncurl -i http://localhost:8080/api/students\n\n# 2\ncurl -i -u aditya:secret123 http://localhost:8080/api/students\n\n# 3\ncurl -i -u aditya:secret123 -X DELETE http://localhost:8080/api/students",
+      "options": [
+        "200, 200, 200 - the controller methods have no security annotations",
+        "401, 200, 401 - DELETE needs a fresh login",
+        "401, 200, 403 - the DELETE is authenticated but rejected for missing a CSRF token",
+        "401, 200, 200 - HTTP Basic credentials make CSRF irrelevant"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The default chain requires authentication for every request, so #1 without credentials gets 401, and #2 succeeds with HTTP Basic. CSRF protection is on by default for state-changing methods, so #3 is authenticated but rejected with 403 because no CSRF token was sent (the lecture adds a `/api/students/csrf` endpoint to obtain one). A 403 here is not a role problem.",
+      "source": "code: StudentController.java, application.properties; notes p46-47, p53-54 (CSRF 403 surprise)",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/spring-security.html"
+    },
+    {
+      "id": "d92_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Stateful vs stateless authentication",
+      "question": "The notes separate the authentication mechanism (how credentials are obtained) from the session policy (whether the `SecurityContext` is stored in an HTTP session). Which design is stateless in that sense?",
+      "codeSnippet": null,
+      "options": [
+        "A JWT is validated once at login, the resulting `SecurityContext` is saved in the `HttpSession`, and later requests send `JSESSIONID`",
+        "Each request carries an opaque bearer token that the API checks against a token store; no HTTP session is created or read",
+        "Form login with the session stored in Redis so that several servers can share it",
+        "HTTP Basic credentials are verified once and the resulting context is persisted in the session for later requests"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Stateless means the server does not rely on a stored HTTP login session to rebuild the user's authentication on the next request. An opaque token checked on every request is stateless in that sense even though a token store holds data. The JWT-plus-session design is session-based afterwards, which shows that token format does not decide session policy; the Redis and Basic-with-session designs are also stateful.",
+      "source": "notes p34-43 (Stateless authentication, opaque tokens, mechanism vs session policy)",
+      "reference": null
+    }
+  ]
+}

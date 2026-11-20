@@ -1,0 +1,200 @@
+{
+  "day": 55,
+  "title": "Lecture #55: Lock-Free Concurrency in Java - 2",
+  "sources": [
+    "notes/Notes.pdf (20 pages)",
+    "notes/slides.pdf (5 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "Compare-And-Set semantics",
+    "CAS retry loop",
+    "CAS contention & starvation",
+    "Coordinating with join() not sleep()",
+    "Atomic arrays",
+    "Memory effects of atomics",
+    "ABA problem & versioning"
+  ],
+  "questions": [
+    {
+      "id": "d55_q1",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Compare-And-Set semantics",
+      "question": "What does this code print?",
+      "codeSnippet": "AtomicInteger n = new AtomicInteger(30);\nboolean a = n.compareAndSet(10, 20);\nboolean b = n.compareAndSet(30, 40);\nSystem.out.println(a + \" \" + b + \" \" + n.get());",
+      "options": [
+        "true true 40",
+        "false true 40",
+        "false false 30",
+        "false true 20"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`compareAndSet(expected, new)` changes the value only if the current value equals `expected`, and returns whether it did. The first call expects 10 but finds 30, so it fails and leaves 30 unchanged. The second call expects 30, finds 30, and sets 40. A failed CAS never writes anything, so 20 can't appear.",
+      "source": "notes p1-2",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html#compareAndSet(int,int)"
+    },
+    {
+      "id": "d55_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Compare-And-Set semantics",
+      "question": "Why is CAS called an 'optimistic' strategy, compared with a lock?",
+      "codeSnippet": null,
+      "options": [
+        "It assumes no other thread will change the value, tries the update, and retries if that assumption was wrong, instead of blocking others in advance",
+        "It always succeeds on the first try, because the CPU reserves the value for the reading thread",
+        "It locks the whole memory bus before reading, so conflicts are impossible",
+        "It lets every thread write and later merges all the values together"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A pessimistic lock prevents conflicts by locking first, so other threads wait. CAS reads the value, computes the new one, and only at the moment of the atomic update checks whether the value is unchanged. It retries if someone else got there first. CAS can fail and must be retried, and modern CPUs coordinate it at the cache-line level rather than locking the whole bus.",
+      "source": "notes p3-4",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    },
+    {
+      "id": "d55_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "CAS retry loop",
+      "question": "A teammate wrote this manual CAS loop for `like()`. Ten threads call it at the same time. What can go wrong?",
+      "codeSnippet": "class LikeCounter {\n    private final AtomicInteger totalLikes = new AtomicInteger(0);\n\n    public void like() {\n        int current = totalLikes.get();\n        while (!totalLikes.compareAndSet(current, current + 1)) {\n            // retry\n        }\n    }\n}",
+      "options": [
+        "Nothing; the loop retries until the CAS succeeds, so every like is counted",
+        "Some likes are counted twice, because a failed CAS still writes `current + 1`",
+        "A thread whose first CAS fails can spin forever, because `current` is never re-read and the counter never goes back to that old value",
+        "It throws `ConcurrentModificationException` when two CAS calls overlap"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A CAS retry loop must re-read the latest value and recompute the update on every attempt. Here `current` is read once. After another thread increments the counter, it never returns to that stale value, so `compareAndSet(current, ...)` keeps failing forever. Moving `get()` inside the loop fixes it, as in the lecture's commented code. A failed CAS never writes anything.",
+      "source": "notes p5-6; code: Demo.java (commented CAS loop)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html"
+    },
+    {
+      "id": "d55_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Coordinating with join() not sleep()",
+      "question": "The lecture's `Demo` starts 10 threads that each add 10 likes, then calls `Thread.sleep(3000)` and prints the total. On a heavily loaded CI machine it sometimes prints fewer than 100. What is the right fix?",
+      "codeSnippet": null,
+      "options": [
+        "Increase the sleep to 10 seconds to leave more margin",
+        "Replace `AtomicInteger` with `int`, because atomics are slow under load",
+        "Make the `like()` method `synchronized`",
+        "Call `join()` on every thread before printing, so main waits until they have all actually finished"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A sleep only guesses how long the threads will take. Under load the guess can be too short, so main reads the counter before all increments are done. The atomic counter itself is correct. `join()` waits for each thread to actually finish, and it also makes their updates visible to main. A longer sleep only makes the failure less frequent.",
+      "source": "notes p7-8; code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/concurrency/join.html"
+    },
+    {
+      "id": "d55_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "CAS contention & starvation",
+      "question": "Hundreds of threads update ONE `AtomicLong` with CAS loops in a tight hot path. Which statement is accurate?",
+      "codeSnippet": null,
+      "options": [
+        "Because no lock is involved, throughput keeps growing as you add threads",
+        "Many CAS attempts fail and retry, wasting CPU and bouncing the cache line between cores, and an unlucky thread can keep losing; lock-free is not automatically faster",
+        "CAS fails only on single-core machines, so contention disappears on multi-core servers",
+        "Every thread is guaranteed to finish within a fixed number of retries, because CAS is wait-free"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Under heavy contention, only one of many competing CAS attempts succeeds each round. The rest re-read and retry, which burns CPU and causes cache-line traffic. Lock-free guarantees system-wide progress, not progress for each thread, so a particular thread can starve. That is lock-free, not wait-free.",
+      "source": "notes p8-10",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    },
+    {
+      "id": "d55_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Atomic arrays",
+      "question": "`MovieTheatre` stores seats in an `AtomicReferenceArray<String>`, and `bookSeat(i, user)` returns `seats.compareAndSet(i, null, user)`. A family wants seats 10, 11 and 12 'all or nothing', so the app calls `bookSeat` for each seat in turn. What can happen?",
+      "codeSnippet": null,
+      "options": [
+        "The family might get seats 10 and 11, while another user grabs seat 12 in between; each seat is atomic, but the group booking is not",
+        "Either all three succeed or all three fail, because the calls use the same array",
+        "Two users can both book seat 11, because `compareAndSet` on an array element is not atomic",
+        "The second call fails, because an atomic array allows only one CAS per thread"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Each index of an atomic array works like its own atomic variable. So a single seat can never be double-booked, because only one CAS from null can win. Three separate CAS calls, however, do not form one indivisible transaction, and the group can end up partly booked. 'All or nothing' needs broader coordination, such as a lock around the whole group, or rolling back seats that were already booked.",
+      "source": "notes p11-14",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicReferenceArray.html"
+    },
+    {
+      "id": "d55_q7",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Atomic arrays",
+      "question": "Each index of an `AtomicIntegerArray` is a separate atomic value. What does this code print?",
+      "codeSnippet": "AtomicIntegerArray arr = new AtomicIntegerArray(3);\narr.incrementAndGet(0);\narr.addAndGet(1, 5);\nint old = arr.getAndAdd(1, 2);\nSystem.out.println(arr.get(0) + \" \" + arr.get(1) + \" \" + arr.get(2) + \" \" + old);",
+      "options": [
+        "1 5 0 7",
+        "1 7 2 5",
+        "1 7 0 5",
+        "0 7 0 5"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`new AtomicIntegerArray(3)` creates three elements, all 0. `incrementAndGet(0)` makes index 0 equal to 1. `addAndGet(1, 5)` makes index 1 equal to 5. Then `getAndAdd(1, 2)` returns the old value 5 and sets index 1 to 7. Index 2 was never touched, so it stays 0. The first argument is always the index, not the value.",
+      "source": "notes p10-11",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicIntegerArray.html"
+    },
+    {
+      "id": "d55_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "ABA problem & versioning",
+      "question": "A lock-free stack pops by doing `top.compareAndSet(oldTop, oldTop.next)`. Thread 1 reads `top = A` (with `A.next = B`) and is paused. Meanwhile, Thread 2 pops A, pops B, and pushes A back. Thread 1 resumes and its CAS succeeds. What went wrong, and what is the standard fix?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing went wrong; the CAS succeeded, so the stack must be consistent",
+        "A visibility bug; making `top` volatile stops the CAS from succeeding",
+        "A deadlock between the threads; adding a timeout to the CAS fixes it",
+        "The ABA problem: `top` is A again, so the CAS can't tell the stack changed, and it sets `top` to the already-removed B; pairing the reference with a version (e.g. `AtomicStampedReference`) makes the CAS fail"
+      ],
+      "correctAnswer": 3,
+      "explanation": "CAS only checks whether the current value equals the expected one now. It cannot see that the value went A, then B, then A. Thread 1's stale `next` pointer installs B, a node that is no longer in the stack, so the stack is corrupted. Storing a version that changes on every update, such as (A,1), then (B,2), then (A,3), makes a CAS expecting (A,1) fail. `top` is already accessed atomically, so `volatile` adds nothing here.",
+      "source": "notes p17-19",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicStampedReference.html"
+    },
+    {
+      "id": "d55_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Memory effects of atomics",
+      "question": "In `ConfigurationHolder`, `initialize()` runs `configuration = \"production\"; ready.set(true);`, where `configuration` is a plain field and `ready` is an `AtomicBoolean`. Another thread runs `if (ready.get()) return configuration;`. If that thread sees `ready` as true, what is guaranteed?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing; `configuration` is not volatile, so the reader may see null",
+        "The reader sees \"production\" only if `configuration` is also wrapped in an `AtomicReference`",
+        "The reader sees \"production\", because an atomic's `set`/`get` have volatile-like memory effects, so the earlier plain write is published with the flag",
+        "The reader sees \"production\" only if `initialize()` is synchronized"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Atomic classes do more than make updates indivisible. Their `get()` and `set()` have the same memory effects as volatile reads and writes. The plain write to `configuration` comes before `ready.set(true)`, and `ready.set(true)` happens-before a `ready.get()` that reads true. So the reader must see \"production\". This is the same safe-publication pattern as a volatile flag. Making sure initialization happens only once is a separate concern.",
+      "source": "notes p14-17",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    },
+    {
+      "id": "d55_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "CAS contention & starvation",
+      "question": "Profiling a CAS-based rate tracker shows that one low-priority thread's update sometimes takes thousands of retries while other threads keep succeeding. The product team now requires every caller to get a turn in roughly arrival order. Which response is most appropriate?",
+      "codeSnippet": null,
+      "options": [
+        "Replace `compareAndSet` with `weakCompareAndSet` to reduce failures",
+        "Raise the slow thread's priority to `MAX_PRIORITY` so it wins the CAS race",
+        "Keep the CAS loop as is; lock-free algorithms already guarantee every thread finishes in bounded steps",
+        "Use a coordination mechanism with a fairness policy, such as `new ReentrantLock(true)`, because lock-free CAS only guarantees system-wide progress, not fairness"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Lock-free means some thread always makes progress, but a particular thread can keep losing, which is starvation. If fairness is a requirement, the notes suggest a fair explicit lock or another coordination mechanism that orders waiters. Thread priority is only a hint and gives no guarantee. Backoff (`Thread.onSpinWait()`, bounded spinning) can reduce wasted CPU, but it does not give ordering guarantees either.",
+      "source": "notes p9-10",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html#%3Cinit%3E(boolean)"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "day": 58,
+  "title": "Spring Lecture #1: Spring Boot & Spring Framework Full Course",
+  "sources": [
+    "notes/Notes.pdf (24 pages)",
+    "notes/Ipad-screens.pdf (9 pages)"
+  ],
+  "topics": [
+    "Client-server & HTTP",
+    "HTTP request/response anatomy",
+    "Core Java networking limits",
+    "Servlets & servlet containers",
+    "Spring ecosystem",
+    "Spring vs Spring Boot",
+    "JPA, Hibernate & Spring Data JPA",
+    "Microservices"
+  ],
+  "questions": [
+    {
+      "id": "d58_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Spring vs Spring Boot",
+      "question": "Which statement best describes the relationship between Spring Framework and Spring Boot?",
+      "codeSnippet": null,
+      "options": [
+        "Spring Boot is a newer framework that replaces Spring Framework entirely",
+        "Spring Boot is only a build tool and has nothing to do with Spring Core",
+        "Spring Boot is built on top of Spring and auto-configures it with sensible defaults",
+        "Spring Framework is a lightweight subset of Spring Boot used for small apps"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Spring Boot is an automation layer on top of Spring: it provides auto-configuration, starter dependencies, embedded servers and sensible defaults, while Spring Core, MVC etc. still do the actual work. It does not replace Spring - \"Spring Boot uses Spring\" - so knowing the Spring fundamentals still matters.",
+      "source": "notes p19-21",
+      "reference": "https://docs.spring.io/spring-boot/docs/2.0.x/reference/html/howto-embedded-web-servers.html"
+    },
+    {
+      "id": "d58_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "JPA, Hibernate & Spring Data JPA",
+      "question": "What is the difference between JPA and Hibernate?",
+      "codeSnippet": null,
+      "options": [
+        "JPA is a specification defining how objects map to tables; Hibernate is an implementation of it",
+        "JPA is an implementation of Hibernate that adds Spring support",
+        "JPA is a database driver, while Hibernate is the database itself",
+        "JPA and Hibernate are two names for the same Spring module"
+      ],
+      "correctAnswer": 0,
+      "explanation": "JPA (Java Persistence API) only defines the rules - \"JPA tells what should be done\" - and Hibernate is one of the most popular libraries that actually implements those rules (ORM). Neither is a database or a driver; the stack is Spring Data JPA -> Hibernate -> JDBC -> Database.",
+      "source": "notes p17-18",
+      "reference": "https://www.baeldung.com/spring-data-jpa-vs-jpa"
+    },
+    {
+      "id": "d58_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "HTTP request/response anatomy",
+      "question": "A mobile app lets a user change only their phone number; all other profile fields stay untouched. Which HTTP method fits this request best?",
+      "codeSnippet": null,
+      "options": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH"
+      ],
+      "correctAnswer": 3,
+      "explanation": "PATCH is used for a partial update, such as changing only the phone number. PUT is the tempting choice, but it is meant to replace the whole resource (e.g. the entire profile). POST creates new data and GET only reads.",
+      "source": "notes p5",
+      "reference": "https://developer.mozilla.org/docs/Web/HTTP/Reference/Methods/PATCH"
+    },
+    {
+      "id": "d58_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "HTTP request/response anatomy",
+      "question": "Look at this raw HTTP request. Which statement about its parts is correct?",
+      "codeSnippet": "POST /login HTTP/1.1\nHost: www.coderarmy.in\nContent-Type: application/json\nAccept: application/json\n\n{\n    \"email\": \"abc@gmail.com\",\n    \"password\": \"12345\"\n}",
+      "options": [
+        "`Content-Type` tells the server which format the client wants back in the response",
+        "`POST /login HTTP/1.1` is the request line; `Content-Type` describes the format of the JSON body being sent",
+        "`Host` is part of the request line, and the JSON block is a set of headers",
+        "The request has no body, because only GET requests can carry a body"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The first line (method, path, HTTP version) is the request line; `Host`, `Content-Type` and `Accept` are key-value headers; the JSON after the blank line is the body. `Content-Type` describes the body that is being sent, while `Accept` is the header that says which format the client can understand in the response. Bodies are typical for POST/PUT/PATCH, not GET.",
+      "source": "notes p4-6",
+      "reference": null
+    },
+    {
+      "id": "d58_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Core Java networking limits",
+      "question": "This plain Java program is running, and a browser opens `http://localhost:8080/users`. What is printed on the server console?",
+      "codeSnippet": "import java.io.*;\nimport java.net.*;\n\npublic class RawServer {\n    public static void main(String[] args) throws IOException {\n        ServerSocket server = new ServerSocket(8080);\n        Socket socket = server.accept();\n        BufferedReader in = new BufferedReader(\n                new InputStreamReader(socket.getInputStream()));\n        String firstLine = in.readLine();\n        System.out.println(firstLine);\n    }\n}",
+      "options": [
+        "GET /users HTTP/1.1",
+        "/users",
+        "Host: localhost:8080",
+        "Nothing - java.net cannot accept connections from a browser"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`java.net` can open a port and accept the TCP connection, but what arrives is just raw text; the first line of an HTTP request is the request line `GET /users HTTP/1.1`. Java does not extract the path `/users` for you - splitting the line, reading headers, routing and building a response would all be manual work, which is exactly the gap servlets and servlet containers fill.",
+      "source": "notes p10-11",
+      "reference": "https://docs.oracle.com/javase/tutorial/networking/sockets/clientServer.html"
+    },
+    {
+      "id": "d58_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Servlets & servlet containers",
+      "question": "Your team moves from a hand-written `ServerSocket` server to a servlet container such as Apache Tomcat. Which job still remains your code's responsibility?",
+      "codeSnippet": null,
+      "options": [
+        "Listening on port 8080 and reading the incoming TCP bytes",
+        "Parsing the HTTP text into request and response objects",
+        "Deciding the business rules, e.g. how a discount is calculated for an order",
+        "Managing threads so that multiple users can be served at the same time"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A servlet container opens the port, reads the bytes, parses HTTP, creates request/response objects, manages threads and calls servlet methods such as `doGet()`. What it cannot know is your application's business logic, which is what developers should be spending their time on. The other three options are all low-level web work the container takes over.",
+      "source": "notes p11-14",
+      "reference": null
+    },
+    {
+      "id": "d58_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Microservices",
+      "question": "How do microservices relate to Spring Boot?",
+      "codeSnippet": null,
+      "options": [
+        "Microservices is a Spring module that must be added as a dependency before building services",
+        "Spring Boot can only build microservices, not single monolithic applications",
+        "Microservices are a feature of Spring Core that replaces the IoC container",
+        "Microservices are an architecture style; Spring Boot is a tool commonly used to build each independent service"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Microservices describe how a large application is split into small, independently developed, deployed and scaled services (user, order, payment...). They are not a Spring module. Spring Boot is popular for them because it makes it easy to create independent, production-ready applications, but it can just as well build a single application.",
+      "source": "notes p21-22",
+      "reference": null
+    },
+    {
+      "id": "d58_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Core Java networking limits",
+      "question": "A developer writes manual routing for a raw request line, as in the notes. What does `main` print?",
+      "codeSnippet": "public class Router {\n    static String handle(String requestLine) {\n        String[] parts = requestLine.split(\" \");\n        String url = parts[1];\n        if (url.equals(\"/users\")) {\n            return \"users\";\n        } else if (url.equals(\"/orders\")) {\n            return \"orders\";\n        }\n        return \"404\";\n    }\n\n    public static void main(String[] args) {\n        String a = handle(\"GET /users?id=5 HTTP/1.1\");\n        String b = handle(\"POST /users HTTP/1.1\");\n        System.out.println(a + \" \" + b);\n    }\n}",
+      "options": [
+        "users users",
+        "404 users",
+        "users 404",
+        "404 404"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`split(\" \")` gives `parts[1]` = \"/users?id=5\" for the first line, which is not equal to \"/users\", so it returns \"404\". The second line yields \"/users\" and returns \"users\" even though it is a POST - this router ignores both the query string and the HTTP method. Bugs like these are why hand-written HTTP parsing and routing is repeated, error-prone plumbing that servlets and Spring MVC take over.",
+      "source": "notes p10-11",
+      "reference": null
+    },
+    {
+      "id": "d58_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Servlets & servlet containers",
+      "question": "A junior says: \"Spring Boot replaced servlets, so our app has no servlet container.\" Yet when the app (built with the web starter) starts, the log shows `Tomcat started on port 8080`. What is the correct explanation?",
+      "codeSnippet": null,
+      "options": [
+        "Tomcat is only used during development; in production Spring Boot handles HTTP directly with the JVM",
+        "Spring Boot ships its own HTTP parser, and the Tomcat log line is only for backward compatibility",
+        "Spring MVC replaced servlets, and Tomcat now only serves static HTML files",
+        "Spring Boot auto-configures an embedded servlet container (Tomcat), and Spring MVC is still built on servlet technology"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The layers stack rather than replace each other: the servlet container receives and parses HTTP, Spring MVC gives a cleaner programming model on top of servlets, Spring Core manages objects, and Spring Boot auto-configures it all - including an embedded Tomcat when the web dependency is present. Nothing in the JVM parses HTTP on its own, so a container is always doing that low-level work.",
+      "source": "notes p16, 20, 22-23",
+      "reference": "https://docs.spring.io/spring-boot/docs/2.0.x/reference/html/howto-embedded-web-servers.html"
+    },
+    {
+      "id": "d58_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "JPA, Hibernate & Spring Data JPA",
+      "question": "A teammate removes the database's JDBC driver from the project, arguing: \"We use Spring Data JPA now, so JDBC is no longer involved.\" The app then fails to connect to the database. Which explanation is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Spring Data JPA talks to the database directly; the failure must be a wrong password",
+        "Hibernate replaces JDBC completely, so the driver is only needed when writing raw SQL",
+        "Spring Data JPA sits on Hibernate (a JPA implementation), which still uses JDBC underneath to reach the database",
+        "JPA is itself the database driver, so the missing piece is a JPA dependency"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes' chain is Spring Data JPA -> Hibernate -> JDBC -> Database: each layer removes boilerplate from the one below but does not eliminate it. Hibernate generates SQL and still executes it through JDBC, so a JDBC driver for the database is required. JPA is only a specification, not a driver.",
+      "source": "notes p17-18; ipad p9",
+      "reference": "https://www.baeldung.com/spring-data-jpa-vs-jpa"
+    }
+  ]
+}

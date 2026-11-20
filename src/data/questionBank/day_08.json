@@ -1,0 +1,201 @@
+{
+  "day": 8,
+  "title": "Lecture #8: Java Loops & Jump Statements",
+  "sources": [
+    "notes.pdf (1 page)",
+    "Practice Questions.pdf (5 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "while vs do-while",
+    "for loop flow of control",
+    "Comma-separated for loop",
+    "Nested loops (n * m)",
+    "break and continue",
+    "Labeled break and labeled blocks",
+    "Pattern printing"
+  ],
+  "questions": [
+    {
+      "id": "d8_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "while vs do-while",
+      "question": "What is the key difference between a `while` loop and a `do-while` loop?",
+      "codeSnippet": null,
+      "options": [
+        "A do-while loop cannot use a boolean condition",
+        "A do-while checks its condition after the body, so the body always runs at least once; a while checks first and may run zero times",
+        "A while loop always runs at least once, a do-while may run zero times",
+        "There is no difference; do-while is just older syntax"
+      ],
+      "correctAnswer": 1,
+      "explanation": "In `do { ... } while (expression);` the condition sits at the bottom, so the body executes once before the first check; `while (expression) { ... }` tests at the top. Swapping the two (option 3) is the common mix-up.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/while.html"
+    },
+    {
+      "id": "d8_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "break and continue",
+      "question": "What does this loop from the lecture print?",
+      "codeSnippet": "for (int i = 1; i <= 10; i++) {\n    if (i % 2 == 0) {\n        continue;\n    }\n    System.out.println(i);\n}",
+      "options": [
+        "1, 3, 5, 7, 9 (each on its own line)",
+        "2, 4, 6, 8, 10 (each on its own line)",
+        "Only 1, because continue ends the loop at i = 2",
+        "1 to 10 (each on its own line), because continue has no effect here"
+      ],
+      "correctAnswer": 0,
+      "explanation": "For even i, `continue` skips the rest of that iteration (the println) and jumps to the update i++, so only odd numbers are printed. Ending the loop at the first even number is what `break` would do, not `continue`.",
+      "source": "code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/branch.html"
+    },
+    {
+      "id": "d8_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "for loop flow of control",
+      "question": "In `for (init; condition; update) { body }`, which order matches the flow of control written in the lecture's Demo2.java?",
+      "codeSnippet": null,
+      "options": [
+        "init -> body -> condition -> update, with init repeated every iteration",
+        "condition -> init -> body -> update, repeated",
+        "init once -> condition -> body (if true) -> update -> condition -> ... until the condition is false",
+        "init once -> update -> condition -> body, repeated"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes list: 1) the initialisation runs first (once), 2) the condition is evaluated, 3) if true the body runs, 4) control returns to the for and the update runs, 5) the condition is checked again, repeating 2-5. The update never runs before the first body execution, so a loop starting at 10 prints 10 first.",
+      "source": "code: Demo2.java",
+      "reference": null
+    },
+    {
+      "id": "d8_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "while vs do-while",
+      "question": "You are writing a console game menu (1. Play Game, 2. Return saved Game, 3. Exit) that must be shown to the user and then repeated until they choose Exit. Which loop does the lecture suggest?",
+      "codeSnippet": null,
+      "options": [
+        "A for loop counting from 1 to 3, one iteration per menu item",
+        "A switch statement alone, since it already repeats",
+        "A while loop whose condition is false at the start",
+        "A do-while loop, because the menu must be displayed at least once before checking whether the user chose Exit"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The lecture names menu item selection as the classic do-while use: show the menu, read the choice, and only then test whether to repeat. A switch selects one branch but never loops by itself, and a counting for loop ignores the user's choice.",
+      "source": "code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/while.html"
+    },
+    {
+      "id": "d8_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Comma-separated for loop",
+      "question": "This comma-separated for loop is from the lecture's Demo.java. What does it print?",
+      "codeSnippet": "for (int i = 1, j = 1; i <= 10 && j <= 5; i++, j += 2) {\n    System.out.println(i * j);\n}",
+      "options": [
+        "1, 4, 9, 16, 25 (one per line)",
+        "1, 6, 15, 28 (one per line)",
+        "1, 6, 15 (one per line)",
+        "1 to 10 (one per line), because the loop runs until i reaches 10"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The pairs are (i, j) = (1, 1), (2, 3), (3, 5), giving 1, 6, 15; then j becomes 7 and `j <= 5` is false, so the && condition stops the loop even though i is only 4. Printing 28 would require the loop to run with j = 7.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d8_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Nested loops (n * m)",
+      "question": "For practice Question 1 (a 4 x 4 square of `* `), you use an outer loop for rows and an inner loop for columns. How many times does `System.out.print(\"* \")` run, and where should `System.out.println()` go?",
+      "codeSnippet": null,
+      "options": [
+        "16 times; println goes after the inner loop finishes, inside the outer loop",
+        "8 times; println goes inside the inner loop",
+        "16 times; println goes after the outer loop finishes",
+        "4 times; println goes before the outer loop"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes show that with an outer loop of n iterations and an inner loop of m iterations, the inner body runs n * m times, so 4 * 4 = 16. The newline must come once per row, i.e. after the inner loop but still inside the outer loop; placing it after the outer loop prints all 16 stars on one line.",
+      "source": "notes p1; practice p1",
+      "reference": null
+    },
+    {
+      "id": "d8_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "break and continue",
+      "question": "The lecture's prime check declares `int i;` before the loop, runs `for (i = 2; i < p; i++)` with a `break` when `p % i == 0`, and then tests `if (i == p)` to print \"The number is prime\". A teammate \"cleans it up\" by writing `for (int i = 2; i < p; i++)`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It still works, because i keeps its last value after the loop",
+        "It no longer compiles, because i declared in the for header only exists inside the loop, so `if (i == p)` cannot see it",
+        "It compiles, but every number is now reported as prime",
+        "It compiles, but the break no longer exits the loop"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A variable declared in the for initialiser is scoped to the loop, so the later `if (i == p)` refers to an unknown symbol. The original design needs i outside the loop: i == p means the loop ran to the end without a break, so no divisor was found. The break behaves the same either way.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d8_q8",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "break and continue",
+      "question": "Inside a nested loop, the inner loop contains a plain (unlabeled) `break;`. What does it do when executed?",
+      "codeSnippet": null,
+      "options": [
+        "It terminates both the inner and the outer loop",
+        "It skips only the rest of the current inner iteration and continues with the next j",
+        "It ends the whole program",
+        "It terminates only the innermost loop; the outer loop continues with its next iteration"
+      ],
+      "correctAnswer": 3,
+      "explanation": "An unlabeled break exits only the innermost enclosing loop (or switch), which is why the lecture introduces labels (`break outer;`) to leave both loops at once. Skipping just the current iteration is what `continue` does.",
+      "source": "code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/branch.html"
+    },
+    {
+      "id": "d8_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Labeled break and labeled blocks",
+      "question": "This uses the lecture's labeled loops. What does it print?",
+      "codeSnippet": "outer: for (int i = 1; i <= 10; i++) {\n    inner: for (int j = 1; j <= i; j++) {\n        System.out.print(\"* \");\n        if (j >= 5) {\n            break outer;\n        }\n    }\n    System.out.println();\n}",
+      "options": [
+        "Five rows with 1, 2, 3, 4 and 5 stars (15 stars in total), then both loops stop",
+        "Ten rows: 1, 2, 3, 4 stars, then six rows of 5 stars each",
+        "Ten rows with 1 to 10 stars, because the break only affects the inner loop",
+        "A single row of 5 stars"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Rows i = 1..4 never reach j = 5, so they print normally. On i = 5 the fifth star triggers `break outer`, which ends the outer loop immediately (the println after the inner loop is skipped). The 'six rows of 5 stars' option is what an unlabeled `break` would produce, since it only leaves the inner loop.",
+      "source": "code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/branch.html"
+    },
+    {
+      "id": "d8_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Labeled break and labeled blocks",
+      "question": "The lecture also labels plain code blocks (`first: { second: { third: { ... break first; } } }`). Which statement about `break label;` is correct?",
+      "codeSnippet": null,
+      "options": [
+        "It works like goto: control jumps back to the line where the label is written",
+        "It is only allowed when the label is on a loop or switch, so the block example does not compile",
+        "It terminates the enclosing statement or block with that label, and execution continues right after that labeled block",
+        "It can jump to any label in the method, even one that does not enclose the break"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A labeled break ends the labeled statement that encloses it, which may be an ordinary block, and control resumes at the statement immediately after it; so in the lecture's example everything after `break first;` inside `first` is skipped. It does not jump back to the label (it is not goto, which Java reserves but does not support), and the label must enclose the break.",
+      "source": "code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/branch.html"
+    }
+  ]
+}

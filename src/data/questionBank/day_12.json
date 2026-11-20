@@ -1,0 +1,198 @@
+{
+  "day": 12,
+  "title": "Lecture #12: Object Oriented Programming  in Java",
+  "sources": [
+    "notes.pdf (6 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "Why OOP (problems with loose variables)",
+    "Class as blueprint vs object",
+    "new & dynamic memory allocation",
+    "Reference variables",
+    "Fields (characteristics) & methods (behaviour)",
+    "Naming conventions"
+  ],
+  "questions": [
+    {
+      "id": "d12_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Class as blueprint vs object",
+      "question": "Which statement best describes the relationship between `class Student { ... }` and `new Student()` in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "The class is the actual student data; `new Student()` creates a copy of the class file",
+        "The class is a blueprint describing what every student has and does; `new Student()` creates one actual object (instance) from it",
+        "The class and the object are the same thing; `new` just gives the class a second name",
+        "The class stores the data of the first student, and each `new` creates a smaller version for the next students"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A class is the blueprint of an object: it declares the characteristics (fields like name, age) and behaviours (methods like `markAttendance`). Each `new Student()` builds a separate object that has its own values for those fields. The class itself holds no particular student's data.",
+      "source": "notes p2-p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/objectcreation.html"
+    },
+    {
+      "id": "d12_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Naming conventions",
+      "question": "Which set of names follows the naming conventions taught in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "class `student`, variable `FirstName`, method `MarkAttendance()`",
+        "class `STUDENT`, variable `first_name`, method `markattendance()`",
+        "class `Student`, variable `FirstNameOfStudent`, method `markAttendance()`",
+        "class `BankAccount`, variable `firstNameOfStudent`, method `markAttendance()`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Class names start with a capital letter (`Student`, `BankAccount`), while variables (primitive or reference) and functions use camelCase starting lowercase (`firstNameOfStudent`, `markAttendance`). The third option looks close but `FirstNameOfStudent` starts with a capital, which is the class style, not the variable style.",
+      "source": "notes p5",
+      "reference": null
+    },
+    {
+      "id": "d12_q3",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Fields (characteristics) & methods (behaviour)",
+      "question": "Given the lecture's `Student` class, what does this code print?",
+      "codeSnippet": "class Student {\n    String name;\n    int age;\n    int rollNumber;\n    String college;\n\n    void markAttendance() {\n        System.out.println(\"Attendance marked by \" + name);\n    }\n}\n\npublic class Demo {\n    public static void main(String[] args) {\n        Student s1 = new Student();\n        Student s2 = new Student();\n        s1.name = \"Aditya\";\n        s2.name = \"Rohit\";\n        s2.markAttendance();\n        s1.markAttendance();\n    }\n}",
+      "options": [
+        "Attendance marked by Rohit\nAttendance marked by Aditya",
+        "Attendance marked by Aditya\nAttendance marked by Rohit",
+        "Attendance marked by Rohit\nAttendance marked by Rohit",
+        "Compile error: `name` is not passed to `markAttendance`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A method called with the dot operator works on the fields of the object it was called on, so `s2.markAttendance()` uses s2's name (Rohit) and `s1.markAttendance()` uses s1's name (Aditya), in that call order. No parameter is needed because the method can read its own object's fields; each object keeps its own `name`, so it is not overwritten by the later assignment.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d12_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Why OOP (problems with loose variables)",
+      "question": "A teammate's code stores students as `name, age, rollNo, college, name2, age2, rollNo2, college2, ...` and has `void print(String name, int age, int rN, String college)`. Which benefit does a `Student` class bring, as discussed in the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "The program runs faster because classes are compiled to machine code",
+        "Fields of a class need no memory, unlike separate variables",
+        "All of a student's data is grouped in one object, so you pass one `Student` instead of four variables and create a new object instead of a new set of variables",
+        "A class lets you store several students' names in one String variable"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The lecture lists the problems: many independent variables for one student, passing all four to every function, and inventing a new set of variables for each new student. A class bundles the data (and behaviour) into one unit, and each `new Student()` gives a fresh set. It does not make objects free in memory or faster.",
+      "source": "notes p1",
+      "reference": null
+    },
+    {
+      "id": "d12_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "new & dynamic memory allocation",
+      "question": "For `Student s1 = new Student();` inside `main`, which description is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`Student s1` creates the object on the stack, and `new Student()` copies it to the heap",
+        "`new Student()` stores the object directly inside `s1`, just like `int x = 4` stores 4",
+        "`Student s1` declares a reference variable; `new Student()` allocates the object on the heap at run time and the reference to it is stored in `s1`",
+        "Both `s1` and the object are created when the class is compiled, before `main` runs"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`Student s1` only declares a reference variable (a stack local here). `new` performs dynamic memory allocation: at run time it creates the object on the heap and returns its reference, which is assigned to `s1`. Unlike `int x = 4`, `s1` does not hold the object itself, and nothing is allocated at compile time.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/objectcreation.html"
+    },
+    {
+      "id": "d12_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Fields (characteristics) & methods (behaviour)",
+      "question": "Using the lecture's `Student` class (fields `name`, `age`, ...), what does this print?",
+      "codeSnippet": "Student s1 = new Student();\nStudent s2 = new Student();\ns1.name = \"Aditya\";\ns1.age = 28;\ns2.name = \"Rohit\";\ns2.age = s1.age + 1;\ns1.age = 30;\nSystem.out.println(s1.name + \" \" + s1.age + \" \" + s2.name + \" \" + s2.age);",
+      "options": [
+        "Aditya 30 Rohit 31",
+        "Aditya 30 Rohit 29",
+        "Aditya 28 Rohit 29",
+        "Rohit 30 Rohit 29"
+      ],
+      "correctAnswer": 1,
+      "explanation": "s1 and s2 are two separate objects, each with its own `name` and `age`. `s2.age = s1.age + 1` copies the value 29 at that moment; changing `s1.age` to 30 later does not update s2. The '31' option wrongly assumes s2.age stays linked to s1.age.",
+      "source": "code: Demo.java; notes p4",
+      "reference": null
+    },
+    {
+      "id": "d12_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Fields (characteristics) & methods (behaviour)",
+      "question": "Your teammate keeps a separate helper `static void print(Student s)` in `Demo` that prints `s.name, s.age, ...`. Following the lecture's design, what is the better OOP place for this logic?",
+      "codeSnippet": null,
+      "options": [
+        "Move it into `Student` as `void print()` that prints its own fields, and call it as `s1.print()`",
+        "Keep it in `Demo` but give it four parameters (name, age, rollNo, college) instead of a `Student`",
+        "Move it into `Student` as `void print(Student s)` and always call it as `s1.print(s1)`",
+        "Turn `print` into a field of `Student` that stores the printed text"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Behaviour belongs in the class next to the data it uses, so `void print()` inside `Student` reads the calling object's own fields and is invoked as `s1.print()`, exactly like Demo.java. Passing the object to its own method (`s1.print(s1)`) is redundant, and going back to four loose parameters reintroduces the problem OOP solves.",
+      "source": "notes p6; code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d12_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "new & dynamic memory allocation",
+      "question": "A program reads a number `n` typed by the user and then creates `n` Student objects with `new Student()` in a loop. Why is this possible, according to the lecture's idea of dynamic memory allocation?",
+      "codeSnippet": null,
+      "options": [
+        "The compiler reserves heap space for the maximum possible n while compiling",
+        "Each object is stored inside the reference variable, so no extra memory is needed",
+        "Only one object is ever created; the loop renames it n times",
+        "Objects are created on the heap at run time, each time `new` executes, so the count can depend on input known only while running"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The lecture contrasts compile time (static) with run time (dynamic): `new` allocates object memory on the heap when that statement actually runs. So the number of objects can be decided by runtime input. The compiler does not pre-reserve heap space, and the reference variable stores only an address, not the object.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/objectcreation.html"
+    },
+    {
+      "id": "d12_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Reference variables",
+      "question": "The lecture shows `Student s1;` declared on its own and `new Student()` assigned later. Which line of this program fails to compile?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        Student s1 = new Student();   // line A\n        Student s3;                   // line B\n        s1.name = \"Aditya\";           // line C\n        s3.name = \"Rohit\";            // line D\n    }\n}\n\nclass Student {\n    String name;\n}",
+      "options": [
+        "Line B: a reference variable must be created together with `new`",
+        "None; it compiles but throws a NullPointerException at line D",
+        "None; it compiles and runs, creating the object for `s3` automatically",
+        "Line D: `s3` is a local variable that might not have been initialized"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Declaring `Student s3;` is legal (line B), but it creates no object, and a local variable must be definitely assigned before use, so line D is a compile-time error ('variable s3 might not have been initialized'). A NullPointerException would happen only if s3 had been explicitly set to null; Java never creates an object automatically without `new`.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/objectcreation.html"
+    },
+    {
+      "id": "d12_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Reference variables",
+      "question": "After these lines run, how many Student objects have been created, and which object does `c` refer to?",
+      "codeSnippet": "Student a = new Student();\nStudent b = new Student();\nStudent c = a;\na = new Student();",
+      "options": [
+        "3 objects; `c` still refers to the first object created",
+        "4 objects, because `c = a` copies the object; `c` refers to that copy",
+        "3 objects; `c` now refers to the third object, because it follows `a`",
+        "2 objects; `a = new Student()` reuses the first object's memory"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Only `new` creates objects, and it runs three times. `c = a` copies the reference (address) stored in `a`, so `c` points to the first object; reassigning `a` later changes only `a`, not `c`. Assignment never copies the object itself, and a reference variable does not 'follow' another one.",
+      "source": "notes p3-p4",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/javaOO/objectcreation.html"
+    }
+  ]
+}

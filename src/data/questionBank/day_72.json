@@ -1,0 +1,207 @@
+{
+  "day": 72,
+  "title": "Spring Lecture #15: Spring MVC Architecture",
+  "sources": [
+    "Notes.pdf (46 pages)",
+    "Excalidraw-Notes.pdf (4 pages)",
+    "code/SpringMVCDemo/pom.xml",
+    "code/SpringMVCDemo/.../Main.java",
+    "code/SpringMVCDemo/.../config/WebConfig.java",
+    "code/SpringMVCDemo/.../controller/StudentController.java",
+    "code/SpringMVCDemo/.../repository/StudentRepository.java",
+    "code/JSPDemo/.../Main.java",
+    "code/JSPDemo/.../config/WebConfig.java",
+    "code/JSPDemo/.../controller/HelloController.java",
+    "code/JSPDemo/src/main/webapp/WEB-INF/views/home.jsp"
+  ],
+  "topics": [
+    "DispatcherServlet & HandlerMapping",
+    "@Controller vs @RestController",
+    "Manual embedded Tomcat setup",
+    "HttpMessageConverter & Jackson",
+    "ViewResolver & JSP",
+    "Spring Boot auto-configuration of MVC"
+  ],
+  "questions": [
+    {
+      "id": "d72_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "DispatcherServlet & HandlerMapping",
+      "question": "`GET /students/1` reaches `DispatcherServlet`. Which Spring MVC component decides that `StudentController.getStudent()` is the method that should handle it?",
+      "codeSnippet": null,
+      "options": [
+        "`HandlerAdapter`",
+        "`ViewResolver`",
+        "`HandlerMapping`",
+        "`HttpMessageConverter`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`HandlerMapping` uses the mapping table built at startup from `@RequestMapping`/`@GetMapping` annotations (path + HTTP method) to find the controller method. `HandlerAdapter` is the tempting answer, but it only invokes the method that `HandlerMapping` already selected, preparing its arguments.",
+      "source": "notes p4-p8; Excalidraw p2-p3",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html"
+    },
+    {
+      "id": "d72_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@Controller vs @RestController",
+      "question": "According to the lecture, what is `@RestController` a shortcut for?",
+      "codeSnippet": null,
+      "options": [
+        "`@Controller` + `@RequestMapping`",
+        "`@Controller` + `@ResponseBody`",
+        "`@Component` + `@EnableWebMvc`",
+        "`@Service` + `@RequestBody`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@RestController` combines `@Controller` with `@ResponseBody`, so every handler's return value is written to the HTTP response body (converted to JSON) instead of being treated as a view name. `@RequestMapping` is still added separately to set the base URL, as in `@RequestMapping(\"/students\")`.",
+      "source": "notes p21, p34-p36",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping.html"
+    },
+    {
+      "id": "d72_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Manual embedded Tomcat setup",
+      "question": "In the manual (non-Boot) `Main.java`, a student deletes the last line `tomcat.getServer().await();`. The console prints \"Tomcat started on port 8080\" and then the program ends before Postman can call anything. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`tomcat.start()` only works if `await()` is called first",
+        "Without `await()`, Tomcat never registers the `DispatcherServlet`",
+        "Port 8080 is released as soon as the success message is printed",
+        "`await()` is what keeps the main thread waiting; without it `main()` can finish and the application stops"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes explain that `tomcat.start()` starts the server and `await()` keeps it running; without it the `main()` method may finish and the application stops immediately. The servlet was already registered and mapped before `start()`, so registration is not the issue.",
+      "source": "notes p25-p31; code: SpringMVCDemo Main.java",
+      "reference": null
+    },
+    {
+      "id": "d72_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "DispatcherServlet & HandlerMapping",
+      "question": "With this controller, Postman sends `POST /students/5` with a JSON body. What response does it get?",
+      "codeSnippet": "@RestController\n@RequestMapping(\"/students\")\npublic class StudentController {\n    @PostMapping\n    public Student createStudent(@RequestBody Student student) { ... }\n\n    @GetMapping(\"/{id}\")\n    public Student getStudent(@PathVariable Integer id) { ... }\n\n    @GetMapping\n    public Collection<Student> getAllStudents() { ... }\n}",
+      "options": [
+        "405 Method Not Allowed: the path matches `/students/{id}`, but that mapping only accepts GET",
+        "The request goes to `createStudent()` and the `5` is ignored",
+        "The request goes to `getStudent(5)` because the path pattern matches",
+        "200 OK with an empty body, because no method returned anything"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`HandlerMapping` matches on both URL pattern and HTTP method. `/students/5` only matches `@GetMapping(\"/{id}\")`, and `@PostMapping` is mapped to `/students` exactly, so no handler accepts POST on this path, and Spring MVC answers 405. It never calls a GET handler for a POST, which is why the notes stress that the method changes the meaning of the same URL.",
+      "source": "notes p5-p7; code: StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping.html"
+    },
+    {
+      "id": "d72_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "HttpMessageConverter & Jackson",
+      "question": "In the lecture's `SpringMVCDemo` code (not the notes' version), Postman sends `POST /students` with `{\"name\":\"Asha\",\"email\":\"a@x.com\"}`, then `POST /students` with `{\"name\":\"Ravi\",\"email\":\"r@x.com\"}`, then `GET /students`. What does the GET return?",
+      "codeSnippet": "@Repository\npublic class StudentRepository {\n    private Map<Long, Student> studentDB;\n\n    public StudentRepository() {\n        studentDB = new HashMap<>();\n    }\n\n    public Student save(Student studentReq) {\n        studentDB.put(studentReq.getId(), studentReq);\n        return studentReq;\n    }\n\n    public List<Student> findAll() {\n        return new ArrayList<>(studentDB.values());\n    }\n}\n\n// Student: Long id; String name; String email; (getters/setters)",
+      "options": [
+        "Two students, Asha with id 1 and Ravi with id 2",
+        "A 500 error, because `HashMap` does not allow a null key",
+        "One student: Ravi, with `\"id\": null`",
+        "Two students, both with `\"id\": null`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Neither JSON body has an id, so Jackson leaves `id` null and both saves use the key `null`; `HashMap` allows one null key, so Ravi overwrites Asha. The repository in the notes assigns ids from a `currentId` counter, which is where \"ids 1 and 2\" comes from, but the lecture code does not. Jackson writes the null id back as `\"id\": null`.",
+      "source": "code: SpringMVCDemo StudentRepository.java, StudentController.java; notes p16",
+      "reference": null
+    },
+    {
+      "id": "d72_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "@Controller vs @RestController",
+      "question": "In `SpringMVCDemo`, every handler method also has `@ResponseBody` (e.g. `@GetMapping(\"/{id}\") @ResponseBody public ResponseEntity<Student> getStudent(...)`). A teammate changes the class annotation from `@RestController` to `@Controller`. What happens to `GET /students/1`?",
+      "codeSnippet": null,
+      "options": [
+        "It fails, because `@Controller` methods must return a view name",
+        "It still returns the student as JSON, because each method's own `@ResponseBody` writes the return value to the response body",
+        "It returns the text `students/1`, which is treated as a view name",
+        "The app fails at startup, because `@ResponseBody` is only allowed inside `@RestController`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@RestController` just applies `@ResponseBody` to every method; with `@Controller` plus method-level `@ResponseBody`, the result is the same and the return value is still converted to JSON. Without `@ResponseBody` anywhere, a `@Controller` method's return value is treated as view-related, which is the JSP style the lecture shows with `return \"home\";`.",
+      "source": "code: SpringMVCDemo StudentController.java; notes p21, p34-p36",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping.html"
+    },
+    {
+      "id": "d72_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "ViewResolver & JSP",
+      "question": "Why does the JSP demo keep `home.jsp` inside `src/main/webapp/WEB-INF/views/` rather than directly under `webapp/`?",
+      "codeSnippet": null,
+      "options": [
+        "Because Jasper can only compile JSP files whose path contains `views`",
+        "Because `WEB-INF` makes the JSP load faster by caching it in memory",
+        "Because `@EnableWebMvc` deletes any JSP outside `WEB-INF` at startup",
+        "Because files under `WEB-INF` cannot be requested directly by the browser, so the request must go through the controller, which prepares the Model first"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes state JSPs are kept in `WEB-INF` so users cannot access them directly; the controller fills the Model (e.g. `message`) and the ViewResolver forwards to the page internally. The `views` folder name is just a convention matched by the prefix `/WEB-INF/views/`, not a Jasper requirement.",
+      "source": "notes p37-p38; code: JSPDemo WebConfig.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/viewresolver.html"
+    },
+    {
+      "id": "d72_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "HttpMessageConverter & Jackson",
+      "question": "A student builds the manual `SpringMVCDemo` but leaves out the `jackson-databind` dependency (only `spring-webmvc` and `tomcat-embed-core`). The app starts and `GET /students/1` reaches `getStudent()`, which returns `ResponseEntity.ok(student)`. What goes wrong?",
+      "codeSnippet": null,
+      "options": [
+        "The request fails because no `HttpMessageConverter` is available to write a `Student` as JSON",
+        "Tomcat refuses to start because Spring MVC requires Jackson at compile time",
+        "The response body is the result of `student.toString()`",
+        "`HandlerMapping` cannot find the method because mappings are stored as JSON"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Spring MVC converts return values through `HttpMessageConverter`s, and JSON conversion is provided by Jackson; without it there is no converter for a `Student` object, so the response cannot be written and the request fails with an error. Spring Boot's starter would include Jackson automatically, which is why the manual pom adds it explicitly. Spring never falls back to `toString()` for objects.",
+      "source": "notes p4, p10-p14, p32-p34; code: SpringMVCDemo pom.xml",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html"
+    },
+    {
+      "id": "d72_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "ViewResolver & JSP",
+      "question": "The JSP demo's form submits `POST /greet` with `name=Rahul`. What does the browser end up showing?",
+      "codeSnippet": "// WebConfig\nresolver.setPrefix(\"/WEB-INF/views/\");\nresolver.setSuffix(\".jsp\");\n\n// HelloController (@Controller)\n@PostMapping(\"/greet\")\npublic String greetUser(@RequestParam(\"name\") String name, Model model) {\n    model.addAttribute(\"message\", \"Hello \" + name);\n    return \"home\";\n}\n\n<!-- home.jsp -->\n<p>${message}</p>",
+      "options": [
+        "The plain text `home`, because the method returns a String",
+        "A 404, because there is no file called `/greet.jsp`",
+        "A redirect to `/home`, where the message is lost",
+        "The page rendered from `/WEB-INF/views/home.jsp` with `<p>Hello Rahul</p>`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "In a `@Controller` without `@ResponseBody`, the String is a logical view name: the ViewResolver turns `home` into `/WEB-INF/views/home.jsp`, and the JSP reads `${message}` from the Model, giving \"Hello Rahul\". Printing `home` as text is what a `@RestController` would do; the view is resolved by the returned name, not by the URL `/greet`.",
+      "source": "code: JSPDemo HelloController.java, WebConfig.java, home.jsp; notes p34-p45",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/viewresolver.html"
+    },
+    {
+      "id": "d72_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "DispatcherServlet & HandlerMapping",
+      "question": "In the manual setup, the code creates `new DispatcherServlet(springContext)` after registering `WebConfig` with an `AnnotationConfigWebApplicationContext`. Why must the Spring context be passed to the `DispatcherServlet`?",
+      "codeSnippet": null,
+      "options": [
+        "Because Tomcat refuses to register any servlet that has no constructor argument",
+        "Because the context tells the `DispatcherServlet` which port to listen on",
+        "Because the `DispatcherServlet` needs the IoC container to find controllers, their mappings, and the MVC infrastructure such as message converters",
+        "Because the context compiles the JSP files before the first request"
+      ],
+      "correctAnswer": 2,
+      "explanation": "After Tomcat hands it a request, `DispatcherServlet` must know which controller beans exist, which URL maps to which method, and which converters and resolvers are available; all of this lives in the Spring container configured by `WebConfig` (`@EnableWebMvc` + `@ComponentScan`). The port belongs to Tomcat's connector (`tomcat.setPort(8080)`), and JSP compilation is Jasper's job.",
+      "source": "notes p29-p31; code: SpringMVCDemo Main.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html"
+    }
+  ]
+}

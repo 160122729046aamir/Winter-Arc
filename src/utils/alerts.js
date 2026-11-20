@@ -86,6 +86,10 @@ export const showError = (title, text = '') => showAlert({ title, text, icon: 'e
 
 /** Non-blocking toast in the top-right corner. */
 export function toast(title, { icon = 'success', text = '', timer } = {}) {
+  // SweetAlert shows one popup at a time: never let a toast replace an open dialog
+  // (that would silently dismiss a pending confirm or a success message).
+  const open = Swal.isVisible() ? Swal.getPopup() : null;
+  if (open && !open.classList.contains('swal2-toast')) return Promise.resolve(null);
   return toastBase.fire({ title, text, icon, ...(timer ? { timer } : {}) });
 }
 

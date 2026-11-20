@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { showError, showSuccess, toast } from '../utils/alerts';
 import { INITIAL_ROADMAP_DAYS } from '../data/roadmapData';
@@ -6,289 +6,299 @@ import { PLAYLISTS_DATA } from '../data/playlistsData';
 import { BADGES_CATALOG } from '../data/badgesData';
 import { QUESTION_BANK_BY_DAY } from '../data/questionBankData';
 import {
-  calculateCurrentChallengeDay,
   getTodayDateString,
-  getTomorrowDateString,
   addDaysToDate,
   addStudyDays,
   getDaysDifference,
   getStudyDaysDifference,
-  formatDateWithDay
+  isStudyDate,
+  setStudyWeekdays
 } from '../utils/dateUtils';
 import {
-  XP_VALUES,
   calculateLevel,
   evaluateBadges,
-  calculateConsistencyScore
+  calculateConsistencyScore,
+  computeXP
 } from '../utils/gamificationUtils';
 import {
   loadStoredState,
   saveStateToStorage,
   exportStateAsJSON,
   parseAndValidateImportJSON,
-  FIXED_CHALLENGE_START_DATE
+  hydrateState,
+  FIXED_CHALLENGE_START_DATE,
+  SCHEMA_VERSION
 } from '../utils/storageUtils';
 
 const PlannerContext = createContext();
 
-// Default initial state
+const DEFAULT_STUDY_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// ---------------------------------------------------------------------------
+// Initial state
+// ---------------------------------------------------------------------------
 const buildInitialState = () => {
+  setStudyWeekdays(DEFAULT_STUDY_DAYS);
   const startDate = FIXED_CHALLENGE_START_DATE;
   return {
+    schemaVersion: SCHEMA_VERSION,
     days: INITIAL_ROADMAP_DAYS.map((day, idx) => ({
       ...day,
       date: addStudyDays(startDate, idx, true),
-      checkedVideos: {}, // { [videoId]: true }
+      checkedVideos: {}, // { [videoId]: true }  (mirror of watchedVideosGlobal for this day's videos)
       checkedExercises: {}, // { [index]: true }
       checkedRevision: {}, // { [index]: true }
-      customTasks: [], // [ { id, title, completed } ]
+      customTasks: [], // [ { id, title, completed, originalVideoId? } ]
       completed: false,
       completedAt: null,
       loggedStudyMinutes: 0,
-      notes: ''
+      notes: '',
+      skipped: false, // passed over by "Move to Today" — shows up in Missed-Day Recovery
+      recovered: false // pending tasks were transferred to another day
     })),
     playlists: PLAYLISTS_DATA,
-    watchedVideosGlobal: {}, // { [videoId]: { watched: boolean, watchedAt: date } }
-    studySessions: [], // [ { id, timestamp, durationMinutes, dayNumber, note, type } ]
+    watchedVideosGlobal: {}, // { [videoId]: { watched, watchedAt } } — single source of truth
+    studySessions: [], // [ { id, timestamp, date, durationMinutes, dayNumber, note, type } ]
     streak: {
       currentStreak: 0,
       longestStreak: 0,
       lastActiveDate: null,
       activeDatesList: []
     },
-    // Journey Pause / Resume State
-    journeyStatus: 'active', // 'active' | 'paused' | 'completed'
-    pausedAt: null, // ISO string when paused
-    frozenChallengeDay: null, // Current day frozen when paused
-    totalPausedDays: 0, // Cumulative count of paused days
-    pauseHistory: [], // [ { id, pauseDate, resumeDate, durationDays, reason } ]
-    // Daily Question Bank Quiz State
-    quizState: {}, // { [dayNumber]: { answers: { [qId]: { selectedOption, isCorrect, submittedAt } }, bookmarked: [qId], markedForReview: [qId], status: 'not_started' | 'in_progress' | 'completed', score: 0, completedAt: null } }
+    restDates: [], // dates that never break a streak (skipped days, paused days)
+    journeyStatus: 'active', // 'active' | 'paused'
+    pausedAt: null,
+    frozenChallengeDay: null,
+    activePauseReason: null,
+    totalPausedDays: 0, // study days spent paused
+    pauseHistory: [],
+    quizState: {},
     totalSkippedDays: 0,
-    xp: 0,
     unlockedBadges: [],
-    recentCelebration: null,
     settings: {
-      startDate: startDate,
-      challengeDuration: 97,
+      startDate,
+      challengeDuration: INITIAL_ROADMAP_DAYS.length,
       dailyTargetMinutes: 120,
-      preferredStudyDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      recoveryModeEnabled: true,
+      preferredStudyDays: DEFAULT_STUDY_DAYS,
+      autoRescheduleMissedDays: true,
       isQuizMandatoryForDayCompletion: false,
       userName: 'Backend Engineer'
     }
   };
 };
 
-export function PlannerProvider({ children }) {
-  const [state, setState] = useState(() => {
-    const defaultState = buildInitialState();
-    return loadStoredState(defaultState);
-  });
+// ---------------------------------------------------------------------------
+// Pure helpers (operate on plain state; safe inside setState updaters)
+// ---------------------------------------------------------------------------
+const questionCountForDay = (dayNumber) => QUESTION_BANK_BY_DAY[dayNumber]?.totalQuestions || 0;
 
-  // Save state on changes
+export const getDayTaskProgress = (day) => {
+  const videos = day.videos || [];
+  const exercises = day.exercises || [];
+  const revision = day.revision || [];
+  const custom = day.customTasks || [];
+  const total = videos.length + exercises.length + revision.length + custom.length;
+  const done =
+    videos.filter((v) => day.checkedVideos?.[v.id]).length +
+    exercises.filter((_, i) => day.checkedExercises?.[i]).length +
+    revision.filter((_, i) => day.checkedRevision?.[i]).length +
+    custom.filter((t) => t.completed).length;
+  return { total, done };
+};
+
+const isDayDone = (day, dayQuiz, quizMandatory) => {
+  const { total, done } = getDayTaskProgress(day);
+  const tasksDone = total > 0 && done >= total;
+  // A day without a quiz can't be blocked by the "quiz required" setting
+  if (!quizMandatory || questionCountForDay(day.day) === 0) return tasksDone;
+  return tasksDone && dayQuiz?.status === 'completed';
+};
+
+const withCompletion = (day, state, today) => {
+  const done = isDayDone(day, state.quizState?.[day.day], state.settings.isQuizMandatoryForDayCompletion);
+  return {
+    ...day,
+    completed: done,
+    completedAt: done ? (day.completedAt || today) : null,
+    skipped: done ? false : day.skipped
+  };
+};
+
+/** Set a video's watched flag everywhere it appears (global map + every day that lists it). */
+const applyVideoWatched = (state, videoId, watched, today) => {
+  const watchedVideosGlobal = {
+    ...state.watchedVideosGlobal,
+    [videoId]: { watched, watchedAt: watched ? today : null }
+  };
+  const next = { ...state, watchedVideosGlobal };
+  next.days = state.days.map((d) => {
+    const hasVideo = (d.videos || []).some((v) => v.id === videoId);
+    const hasMovedTask = (d.customTasks || []).some((t) => t.originalVideoId === videoId);
+    if (!hasVideo && !hasMovedTask) return d;
+    const updated = {
+      ...d,
+      checkedVideos: hasVideo ? { ...(d.checkedVideos || {}), [videoId]: watched } : d.checkedVideos,
+      customTasks: hasMovedTask
+        ? d.customTasks.map((t) => (t.originalVideoId === videoId ? { ...t, completed: watched } : t))
+        : d.customTasks
+    };
+    return withCompletion(updated, next, today);
+  });
+  return next;
+};
+
+const updateDay = (state, dayNumber, fn, today) => ({
+  ...state,
+  days: state.days.map((d) => (d.day === dayNumber ? withCompletion(fn(d), state, today) : d))
+});
+
+/** Is every date strictly between `fromDate` and `toDate` a rest/skip/pause day? */
+const isGapNeutral = (fromDate, toDate, restSet, pausedAt) => {
+  let cur = addDaysToDate(fromDate, 1);
+  let guard = 0;
+  while (cur < toDate && guard++ < 400) {
+    const neutral = !isStudyDate(cur) || restSet.has(cur) || (pausedAt && cur >= pausedAt);
+    if (!neutral) return false;
+    cur = addDaysToDate(cur, 1);
+  }
+  return true;
+};
+
+const recordActivity = (state, today) => {
+  if (state.journeyStatus === 'paused') return state.streak;
+  const s = state.streak || {};
+  if (s.lastActiveDate === today) return s;
+  const restSet = new Set(state.restDates || []);
+  const continues = s.lastActiveDate && isGapNeutral(s.lastActiveDate, today, restSet, null);
+  const currentStreak = continues ? (s.currentStreak || 0) + 1 : 1;
+  const activeDates = new Set(s.activeDatesList || []);
+  activeDates.add(today);
+  return {
+    currentStreak,
+    longestStreak: Math.max(currentStreak, s.longestStreak || 0),
+    lastActiveDate: today,
+    activeDatesList: Array.from(activeDates)
+  };
+};
+
+/** Lay out days >= fromDayNumber consecutively on study days starting at anchorDate. */
+const layOutFrom = (days, fromDayNumber, anchorDate) =>
+  days.map((d) =>
+    d.day >= fromDayNumber
+      ? { ...d, date: addStudyDays(anchorDate, d.day - fromDayNumber, true) }
+      : d
+  );
+
+/** Today's challenge day: the first day scheduled today or later. */
+const deriveCurrentDay = (state, today) => {
+  if (state.journeyStatus === 'paused' && state.frozenChallengeDay) return state.frozenChallengeDay;
+  const days = state.days || [];
+  const upcoming = days.find((d) => d.date && d.date >= today);
+  return upcoming ? upcoming.day : (days[days.length - 1]?.day || 1);
+};
+
+const fireConfetti = () => {
+  try {
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ec4899']
+    });
+  } catch {
+    // canvas unavailable
+  }
+};
+
+// ---------------------------------------------------------------------------
+// Provider
+// ---------------------------------------------------------------------------
+export function PlannerProvider({ children }) {
+  const [state, setState] = useState(() => loadStoredState(buildInitialState()));
+  const [today, setToday] = useState(getTodayDateString);
+
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const bulkReplaceRef = useRef(false);
+
+  // Keep the study-day calendar in sync with settings
+  setStudyWeekdays(state.settings.preferredStudyDays || DEFAULT_STUDY_DAYS);
+
+  // Persist
   useEffect(() => {
     saveStateToStorage(state);
   }, [state]);
 
-  // Automatic rollover: If an uncompleted day was scheduled before today, roll it over to today automatically
-  // All days reschedule strictly line-wise excluding Sundays
+  // Notice midnight / returning to an open tab on a new day
   useEffect(() => {
-    const today = getTodayDateString();
-    if (state.journeyStatus === 'paused') return;
-
-    // Find the earliest unfinished day
-    const firstUnfinished = (state.days || []).find(d => !d.completed);
-    if (!firstUnfinished || !firstUnfinished.date) return;
-
-    // Check if its scheduled date is earlier than today in study days
-    const studyDaysBehind = getStudyDaysDifference(firstUnfinished.date, today, true);
-    if (studyDaysBehind > 0) {
-      setState(prev => {
-        // Shift firstUnfinished and all subsequent days forward so firstUnfinished aligns with today
-        // and subsequent days continue line-wise without Sunday gaps
-        const updatedDays = (prev.days || []).map(d => {
-          if (d.day >= firstUnfinished.day) {
-            const studyOffset = d.day - firstUnfinished.day;
-            return {
-              ...d,
-              date: addStudyDays(today, studyOffset, true),
-              notes: d.day === firstUnfinished.day
-                ? (d.notes ? d.notes + '\n' : '') + `[Schedule Rollover: Rescheduled to ${today} because day was skipped]`
-                : d.notes
-            };
-          }
-          return d;
-        });
-
-        const newTotalPaused = (prev.totalPausedDays || 0) + studyDaysBehind;
-        const newTotalSkipped = (prev.totalSkippedDays || 0) + studyDaysBehind;
-
-        return {
-          ...prev,
-          totalPausedDays: newTotalPaused,
-          totalSkippedDays: newTotalSkipped,
-          days: updatedDays
-        };
-      });
-    }
-  }, [state.days, state.journeyStatus]);
-
-  // Current challenge day based on start date, paused days, and paused status (excluding Sundays)
-  const currentChallengeDay = useMemo(() => {
-    return calculateCurrentChallengeDay(
-      state.settings.startDate,
-      state.settings.challengeDuration || 97,
-      state.totalPausedDays || 0,
-      state.journeyStatus === 'paused',
-      state.frozenChallengeDay,
-      true // excludeSundays
-    );
-  }, [
-    state.settings.startDate,
-    state.settings.challengeDuration,
-    state.totalPausedDays,
-    state.journeyStatus,
-    state.frozenChallengeDay
-  ]);
-
-  // Streak update helper (only updates when journey is active)
-  const updateStreakOnActivity = useCallback((currentStreakState) => {
-    if (state.journeyStatus === 'paused') {
-      return currentStreakState; // Do not alter streak while journey is paused
-    }
-
-    const today = getTodayDateString();
-    const lastActive = currentStreakState.lastActiveDate;
-    const activeDates = new Set(currentStreakState.activeDatesList || []);
-
-    if (lastActive === today) {
-      return currentStreakState; // already logged activity today
-    }
-
-    activeDates.add(today);
-    let newStreak = 1;
-
-    if (lastActive) {
-      const diff = getDaysDifference(lastActive, today);
-      if (diff === 1) {
-        newStreak = (currentStreakState.currentStreak || 0) + 1;
-      } else if (diff === 0) {
-        newStreak = currentStreakState.currentStreak || 1;
-      } else {
-        newStreak = 1; // broken streak
-      }
-    }
-
-    const longestStreak = Math.max(newStreak, currentStreakState.longestStreak || 0);
-
-    return {
-      currentStreak: newStreak,
-      longestStreak,
-      lastActiveDate: today,
-      activeDatesList: Array.from(activeDates)
+    const check = () => {
+      const t = getTodayDateString();
+      setToday((prev) => (prev === t ? prev : t));
     };
-  }, [state.journeyStatus]);
+    const id = setInterval(check, 60 * 1000);
+    document.addEventListener('visibilitychange', check);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', check);
+    };
+  }, []);
 
-  // Trigger confetti burst
+  // Auto-reschedule: if the earliest unfinished day is scheduled in the past,
+  // move it (and everything after it) so it starts today. Runs at most once per day.
+  useEffect(() => {
+    if (state.journeyStatus === 'paused') return;
+    if (state.settings.autoRescheduleMissedDays === false) return;
+    const firstOverdue = state.days.find((d) => !d.completed && !d.skipped && !d.recovered);
+    if (!firstOverdue || !firstOverdue.date || firstOverdue.date >= today) return;
+    const behind = getStudyDaysDifference(firstOverdue.date, today, true);
+    setState((prev) => ({
+      ...prev,
+      days: layOutFrom(prev.days, firstOverdue.day, today),
+      totalSkippedDays: (prev.totalSkippedDays || 0) + Math.max(0, behind)
+    }));
+  }, [state.days, state.journeyStatus, state.settings.autoRescheduleMissedDays, today]);
+
+  const currentChallengeDay = useMemo(() => deriveCurrentDay(state, today), [state, today]);
+
   const triggerCelebration = useCallback((title, message) => {
     if (title) toast(title, { text: message || '', icon: 'success' });
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ec4899']
-      });
-    } catch {
-      // ignore in environments without canvas
-    }
+    fireConfetti();
   }, []);
 
-  // Check if day qualifies as completed
-  const checkDayCompletion = useCallback((day, dayQuizState, isQuizMandatory) => {
-    const totalVideos = day.videos?.length || 0;
-    const watchedVideos = Object.keys(day.checkedVideos || {}).filter(k => day.checkedVideos[k]).length;
-    const totalExercises = day.exercises?.length || 0;
-    const checkedExercises = Object.keys(day.checkedExercises || {}).filter(k => day.checkedExercises[k]).length;
-    const totalRevision = day.revision?.length || 0;
-    const checkedRevision = Object.keys(day.checkedRevision || {}).filter(k => day.checkedRevision[k]).length;
-    const totalCustom = day.customTasks?.length || 0;
-    const checkedCustom = (day.customTasks || []).filter(t => t.completed).length;
-
-    const totalTasks = totalVideos + totalExercises + totalRevision + totalCustom;
-    const completedTasks = watchedVideos + checkedExercises + checkedRevision + checkedCustom;
-
-    const areTasksDone = totalTasks > 0 && completedTasks >= totalTasks;
-
-    if (isQuizMandatory) {
-      const isQuizDone = dayQuizState?.status === 'completed';
-      return areTasksDone && isQuizDone;
-    }
-
-    return areTasksDone;
-  }, []);
-
-  // PAUSE JOURNEY
+  // ---------------- Journey: pause / resume ----------------
   const pauseJourney = useCallback((reason = 'Personal commitments') => {
-    setState(prev => {
+    setState((prev) => {
       if (prev.journeyStatus === 'paused') return prev;
-      const today = getTodayDateString();
-      const currentDay = calculateCurrentChallengeDay(
-        prev.settings.startDate,
-        prev.settings.challengeDuration || 97,
-        prev.totalPausedDays || 0,
-        false,
-        null,
-        true
-      );
-
+      const t = getTodayDateString();
       return {
         ...prev,
         journeyStatus: 'paused',
-        pausedAt: today,
-        frozenChallengeDay: currentDay,
+        pausedAt: t,
+        frozenChallengeDay: deriveCurrentDay(prev, t),
         activePauseReason: reason
       };
     });
   }, []);
 
-  // RESUME JOURNEY
   const resumeJourney = useCallback(() => {
-    setState(prev => {
+    setState((prev) => {
       if (prev.journeyStatus !== 'paused') return prev;
-      const today = getTodayDateString();
-      const pauseStart = prev.pausedAt || today;
-      const daysInPause = Math.max(0, getDaysDifference(pauseStart, today));
+      const t = getTodayDateString();
+      const pauseStart = prev.pausedAt || t;
+      const calendarDays = Math.max(0, getDaysDifference(pauseStart, t));
+      const studyDaysPaused = Math.max(0, getStudyDaysDifference(pauseStart, t, true));
 
-      const newTotalPaused = (prev.totalPausedDays || 0) + daysInPause;
-      const newHistoryItem = {
-        id: 'pause_' + Date.now(),
-        pauseDate: pauseStart,
-        resumeDate: today,
-        durationDays: daysInPause,
-        reason: prev.activePauseReason || 'Personal break'
-      };
+      // Every date from the pause start up to yesterday is neutral for the streak
+      const rest = new Set(prev.restDates || []);
+      for (let i = 0; i < calendarDays; i++) rest.add(addDaysToDate(pauseStart, i));
 
-      // Shift remaining scheduled day dates forward by daysInPause if paused >= 1 day
-      let updatedDays = prev.days;
-      if (daysInPause > 0 && prev.frozenChallengeDay) {
-        updatedDays = prev.days.map(d => {
-          if (d.day >= prev.frozenChallengeDay) {
-            return {
-              ...d,
-              date: addDaysToDate(d.date, daysInPause)
-            };
-          }
-          return d;
-        });
+      // Shift the remaining curriculum so the first unfinished day (from where we froze) is today
+      let days = prev.days;
+      if (calendarDays > 0) {
+        const fromDay = prev.frozenChallengeDay || 1;
+        const firstOpen = prev.days.find((d) => d.day >= fromDay && !d.completed);
+        if (firstOpen && firstOpen.date < t) days = layOutFrom(prev.days, firstOpen.day, t);
       }
-
-      // Preserve streak by setting lastActiveDate to yesterday so resuming today continues streak without penalty
-      const preservedStreak = {
-        ...prev.streak,
-        lastActiveDate: addDaysToDate(today, -1)
-      };
 
       return {
         ...prev,
@@ -296,752 +306,478 @@ export function PlannerProvider({ children }) {
         pausedAt: null,
         frozenChallengeDay: null,
         activePauseReason: null,
-        totalPausedDays: newTotalPaused,
-        pauseHistory: [newHistoryItem, ...(prev.pauseHistory || [])],
-        days: updatedDays,
-        streak: preservedStreak
+        totalPausedDays: (prev.totalPausedDays || 0) + studyDaysPaused,
+        restDates: Array.from(rest),
+        pauseHistory: [
+          {
+            id: 'pause_' + Date.now(),
+            pauseDate: pauseStart,
+            resumeDate: t,
+            durationDays: calendarDays,
+            reason: prev.activePauseReason || 'Personal break'
+          },
+          ...(prev.pauseHistory || [])
+        ],
+        days
       };
     });
   }, []);
 
-  // Toggle Video Watched in a Day
-  const toggleVideoWatched = useCallback((dayNumber, videoId) => {
-    setState(prev => {
-      const today = getTodayDateString();
-      const dayQuiz = prev.quizState?.[dayNumber];
-      const isQuizMandatory = prev.settings.isQuizMandatoryForDayCompletion;
-
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        const currentChecked = d.checkedVideos?.[videoId] || false;
-        const newChecked = !currentChecked;
-        const updatedCheckedVideos = {
-          ...(d.checkedVideos || {}),
-          [videoId]: newChecked
-        };
-        const updatedDay = {
-          ...d,
-          checkedVideos: updatedCheckedVideos
-        };
-        const nowCompleted = checkDayCompletion(updatedDay, dayQuiz, isQuizMandatory);
-        return {
-          ...updatedDay,
-          completed: nowCompleted,
-          completedAt: nowCompleted ? (d.completedAt || today) : null
-        };
-      });
-
-      const wasWatched = prev.watchedVideosGlobal?.[videoId]?.watched;
-      const newWatched = !wasWatched;
-      const updatedWatchedGlobal = {
-        ...prev.watchedVideosGlobal,
-        [videoId]: {
-          watched: newWatched,
-          watchedAt: newWatched ? today : null
-        }
-      };
-
-      const xpChange = newWatched ? XP_VALUES.WATCH_VIDEO : -XP_VALUES.WATCH_VIDEO;
-      const newXP = Math.max(0, (prev.xp || 0) + xpChange);
-      const updatedStreak = newWatched ? updateStreakOnActivity(prev.streak) : prev.streak;
-
-      if (newWatched) {
-        triggerCelebration();
-      }
-
-      return {
-        ...prev,
-        days: updatedDays,
-        watchedVideosGlobal: updatedWatchedGlobal,
-        xp: newXP,
-        streak: updatedStreak
-      };
+  // ---------------- Tasks ----------------
+  const toggleVideoWatched = useCallback((_dayNumber, videoId) => {
+    const willWatch = !stateRef.current.watchedVideosGlobal?.[videoId]?.watched;
+    setState((prev) => {
+      const t = getTodayDateString();
+      const watched = !prev.watchedVideosGlobal?.[videoId]?.watched;
+      const next = applyVideoWatched(prev, videoId, watched, t);
+      return watched ? { ...next, streak: recordActivity(prev, t) } : next;
     });
-  }, [checkDayCompletion, updateStreakOnActivity, triggerCelebration]);
+    if (willWatch) fireConfetti();
+  }, []);
 
-  // Toggle Exercise
   const toggleExercise = useCallback((dayNumber, exerciseIdx) => {
-    setState(prev => {
-      const today = getTodayDateString();
-      let earnedXP = false;
-      const dayQuiz = prev.quizState?.[dayNumber];
-      const isQuizMandatory = prev.settings.isQuizMandatoryForDayCompletion;
-
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        const currentVal = d.checkedExercises?.[exerciseIdx] || false;
-        const newVal = !currentVal;
-        if (newVal) earnedXP = true;
-        const updatedExercises = {
-          ...(d.checkedExercises || {}),
-          [exerciseIdx]: newVal
-        };
-        const updatedDay = {
-          ...d,
-          checkedExercises: updatedExercises
-        };
-        const nowCompleted = checkDayCompletion(updatedDay, dayQuiz, isQuizMandatory);
-        return {
-          ...updatedDay,
-          completed: nowCompleted,
-          completedAt: nowCompleted ? (d.completedAt || today) : null
-        };
-      });
-
-      const xpDelta = earnedXP ? XP_VALUES.COMPLETE_EXERCISE : -XP_VALUES.COMPLETE_EXERCISE;
-      const newXP = Math.max(0, (prev.xp || 0) + xpDelta);
-      const updatedStreak = earnedXP ? updateStreakOnActivity(prev.streak) : prev.streak;
-
-      return {
-        ...prev,
-        days: updatedDays,
-        xp: newXP,
-        streak: updatedStreak
-      };
+    setState((prev) => {
+      const t = getTodayDateString();
+      let checking = false;
+      const next = updateDay(prev, dayNumber, (d) => {
+        checking = !d.checkedExercises?.[exerciseIdx];
+        return { ...d, checkedExercises: { ...(d.checkedExercises || {}), [exerciseIdx]: checking } };
+      }, t);
+      return checking ? { ...next, streak: recordActivity(prev, t) } : next;
     });
-  }, [checkDayCompletion, updateStreakOnActivity]);
+  }, []);
 
-  // Toggle Revision item
   const toggleRevision = useCallback((dayNumber, revisionIdx) => {
-    setState(prev => {
-      const today = getTodayDateString();
-      let earnedXP = false;
-      const dayQuiz = prev.quizState?.[dayNumber];
-      const isQuizMandatory = prev.settings.isQuizMandatoryForDayCompletion;
-
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        const currentVal = d.checkedRevision?.[revisionIdx] || false;
-        const newVal = !currentVal;
-        if (newVal) earnedXP = true;
-        const updatedRevision = {
-          ...(d.checkedRevision || {}),
-          [revisionIdx]: newVal
-        };
-        const updatedDay = {
-          ...d,
-          checkedRevision: updatedRevision
-        };
-        const nowCompleted = checkDayCompletion(updatedDay, dayQuiz, isQuizMandatory);
-        return {
-          ...updatedDay,
-          completed: nowCompleted,
-          completedAt: nowCompleted ? (d.completedAt || today) : null
-        };
-      });
-
-      const xpDelta = earnedXP ? XP_VALUES.COMPLETE_REVISION : -XP_VALUES.COMPLETE_REVISION;
-      const newXP = Math.max(0, (prev.xp || 0) + xpDelta);
-      const updatedStreak = earnedXP ? updateStreakOnActivity(prev.streak) : prev.streak;
-
-      return {
-        ...prev,
-        days: updatedDays,
-        xp: newXP,
-        streak: updatedStreak
-      };
+    setState((prev) => {
+      const t = getTodayDateString();
+      let checking = false;
+      const next = updateDay(prev, dayNumber, (d) => {
+        checking = !d.checkedRevision?.[revisionIdx];
+        return { ...d, checkedRevision: { ...(d.checkedRevision || {}), [revisionIdx]: checking } };
+      }, t);
+      return checking ? { ...next, streak: recordActivity(prev, t) } : next;
     });
-  }, [checkDayCompletion, updateStreakOnActivity]);
+  }, []);
 
-  // Add Custom Task to a Day
   const addCustomTask = useCallback((dayNumber, title) => {
     if (!title || !title.trim()) return;
-    setState(prev => {
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        const newTask = {
-          id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-          title: title.trim(),
-          completed: false,
-          createdAt: new Date().toISOString()
-        };
-        return {
-          ...d,
-          customTasks: [...(d.customTasks || []), newTask]
-        };
-      });
-      return { ...prev, days: updatedDays };
-    });
-  }, []);
-
-  // Toggle Custom Task
-  const toggleCustomTask = useCallback((dayNumber, taskId) => {
-    setState(prev => {
-      const today = getTodayDateString();
-      let earnedXP = false;
-      const dayQuiz = prev.quizState?.[dayNumber];
-      const isQuizMandatory = prev.settings.isQuizMandatoryForDayCompletion;
-
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        const updatedTasks = (d.customTasks || []).map(t => {
-          if (t.id === taskId) {
-            const nextVal = !t.completed;
-            if (nextVal) earnedXP = true;
-            return { ...t, completed: nextVal };
+    setState((prev) => {
+      const t = getTodayDateString();
+      return updateDay(prev, dayNumber, (d) => ({
+        ...d,
+        customTasks: [
+          ...(d.customTasks || []),
+          {
+            id: 'task_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+            title: title.trim(),
+            completed: false,
+            createdAt: new Date().toISOString()
           }
-          return t;
-        });
-        const updatedDay = {
-          ...d,
-          customTasks: updatedTasks
-        };
-        const nowCompleted = checkDayCompletion(updatedDay, dayQuiz, isQuizMandatory);
-        return {
-          ...updatedDay,
-          completed: nowCompleted,
-          completedAt: nowCompleted ? (d.completedAt || today) : null
-        };
-      });
-
-      const xpDelta = earnedXP ? XP_VALUES.COMPLETE_CUSTOM_TASK : -XP_VALUES.COMPLETE_CUSTOM_TASK;
-      const newXP = Math.max(0, (prev.xp || 0) + xpDelta);
-      const updatedStreak = earnedXP ? updateStreakOnActivity(prev.streak) : prev.streak;
-
-      return {
-        ...prev,
-        days: updatedDays,
-        xp: newXP,
-        streak: updatedStreak
-      };
+        ]
+      }), t);
     });
-  }, [checkDayCompletion, updateStreakOnActivity]);
+  }, []);
 
-  // Delete Custom Task
+  const toggleCustomTask = useCallback((dayNumber, taskId) => {
+    setState((prev) => {
+      const t = getTodayDateString();
+      const day = prev.days.find((d) => d.day === dayNumber);
+      const task = day?.customTasks?.find((x) => x.id === taskId);
+      if (!task) return prev;
+      const checking = !task.completed;
+      // A task moved from a missed day that represents a video keeps the video in sync
+      const next = task.originalVideoId
+        ? applyVideoWatched(prev, task.originalVideoId, checking, t)
+        : updateDay(prev, dayNumber, (d) => ({
+          ...d,
+          customTasks: d.customTasks.map((x) => (x.id === taskId ? { ...x, completed: checking } : x))
+        }), t);
+      return checking ? { ...next, streak: recordActivity(prev, t) } : next;
+    });
+  }, []);
+
   const deleteCustomTask = useCallback((dayNumber, taskId) => {
-    setState(prev => {
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        return {
-          ...d,
-          customTasks: (d.customTasks || []).filter(t => t.id !== taskId)
-        };
-      });
-      return { ...prev, days: updatedDays };
-    });
+    setState((prev) => updateDay(prev, dayNumber, (d) => ({
+      ...d,
+      customTasks: (d.customTasks || []).filter((x) => x.id !== taskId)
+    }), getTodayDateString()));
   }, []);
 
-  // Update Day Notes
   const updateDayNotes = useCallback((dayNumber, notesText) => {
-    setState(prev => {
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        return { ...d, notes: notesText };
+    setState((prev) => ({
+      ...prev,
+      days: prev.days.map((d) => (d.day === dayNumber ? { ...d, notes: notesText } : d))
+    }));
+  }, []);
+
+  const markDayComplete = useCallback((dayNumber) => {
+    const snapshot = stateRef.current;
+    const target = snapshot.days.find((d) => d.day === dayNumber);
+    if (!target || target.completed) return;
+    const quizBlocks = snapshot.settings.isQuizMandatoryForDayCompletion &&
+      questionCountForDay(dayNumber) > 0 &&
+      snapshot.quizState?.[dayNumber]?.status !== 'completed';
+    if (quizBlocks) {
+      toast('Finish the quiz to complete this day', {
+        icon: 'info',
+        text: 'All tasks are ticked. "Require quiz" is on in Settings.',
+        timer: 4500
       });
-      return { ...prev, days: updatedDays };
+    }
+    setState((prev) => {
+      const t = getTodayDateString();
+      let next = prev;
+      const day = prev.days.find((d) => d.day === dayNumber);
+      if (!day || day.completed) return prev;
+      (day.videos || []).forEach((v) => { next = applyVideoWatched(next, v.id, true, t); });
+      next = {
+        ...next,
+        days: next.days.map((d) => {
+          if (d.day !== dayNumber) return d;
+          const checkedEx = {};
+          (d.exercises || []).forEach((_, i) => { checkedEx[i] = true; });
+          const checkedRev = {};
+          (d.revision || []).forEach((_, i) => { checkedRev[i] = true; });
+          return withCompletion({
+            ...d,
+            checkedExercises: checkedEx,
+            checkedRevision: checkedRev,
+            customTasks: (d.customTasks || []).map((x) => ({ ...x, completed: true }))
+          }, next, t);
+        })
+      };
+      return { ...next, streak: recordActivity(prev, t) };
     });
   }, []);
 
-  // QUIZ ACTIONS: Submit answer for a question
+  /** Re-opens a day: clears its checklist so the day genuinely reads as not done. */
+  const markDayIncomplete = useCallback((dayNumber) => {
+    setState((prev) => {
+      const t = getTodayDateString();
+      const day = prev.days.find((d) => d.day === dayNumber);
+      if (!day) return prev;
+      let next = prev;
+      (day.videos || []).forEach((v) => { next = applyVideoWatched(next, v.id, false, t); });
+      return {
+        ...next,
+        days: next.days.map((d) => (d.day === dayNumber
+          ? {
+            ...d,
+            checkedExercises: {},
+            checkedRevision: {},
+            customTasks: (d.customTasks || []).map((x) => ({ ...x, completed: false })),
+            completed: false,
+            completedAt: null
+          }
+          : d))
+      };
+    });
+  }, []);
+
+  // ---------------- Quiz ----------------
   const submitQuizAnswer = useCallback((dayNumber, difficulty, questionId, selectedOption, isCorrect, topic) => {
-    setState(prev => {
-      const currentDayQuiz = prev.quizState?.[dayNumber] || {
-        answers: {},
-        bookmarked: [],
-        markedForReview: [],
-        status: 'not_started',
-        score: 0,
-        completedAt: null
+    setState((prev) => {
+      const current = prev.quizState?.[dayNumber] || {
+        answers: {}, bookmarked: [], markedForReview: [], status: 'not_started', score: 0, completedAt: null
       };
+      if (current.answers?.[questionId]) return prev; // already answered
 
-      const prevAnswer = currentDayQuiz.answers?.[questionId];
-      if (prevAnswer) {
-        return prev; // Already answered
-      }
-
-      const today = getTodayDateString();
-      const newAnswers = {
-        ...currentDayQuiz.answers,
-        [questionId]: {
-          selectedOption,
-          isCorrect,
-          difficulty,
-          topic,
-          submittedAt: new Date().toISOString()
-        }
+      const t = getTodayDateString();
+      const answers = {
+        ...current.answers,
+        [questionId]: { selectedOption, isCorrect, difficulty, topic, submittedAt: new Date().toISOString() }
       };
-
-      // Check if all 25 questions are now answered
-      const answeredCount = Object.keys(newAnswers).length;
-      const isQuizNowComplete = answeredCount >= 25;
-      const correctCount = Object.values(newAnswers).filter(a => a.isCorrect).length;
-      const newStatus = isQuizNowComplete ? 'completed' : 'in_progress';
-
-      // XP reward calculation
-      let xpEarned = 0;
-      if (isCorrect) {
-        if (difficulty === 'basic') xpEarned = XP_VALUES.QUIZ_BASIC_CORRECT;
-        else if (difficulty === 'medium') xpEarned = XP_VALUES.QUIZ_MEDIUM_CORRECT;
-        else if (difficulty === 'hard') xpEarned = XP_VALUES.QUIZ_HARD_CORRECT;
-      }
-      if (isQuizNowComplete && currentDayQuiz.status !== 'completed') {
-        xpEarned += XP_VALUES.QUIZ_DAILY_COMPLETION_BONUS;
-        triggerCelebration();
-      }
-
-      const updatedQuizState = {
+      const total = questionCountForDay(dayNumber);
+      const complete = total > 0 && Object.keys(answers).length >= total;
+      const quizState = {
         ...prev.quizState,
         [dayNumber]: {
-          ...currentDayQuiz,
-          answers: newAnswers,
-          status: newStatus,
-          score: correctCount,
-          completedAt: isQuizNowComplete ? (currentDayQuiz.completedAt || today) : null
+          ...current,
+          answers,
+          status: complete ? 'completed' : 'in_progress',
+          score: Object.values(answers).filter((a) => a.isCorrect).length,
+          completedAt: complete ? (current.completedAt || t) : null
         }
       };
-
-      // Check if day completion is affected by quiz completion
-      let updatedDays = prev.days;
-      if (prev.settings.isQuizMandatoryForDayCompletion) {
-        updatedDays = prev.days.map(d => {
-          if (d.day !== dayNumber) return d;
-          const nowDone = checkDayCompletion(d, updatedQuizState[dayNumber], true);
-          return {
-            ...d,
-            completed: nowDone,
-            completedAt: nowDone ? (d.completedAt || today) : null
-          };
-        });
-      }
-
-      const updatedStreak = updateStreakOnActivity(prev.streak);
-
-      return {
-        ...prev,
-        quizState: updatedQuizState,
-        days: updatedDays,
-        xp: (prev.xp || 0) + xpEarned,
-        streak: updatedStreak
-      };
-    });
-  }, [checkDayCompletion, updateStreakOnActivity, triggerCelebration]);
-
-  // Bookmark / Unbookmark a Question
-  const toggleBookmarkQuestion = useCallback((dayNumber, questionId) => {
-    setState(prev => {
-      const currentDayQuiz = prev.quizState?.[dayNumber] || {
-        answers: {},
-        bookmarked: [],
-        markedForReview: [],
-        status: 'not_started',
-        score: 0
-      };
-      const bookmarks = new Set(currentDayQuiz.bookmarked || []);
-      if (bookmarks.has(questionId)) {
-        bookmarks.delete(questionId);
-      } else {
-        bookmarks.add(questionId);
-      }
-      return {
-        ...prev,
-        quizState: {
-          ...prev.quizState,
-          [dayNumber]: {
-            ...currentDayQuiz,
-            bookmarked: Array.from(bookmarks)
-          }
-        }
-      };
+      const withQuiz = { ...prev, quizState };
+      const days = prev.days.map((d) => (d.day === dayNumber ? withCompletion(d, withQuiz, t) : d));
+      return { ...withQuiz, days, streak: recordActivity(prev, t) };
     });
   }, []);
 
-  // Mark / Unmark Question for Review
-  const toggleReviewQuestion = useCallback((dayNumber, questionId) => {
-    setState(prev => {
-      const currentDayQuiz = prev.quizState?.[dayNumber] || {
-        answers: {},
-        bookmarked: [],
-        markedForReview: [],
-        status: 'not_started',
-        score: 0
+  const toggleQuizList = (key) => (dayNumber, questionId) => {
+    setState((prev) => {
+      const current = prev.quizState?.[dayNumber] || {
+        answers: {}, bookmarked: [], markedForReview: [], status: 'not_started', score: 0
       };
-      const reviewSet = new Set(currentDayQuiz.markedForReview || []);
-      if (reviewSet.has(questionId)) {
-        reviewSet.delete(questionId);
-      } else {
-        reviewSet.add(questionId);
-      }
+      const set = new Set(current[key] || []);
+      if (set.has(questionId)) set.delete(questionId); else set.add(questionId);
       return {
         ...prev,
-        quizState: {
-          ...prev.quizState,
-          [dayNumber]: {
-            ...currentDayQuiz,
-            markedForReview: Array.from(reviewSet)
-          }
-        }
+        quizState: { ...prev.quizState, [dayNumber]: { ...current, [key]: Array.from(set) } }
       };
     });
-  }, []);
+  };
+  const toggleBookmarkQuestion = useCallback(toggleQuizList('bookmarked'), []);
+  const toggleReviewQuestion = useCallback(toggleQuizList('markedForReview'), []);
 
-  // Reset Quiz for a Day
   const resetDayQuiz = useCallback((dayNumber) => {
-    setState(prev => {
-      const updatedQuizState = { ...prev.quizState };
-      delete updatedQuizState[dayNumber];
-      return {
-        ...prev,
-        quizState: updatedQuizState
-      };
+    setState((prev) => {
+      const t = getTodayDateString();
+      const quizState = { ...prev.quizState };
+      delete quizState[dayNumber];
+      const next = { ...prev, quizState };
+      // If the quiz was required for completion, the day re-opens
+      if (prev.settings.isQuizMandatoryForDayCompletion) {
+        next.days = prev.days.map((d) => (d.day === dayNumber ? withCompletion(d, next, t) : d));
+      }
+      return next;
     });
   }, []);
 
-  // Mark an entire day as completed manually
-  const markDayComplete = useCallback((dayNumber) => {
-    setState(prev => {
-      const today = getTodayDateString();
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        const checkedEx = {};
-        (d.exercises || []).forEach((_, idx) => { checkedEx[idx] = true; });
-        const checkedRev = {};
-        (d.revision || []).forEach((_, idx) => { checkedRev[idx] = true; });
-        const checkedVid = {};
-        (d.videos || []).forEach(v => { checkedVid[v.id] = true; });
-        const customUpdated = (d.customTasks || []).map(t => ({ ...t, completed: true }));
-
-        return {
-          ...d,
-          checkedExercises: checkedEx,
-          checkedRevision: checkedRev,
-          checkedVideos: checkedVid,
-          customTasks: customUpdated,
-          completed: true,
-          completedAt: today
-        };
-      });
-
-      const currentDayObj = prev.days.find(d => d.day === dayNumber);
-      const updatedWatchedGlobal = { ...prev.watchedVideosGlobal };
-      (currentDayObj?.videos || []).forEach(v => {
-        updatedWatchedGlobal[v.id] = { watched: true, watchedAt: today };
-      });
-
-      const updatedStreak = updateStreakOnActivity(prev.streak);
-      const newXP = (prev.xp || 0) + XP_VALUES.COMPLETE_DAY_BONUS;
-
-      triggerCelebration();
-
-      return {
-        ...prev,
-        days: updatedDays,
-        watchedVideosGlobal: updatedWatchedGlobal,
-        streak: updatedStreak,
-        xp: newXP
-      };
-    });
-  }, [updateStreakOnActivity, triggerCelebration]);
-
-  // Mark day incomplete
-  const markDayIncomplete = useCallback((dayNumber) => {
-    setState(prev => {
-      const updatedDays = prev.days.map(d => {
-        if (d.day !== dayNumber) return d;
-        return {
-          ...d,
-          completed: false,
-          completedAt: null
-        };
-      });
-      return { ...prev, days: updatedDays };
-    });
-  }, []);
-
-  // Log study session
+  // ---------------- Study time ----------------
   const logStudyTime = useCallback((dayNumber, durationMinutes, sessionNote = '', type = 'pomodoro') => {
-    if (!durationMinutes || durationMinutes <= 0) return;
-    setState(prev => {
-      const today = getTodayDateString();
-      const newSession = {
-        id: 'session_' + Date.now(),
-        timestamp: new Date().toISOString(),
-        date: today,
-        durationMinutes,
-        dayNumber: dayNumber || 1,
-        note: sessionNote,
-        type
-      };
-
-      const updatedDays = prev.days.map(d => {
-        if (d.day === dayNumber) {
-          return {
-            ...d,
-            loggedStudyMinutes: (d.loggedStudyMinutes || 0) + durationMinutes
-          };
-        }
-        return d;
-      });
-
-      const xpEarned = Math.round(durationMinutes * 0.75) + XP_VALUES.POMODORO_SESSION;
-      const updatedStreak = updateStreakOnActivity(prev.streak);
-
+    const mins = Math.round(Number(durationMinutes));
+    if (!mins || mins <= 0) return;
+    setState((prev) => {
+      const t = getTodayDateString();
+      const dNum = dayNumber || deriveCurrentDay(prev, t);
       return {
         ...prev,
-        days: updatedDays,
-        studySessions: [newSession, ...(prev.studySessions || [])],
-        xp: (prev.xp || 0) + xpEarned,
-        streak: updatedStreak
+        days: prev.days.map((d) => (d.day === dNum
+          ? { ...d, loggedStudyMinutes: (d.loggedStudyMinutes || 0) + mins }
+          : d)),
+        studySessions: [
+          {
+            id: 'session_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+            timestamp: new Date().toISOString(),
+            date: t,
+            durationMinutes: mins,
+            dayNumber: dNum,
+            note: sessionNote,
+            type
+          },
+          ...(prev.studySessions || [])
+        ],
+        streak: recordActivity(prev, t)
       };
     });
-  }, [updateStreakOnActivity]);
+  }, []);
 
-  // Missed-Day Recovery
+  const deleteStudySession = useCallback((sessionId) => {
+    setState((prev) => {
+      const session = (prev.studySessions || []).find((s) => s.id === sessionId);
+      if (!session) return prev;
+      return {
+        ...prev,
+        studySessions: prev.studySessions.filter((s) => s.id !== sessionId),
+        days: prev.days.map((d) => (d.day === session.dayNumber
+          ? { ...d, loggedStudyMinutes: Math.max(0, (d.loggedStudyMinutes || 0) - (session.durationMinutes || 0)) }
+          : d))
+      };
+    });
+  }, []);
+
+  // ---------------- Scheduling & recovery ----------------
   const moveMissedTasksToDay = useCallback((fromDayNumber, toDayNumber) => {
-    setState(prev => {
-      const fromDay = prev.days.find(d => d.day === fromDayNumber);
-      const toDay = prev.days.find(d => d.day === toDayNumber);
-      if (!fromDay || !toDay) return prev;
+    setState((prev) => {
+      const fromDay = prev.days.find((d) => d.day === fromDayNumber);
+      const toDay = prev.days.find((d) => d.day === toDayNumber);
+      if (!fromDay || !toDay || fromDayNumber === toDayNumber) return prev;
+      const t = getTodayDateString();
+      const stamp = Date.now();
+      const rid = () => Math.random().toString(36).slice(2, 6);
 
-      const pendingVideos = (fromDay.videos || []).filter(v => !fromDay.checkedVideos?.[v.id]);
-      const pendingExercises = (fromDay.exercises || []).filter((_, idx) => !fromDay.checkedExercises?.[idx]);
-      const pendingCustom = (fromDay.customTasks || []).filter(t => !t.completed);
-
-      const newCustomTasks = [
-        ...(toDay.customTasks || []),
-        ...pendingVideos.map(v => ({
-          id: 'moved_vid_' + v.id + '_' + Date.now(),
-          title: `[Moved from Day ${fromDayNumber}] Video: ${v.title}`,
-          completed: false,
-          originalVideoId: v.id,
-          createdAt: new Date().toISOString()
-        })),
-        ...pendingExercises.map(ex => ({
-          id: 'moved_ex_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-          title: `[Moved from Day ${fromDayNumber}] ${ex}`,
-          completed: false,
-          createdAt: new Date().toISOString()
-        })),
-        ...pendingCustom.map(c => ({
-          ...c,
-          id: 'moved_cust_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-          title: `[Moved from Day ${fromDayNumber}] ${c.title}`
-        }))
+      const moved = [
+        ...(fromDay.videos || [])
+          .filter((v) => !prev.watchedVideosGlobal?.[v.id]?.watched)
+          .map((v) => ({
+            id: `moved_vid_${v.id}_${stamp}_${rid()}`,
+            title: `[From Day ${fromDayNumber}] Watch: ${v.title}`,
+            completed: false,
+            originalVideoId: v.id,
+            createdAt: new Date().toISOString()
+          })),
+        ...(fromDay.exercises || [])
+          .filter((_, i) => !fromDay.checkedExercises?.[i])
+          .map((ex) => ({
+            id: `moved_ex_${stamp}_${rid()}`,
+            title: `[From Day ${fromDayNumber}] ${ex}`,
+            completed: false,
+            createdAt: new Date().toISOString()
+          })),
+        ...(fromDay.customTasks || [])
+          .filter((c) => !c.completed)
+          .map((c) => ({ ...c, id: `moved_cust_${stamp}_${rid()}`, title: `[From Day ${fromDayNumber}] ${c.title}` }))
       ];
 
-      const updatedDays = prev.days.map(d => {
+      const days = prev.days.map((d) => {
         if (d.day === fromDayNumber) {
           return {
             ...d,
             recovered: true,
-            notes: (d.notes || '') + `\n[Recovery System: Missed tasks transferred to Day ${toDayNumber}]`
+            // keep only completed custom tasks on the original day; the rest moved
+            customTasks: (d.customTasks || []).filter((c) => c.completed)
           };
         }
         if (d.day === toDayNumber) {
-          return {
+          const extra = moved.length > 0 ? 30 : 0;
+          return withCompletion({
             ...d,
-            customTasks: newCustomTasks,
-            targetMinutes: (d.targetMinutes || 90) + 30
-          };
+            customTasks: [...(d.customTasks || []), ...moved],
+            extraMinutes: (d.extraMinutes || 0) + extra,
+            targetMinutes: (d.targetMinutes || 90) + extra
+          }, prev, t);
         }
         return d;
       });
-
-      return {
-        ...prev,
-        days: updatedDays
-      };
+      return { ...prev, days };
     });
   }, []);
 
-  // Reschedule
   const rescheduleScheduleFromDay = useCallback((startDayNumber) => {
-    setState(prev => {
-      const today = getTodayDateString();
-      const updatedDays = prev.days.map(d => {
-        if (d.day >= startDayNumber) {
-          const dayOffset = d.day - startDayNumber;
-          return {
-            ...d,
-            date: addStudyDays(today, dayOffset, true)
-          };
-        }
-        return d;
-      });
+    setState((prev) => {
+      const t = getTodayDateString();
+      const days = layOutFrom(prev.days, startDayNumber, t).map((d) =>
+        d.day >= startDayNumber ? { ...d, skipped: false, recovered: false } : d
+      );
+      return { ...prev, days };
+    });
+  }, []);
+
+  /** Push a day (and everything after it) to the next study day. The skipped date never breaks the streak. */
+  const skipAndMoveToNextDay = useCallback((dayNumber) => {
+    setState((prev) => {
+      const target = prev.days.find((d) => d.day === dayNumber);
+      if (!target) return prev;
+      const t = getTodayDateString();
+      const anchor = target.date && target.date > t ? target.date : t;
+      const nextDate = addStudyDays(anchor, 1, true);
+      const rest = new Set(prev.restDates || []);
+      if (anchor <= t) rest.add(anchor);
       return {
         ...prev,
-        days: updatedDays
+        days: layOutFrom(prev.days, dayNumber, nextDate),
+        totalSkippedDays: (prev.totalSkippedDays || 0) + 1,
+        restDates: Array.from(rest)
       };
     });
   }, []);
 
-  // Explicit Skip / Move day to next day (Rest Day / Rollover - skips Sundays)
-  const skipAndMoveToNextDay = useCallback((dayNumber, reason = 'Planned Rest Day') => {
-    setState(prev => {
-      const today = getTodayDateString();
-      const targetDay = prev.days.find(d => d.day === dayNumber);
-      if (!targetDay) return prev;
-
-      // Shift this day and all subsequent days forward by 1 study day (skipping Sundays)
-      const updatedDays = prev.days.map(d => {
-        if (d.day >= dayNumber) {
-          return {
-            ...d,
-            date: addStudyDays(d.date, 1, true),
-            notes: d.day === dayNumber
-              ? (d.notes ? d.notes + '\n' : '') + `[Schedule Rollover: Shifted to next study day (${reason}) on ${today}]`
-              : d.notes
-          };
-        }
-        return d;
-      });
-
-      // Increase paused/skipped counter by 1 so currentChallengeDay anchors on dayNumber
-      const newTotalPaused = (prev.totalPausedDays || 0) + 1;
-      const newTotalSkipped = (prev.totalSkippedDays || 0) + 1;
-
-      // Preserve streak by treating rest day as frozen
-      const preservedStreak = {
-        ...prev.streak,
-        lastActiveDate: addDaysToDate(today, -1)
-      };
-
-      return {
-        ...prev,
-        totalPausedDays: newTotalPaused,
-        totalSkippedDays: newTotalSkipped,
-        days: updatedDays,
-        streak: preservedStreak
-      };
-    });
-  }, []);
-
-  // MOVE DAY TO TODAY: Sets targetDayNumber as Today, and reschedules all subsequent days line-wise (skipping Sundays)
+  /**
+   * Make `targetDayNumber` today's lecture. Later days follow line-wise.
+   * Earlier unfinished days are flagged `skipped` so they appear in Missed-Day
+   * Recovery instead of being auto-rescheduled back over the chosen day.
+   */
   const moveDayToToday = useCallback((targetDayNumber) => {
-    setState(prev => {
-      const today = getTodayDateString();
-      const targetDay = prev.days.find(d => d.day === targetDayNumber);
-      if (!targetDay) return prev;
-
-      // 1. Shift all days line-wise so targetDayNumber is scheduled on today, and subsequent days are consecutive study days:
-      const updatedDays = prev.days.map(d => {
-        const offset = d.day - targetDayNumber;
-        return {
-          ...d,
-          date: addStudyDays(today, offset, true),
-          notes: d.day === targetDayNumber
-            ? (d.notes ? d.notes + '\n' : '') + `[Rescheduled: Moved to Today on ${today}]`
-            : d.notes
-        };
+    setState((prev) => {
+      if (!prev.days.some((d) => d.day === targetDayNumber)) return prev;
+      const t = getTodayDateString();
+      const days = prev.days.map((d) => {
+        const date = addStudyDays(t, d.day - targetDayNumber, true);
+        if (d.day < targetDayNumber) return { ...d, date, skipped: !d.completed };
+        return { ...d, date, skipped: false, recovered: false };
       });
-
-      // 2. Set startDate so calculateCurrentChallengeDay resolves directly to targetDayNumber today
-      const newStartDate = addStudyDays(today, -(targetDayNumber - 1), true);
-
       return {
         ...prev,
-        totalPausedDays: 0,
-        totalSkippedDays: 0,
+        days,
         journeyStatus: 'active',
         pausedAt: null,
         frozenChallengeDay: null,
-        days: updatedDays,
-        settings: {
-          ...prev.settings,
-          startDate: newStartDate
-        }
+        activePauseReason: null
       };
     });
   }, []);
 
-  // Playlist additions/edits
+  // ---------------- Playlists ----------------
   const addCustomVideoToPlaylist = useCallback((playlistKey, videoObj) => {
-    setState(prev => {
-      const currentPl = prev.playlists?.[playlistKey];
-      if (!currentPl) return prev;
-      const newVideo = {
-        id: videoObj.id || 'vid_' + Date.now(),
-        title: videoObj.title,
-        duration: videoObj.duration || '45:00',
-        durationSeconds: videoObj.durationSeconds || 2700,
-        thumbnail: videoObj.thumbnail || `https://i.ytimg.com/vi/${videoObj.id}/hqdefault.jpg`,
-        url: videoObj.url || `https://www.youtube.com/watch?v=${videoObj.id}`,
-        index: (currentPl.videos?.length || 0) + 1,
-        playlistId: currentPl.id,
-        playlistName: currentPl.title,
-        isCustom: true
-      };
-
-      const updatedVideos = [...(currentPl.videos || []), newVideo];
-      const updatedPlaylists = {
-        ...prev.playlists,
-        [playlistKey]: {
-          ...currentPl,
-          totalVideos: updatedVideos.length,
-          videos: updatedVideos
+    setState((prev) => {
+      const pl = prev.playlists?.[playlistKey];
+      if (!pl) return prev;
+      const id = videoObj.id || 'vid_' + Date.now();
+      const videos = [
+        ...(pl.videos || []),
+        {
+          id,
+          title: videoObj.title,
+          duration: videoObj.duration || '45:00',
+          durationSeconds: videoObj.durationSeconds || 2700,
+          thumbnail: videoObj.thumbnail || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+          url: videoObj.url || `https://www.youtube.com/watch?v=${id}`,
+          index: (pl.videos?.length || 0) + 1,
+          playlistId: pl.id,
+          playlistName: pl.title,
+          isCustom: true
         }
-      };
-
-      return {
-        ...prev,
-        playlists: updatedPlaylists
-      };
+      ];
+      return { ...prev, playlists: { ...prev.playlists, [playlistKey]: { ...pl, totalVideos: videos.length, videos } } };
     });
   }, []);
 
   const editVideoInPlaylist = useCallback((playlistKey, videoId, fields) => {
-    setState(prev => {
-      const currentPl = prev.playlists?.[playlistKey];
-      if (!currentPl) return prev;
-      const updatedVideos = (currentPl.videos || []).map(v => {
-        if (v.id === videoId) return { ...v, ...fields };
-        return v;
-      });
-      return {
-        ...prev,
-        playlists: {
-          ...prev.playlists,
-          [playlistKey]: { ...currentPl, videos: updatedVideos }
-        }
-      };
+    setState((prev) => {
+      const pl = prev.playlists?.[playlistKey];
+      if (!pl) return prev;
+      const videos = (pl.videos || []).map((v) => (v.id === videoId ? { ...v, ...fields } : v));
+      return { ...prev, playlists: { ...prev.playlists, [playlistKey]: { ...pl, videos } } };
     });
   }, []);
 
   const deleteVideoFromPlaylist = useCallback((playlistKey, videoId) => {
-    setState(prev => {
-      const currentPl = prev.playlists?.[playlistKey];
-      if (!currentPl) return prev;
-      const updatedVideos = (currentPl.videos || []).filter(v => v.id !== videoId);
+    setState((prev) => {
+      const pl = prev.playlists?.[playlistKey];
+      if (!pl) return prev;
+      const videos = (pl.videos || []).filter((v) => v.id !== videoId);
+      const watchedVideosGlobal = { ...prev.watchedVideosGlobal };
+      delete watchedVideosGlobal[videoId];
       return {
         ...prev,
-        playlists: {
-          ...prev.playlists,
-          [playlistKey]: {
-            ...currentPl,
-            totalVideos: updatedVideos.length,
-            videos: updatedVideos
-          }
-        }
+        watchedVideosGlobal,
+        playlists: { ...prev.playlists, [playlistKey]: { ...pl, totalVideos: videos.length, videos } }
       };
     });
   }, []);
 
+  // ---------------- Settings & data ----------------
   const updateSettings = useCallback((newSettings) => {
-    setState(prev => {
-      const merged = { ...prev.settings, ...newSettings };
-      let updatedDays = prev.days;
-      if (newSettings.startDate && newSettings.startDate !== prev.settings.startDate) {
-        updatedDays = prev.days.map((d, idx) => ({
-          ...d,
-          date: addStudyDays(newSettings.startDate, idx, true)
-        }));
+    setState((prev) => {
+      const t = getTodayDateString();
+      const settings = { ...prev.settings, ...newSettings };
+      setStudyWeekdays(settings.preferredStudyDays || DEFAULT_STUDY_DAYS);
+      let days = prev.days;
+
+      const startChanged = newSettings.startDate && newSettings.startDate !== prev.settings.startDate;
+      const studyDaysChanged = newSettings.preferredStudyDays &&
+        [...newSettings.preferredStudyDays].sort().join() !== [...(prev.settings.preferredStudyDays || [])].sort().join();
+
+      if (startChanged) {
+        // Explicit new start date: lay the whole curriculum out from it
+        days = days.map((d, idx) => ({ ...d, date: addStudyDays(settings.startDate, idx, true), skipped: false }));
+      } else if (studyDaysChanged) {
+        // New weekly pattern: re-lay the remaining (unfinished) part of the plan from today onwards
+        const firstOpen = days.find((d) => !d.completed);
+        if (firstOpen) days = layOutFrom(days, firstOpen.day, firstOpen.date > t ? firstOpen.date : t);
       }
-      return {
-        ...prev,
-        settings: merged,
-        days: updatedDays
-      };
+
+      const next = { ...prev, settings, days };
+      if (newSettings.isQuizMandatoryForDayCompletion !== undefined &&
+        newSettings.isQuizMandatoryForDayCompletion !== prev.settings.isQuizMandatoryForDayCompletion) {
+        next.days = next.days.map((d) => withCompletion(d, next, t));
+      }
+      return next;
     });
   }, []);
 
   const resetAllProgress = useCallback(() => {
     const fresh = buildInitialState();
+    bulkReplaceRef.current = true;
     setState(fresh);
     saveStateToStorage(fresh);
   }, []);
 
   const exportBackup = useCallback(() => {
-    exportStateAsJSON(state);
-  }, [state]);
+    exportStateAsJSON(stateRef.current);
+  }, []);
 
   const importBackup = useCallback((jsonString) => {
     const res = parseAndValidateImportJSON(jsonString);
@@ -1049,208 +785,190 @@ export function PlannerProvider({ children }) {
       showError('Import failed', res.error);
       return false;
     }
-    setState(res.data);
-    saveStateToStorage(res.data);
+    const restored = hydrateState(res.state, buildInitialState());
+    bulkReplaceRef.current = true;
+    setState(restored);
+    saveStateToStorage(restored);
     showSuccess('Backup restored', 'Your progress was restored from the backup file.');
     return true;
   }, []);
 
-  // COMPREHENSIVE STATS CALCULATION
+  // ---------------- Derived stats ----------------
+  const xp = useMemo(() => computeXP(state), [state]);
+
   const stats = useMemo(() => {
-    const totalDays = state.days.length;
-    const completedDays = state.days.filter(d => d.completed);
-    const completedDaysCount = completedDays.length;
-    const overallCompletionPercent = totalDays > 0 ? Math.round((completedDaysCount / totalDays) * 100) : 0;
+    const days = state.days;
+    const totalDays = days.length;
+    const completedDaysCount = days.filter((d) => d.completed).length;
+    const pct = (a, b) => (b > 0 ? Math.round((a / b) * 100) : 0);
 
-    // Phases
-    const javaDays = state.days.filter(d => d.phaseId === 'phase-1');
-    const javaCompletedDays = javaDays.filter(d => d.completed).length;
-    const javaCompletionPercent = javaDays.length > 0 ? Math.round((javaCompletedDays / javaDays.length) * 100) : 0;
+    const phase = (id) => {
+      const list = days.filter((d) => d.phaseId === id);
+      const done = list.filter((d) => d.completed).length;
+      return { count: list.length, done, percent: pct(done, list.length) };
+    };
+    const p1 = phase('phase-1');
+    const p2 = phase('phase-2');
+    const p3 = phase('phase-3');
 
-    const springDays = state.days.filter(d => d.phaseId === 'phase-2');
-    const springCompletedDays = springDays.filter(d => d.completed).length;
-    const springCompletionPercent = springDays.length > 0 ? Math.round((springCompletedDays / springDays.length) * 100) : 0;
+    const totalVideos = (state.playlists?.java?.videos?.length || 0) + (state.playlists?.spring?.videos?.length || 0);
+    const completedVideosCount = Object.values(state.watchedVideosGlobal || {}).filter((v) => v?.watched).length;
 
-    const revDays = state.days.filter(d => d.phaseId === 'phase-3');
-    const revCompletedDays = revDays.filter(d => d.completed).length;
-    const revCompletionPercent = revDays.length > 0 ? Math.round((revCompletedDays / revDays.length) * 100) : 0;
+    const totalStudyMinutes = (state.studySessions || []).reduce((acc, s) => acc + (Number(s.durationMinutes) || 0), 0);
+    const todayStudyMinutes = (state.studySessions || [])
+      .filter((s) => s.date === today)
+      .reduce((acc, s) => acc + (Number(s.durationMinutes) || 0), 0);
 
-    // Videos
-    const totalJavaVideos = state.playlists?.java?.videos?.length || 57;
-    const totalSpringVideos = state.playlists?.spring?.videos?.length || 45;
-    const totalVideos = totalJavaVideos + totalSpringVideos;
-
-    let completedVideosCount = 0;
-    Object.values(state.watchedVideosGlobal || {}).forEach(v => {
-      if (v?.watched) completedVideosCount++;
-    });
-    const remainingVideosCount = Math.max(0, totalVideos - completedVideosCount);
-
-    // Study Hours
-    const totalLoggedStudyMinutes = state.days.reduce((acc, d) => acc + (d.loggedStudyMinutes || 0), 0);
-    const sessionStudyMinutes = (state.studySessions || []).reduce((acc, s) => acc + (s.durationMinutes || 0), 0);
-    const totalStudyMinutes = Math.max(totalLoggedStudyMinutes, sessionStudyMinutes);
-    const totalStudyHours = (totalStudyMinutes / 60).toFixed(1);
-
-    // Tasks completed
     let totalCompletedTasksCount = completedVideosCount;
-    state.days.forEach(d => {
-      totalCompletedTasksCount += Object.keys(d.checkedExercises || {}).filter(k => d.checkedExercises[k]).length;
-      totalCompletedTasksCount += Object.keys(d.checkedRevision || {}).filter(k => d.checkedRevision[k]).length;
-      totalCompletedTasksCount += (d.customTasks || []).filter(t => t.completed).length;
+    days.forEach((d) => {
+      totalCompletedTasksCount += Object.values(d.checkedExercises || {}).filter(Boolean).length;
+      totalCompletedTasksCount += Object.values(d.checkedRevision || {}).filter(Boolean).length;
+      totalCompletedTasksCount += (d.customTasks || []).filter((x) => x.completed && !x.originalVideoId).length;
     });
 
-    // Missed Days (only if active, not paused)
+    // Missed days: scheduled in the past, not done, not already recovered.
+    // With auto-reschedule on, only days deliberately passed over (Move to Today) qualify.
+    const autoReschedule = state.settings.autoRescheduleMissedDays !== false;
     const missedDays = state.journeyStatus === 'paused'
       ? []
-      : state.days.filter(d => d.day < currentChallengeDay && !d.completed && !d.recovered);
+      : days.filter((d) => d.date < today && !d.completed && !d.recovered && (d.skipped || !autoReschedule));
 
-    // Consistency & Levels
-    const consistencyScore = calculateConsistencyScore(completedDaysCount, currentChallengeDay);
-    const levelInfo = calculateLevel(state.xp || 0);
+    // Streak shown is live: it drops to 0 once a non-rest study day passes with no activity
+    const s = state.streak || {};
+    const restSet = new Set(state.restDates || []);
+    const streakAlive = s.lastActiveDate && (
+      s.lastActiveDate === today ||
+      isGapNeutral(s.lastActiveDate, today, restSet, state.journeyStatus === 'paused' ? state.pausedAt : null)
+    );
+    const currentStreak = streakAlive ? (s.currentStreak || 0) : 0;
 
-    // QUESTION BANK & QUIZ ANALYTICS
+    const studyDaysElapsed = Math.max(1, getStudyDaysDifference(state.settings.startDate, today, true) + 1);
+    const elapsedForConsistency = Math.max(1, Math.min(currentChallengeDay, studyDaysElapsed - (state.totalPausedDays || 0)));
+    const consistencyScore = calculateConsistencyScore(completedDaysCount, elapsedForConsistency);
+    const levelInfo = calculateLevel(xp);
+
+    // Quiz analytics
     let totalQuestionsAttempted = 0;
     let totalQuestionsCorrect = 0;
-    let totalQuestionsIncorrect = 0;
-    let basicAttempted = 0, basicCorrect = 0;
-    let mediumAttempted = 0, mediumCorrect = 0;
-    let hardAttempted = 0, hardCorrect = 0;
+    const byDiff = { basic: [0, 0], medium: [0, 0], hard: [0, 0] };
     let completedQuizzesCount = 0;
-
-    const topicStats = {}; // { [topic]: { attempted, correct, dayNumbers: Set } }
-
-    Object.entries(state.quizState || {}).forEach(([dayStr, qData]) => {
-      const dNum = parseInt(dayStr, 10);
-      if (qData.status === 'completed') completedQuizzesCount++;
-
-      Object.values(qData.answers || {}).forEach(ans => {
+    const topicStats = {};
+    Object.entries(state.quizState || {}).forEach(([dayStr, q]) => {
+      if (q?.status === 'completed') completedQuizzesCount++;
+      Object.values(q?.answers || {}).forEach((a) => {
         totalQuestionsAttempted++;
-        if (ans.isCorrect) totalQuestionsCorrect++;
-        else totalQuestionsIncorrect++;
-
-        if (ans.difficulty === 'basic') {
-          basicAttempted++;
-          if (ans.isCorrect) basicCorrect++;
-        } else if (ans.difficulty === 'medium') {
-          mediumAttempted++;
-          if (ans.isCorrect) mediumCorrect++;
-        } else if (ans.difficulty === 'hard') {
-          hardAttempted++;
-          if (ans.isCorrect) hardCorrect++;
+        if (a.isCorrect) totalQuestionsCorrect++;
+        if (byDiff[a.difficulty]) {
+          byDiff[a.difficulty][0]++;
+          if (a.isCorrect) byDiff[a.difficulty][1]++;
         }
-
-        // Track topic
-        const topicName = ans.topic || 'General';
-        if (!topicStats[topicName]) {
-          topicStats[topicName] = { topic: topicName, attempted: 0, correct: 0, dayNumber: dNum };
-        }
-        topicStats[topicName].attempted++;
-        if (ans.isCorrect) topicStats[topicName].correct++;
+        const topic = a.topic || 'General';
+        if (!topicStats[topic]) topicStats[topic] = { topic, attempted: 0, correct: 0, dayNumber: parseInt(dayStr, 10) };
+        topicStats[topic].attempted++;
+        if (a.isCorrect) topicStats[topic].correct++;
       });
     });
-
-    const overallQuizAccuracy = totalQuestionsAttempted > 0
-      ? Math.round((totalQuestionsCorrect / totalQuestionsAttempted) * 100)
-      : 0;
-
-    const basicAccuracy = basicAttempted > 0 ? Math.round((basicCorrect / basicAttempted) * 100) : 0;
-    const mediumAccuracy = mediumAttempted > 0 ? Math.round((mediumCorrect / mediumAttempted) * 100) : 0;
-    const hardAccuracy = hardAttempted > 0 ? Math.round((hardCorrect / hardAttempted) * 100) : 0;
-
-    // Identify Weak Topics (accuracy < 70% or at least 1 incorrect answer)
     const weakTopics = Object.values(topicStats)
-      .map(t => ({
-        ...t,
-        accuracy: t.attempted > 0 ? Math.round((t.correct / t.attempted) * 100) : 100,
-        incorrect: t.attempted - t.correct
+      .map((x) => ({
+        ...x,
+        accuracy: x.attempted > 0 ? Math.round((x.correct / x.attempted) * 100) : 100,
+        incorrect: x.attempted - x.correct
       }))
-      .filter(t => t.incorrect > 0 || t.accuracy < 70)
+      .filter((x) => x.incorrect > 0 || x.accuracy < 70)
       .sort((a, b) => a.accuracy - b.accuracy || b.incorrect - a.incorrect);
 
-    // Timeline days
-    const totalCalendarDaysElapsed = getDaysDifference(state.settings.startDate, getTodayDateString()) + 1;
-    const activeLearningDays = Math.max(1, totalCalendarDaysElapsed - (state.totalPausedDays || 0));
+    const totalCalendarDaysElapsed = Math.max(1, getDaysDifference(state.settings.startDate, today) + 1);
+    const activeLearningDays = Math.max(1, studyDaysElapsed - (state.totalPausedDays || 0));
 
     return {
       totalDays,
       completedDaysCount,
-      overallCompletionPercent,
-      javaDaysCount: javaDays.length,
-      javaCompletedDays,
-      javaCompletionPercent,
-      springDaysCount: springDays.length,
-      springCompletedDays,
-      springCompletionPercent,
-      revDaysCount: revDays.length,
-      revCompletedDays,
-      revCompletionPercent,
+      overallCompletionPercent: pct(completedDaysCount, totalDays),
+      javaDaysCount: p1.count,
+      javaCompletedDays: p1.done,
+      javaCompletionPercent: p1.percent,
+      springDaysCount: p2.count,
+      springCompletedDays: p2.done,
+      springCompletionPercent: p2.percent,
+      revDaysCount: p3.count,
+      revCompletedDays: p3.done,
+      revCompletionPercent: p3.percent,
       totalVideos,
       completedVideosCount,
-      remainingVideosCount,
+      remainingVideosCount: Math.max(0, totalVideos - completedVideosCount),
       totalStudyMinutes,
-      totalStudyHours,
+      todayStudyMinutes,
+      dailyTargetMinutes: state.settings.dailyTargetMinutes || 120,
+      totalStudyHours: (totalStudyMinutes / 60).toFixed(1),
       totalCompletedTasksCount,
-      currentStreak: state.streak?.currentStreak || 0,
-      longestStreak: state.streak?.longestStreak || 0,
+      currentStreak,
+      longestStreak: s.longestStreak || 0,
       missedDays,
       consistencyScore,
       levelInfo,
-      isPhase1Completed: javaCompletedDays >= javaDays.length,
-      isPhase2Completed: springCompletedDays >= springDays.length,
-      isPhase3Completed: revCompletedDays >= revDays.length,
-      // Quiz stats
+      isPhase1Completed: p1.count > 0 && p1.done >= p1.count,
+      isPhase2Completed: p2.count > 0 && p2.done >= p2.count,
+      isPhase3Completed: p3.count > 0 && p3.done >= p3.count,
       totalQuestionsAttempted,
       totalQuestionsCorrect,
-      totalQuestionsIncorrect,
-      overallQuizAccuracy,
-      basicAccuracy,
-      mediumAccuracy,
-      hardAccuracy,
+      totalQuestionsIncorrect: totalQuestionsAttempted - totalQuestionsCorrect,
+      overallQuizAccuracy: pct(totalQuestionsCorrect, totalQuestionsAttempted),
+      basicAccuracy: pct(byDiff.basic[1], byDiff.basic[0]),
+      mediumAccuracy: pct(byDiff.medium[1], byDiff.medium[0]),
+      hardAccuracy: pct(byDiff.hard[1], byDiff.hard[0]),
       completedQuizzesCount,
       weakTopics,
       topicStats,
-      // Pause metrics
       journeyStatus: state.journeyStatus,
       isPaused: state.journeyStatus === 'paused',
       pausedAt: state.pausedAt,
       totalPausedDays: state.totalPausedDays || 0,
+      totalSkippedDays: state.totalSkippedDays || 0,
       pauseCyclesCount: (state.pauseHistory || []).length,
       pauseHistory: state.pauseHistory || [],
       totalCalendarDaysElapsed,
       activeLearningDays
     };
-  }, [state, currentChallengeDay]);
+  }, [state, currentChallengeDay, today, xp]);
 
-  // Sync unlocked badges
+  // ---------------- Badges & celebrations (side effects live here, not in updaters) ----------------
   useEffect(() => {
-    const earnedBadgeIds = evaluateBadges(stats);
-    const alreadyUnlocked = new Set(state.unlockedBadges || []);
-    let newlyUnlocked = false;
-
-    earnedBadgeIds.forEach(id => {
-      if (!alreadyUnlocked.has(id)) {
-        alreadyUnlocked.add(id);
-        newlyUnlocked = true;
-      }
-    });
-
-    if (newlyUnlocked) {
-      setState(prev => ({
-        ...prev,
-        unlockedBadges: Array.from(alreadyUnlocked)
-      }));
-      triggerCelebration();
-    }
+    const earned = evaluateBadges(stats);
+    const already = new Set(state.unlockedBadges || []);
+    const fresh = earned.filter((id) => !already.has(id));
+    if (fresh.length === 0) return;
+    setState((prev) => ({
+      ...prev,
+      unlockedBadges: Array.from(new Set([...(prev.unlockedBadges || []), ...fresh]))
+    }));
+    const names = fresh.map((id) => BADGES_CATALOG.find((b) => b.id === id)?.name).filter(Boolean);
+    triggerCelebration(
+      names.length === 1 ? `Badge unlocked: ${names[0]}` : `${names.length} badges unlocked`,
+      names.length > 1 ? names.join(', ') : ''
+    );
   }, [stats, state.unlockedBadges, triggerCelebration]);
+
+  const prevCounts = useRef({ days: stats.completedDaysCount, quizzes: stats.completedQuizzesCount });
+  useEffect(() => {
+    const prev = prevCounts.current;
+    if (bulkReplaceRef.current) {
+      // Import / reset replaced the whole state: resync counters without celebrating
+      bulkReplaceRef.current = false;
+    } else if (stats.completedDaysCount > prev.days) {
+      triggerCelebration('Day complete!', 'Great work. Keep the streak alive.');
+    } else if (stats.completedQuizzesCount > prev.quizzes) {
+      triggerCelebration('Quiz complete!', 'All questions for the day answered.');
+    }
+    prevCounts.current = { days: stats.completedDaysCount, quizzes: stats.completedQuizzesCount };
+  }, [stats.completedDaysCount, stats.completedQuizzesCount, triggerCelebration]);
 
   const value = {
     days: state.days,
     playlists: state.playlists,
     watchedVideosGlobal: state.watchedVideosGlobal,
     studySessions: state.studySessions,
-    streak: state.streak,
-    xp: state.xp,
+    streak: { ...state.streak, currentStreak: stats.currentStreak },
+    xp,
     unlockedBadges: state.unlockedBadges,
     settings: state.settings,
     quizState: state.quizState,
@@ -1258,6 +976,7 @@ export function PlannerProvider({ children }) {
     pausedAt: state.pausedAt,
     totalPausedDays: state.totalPausedDays || 0,
     pauseHistory: state.pauseHistory || [],
+    today,
     currentChallengeDay,
     stats,
     pauseJourney,
@@ -1276,6 +995,7 @@ export function PlannerProvider({ children }) {
     markDayComplete,
     markDayIncomplete,
     logStudyTime,
+    deleteStudySession,
     moveMissedTasksToDay,
     rescheduleScheduleFromDay,
     skipAndMoveToNextDay,
@@ -1290,11 +1010,7 @@ export function PlannerProvider({ children }) {
     triggerCelebration
   };
 
-  return (
-    <PlannerContext.Provider value={value}>
-      {children}
-    </PlannerContext.Provider>
-  );
+  return <PlannerContext.Provider value={value}>{children}</PlannerContext.Provider>;
 }
 
 export function usePlanner() {

@@ -1,0 +1,201 @@
+{
+  "day": 94,
+  "title": "Spring Lecture #37: Security Authentication Internals",
+  "sources": [
+    "notes/Notes.pdf (42 pages)",
+    "notes/Excalidraw-Notes.pdf (12 pages)",
+    "code/springPracticalDemo (SecurityConfig, CustomUserDetails, CustomUserDetailsService, AuthService, UserRepository, RoleController)"
+  ],
+  "topics": [
+    "DelegatingFilterProxy & FilterChainProxy",
+    "SecurityFilterChain matching",
+    "Authentication filters",
+    "AuthenticationManager & ProviderManager",
+    "DaoAuthenticationProvider",
+    "UserDetails & UserDetailsService",
+    "Roles & authorities",
+    "Registration with default role"
+  ],
+  "questions": [
+    {
+      "id": "d94_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "DelegatingFilterProxy & FilterChainProxy",
+      "question": "What is the job of `DelegatingFilterProxy` in Spring Security's servlet architecture?",
+      "codeSnippet": null,
+      "options": [
+        "It checks the username and password against the database",
+        "It decides which URL patterns require the ADMIN role",
+        "It is a servlet filter registered with the container (e.g. Tomcat) that delegates the request to Spring-managed filter beans such as `FilterChainProxy`",
+        "It replaces the `DispatcherServlet` so that controllers receive only authenticated requests"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`DelegatingFilterProxy` bridges the servlet container's lifecycle and Spring's `ApplicationContext`: the container knows it as an ordinary filter, and it forwards the work to a Spring bean, normally `FilterChainProxy`. Password checks happen in authentication providers and access rules in the authorization filter; the `DispatcherServlet` still runs afterwards.",
+      "source": "notes p2-3 (DelegatingFilterProxy)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/architecture.html"
+    },
+    {
+      "id": "d94_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "UserDetails & UserDetailsService",
+      "question": "Your app logs users in with their email address, but `UserDetailsService` only has `loadUserByUsername(String username)`. What is the correct approach?",
+      "codeSnippet": null,
+      "options": [
+        "Implement `loadUserByUsername` so that it looks the user up by email (e.g. `userRepository.findByEmail(...)`) and returns a `UserDetails`",
+        "Rename the `email` column to `username`, because Spring Security queries that column directly",
+        "Create a second interface `UserDetailsByEmailService`, which Spring Security detects automatically",
+        "Email login is impossible with `DaoAuthenticationProvider`; a custom filter is required"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The method name is historical: its argument is just the login identifier the user typed. The notes show the same contract implemented with `findByEmail(email)`. Spring Security never queries your columns itself; it only calls your `UserDetailsService`.",
+      "source": "notes p16-18 (CustomUserDetailsService, email as login identity)",
+      "reference": null
+    },
+    {
+      "id": "d94_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "SecurityFilterChain matching",
+      "question": "This is the application's only `SecurityFilterChain` bean. `HomeController` maps `GET /home` with no security annotations. What happens for `GET /home` sent without any credentials?",
+      "codeSnippet": "@Bean\nSecurityFilterChain apiChain(HttpSecurity http) throws Exception {\n    http.securityMatcher(\"/api/**\")\n        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())\n        .httpBasic(Customizer.withDefaults());\n    return http.build();\n}",
+      "options": [
+        "401, because `anyRequest().authenticated()` covers every URL in the application",
+        "200: no `SecurityFilterChain` matches `/home`, so no Spring Security filters run for it and the controller is reached",
+        "403, because unmatched requests are denied by default",
+        "Spring Boot adds its default chain for `/home`, so the browser is redirected to `/login`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`securityMatcher(\"/api/**\")` limits the whole chain, including its `anyRequest()` rule, to `/api/**` requests. Because a custom `SecurityFilterChain` exists, Boot's default chain backs off, so `/home` matches no chain and is not protected. That is why the notes recommend a general fallback chain ordered last.",
+      "source": "notes p4-6 (Request matching, first matching chain wins, fallback chain)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/architecture.html"
+    },
+    {
+      "id": "d94_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Authentication filters",
+      "question": "`UsernamePasswordAuthenticationFilter` is part of the chain. What does it do when an already-logged-in browser sends `GET /courses`?",
+      "codeSnippet": null,
+      "options": [
+        "It re-reads the password from the session and authenticates again on every request",
+        "It queries the database to refresh the user's roles before each request",
+        "It rejects the request, because it only allows `POST /login`",
+        "It sees that this is not a form-login request (such as `POST /login`) and simply continues the chain"
+      ],
+      "correctAnswer": 3,
+      "explanation": "An authentication filter first checks whether the request contains the mechanism it understands; for form login that is the login-processing request. Other requests pass through with `chain.doFilter(...)`. Even on a login request the filter only extracts credentials and calls the `AuthenticationManager`; it does no database work itself.",
+      "source": "notes p7-10 (A filter does not authenticate every request)",
+      "reference": null
+    },
+    {
+      "id": "d94_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Roles & authorities",
+      "question": "An admin creates a role through the lecture's `POST /api/roles` with body `{\"name\":\"ADMIN\"}` and assigns it to Aditya. The security config contains `.requestMatchers(\"/admin/**\").hasRole(\"ADMIN\")`. Aditya calls `GET /admin/stats` with correct HTTP Basic credentials. What is the result?",
+      "codeSnippet": "// CustomUserDetails (lecture code)\n@Override\npublic Collection<? extends GrantedAuthority> getAuthorities() {\n    return user.getRoles()\n            .stream()\n            .map(role -> new SimpleGrantedAuthority(role.getName()))\n            .toList();\n}",
+      "options": [
+        "200, because `hasRole(\"ADMIN\")` matches an authority named `ADMIN`",
+        "401, because the role name is not a valid authority, so login fails",
+        "403: Aditya authenticates, but his authority is `ADMIN` while `hasRole(\"ADMIN\")` requires the authority `ROLE_ADMIN`",
+        "500, because `SimpleGrantedAuthority` rejects names without the `ROLE_` prefix"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The adapter turns each role name into an authority unchanged, so Aditya gets `ADMIN`. `hasRole(\"ADMIN\")` checks for `ROLE_ADMIN`, which is why the lecture stores role names as `ROLE_USER` / `ROLE_ADMIN`. Authentication succeeds (correct password), so this is an authorization failure: 403, not 401.",
+      "source": "code: CustomUserDetails.getAuthorities, RoleController; notes p30 (Role names, hasRole)",
+      "reference": null
+    },
+    {
+      "id": "d94_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "DaoAuthenticationProvider",
+      "question": "Support sets `enabled = false` for Rohit in the `users` table. Rohit then calls `GET /api/users/hello` with HTTP Basic and his correct password. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "200, because the password matches and `enabled` is only checked at registration",
+        "Authentication fails (401) because `DaoAuthenticationProvider` checks the account state exposed by `CustomUserDetails.isEnabled()`, so no authenticated result reaches the `SecurityContext`",
+        "403, because a disabled user is authenticated but has no authorities",
+        "The request succeeds once, then the session is invalidated"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Database authentication is more than password comparison: the provider also checks `isEnabled()`, `isAccountNonLocked()` and the expiry flags from `UserDetails`. A disabled account fails authentication even with the right password, so the request is treated as unauthenticated (401) and never reaches the controller.",
+      "source": "notes p21-22 (Step 6: account status), p40 (Disable the account demo); code: CustomUserDetails.isEnabled",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/dao-authentication-provider.html"
+    },
+    {
+      "id": "d94_q7",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "AuthenticationManager & ProviderManager",
+      "question": "During an HTTP Basic login in the lecture app, which component actually calls `passwordEncoder.matches(raw, stored)`?",
+      "codeSnippet": null,
+      "options": [
+        "`DaoAuthenticationProvider`, after `ProviderManager` selects it because it supports `UsernamePasswordAuthenticationToken` and it has loaded the user via `CustomUserDetailsService`",
+        "`BasicAuthenticationFilter`, right after decoding the Base64 header",
+        "`CustomUserDetailsService.loadUserByUsername`, before returning the `UserDetails`",
+        "`ProviderManager` itself, which compares passwords for all providers"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The filter only extracts credentials and builds an unauthenticated token; `ProviderManager` (the usual `AuthenticationManager`) delegates to a provider that supports that token type. `DaoAuthenticationProvider` loads the user via the `UserDetailsService` (which just finds the user) and then verifies the password with the configured `PasswordEncoder`.",
+      "source": "notes p9-12, p18-23 (Complete internal login flow)",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/dao-authentication-provider.html"
+    },
+    {
+      "id": "d94_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Registration with default role",
+      "question": "The application is started against a brand-new database (the `role` table is empty). A client calls `POST /api/users/register` with `{\"username\":\"aditya\",\"password\":\"secret123\"}`. What happens, given the lecture's `register` method?",
+      "codeSnippet": "public UserRegisterResponseDto register(UserRegisterRequestDto dto) {\n    User user = new User();\n    user.setUsername(dto.getUsername());\n    user.setPassword(passwordEncoder.encode(dto.getPassword()));\n    user.setEnabled(true);\n\n    Role role = roleRepository.findByName(\"ROLE_USER\").get();\n    user.getRoles().add(role);\n\n    userRepository.save(user);\n    // ... build and return response DTO\n}",
+      "options": [
+        "The user is saved without any role and can log in but access nothing",
+        "Hibernate creates the missing `ROLE_USER` row automatically because of `@ManyToMany`",
+        "The user is saved first, then the request fails while adding the role",
+        "`Optional.get()` throws `NoSuchElementException` before `save()`, so the request fails with a server error and no user is stored"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`findByName` returns an empty Optional, and `get()` throws before `userRepository.save(user)` is reached. `@ManyToMany` without cascade never creates Role rows. That is why the notes' demo sequence starts with 'Create the default role' and their version uses `orElseThrow(() -> new IllegalStateException(\"ROLE_USER not found\"))` for a clearer error.",
+      "source": "code: AuthService.register; notes p27, p35-36, p39 (default role, demonstration sequence)",
+      "reference": null
+    },
+    {
+      "id": "d94_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "UserDetails & UserDetailsService",
+      "question": "The lecture's `UserRepository` declares `@EntityGraph(attributePaths = \"roles\") Optional<User> findByUsername(String username);`. A teammate removes the `@EntityGraph` as 'unnecessary'. `User.roles` is a plain `@ManyToMany` and `loadUserByUsername` is not `@Transactional`. What is the most likely result at login?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing changes, because `@ManyToMany` is EAGER by default",
+        "Login fails with a `LazyInitializationException` when `getAuthorities()` reads `user.getRoles()` after the repository call's persistence context has closed",
+        "Login succeeds, but the user gets no authorities, because lazy collections return empty lists when not loaded",
+        "The query fails at startup, because derived queries require an entity graph for collections"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@ManyToMany` is LAZY by default (lecture #31). Authentication runs in the security filter chain, before the web layer's open-session support, so after `findByUsername` returns, the `User` is detached. When `DaoAuthenticationProvider` builds the result it calls `getAuthorities()`, which touches the uninitialized `roles` collection and fails. The entity graph fetches roles in the same query.",
+      "source": "code: UserRepository.java, CustomUserDetails.getAuthorities; day 31 notes (default fetch types)",
+      "reference": "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+    },
+    {
+      "id": "d94_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "DaoAuthenticationProvider",
+      "question": "The lecture's `CustomUserDetailsService` throws `UsernameNotFoundException(\"User Not found\")` for an unknown username. With the default `DaoAuthenticationProvider` settings, how does the HTTP Basic client experience an unknown username compared with a wrong password?",
+      "codeSnippet": null,
+      "options": [
+        "Both get the same 401 response: by default the provider hides `UsernameNotFoundException` as a `BadCredentialsException`, so the response does not reveal whether the account exists",
+        "Unknown user gets 404, wrong password gets 401",
+        "Unknown user gets a 500 error because the exception is unchecked; wrong password gets 401",
+        "Unknown user gets a 401 whose body says \"User Not found\"; wrong password gets \"Bad credentials\""
+      ],
+      "correctAnswer": 0,
+      "explanation": "`DaoAuthenticationProvider` (through `AbstractUserDetailsAuthenticationProvider`'s default `hideUserNotFoundExceptions = true`) converts a not-found user into `BadCredentialsException`, so both failures look the same to the client. This is the framework doing what lecture #35 recommended manually: don't reveal unnecessary failure details. No trusted authentication is placed in the context in either case.",
+      "source": "notes p24-25 (What happens when authentication fails); code: CustomUserDetailsService",
+      "reference": "https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/dao-authentication-provider.html"
+    }
+  ]
+}

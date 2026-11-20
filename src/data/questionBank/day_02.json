@@ -1,0 +1,197 @@
+{
+  "day": 2,
+  "title": "Lecture #2: Write Your First JAVA Program",
+  "sources": [
+    "notes.pdf (5 pages)"
+  ],
+  "topics": [
+    "JDK, JRE and JVM",
+    "Compiler vs interpreter",
+    "Interpreter + JIT compiler",
+    "Responsibilities of the JVM",
+    "JSE vs JEE vs JME",
+    "javac / java workflow"
+  ],
+  "questions": [
+    {
+      "id": "d2_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "JDK, JRE and JVM",
+      "question": "According to the lecture, what does the JRE (Java Runtime Environment) consist of?",
+      "codeSnippet": null,
+      "options": [
+        "The JVM plus the class libraries that programs use for things like console output and file reading",
+        "The compiler, debugger and Javadoc tool",
+        "Only the JIT compiler, without an interpreter",
+        "The JDK plus an IDE such as VS Code or IntelliJ"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes give JRE = JVM + class libraries, the ready-made code your program calls for console output, file reading, etc. The compiler, debugger and Javadoc belong to the JDK, which is the outermost circle (JDK = JRE + development tools).",
+      "source": "notes p4",
+      "reference": "https://howtodoinjava.com/java/basics/jdk-jre-jvm/"
+    },
+    {
+      "id": "d2_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Compiler vs interpreter",
+      "question": "The lecture contrasts C/C++, Python and Java. Which classification matches the notes?",
+      "codeSnippet": null,
+      "options": [
+        "C/C++ is interpreted, Python is compiled, Java is compiled only",
+        "All three are purely compiled languages",
+        "C/C++ is compiled, Python is interpreted, Java is purely interpreted",
+        "C/C++ is compiled, Python is interpreted, Java is both compiled and interpreted"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A compiler converts the whole code at once and an interpreter converts line by line; C/C++ use a compiler and Python an interpreter. Java uses both: javac compiles source to bytecode, and the JVM then runs that bytecode with an interpreter (helped by the JIT), so calling it 'purely interpreted' ignores the compile step.",
+      "source": "notes p2-p3",
+      "reference": null
+    },
+    {
+      "id": "d2_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "JDK, JRE and JVM",
+      "question": "You are setting up a new laptop to write, compile and debug your own Java programs. Which one should you install?",
+      "codeSnippet": null,
+      "options": [
+        "Only a JVM, because it is the part that runs bytecode",
+        "The JDK, because it contains the JRE plus the compiler, debugger and other development tools",
+        "Only the JRE, because it already includes the javac compiler",
+        "Only an IDE such as IntelliJ, because IDEs replace the need for Java"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Developing means compiling, and the compiler (plus debugger, Javadoc) is in the JDK, which also contains the JRE and JVM to run the result. The JRE can only run already-compiled programs; it does not contain javac.",
+      "source": "notes p1, p4",
+      "reference": "https://howtodoinjava.com/java/basics/jdk-jre-jvm/"
+    },
+    {
+      "id": "d2_q4",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "javac / java workflow",
+      "question": "You run the two commands below in the folder containing `Demo.java`. What does the second command actually load and execute?",
+      "codeSnippet": "javac Demo.java\njava Demo",
+      "options": [
+        "Demo.java, which the java command re-reads line by line as source text",
+        "A Demo.exe file that javac created for your operating system",
+        "Demo.class, whose bytecode the JVM in the JRE converts to machine code for the CPU",
+        "Nothing; the second command only checks Demo.java for syntax errors"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes show Demo.java -> javac -> Demo.class (bytecode) -> `java Demo` -> JRE/JVM -> machine code -> CPU -> output. Note that `java Demo` takes the class name and uses the compiled Demo.class; javac never produces a native .exe.",
+      "source": "notes p5",
+      "reference": null
+    },
+    {
+      "id": "d2_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Responsibilities of the JVM",
+      "question": "The lecture lists the main jobs of the JVM. Which of the following is NOT one of the JVM's jobs?",
+      "codeSnippet": null,
+      "options": [
+        "Compiling Demo.java source code into Demo.class bytecode",
+        "Converting bytecode into machine code using an interpreter and a JIT compiler",
+        "Providing security by running code inside a sandbox model",
+        "Garbage collection, i.e. freeing memory that is no longer used"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes list the JVM's jobs as (1) bytecode -> machine code via interpreter + JIT, (2) security via the sandbox model, (3) garbage collection. Turning .java source into bytecode is done by javac, a JDK tool that runs before the JVM is ever involved.",
+      "source": "notes p4",
+      "reference": "https://howtodoinjava.com/java/basics/jdk-jre-jvm/"
+    },
+    {
+      "id": "d2_q6",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "javac / java workflow",
+      "question": "A beginner compiles successfully and then types the second command below (Java 17). What happens?",
+      "codeSnippet": "javac Demo.java\njava Demo.class",
+      "options": [
+        "The program runs normally, because the .class extension is optional",
+        "javac runs again and recompiles Demo.java before running it",
+        "The JVM runs Demo.java directly in source-file mode",
+        "It fails with \"Could not find or load main class Demo.class\", because `java` expects the class name, not the file name"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The `java` launcher takes a class name (`java Demo`), so `Demo.class` is treated as a class named `class` inside a package `Demo`, which does not exist, giving ClassNotFoundException. Source-file mode only applies when you pass a `.java` file, not a `.class` file.",
+      "source": "notes p5",
+      "reference": null
+    },
+    {
+      "id": "d2_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "JSE vs JEE vs JME",
+      "question": "Your team is building a large, transactional banking web application for enterprise use. Which Java edition from the lecture is designed for this kind of system?",
+      "codeSnippet": null,
+      "options": [
+        "JME (Java Micro Edition), because banking apps run on phones",
+        "JEE (Java Enterprise Edition), now called Jakarta EE",
+        "JSE (Java Standard Edition) only, because enterprise features do not exist",
+        "JRE, because enterprise apps only need a runtime"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes map JSE = core Java, JEE = enterprise/transactional systems (renamed Jakarta EE), and JME = lightweight devices (linked to Android-era mobile). JEE builds on JSE, so 'JSE only' misses the enterprise APIs, and the JRE is a runtime, not an edition.",
+      "source": "notes p5",
+      "reference": null
+    },
+    {
+      "id": "d2_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "JDK, JRE and JVM",
+      "question": "A production server has only a Java runtime (JRE) installed. A teammate logs in and runs `javac App.java`, but the shell says `javac: command not found`. What is the right fix?",
+      "codeSnippet": null,
+      "options": [
+        "Reinstall the JRE, because its JVM must be corrupted",
+        "Run `java App.java` with the JRE's built-in compiler instead of javac",
+        "Compile on a machine with a JDK and deploy the compiled .class files, or install a JDK on the server",
+        "Rename App.java to App.class so the JRE can run it"
+      ],
+      "correctAnswer": 2,
+      "explanation": "javac is a development tool that ships in the JDK (JDK = JRE + compiler, debugger, ...); a JRE can only run bytecode. Renaming a file does not create bytecode, and nothing is wrong with the JVM; the compiler is simply not part of a runtime-only install.",
+      "source": "notes p4",
+      "reference": "https://howtodoinjava.com/java/basics/jdk-jre-jvm/"
+    },
+    {
+      "id": "d2_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Interpreter + JIT compiler",
+      "question": "In the program below, `square` is called one million times. Based on the lecture's model of the JVM, what happens to `square` while the program runs?",
+      "codeSnippet": "public class Demo {\n    static int square(int x) {\n        return x * x;\n    }\n\n    public static void main(String[] args) {\n        long sum = 0;\n        for (int i = 0; i < 1_000_000; i++) {\n            sum += square(i % 100);\n        }\n        System.out.println(sum);\n    }\n}",
+      "options": [
+        "javac compiles square directly to machine code, so the JVM never interprets it",
+        "It is first interpreted, then the JIT compiler detects it as frequently executed code and compiles it to machine code that is reused for later calls",
+        "The JIT compiler translates the whole program to machine code before main starts, like a C++ compiler",
+        "The interpreter re-translates square on every one of the million calls; the JIT is only used for code that runs once"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes show bytecode going to the interpreter, while frequent code is sent to the JIT, whose machine code is then reused, which is why the JVM = interpreter + JIT. The JIT works at runtime on hot code, not ahead of time on the whole program, and javac only ever produces bytecode.",
+      "source": "notes p3",
+      "reference": "https://howtodoinjava.com/java/basics/jdk-jre-jvm/"
+    },
+    {
+      "id": "d2_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Interpreter + JIT compiler",
+      "question": "Why does the JVM combine an interpreter with a JIT compiler instead of JIT-compiling every method as soon as the program starts?",
+      "codeSnippet": null,
+      "options": [
+        "Compiling costs time and memory, so it pays off only for frequently executed code; code that runs rarely is cheaper to just interpret",
+        "The JIT compiler can only compile methods named main",
+        "Interpreted code is always faster than compiled machine code",
+        "Compiling everything up front would make the bytecode platform dependent"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes tie this design to early constraints (slow hardware, limited RAM, slow disk): translating everything up front was expensive, so the JVM interprets by default and JIT-compiles only the frequent code. Interpreted code is slower, not faster, which is why hot code gets compiled at all.",
+      "source": "notes p3",
+      "reference": "https://howtodoinjava.com/java/basics/jdk-jre-jvm/"
+    }
+  ]
+}

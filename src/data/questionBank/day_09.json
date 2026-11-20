@@ -1,0 +1,202 @@
+{
+  "day": 9,
+  "title": "Lecture #9: Introduction to Arrays",
+  "sources": [
+    "notes.pdf (10 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "Array declaration and creation with new",
+    "Indexing, length and traversal",
+    "ArrayIndexOutOfBoundsException",
+    "Array initializer syntax",
+    "2-D arrays as arrays of arrays",
+    "Jagged arrays",
+    "3-D / multi-dimensional arrays",
+    "String introduction and concatenation"
+  ],
+  "questions": [
+    {
+      "id": "d9_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Array declaration and creation with new",
+      "question": "In `int[] rollNums = new int[3];`, what do the keyword `new` and the number `3` do, according to the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "`new` copies an existing array, and 3 is the value stored in every element",
+        "`new` allocates memory for the array in the heap, and 3 is the size (number of int elements)",
+        "`new` declares the variable name, and 3 is the last valid index",
+        "`new` is optional decoration, and 3 is the number of dimensions"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The notes label `int[]` as the data type, `rollNums` as the identifier, `new` as the special keyword that allocates memory in the heap, and `[3]` as the size, giving room for three 32-bit ints. With size 3 the last valid index is 2, not 3.",
+      "source": "notes p1",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    },
+    {
+      "id": "d9_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "String introduction and concatenation",
+      "question": "Following the String example from the lecture, what does this snippet print?",
+      "codeSnippet": "String fname = \"Aditya\";\nString lname = \"Tandon\";\nSystem.out.println(fname + lname);",
+      "options": [
+        "Aditya Tandon",
+        "fname + lname",
+        "A compile error, because + only works on numbers",
+        "AdityaTandon"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`+` between two Strings joins them exactly as they are, and neither String contains a space, so the result is AdityaTandon. That is why the lecture's Demo3.java builds the full name as `firstName + \" \" + lastName`, adding the space explicitly.",
+      "source": "notes p10; code: Demo3.java",
+      "reference": null
+    },
+    {
+      "id": "d9_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "ArrayIndexOutOfBoundsException",
+      "question": "`rollNums` was created with `new int[3]` and holds 101, 102, 103. A teammate writes `System.out.println(rollNums[3]);` to print the last roll number. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles, but at runtime it throws ArrayIndexOutOfBoundsException, because valid indexes are 0, 1 and 2",
+        "It prints 103, because index 3 means the third element",
+        "It prints 0, the default value for a missing element",
+        "It does not compile, because the compiler checks every index"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indexing starts at 0, so the third element (103) is at rollNums[2]; index 3 lies outside the array, which the JVM detects at runtime (the notes' 'index out of bound exception'). The compiler does not check index values, so it is not a compile error.",
+      "source": "notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    },
+    {
+      "id": "d9_q4",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "2-D arrays as arrays of arrays",
+      "question": "How does the lecture describe a 2-D array such as `int[][] marks` in Java?",
+      "codeSnippet": null,
+      "options": [
+        "A single block of memory that can only be read row by row",
+        "Two separate arrays that must always have the same length",
+        "An array of arrays: each element of `marks` is itself a 1-D int array (a row)",
+        "A special String table with rows and columns"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes draw `marks` as a 1-D array whose slots point to row arrays (marks[0], marks[1], marks[2]); a 1-D array is an 'array of int' and a 2-D array is an 'array of arrays'. Because each row is its own array, rows do not have to be the same length.",
+      "source": "notes p4, p6-p7",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    },
+    {
+      "id": "d9_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Indexing, length and traversal",
+      "question": "This is based on the lecture's Demo.java. What does it print?",
+      "codeSnippet": "int[] rollNums = new int[3];\nint x = 101;\nfor (int i = 0; i < rollNums.length; i++) {\n    rollNums[i] = x;\n    x++;\n}\nSystem.out.println(rollNums.length + \" \" + rollNums[2] + \" \" + x);",
+      "options": [
+        "3 103 104",
+        "3 103 103",
+        "2 103 104",
+        "3 102 103"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The loop runs for i = 0, 1, 2 (`length` is 3), storing 101, 102, 103; x is incremented after each store, so it ends at 104 (the notes track x going 101 -> 102 -> 103 -> 104). `length` is the number of elements (3), not the last index (2).",
+      "source": "code: Demo.java; notes p2-p3",
+      "reference": null
+    },
+    {
+      "id": "d9_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "2-D arrays as arrays of arrays",
+      "question": "The lecture stores students' marks in `int[][] marks = new int[3][3];` with rows S1, S2, S3 and columns Hindi, English, CSE: S1 = 50 30 90, S2 = 60 40 80, S3 = 70 50 70. Which expression gives S3's English mark?",
+      "codeSnippet": null,
+      "options": [
+        "marks[3][2]",
+        "marks[1][2]",
+        "marks[2][2]",
+        "marks[2][1]"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The first index is the row (student) and the second the column (subject), both starting at 0: S3 is row 2 and English is column 1, so marks[2][1] = 50. marks[3][2] uses 1-based counting and would throw ArrayIndexOutOfBoundsException; marks[2][2] is S3's CSE mark (70).",
+      "source": "notes p5",
+      "reference": null
+    },
+    {
+      "id": "d9_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Jagged arrays",
+      "question": "A teammate builds the jagged array `int[][] marks = new int[3][];` with `marks[0] = new int[2]; marks[1] = new int[3]; marks[2] = new int[4];` and prints it using `for (int col = 0; col < 3; col++)` inside the row loop. What goes wrong, and what is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Nothing; Java pads short rows with zeros so a fixed 3 works for every row",
+        "It does not compile, because rows of different lengths are not allowed",
+        "Row 0 has only 2 columns, so col = 2 throws ArrayIndexOutOfBoundsException; use `col < marks[row].length` (and row 2's 4th value would be skipped anyway)",
+        "Only the last row is printed; the fix is `row <= marks.length`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "In a jagged array every row is a separate array with its own length, so the inner loop must use `marks[row].length`, exactly as the lecture's improved loop does; a hard-coded 3 overruns row 0 and under-reads row 2. Java does not pad rows, and `row <= marks.length` would itself go out of bounds.",
+      "source": "notes p7; code: Demo2.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    },
+    {
+      "id": "d9_q8",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Array initializer syntax",
+      "question": "A teammate coming from C wants an int array holding 4, 5 and 6, and tries several lines. Which one compiles in Java?",
+      "codeSnippet": null,
+      "options": [
+        "`int[] a; a = {4, 5, 6};`",
+        "`int[] a = {4, 5, 6};`",
+        "`int[] a = new int[3]{4, 5, 6};`",
+        "`int a[3] = {4, 5, 6};`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The shortcut initializer from the notes (`int[] rollNums = {4, 5, 6};`) is allowed in the declaration itself, and the size is taken from the number of values. A bare `{...}` cannot be assigned later, you cannot give both a size and an initializer list, and Java never puts the size in the declaration as C does.",
+      "source": "notes p9",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    },
+    {
+      "id": "d9_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Jagged arrays",
+      "question": "What does this program print?",
+      "codeSnippet": "int[][] marks = new int[3][];\nmarks[0] = new int[1];\nmarks[1] = new int[2];\nmarks[2] = new int[3];\n\nint total = 0;\nfor (int row = 0; row < marks.length; row++) {\n    for (int col = 0; col < marks[row].length; col++) {\n        marks[row][col] = row + col;\n        total += marks[row][col];\n    }\n}\nSystem.out.println(marks.length + \" \" + marks[2].length + \" \" + total);",
+      "options": [
+        "3 3 12",
+        "3 6 12",
+        "6 3 12",
+        "3 3 9"
+      ],
+      "correctAnswer": 0,
+      "explanation": "marks.length is the number of rows (3) and marks[2].length is the length of the last row (3), not the total element count 6. The stored values are row 0: 0; row 1: 1, 2; row 2: 2, 3, 4, which sum to 0 + 3 + 9 = 12.",
+      "source": "code: Demo2.java; notes p7",
+      "reference": null
+    },
+    {
+      "id": "d9_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "3-D / multi-dimensional arrays",
+      "question": "For the lecture's 3-D array `int[][][] arr = new int[3][3][3];`, what exactly is `arr[0][0]`?",
+      "codeSnippet": null,
+      "options": [
+        "A single int value",
+        "A 2-D array (3 x 3) of ints",
+        "A 1-D array of 3 ints, e.g. the notes' {3, 4, 7}",
+        "The total element count, 27"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Each index peels off one dimension: arr is an array of three 2-D arrays, arr[0] is one 2-D array (3 x 3), and arr[0][0] is one of its rows, a 1-D int array of length 3; only arr[0][0][0] is a single int. The notes draw exactly this, with arr[0][0] pointing at a row holding 3, 4, 7.",
+      "source": "notes p8",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    }
+  ]
+}

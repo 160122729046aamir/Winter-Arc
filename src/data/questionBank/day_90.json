@@ -1,0 +1,198 @@
+{
+  "day": 90,
+  "title": "Spring Lecture #33: Spring Transactions",
+  "sources": [
+    "notes/Notes.pdf (13 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/transactionDemo (Account, TransferRecord, TransferService, AccountService, controllers)"
+  ],
+  "topics": [
+    "ACID properties",
+    "Transaction boundary",
+    "Begin, commit & rollback",
+    "JDBC/JPA/Hibernate/Spring transaction layers",
+    "@Transactional placement"
+  ],
+  "questions": [
+    {
+      "id": "d90_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "ACID properties",
+      "question": "In a bank transfer, the debit of Account A succeeds but the credit to Account B fails. Which ACID property guarantees that the debit is also discarded, so either both balances change or neither does?",
+      "codeSnippet": null,
+      "options": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Atomicity means all operations in a transaction succeed together or are all discarded together. Consistency is about moving from one valid state to another according to defined rules; it relies on atomicity but is not the property that undoes partial work.",
+      "source": "notes p2-3 (Atomicity)",
+      "reference": null
+    },
+    {
+      "id": "d90_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "ACID properties",
+      "question": "Account A has ₹10,000. Transaction T1 withdraws ₹1,000 and T2 withdraws ₹8,000 at almost the same time. Both read ₹10,000, then T1 writes ₹9,000 and T2 writes ₹2,000, so one withdrawal is lost. Which ACID property is meant to control this problem?",
+      "codeSnippet": null,
+      "options": [
+        "Durability, because the first committed write was not kept",
+        "Atomicity, because each withdrawal only partly completed",
+        "Isolation, because it controls what one transaction may observe while another runs concurrently",
+        "Consistency, because the database allowed two transactions at once"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Isolation answers what one transaction is allowed to see while another is still executing, which is exactly the concurrent read-then-overwrite issue here. Each withdrawal completed fully (so atomicity held), and isolation does not mean only one transaction may run at a time.",
+      "source": "notes p3-4 (Isolation)",
+      "reference": null
+    },
+    {
+      "id": "d90_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Begin, commit & rollback",
+      "question": "This is the lecture's `TransferService.transfer` (the method is annotated `@Transactional`). Account 1 has 10000, account 2 has 5000. After `transfer(1L, 2L, new BigDecimal(\"1000\"))` is called, what is in the database?",
+      "codeSnippet": "@Transactional\npublic void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) throws Throwable {\n    Account fromAccount = accountRepository.findById(fromAccountId)\n            .orElseThrow(() -> new RuntimeException(\"User not found\"));\n    Account toAccount = accountRepository.findById(toAccountId)\n            .orElseThrow(() -> new RuntimeException(\"User not found\"));\n\n    fromAccount.debitAccount(amount);\n    accountRepository.saveAndFlush(fromAccount);\n\n    toAccount.creditAccount(amount);\n    accountRepository.saveAndFlush(toAccount);\n\n    transferRepository.save(new TransferRecord(fromAccountId, toAccountId, amount, LocalDate.now()));\n    transferRepository.flush();\n\n    throw new RuntimeException(\"Some Error Occured\");\n}",
+      "options": [
+        "Account 1 = 9000, account 2 = 6000 and one transfer record, because every change was flushed before the exception",
+        "Account 1 = 10000, account 2 = 5000 and no transfer record, because the RuntimeException rolls back the whole transaction",
+        "Account 1 = 9000, account 2 = 6000 but no transfer record, because only the last save is undone",
+        "Account 1 = 9000, account 2 = 5000, because only the first `saveAndFlush` reached the database"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Flushing sends SQL to the database inside the still-open transaction; it does not commit. The RuntimeException leaves the `@Transactional` method, so Spring rolls back everything done in that transaction, including the flushed updates and insert.",
+      "source": "code: TransferService.java, Account.java; notes p5-7",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html"
+    },
+    {
+      "id": "d90_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Begin, commit & rollback",
+      "question": "A developer writes a manual JDBC transfer. `credit(con)` throws an `SQLException`. Account 1 started at 10000. What is account 1's balance in the database afterwards?",
+      "codeSnippet": "Connection con = dataSource.getConnection();\ntry {\n    PreparedStatement debit = con.prepareStatement(\n        \"UPDATE account SET balance = balance - 1000 WHERE id = 1\");\n    debit.executeUpdate();\n    credit(con);              // throws SQLException\n    con.commit();\n} catch (SQLException e) {\n    con.rollback();\n} finally {\n    con.close();\n}",
+      "options": [
+        "10000, because `rollback()` in the catch block undoes the debit",
+        "10000, because nothing is written until `commit()` is called",
+        "It depends on whether `close()` commits or rolls back pending work",
+        "9000, because auto-commit was never disabled, so the debit was committed as soon as it executed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A new JDBC connection is in auto-commit mode, so each statement is committed on its own. The notes show that manual control begins with `connection.setAutoCommit(false)`; without it the debit is already permanent and `rollback()` cannot undo it (drivers typically even reject `rollback()` in auto-commit mode).",
+      "source": "notes p7-9 (Begin; JDBC transaction)",
+      "reference": null
+    },
+    {
+      "id": "d90_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "ACID properties",
+      "question": "Business rule: an account balance can never be negative. Which statement best describes how this rule is protected according to the notes?",
+      "codeSnippet": null,
+      "options": [
+        "Any `@Transactional` method automatically rejects negative balances, because consistency is part of ACID",
+        "The database refuses negative numbers in every numeric column by default",
+        "The rule must be defined and enforced by application logic (like `debitAccount`'s balance check) and/or database constraints; the transaction makes sure only complete, valid work is committed",
+        "Isolation prevents negative balances, because concurrent withdrawals cannot run"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The notes say a transaction does not invent business rules: consistency depends on rules enforced by application logic, database constraints or both. In the lecture code, `Account.debitAccount` throws when the balance is lower than the amount, and that exception lets the transaction roll back.",
+      "source": "notes p3 (Consistency); code: Account.debitAccount",
+      "reference": null
+    },
+    {
+      "id": "d90_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Transaction boundary",
+      "question": "A teammate removes `@Transactional` from `TransferService.transfer` and instead relies on each repository call (`saveAndFlush`, `save`) being transactional on its own. The credit step then fails with an exception. What is the result, and where should the boundary be?",
+      "codeSnippet": null,
+      "options": [
+        "The debit is already committed in its own transaction while the credit is not; `@Transactional` belongs on the service method that represents the whole transfer",
+        "Spring detects that the calls come from the same service method and still rolls back the debit",
+        "Nothing is committed, because repository transactions only commit when the HTTP response is sent",
+        "The debit is committed, but it is fine because Spring automatically retries the credit"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Without a surrounding transaction, each repository call starts and commits its own transaction, so the debit survives while the credit fails, breaking atomicity. The notes place the boundary in the service layer because a service method represents one complete business use case that coordinates several repository operations.",
+      "source": "notes p5-6, p11-12 (Transaction boundary, @Transactional)",
+      "reference": null
+    },
+    {
+      "id": "d90_q7",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "JDBC/JPA/Hibernate/Spring transaction layers",
+      "question": "In a Spring Boot app using Spring Data JPA with Hibernate, a `@Transactional` service method calls two repositories. Which description of the transactions involved is accurate?",
+      "codeSnippet": null,
+      "options": [
+        "Four separate transactions run: one each in Spring, JPA, Hibernate and JDBC, committed in that order",
+        "Spring's transaction replaces the database transaction, so the database itself never sees BEGIN/COMMIT",
+        "Each repository opens its own JDBC connection and transaction, and Spring commits them together at the end",
+        "Spring manages one underlying database transaction through the EntityManager/Hibernate session and its JDBC connection, and both repository calls participate in it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes describe JDBC, JPA, Hibernate and Spring as layers or APIs that control the same database transaction, not four transaction systems. Spring removes the boilerplate (begin, commit, rollback, releasing resources) but does not replace the database transaction; repository operations use resources that participate in the one started for the service method.",
+      "source": "notes p8-10 (Transaction layers)",
+      "reference": null
+    },
+    {
+      "id": "d90_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Transaction boundary",
+      "question": "Same lecture `transfer` method as before (debit + `saveAndFlush`, credit + `saveAndFlush`, `transferRepository.save(...)` + `flush()`, then `throw new RuntimeException(\"Some Error Occured\")`), but the `@Transactional` annotation has been deleted. Account 1 = 10000, account 2 = 5000, amount = 1000. What is in the database after the call?",
+      "codeSnippet": "// @Transactional  <-- removed\npublic void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) throws Throwable {\n    // ... same body as the lecture code ...\n    accountRepository.saveAndFlush(fromAccount);\n    accountRepository.saveAndFlush(toAccount);\n    transferRepository.save(new TransferRecord(fromAccountId, toAccountId, amount, LocalDate.now()));\n    transferRepository.flush();\n    throw new RuntimeException(\"Some Error Occured\");\n}",
+      "options": [
+        "Account 1 = 10000, account 2 = 5000, no record: the RuntimeException still rolls everything back",
+        "Account 1 = 9000, account 2 = 6000 and a transfer record: each repository call committed in its own transaction before the exception",
+        "Account 1 = 9000, account 2 = 5000: only the first repository call commits outside a transaction",
+        "Nothing at all is written, because `saveAndFlush` throws when no transaction is active"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Spring Data's repository methods such as `saveAndFlush`, `save` and `flush` are transactional by themselves, so without an outer transaction each one commits independently. When the final exception is thrown there is no surrounding transaction left to roll back, so all three changes stay, even though the client gets an error.",
+      "source": "code: TransferService.java; notes p5-6, p12",
+      "reference": null
+    },
+    {
+      "id": "d90_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Begin, commit & rollback",
+      "question": "Inside the `@Transactional` transfer method, a developer calls `smsService.send(\"Transfer successful\")` as the last line. Occasionally the commit itself fails (for example, a constraint is checked at commit), the transfer is rolled back, but the customer has already received the SMS. What is the underlying mistake?",
+      "codeSnippet": null,
+      "options": [
+        "The SMS should be sent before the debit, so it is rolled back together with the debit",
+        "`@Transactional` should be moved to the SMS method so the message joins the database transaction",
+        "The commit happens only after the method returns and can still fail, so non-database side effects inside the method are not covered by the rollback; send the SMS only after a successful commit",
+        "The rollback should have been prevented by catching the exception inside the method"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Spring begins the transaction before the method runs and commits after it returns, and a transaction commits only if the commit itself succeeds. A database rollback cannot undo an SMS, so it must be triggered after the transaction has committed successfully. Catching the exception would hide the failure and break atomicity.",
+      "source": "notes p5-7 (Transaction boundary; commit), p12 (Complete mental model)",
+      "reference": null
+    },
+    {
+      "id": "d90_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "@Transactional placement",
+      "question": "The lecture's `TransferService` imports `jakarta.transaction.Transactional`, while the notes show `org.springframework.transaction.annotation.Transactional`. Which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Spring honours both for basic transaction demarcation, but only Spring's annotation exposes Spring-specific attributes such as `isolation`, `readOnly` and `timeout`",
+        "The jakarta annotation is ignored by Spring, so the lecture's transfer method actually runs without a transaction",
+        "The jakarta annotation only works in Jakarta EE servers, so it causes a startup error in Spring Boot",
+        "They are identical; both are processed only when the class is also annotated with `@EnableTransactionManagement`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Spring reference documentation states that `jakarta.transaction.Transactional` is supported as a drop-in replacement for Spring's annotation, which is why the lecture demo rolls back correctly. Spring's own annotation is richer: it has settings like isolation, readOnly and timeout, which the next lecture uses. Spring Boot enables annotation-driven transactions automatically, so no extra annotation is needed on the class.",
+      "source": "code: TransferService.java (import); notes p11 (import of Spring's @Transactional)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html"
+    }
+  ]
+}

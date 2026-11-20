@@ -1,0 +1,199 @@
+{
+  "day": 42,
+  "title": "Lecture #42: Parallel Streams in Java Explained",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java"
+  ],
+  "topics": [
+    "How parallel streams work (split, assign, process, combine)",
+    "ForkJoinPool",
+    "Spliterator (tryAdvance, trySplit)",
+    "When to use / not use parallel streams",
+    "Shared mutable state & race conditions",
+    "forEach vs forEachOrdered",
+    "Primitive Optional classes (OptionalInt, OptionalDouble, OptionalLong)"
+  ],
+  "questions": [
+    {
+      "id": "d42_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "How parallel streams work",
+      "question": "The notes describe a parallel stream as: split the data into chunks, assign chunks to threads, process them independently, then combine the results. Which framework supplies those worker threads by default?",
+      "codeSnippet": null,
+      "options": [
+        "A brand-new `Thread` created for every element of the stream",
+        "The main thread alone, which switches quickly between chunks",
+        "The common `ForkJoinPool`, which forks tasks into subtasks and joins their results",
+        "A fixed pool of exactly two threads, one for each half of the list"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Parallel streams run on the shared common ForkJoinPool, using the fork (split into subtasks) and join (combine results) model drawn in the notes. They do not create a thread per element, which would be far too expensive. The number of workers depends on the available cores, not a fixed two.",
+      "source": "notes p1-p2",
+      "reference": "https://open-exam-prep.com/study-guides/oracle-java-se17/advanced-streams-and-collectors/parallel-streams-and-performance"
+    },
+    {
+      "id": "d42_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Primitive Optional classes",
+      "question": "What does this program print?",
+      "codeSnippet": "import java.util.OptionalDouble;\nimport java.util.OptionalInt;\nimport java.util.stream.IntStream;\n\npublic class Prim {\n    public static void main(String[] args) {\n        OptionalInt mx = IntStream.of(3, 9, 6).filter(x -> x > 5).max();\n        OptionalDouble avg = IntStream.of(3, 9, 6).average();\n        System.out.println(mx.getAsInt() + \" \" + avg.getAsDouble());\n    }\n}",
+      "options": [
+        "9 6.0",
+        "9 6",
+        "OptionalInt[9] OptionalDouble[6.0]",
+        "9 7.5"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`max()` on an IntStream returns an `OptionalInt`, and `getAsInt()` unwraps it to 9. `average()` always returns an `OptionalDouble`; here it covers all three numbers, (3 + 9 + 6) / 3 = 6.0, printed as a double. 7.5 would be the average of only the filtered values 9 and 6, but the second stream is not filtered.",
+      "source": "notes p4",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/IntStream.html"
+    },
+    {
+      "id": "d42_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "forEach vs forEachOrdered",
+      "question": "Which statement about the output of this program is guaranteed?",
+      "codeSnippet": "import java.util.*;\n\npublic class Demo {\n    public static void main(String[] args) {\n        List<Integer> list = new ArrayList<>(List.of(1, 2, 3, 4, 5));\n\n        list.parallelStream()\n            .map(x -> x * 2)\n            .forEachOrdered(System.out::println);\n    }\n}",
+      "options": [
+        "It prints 2, 4, 6, 8, 10 in exactly that order on every run",
+        "It prints the five doubled values, but their order can change from run to run",
+        "It prints 2, 4, 6, 8, 10 in order only on a machine with a single CPU core",
+        "It throws `ConcurrentModificationException`, because `ArrayList` is not thread-safe"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`map` may run in parallel, but `forEachOrdered` processes results in the source's encounter order, so the output is always 2, 4, 6, 8, 10. Output whose order can change is what you get with plain `forEach` on a parallel stream. Only reading the list in parallel is safe; nothing modifies it.",
+      "source": "code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html"
+    },
+    {
+      "id": "d42_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Shared mutable state & race conditions",
+      "question": "A teammate writes `List<Integer> result = new ArrayList<>(); list.parallelStream().map(x -> x * 2).forEach(x -> result.add(x));`. On large inputs, `result` sometimes has fewer elements than `list`, and occasionally an `ArrayIndexOutOfBoundsException` appears. What is the right fix?",
+      "codeSnippet": null,
+      "options": [
+        "Switch `forEach` to `peek`, because `peek` is designed for side effects",
+        "Drop the shared list and let the stream build the result: `List<Integer> result = list.parallelStream().map(x -> x * 2).toList();`",
+        "Make `result` a `LinkedList`, because linked lists have no internal array to overflow",
+        "Call `result.clear()` before the stream starts, so the threads begin from a clean list"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Several threads calling `add` on a non-thread-safe ArrayList at once is a race condition on a shared mutable resource, which is exactly the problem drawn in the notes. Updates get lost or the internal array gets corrupted. Letting the terminal operation (`toList()` or `collect`) combine per-thread results avoids sharing; a LinkedList is just as unsafe.",
+      "source": "notes p3",
+      "reference": "https://levelup.gitconnected.com/be-careful-with-java-parallel-streams-3ed0fd70c3d0"
+    },
+    {
+      "id": "d42_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Spliterator (tryAdvance, trySplit)",
+      "question": "The notes contrast `Iterator` (hasNext/next/remove) with `Spliterator`. What does a Spliterator add that makes parallel streams possible?",
+      "codeSnippet": null,
+      "options": [
+        "It runs each element on its own thread, so no splitting is needed",
+        "It copies the source into an array first, so elements can be accessed by index",
+        "It locks the source collection, so threads cannot interfere with one another",
+        "Besides traversing (`tryAdvance`), it can partition the source with `trySplit()` into another Spliterator and describe the source (size, characteristics)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A Spliterator traverses elements (`tryAdvance`), decomposes the source (`trySplit` hands off part of the elements to a new Spliterator), and describes the source through characteristics and size estimates. Splitting is what lets the ForkJoinPool hand chunks to different threads. It does not lock or copy the source.",
+      "source": "notes p1-p2",
+      "reference": "https://howtodoinjava.com/java/collections/java-spliterator"
+    },
+    {
+      "id": "d42_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "When to use / not use parallel streams",
+      "question": "Based on the lecture's \"when parallel streams can help\" checklist, which workload is the best candidate for `parallelStream()`?",
+      "codeSnippet": null,
+      "options": [
+        "Doubling the 20 values in a small `ArrayList` before showing them in a UI",
+        "Running `.sorted().distinct()` over a `LinkedList` of 2,000 strings",
+        "Computing a CPU-heavy, stateless score for each of 30 million elements in an array",
+        "Appending each element of a list to a shared `ArrayList` from inside `forEach`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Parallelism pays off for huge datasets, CPU-intensive work, stateless operations and an easily split source such as an array or ArrayList. A 20-element list has more overhead than gain, the LinkedList case combines poor splitting with stateful operations, and writing to a shared list causes race conditions.",
+      "source": "notes p3",
+      "reference": "https://dev.java/learn/api/streams/parallel-streams/"
+    },
+    {
+      "id": "d42_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "When to use / not use parallel streams",
+      "question": "The notes mark `Arrays`/`ArrayList` as data structures optimised for parallel streams and `LinkedList` as a poor fit. What is the underlying reason?",
+      "codeSnippet": null,
+      "options": [
+        "`LinkedList` is synchronized internally, so only one thread can read it at a time",
+        "An array-backed list can be split in half cheaply by index, while a linked list has to be walked node by node to find a split point",
+        "`LinkedList` does not implement `Collection`, so it has no `parallelStream()` method",
+        "Array-backed lists store primitives, which avoids boxing in parallel code"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Splitting is the first step of every parallel stream. With an index-based structure, a midpoint split is simple arithmetic and gives balanced chunks. A LinkedList has to be traversed sequentially to split, which is slow and uneven. LinkedList is not synchronized, and it does have `parallelStream()`; it just splits badly.",
+      "source": "notes p3",
+      "reference": "https://java8tips.readthedocs.io/en/stable/parallelization.html"
+    },
+    {
+      "id": "d42_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Parallel reduce",
+      "question": "Which statement about `a` and `b` is guaranteed?",
+      "codeSnippet": "import java.util.*;\n\npublic class Reduce {\n    public static void main(String[] args) {\n        List<Integer> list = List.of(1, 2, 3, 4, 5);\n        int a = list.stream().reduce(10, Integer::sum);\n        int b = list.parallelStream().reduce(10, Integer::sum);\n        System.out.println(a);\n        System.out.println(b);\n    }\n}",
+      "options": [
+        "`a` and `b` are always 25, because sequential and parallel reduce always give the same result",
+        "`a` is always 25, but `b` can be larger than 25, because the seed 10 may be added once for each chunk",
+        "`a` and `b` are always 15, because the identity is used only when the stream is empty",
+        "`a` is always 25 and `b` is always 15, because parallel reduce ignores the identity"
+      ],
+      "correctAnswer": 1,
+      "explanation": "In a parallel reduce, each chunk starts from the identity value, and the partial results are then combined. With a seed of 10 that is not a true identity for `+`, the extra 10 can be counted several times. Only a real identity (0 for sum) makes the parallel result equal the sequential 10 + 15 = 25. Sequential and parallel results match only when the identity and the operation follow the reduce contract.",
+      "source": "notes p1 (combine results), Day 40 reduce",
+      "reference": "https://java8tips.readthedocs.io/en/stable/parallelization.html"
+    },
+    {
+      "id": "d42_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "ForkJoinPool",
+      "question": "In a web service, a developer uses `urls.parallelStream().map(u -> httpClient.callBlocking(u)).toList()` to call slow remote APIs. Under load, other unrelated parallel streams in the same JVM become very slow. What is the most accurate explanation?",
+      "codeSnippet": null,
+      "options": [
+        "Parallel streams start a new thread per element, so the JVM runs out of memory",
+        "The HTTP client forces the stream back to sequential mode, which slows down other streams",
+        "`toList()` is a stateful operation that locks all other streams until it finishes",
+        "All parallel streams share the common ForkJoinPool; blocking I/O ties up its few worker threads, starving other tasks, because parallel streams are meant for CPU-bound work"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The common ForkJoinPool is shared by the whole JVM, and it is sized for CPU-bound work, roughly the number of cores. Threads that sit waiting on network calls do no useful work but still occupy the pool, so other parallel streams queue behind them. This matches the lecture's guidance that parallel streams help with CPU-intensive work, not slow I/O.",
+      "source": "notes p1, p3",
+      "reference": "https://jrebel.com/rebellabs/java-parallel-streams-are-bad-for-your-health/"
+    },
+    {
+      "id": "d42_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Ordering cost in parallel streams",
+      "question": "On a parallel stream over an `ArrayList`, why can `findAny()` be cheaper than `findFirst()`?",
+      "codeSnippet": null,
+      "options": [
+        "`findFirst()` must respect encounter order, so it may have to wait for earlier chunks, while `findAny()` can return whichever match a thread finds first",
+        "`findAny()` skips the filter step entirely, so it does less work",
+        "`findFirst()` always processes the stream sequentially, even when `parallelStream()` is used",
+        "`findAny()` returns an `OptionalInt`, which avoids boxing, while `findFirst()` returns an `Optional`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "An ArrayList has a defined encounter order, so `findFirst()` must return the earliest matching element, even if a later chunk found a match sooner. `findAny()` is explicitly allowed to return any match, which removes that coordination. Both still run the pipeline in parallel and both return the same Optional type for a Stream.",
+      "source": "notes p1-p2 (ordering of chunks), Day 40 findFirst/findAny",
+      "reference": "https://howtodoinjava.com/java8/stream-findfirst-findany"
+    }
+  ]
+}

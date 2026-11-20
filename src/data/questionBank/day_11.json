@@ -1,0 +1,202 @@
+{
+  "day": 11,
+  "title": "Lecture #11: Java Functions Deep Dive",
+  "sources": [
+    "notes.pdf (4 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java"
+  ],
+  "topics": [
+    "Function anatomy (return type, parameters, arguments)",
+    "Types of functions & return",
+    "Chaining of functions",
+    "Variable scope",
+    "Recursion & base case",
+    "Fibonacci recursion",
+    "Method overloading"
+  ],
+  "questions": [
+    {
+      "id": "d11_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Method overloading",
+      "question": "A class already has `static int sum(int a, int b)`. Which additional method would NOT be a valid overload (it causes a compile error)?",
+      "codeSnippet": null,
+      "options": [
+        "`static int sum(int a, int b, int c)`",
+        "`static int sum(double a, double b)`",
+        "`static int sum(int a, double b)`",
+        "`static double sum(int a, int b)`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Overloads must differ in their parameter list: number, types or order of parameters (as in Demo2's `sum` and `greet` versions). Changing only the return type keeps the same signature `sum(int, int)`, so the compiler reports a duplicate method. The `(int, double)` option is valid because a parameter type differs.",
+      "source": "code: Demo2.java",
+      "reference": "https://www.tpointtech.com/method-overloading-in-java"
+    },
+    {
+      "id": "d11_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Function anatomy (return type, parameters, arguments)",
+      "question": "In `int result = sum(i, j);` calling `static int sum(int a, int b) { return a + b; }`, which naming is correct?",
+      "codeSnippet": null,
+      "options": [
+        "`i` and `j` are arguments; `a` and `b` are parameters; `int` before `sum` is the return type",
+        "`i` and `j` are parameters; `a` and `b` are arguments; `int` before `sum` is the return type",
+        "`i`, `j`, `a` and `b` are all parameters; `static` is the return type",
+        "`a` and `b` are arguments; `result` is the return type of `sum`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Values passed at the call site (`i`, `j`) are arguments; the variables declared in the method header (`a`, `b`) are parameters that receive them. The return type is the data type the function returns (`int`). Swapping arguments and parameters is the most common mix-up.",
+      "source": "notes p1",
+      "reference": null
+    },
+    {
+      "id": "d11_q3",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Chaining of functions",
+      "question": "What is printed by this program (from the lecture's chaining example)?",
+      "codeSnippet": "public class Demo3 {\n    public static void main(String[] args) {\n        fun1();\n        System.out.println(\"bye\");\n    }\n    static void fun1() {\n        fun2();\n        System.out.println(\"Hi\");\n    }\n    static void fun2() {\n        fun3();\n        System.out.println(\"Hello\");\n    }\n    static void fun3() {\n        System.out.println(\"How are you\");\n    }\n}",
+      "options": [
+        "Hi, Hello, How are you, bye (one per line)",
+        "bye, Hi, Hello, How are you (one per line)",
+        "How are you, Hello, Hi, bye (one per line)",
+        "Hi, How are you, Hello, bye (one per line)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Each function calls the next one before printing, so control goes main -> fun1 -> fun2 -> fun3; fun3 prints first, then control returns and fun2, fun1 and main print in reverse order. Reading the prints top-to-bottom in the source (Hi first) ignores that the call happens before the print in each method.",
+      "source": "code: Demo3.java; notes p2",
+      "reference": null
+    },
+    {
+      "id": "d11_q4",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Variable scope",
+      "question": "In Demo4, `int j = 7;` is declared inside `if (x == 4) { ... }` in `main`. A teammate adds `System.out.println(j);` right after the if-block closes. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It prints 7, because `j` is a local variable of `main`",
+        "Compile error: `j` is only in scope inside the if-block where it was declared",
+        "It prints 0, because `j` falls back to its default value outside the block",
+        "It compiles, but throws an exception at run time when `j` is read"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A variable declared inside a block `{ }` exists only within that block, so outside it the name `j` cannot be resolved and the compiler reports 'cannot find symbol'. Scope is checked at compile time, so it never reaches run time, and local variables have no default values to fall back to.",
+      "source": "code: Demo4.java",
+      "reference": null
+    },
+    {
+      "id": "d11_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Recursion & base case",
+      "question": "A variation of the lecture's `printNum` prints both before and after the recursive call. What is the output of `printNum(3)`?",
+      "codeSnippet": "static void printNum(int n) {\n    if (n == 0) {\n        return;\n    }\n    System.out.print(n + \" \");\n    printNum(n - 1);\n    System.out.print(n + \" \");\n}",
+      "options": [
+        "3 2 1 1 2 3 ",
+        "3 2 1 3 2 1 ",
+        "1 2 3 3 2 1 ",
+        "3 3 2 2 1 1 "
+      ],
+      "correctAnswer": 0,
+      "explanation": "The first print runs on the way down (3, 2, 1); when n reaches 0 the base case returns, and each pending call finishes its second print on the way back up (1, 2, 3). '3 2 1 3 2 1' would require the second prints to happen in call order, but the most recent call (n = 1) resumes first.",
+      "source": "notes p3-p4",
+      "reference": null
+    },
+    {
+      "id": "d11_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Recursion & base case",
+      "question": "If the base case `if (n == 0) return;` is removed from `printNum(int n)` (which calls `printNum(n - 1)` and then prints `n`), what happens when `printNum(5)` runs?",
+      "codeSnippet": null,
+      "options": [
+        "Compile error, because the compiler requires a base case in every recursive method",
+        "It loops forever, printing negative numbers without ever stopping",
+        "It keeps calling itself without printing anything until the call stack runs out of space and a StackOverflowError is thrown",
+        "It prints 5 4 3 2 1 and then stops, because n cannot go below 0"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Without a base case nothing stops the calls; each call adds a new frame on the stack, and since the print comes after the recursive call it is never reached. The JVM eventually throws StackOverflowError. The compiler does not check for base cases, and unlike a loop, unbounded recursion cannot run forever because stack memory is limited.",
+      "source": "notes p3-p4",
+      "reference": null
+    },
+    {
+      "id": "d11_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Method overloading",
+      "question": "Demo2 has exactly three `sum` overloads: `sum(int a, int b)`, `sum(int a, int b, int c)`, and `sum(double a, double b)` which returns `(int)(a + b)`. A teammate calls `sum(2.5, 3)`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "Compile error, because there is no `sum(double, int)` overload",
+        "`sum(double, double)` runs (3 is widened to 3.0) and returns 5",
+        "`sum(int, int)` runs after 2.5 is narrowed to 2 and returns 5",
+        "`sum(double, double)` runs and returns 6, because 5.5 is rounded"
+      ],
+      "correctAnswer": 1,
+      "explanation": "An int argument can be widened to double automatically, so `sum(double, double)` is applicable; 2.5 cannot be narrowed to int implicitly, so `sum(int, int)` is not. The result is `(int)(5.5)`, and casting to int truncates, giving 5, not 6. An exact `(double, int)` overload is not required.",
+      "source": "code: Demo2.java",
+      "reference": "https://www.tpointtech.com/method-overloading-in-java"
+    },
+    {
+      "id": "d11_q8",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Types of functions & return",
+      "question": "Which statement about `return` matches the lecture's code (e.g. `greet()` ending with `return;` and `main` ending with `return; // optional`)?",
+      "codeSnippet": null,
+      "options": [
+        "A `void` method must end with `return;`, otherwise it does not compile",
+        "`return;` in a `void` method sends back 0 to the caller",
+        "Statements written after `return;` in a `void` method still run before the method exits",
+        "In a `void` method, `return;` just ends the method early and is optional at the end; a method like `int getNumber()` must return an int value"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A `void` method returns no value, so `return;` simply transfers control back to the caller and is optional as the last statement. A non-void method such as `getNumber()` must return a value of its return type on every path. A `void` method never hands back a value like 0.",
+      "source": "code: Demo.java",
+      "reference": null
+    },
+    {
+      "id": "d11_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Fibonacci recursion",
+      "question": "Using the lecture's Fibonacci definition (fib(0) = fib(1) = 1), what does this print?",
+      "codeSnippet": "public class Fib {\n    static int calls = 0;\n\n    static int fib(int n) {\n        calls++;\n        if (n == 0 || n == 1) {\n            return 1;\n        }\n        return fib(n - 1) + fib(n - 2);\n    }\n\n    public static void main(String[] args) {\n        int r = fib(5);\n        System.out.println(r + \" \" + calls);\n    }\n}",
+      "options": [
+        "8 15",
+        "5 15",
+        "8 9",
+        "8 6"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With fib(0) = fib(1) = 1 the series is 1, 1, 2, 3, 5, 8, so fib(5) = 8. Calls satisfy C(n) = 1 + C(n-1) + C(n-2) with C(0) = C(1) = 1, giving C(2)=3, C(3)=5, C(4)=9, C(5)=15, as in the lecture's recursion tree where fib(3), fib(2) and others are recomputed. Counting only 6 calls (one per n) ignores those repeated subcalls.",
+      "source": "notes p4",
+      "reference": null
+    },
+    {
+      "id": "d11_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Method overloading",
+      "question": "Inspired by `greet(String, int)` / `greet(int, String)`, a teammate writes `static int add(int a, double b)` and `static int add(double a, int b)`, then calls `add(2, 3)`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "The first declared overload `add(int, double)` is chosen",
+        "It compiles but throws an exception at run time because two methods match",
+        "Compile error: the call is ambiguous, since each overload needs one int-to-double widening and neither is more specific",
+        "`add(double, int)` is chosen because its double parameter comes first"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Both overloads are applicable (one argument widened in each) and neither is more specific than the other, so the compiler rejects the call as ambiguous. Overload resolution happens at compile time and never depends on declaration order. Overloading by parameter order works fine only when the argument types match one version exactly, as with `greet(\"Aditya\", 28)`.",
+      "source": "code: Demo2.java",
+      "reference": "https://www.tpointtech.com/method-overloading-in-java"
+    }
+  ]
+}

@@ -36,11 +36,11 @@ export default function TodayTaskCard() {
 
   // Calculate today's completion stats
   const totalVideos = todayDay.videos?.length || 0;
-  const watchedVideos = Object.keys(todayDay.checkedVideos || {}).filter(k => todayDay.checkedVideos[k]).length;
+  const watchedVideos = (todayDay.videos || []).filter((v) => todayDay.checkedVideos?.[v.id]).length;
   const totalExercises = todayDay.exercises?.length || 0;
-  const checkedExercises = Object.keys(todayDay.checkedExercises || {}).filter(k => todayDay.checkedExercises[k]).length;
+  const checkedExercises = (todayDay.exercises || []).filter((_, i) => todayDay.checkedExercises?.[i]).length;
   const totalRevision = todayDay.revision?.length || 0;
-  const checkedRevision = Object.keys(todayDay.checkedRevision || {}).filter(k => todayDay.checkedRevision[k]).length;
+  const checkedRevision = (todayDay.revision || []).filter((_, i) => todayDay.checkedRevision?.[i]).length;
   const totalCustom = todayDay.customTasks?.length || 0;
   const checkedCustom = (todayDay.customTasks || []).filter(t => t.completed).length;
 

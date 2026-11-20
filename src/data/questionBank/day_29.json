@@ -1,0 +1,199 @@
+{
+  "day": 29,
+  "title": "Lecture #29: Java Collection Framework Explained",
+  "sources": [
+    "notes.pdf (8 pages)"
+  ],
+  "topics": [
+    "Why collections: data + query",
+    "Dynamic array (ArrayList idea)",
+    "Linked list nodes",
+    "Set & hashing",
+    "Stack (LIFO) & Queue (FIFO)",
+    "Map key-value",
+    "Tree / BST (TreeSet, TreeMap)",
+    "Collection hierarchy & programming to interface"
+  ],
+  "questions": [
+    {
+      "id": "d29_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Stack (LIFO) & Queue (FIFO)",
+      "question": "You insert 2, then 3, then 4 into a stack, and the same three values in the same order into a queue. Then you remove all elements from each. In what order do they come out?",
+      "codeSnippet": null,
+      "options": [
+        "Stack: 2, 3, 4 — Queue: 4, 3, 2",
+        "Stack: 4, 3, 2 — Queue: 2, 3, 4",
+        "Stack: 4, 3, 2 — Queue: 4, 3, 2",
+        "Stack: 2, 3, 4 — Queue: 2, 3, 4"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A stack is LIFO (last in, first out): insertion and removal happen at the top, so 4 leaves first. A queue is FIFO (first in, first out): elements enter at the back and leave from the front, like people in a line, so 2 leaves first. The first option simply swaps the two behaviours.",
+      "source": "notes p5-p6",
+      "reference": null
+    },
+    {
+      "id": "d29_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Map key-value",
+      "question": "You need to store each student's roll number against their name (Aditya → 101, Rohit → 102) and fetch a roll number by name in constant time on average. Names are unique. Which kind of structure from the lecture fits?",
+      "codeSnippet": null,
+      "options": [
+        "A Set, because it rejects duplicate names",
+        "A Queue, because students are registered in order",
+        "A List, because it stores elements by index",
+        "A Map such as HashMap, because it stores key → value pairs looked up by key"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A Map associates a unique key with a value and, when hash-based, finds the value by hashing the key into a bucket in O(1) on average. A Set does reject duplicates, but it stores single elements, not name → roll-number pairs. A List would need a linear O(N) search by name.",
+      "source": "notes p7",
+      "reference": null
+    },
+    {
+      "id": "d29_q3",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Dynamic array (ArrayList idea)",
+      "question": "Why does the lecture build a `DynamicArray` (the idea behind `ArrayList`) instead of just using `int[] arr = new int[10];`?",
+      "codeSnippet": null,
+      "options": [
+        "A plain array has a fixed size (writing `arr[10]` fails), while a dynamic array creates a bigger array and copies the elements when it fills up",
+        "A plain array cannot store primitive values like `int`, while a dynamic array can",
+        "A plain array has no index-based access, while a dynamic array provides `get(int index)`",
+        "A plain array is stored on the stack, while a dynamic array is the only way to store data on the heap"
+      ],
+      "correctAnswer": 0,
+      "explanation": "An array's length is fixed at creation, so with length 10 the valid indexes are 0–9 and `arr[10]` throws `ArrayIndexOutOfBoundsException`. A dynamic array hides this: when it is full, it allocates a larger array and copies existing elements, so `add()` keeps working. Plain arrays do store primitives and do offer O(1) index access, so those options are false.",
+      "source": "notes p2",
+      "reference": null
+    },
+    {
+      "id": "d29_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Linked list nodes",
+      "question": "What does this program print?",
+      "codeSnippet": "class Node {\n    int data;\n    Node ref;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Node n1 = new Node(); n1.data = 4;\n        Node n2 = new Node(); n2.data = 5;\n        Node n3 = new Node(); n3.data = 8;\n        n1.ref = n2;\n\n        n3.ref = n1.ref;\n        n1.ref = n3;\n\n        Node cur = n1;\n        while (cur != null) {\n            System.out.print(cur.data + \" \");\n            cur = cur.ref;\n        }\n    }\n}",
+      "options": [
+        "4 5 8",
+        "4 5",
+        "4 8 5",
+        "8 4 5"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Initially 4 → 5. `n3.ref = n1.ref` makes 8 point to 5, then `n1.ref = n3` makes 4 point to 8, giving 4 → 8 → 5 → null. This is the lecture's insertion-in-the-middle idea: no elements are shifted, only references change. If the two lines were swapped, n3 would end up pointing to itself and the loop would never end.",
+      "source": "notes p2-p3",
+      "reference": null
+    },
+    {
+      "id": "d29_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Set & hashing",
+      "question": "This is the lecture's simple hash-based set (no chaining yet). What does it print?",
+      "codeSnippet": "public class Main {\n    static int[] arr = new int[10];\n\n    static void add(int el) {\n        arr[el % arr.length] = el;\n    }\n\n    static boolean contains(int el) {\n        return arr[el % arr.length] == el;\n    }\n\n    public static void main(String[] args) {\n        add(10);\n        add(12);\n        add(6);\n        add(100);\n        System.out.println(contains(10) + \" \" + contains(100) + \" \" + contains(12));\n    }\n}",
+      "options": [
+        "true true true",
+        "false true true",
+        "true false true",
+        "An ArrayIndexOutOfBoundsException is thrown for 100"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`el % arr.length` always yields an index 0–9, so 100 does not go out of bounds: it maps to index 0, the same bucket as 10, and overwrites it. Hence `contains(10)` is false, `contains(100)` true and `contains(12)` (index 2) true. This collision is exactly why real HashSet/HashMap keep a chain of nodes per bucket instead of a single slot.",
+      "source": "notes p4",
+      "reference": null
+    },
+    {
+      "id": "d29_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Collection hierarchy & programming to interface",
+      "question": "A teammate wrote `ArrayList<Integer> l = new ArrayList<>();` and passes `l` to many methods typed `ArrayList<Integer>`. Later you want to try `LinkedList` instead. Which design, shown in the lecture, makes that switch a one-line change?",
+      "codeSnippet": null,
+      "options": [
+        "Declare the variable and parameters as the interface type `List<Integer>`, so only `new ArrayList<>()` needs to change to `new LinkedList<>()`",
+        "Make `LinkedList` extend `ArrayList` so it can be passed wherever an `ArrayList` is expected",
+        "Declare everything as `Object` and cast to the right class wherever `add()` is called",
+        "Copy the elements into a new array each time a method needs a different list type"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`ArrayList` and `LinkedList` both implement the `List` interface, so coding against `List<Integer>` lets polymorphism pick the right `add()`/`remove()` at runtime. Only the object creation changes. You cannot change JDK class hierarchies, and declaring everything as `Object` throws away type safety and forces casts.",
+      "source": "notes p8",
+      "reference": "https://cs-214.epfl.ch/jdk-21.0.9-docs/api/java.base/java/util/doc-files/coll-designfaq.html"
+    },
+    {
+      "id": "d29_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Collection hierarchy & programming to interface",
+      "question": "In the hierarchy drawn in the lecture, `Collection` is the root interface. Which of these is NOT a sub-interface of `Collection`?",
+      "codeSnippet": null,
+      "options": [
+        "`List`",
+        "`Set`",
+        "`Queue`",
+        "`Map`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`List`, `Set` and `Queue` all extend `Collection`, which models a group of single elements. `Map` stores key → value pairs, so its operations (put by key, get by key) don't fit Collection's `add(element)` contract and it is a separate hierarchy. `Set` is a common wrong pick because a Map's keys behave like a set, but `Set` itself does extend `Collection`.",
+      "source": "notes p7-p8",
+      "reference": "https://cs-214.epfl.ch/jdk-21.0.9-docs/api/java.base/java/util/doc-files/coll-designfaq.html"
+    },
+    {
+      "id": "d29_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Dynamic array (ArrayList idea)",
+      "question": "A leaderboard loads 1 million scores once, then the app reads scores by position (`get(i)` with random `i`) millions of times; insertions in the middle are rare. Based on how a dynamic array and a linked list store data, which is the better choice and why?",
+      "codeSnippet": null,
+      "options": [
+        "A linked list, because each node knows its neighbour, so jumping to position i is O(1)",
+        "A linked list, because it never has to resize, which makes every read faster",
+        "A dynamic array (ArrayList), because elements sit in contiguous indexes so `get(i)` is O(1), while a linked list must walk node by node",
+        "Either one, because both are Lists and therefore have identical performance for every operation"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A dynamic array stores elements in an underlying array, so reading index i is a direct O(1) access. A linked list only knows the head and each node's `next`, so reaching position i costs O(i). Linked lists shine when you insert by relinking references without shifting, which this workload rarely needs; sharing the `List` interface does not make their performance identical.",
+      "source": "notes p2-p3, p8",
+      "reference": null
+    },
+    {
+      "id": "d29_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Set & hashing",
+      "question": "In the lecture's hash-based set, both 10 and 100 land in bucket 0 (`el % 10`). How does chaining resolve this, and what does it mean for lookup cost?",
+      "codeSnippet": null,
+      "options": [
+        "The second value is moved to the next empty index, so lookup is always exactly O(1)",
+        "Each bucket holds a linked chain of nodes; `contains` hashes to the bucket then walks that chain, so lookup is O(1) on average but degrades if many values share one bucket",
+        "The array is resized whenever any two values collide, so no bucket ever holds more than one value",
+        "The colliding value is rejected as a duplicate, because two values with the same bucket are considered equal"
+      ],
+      "correctAnswer": 1,
+      "explanation": "With chaining, a bucket stores a small linked list (10 → 100); lookup computes the bucket from the hash and then compares only the few nodes in that chain. With a good hash spread the chains stay short, giving average O(1), but if many values collide into one bucket the walk becomes long. Treating colliding values as duplicates would be wrong — 10 and 100 are different values that merely share a bucket.",
+      "source": "notes p4, p7",
+      "reference": null
+    },
+    {
+      "id": "d29_q10",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Dynamic array (ArrayList idea)",
+      "question": "This mini dynamic array doubles its capacity when full. What does it print?",
+      "codeSnippet": "class DynamicArray {\n    int[] arr = new int[2];\n    int size = 0;\n\n    void add(int el) {\n        if (size == arr.length) {\n            int[] bigger = new int[arr.length * 2];\n            for (int i = 0; i < size; i++) {\n                bigger[i] = arr[i];\n            }\n            arr = bigger;\n        }\n        arr[size++] = el;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        DynamicArray da = new DynamicArray();\n        int[] values = {4, 10, 13, 15, 17};\n        for (int v : values) {\n            da.add(v);\n        }\n        System.out.println(da.arr.length + \" \" + da.size + \" \" + da.arr[da.size - 1]);\n    }\n}",
+      "options": [
+        "8 5 17",
+        "5 5 17",
+        "4 5 17",
+        "8 5 0"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Capacity starts at 2: adding 4 and 10 fills it; adding 13 doubles it to 4; 15 fits; adding 17 finds size 4 == length 4 and doubles to 8. So capacity is 8, size is 5, and `arr[4]` is 17. The tempting \"5 5 17\" confuses capacity (`arr.length`) with the number of stored elements (`size`).",
+      "source": "notes p2",
+      "reference": null
+    }
+  ]
+}

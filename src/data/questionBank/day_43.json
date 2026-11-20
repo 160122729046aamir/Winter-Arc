@@ -1,0 +1,201 @@
+{
+  "day": 43,
+  "title": "Lecture #43: Java Exception Handling from Scratch",
+  "sources": [
+    "notes.pdf (3 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java"
+  ],
+  "topics": [
+    "Why exception handling",
+    "Exceptions vs Errors",
+    "Default exception handling & stack trace",
+    "try-catch",
+    "finally",
+    "Exception propagation through a chain of methods"
+  ],
+  "questions": [
+    {
+      "id": "d43_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Exceptions vs Errors",
+      "question": "The notes split runtime \"problems\" into Exceptions and Errors. Which statement matches that distinction?",
+      "codeSnippet": null,
+      "options": [
+        "Exceptions are detected at compile time, while Errors happen only at runtime",
+        "An Exception is a recoverable, handleable abnormal condition (wrong input, missing file, divide by zero), while an Error such as `OutOfMemoryError` or `StackOverflowError` is a serious JVM-level problem the program normally should not try to handle",
+        "Errors are thrown by your own code, while Exceptions are thrown only by the JVM",
+        "An Exception is a plain message string, while an Error is an object"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Exceptions are abnormal but recoverable conditions that occur during execution, and the program can catch them and continue. Errors such as `OutOfMemoryError` or `StackOverflowError` signal problems in the runtime environment that application code usually cannot fix. Both are objects; the notes label each as an \"Object\", so neither is just a string.",
+      "source": "notes p1",
+      "reference": "https://docs.oracle.com/javase/tutorial/essential/exceptions/definition.html"
+    },
+    {
+      "id": "d43_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Default exception handling & stack trace",
+      "question": "What happens when this program runs?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        int a = 5;\n        int b = 0;\n\n        System.out.println(\"Step 1\");\n\n        System.out.println(a / b);\n\n        System.out.println(\"Step 2\");\n    }\n}",
+      "options": [
+        "It prints \"Step 1\" and then \"Step 2\"; the JVM skips the bad line",
+        "It prints \"Step 1\", then 0, then \"Step 2\"",
+        "It does not compile, because the compiler detects the division by zero",
+        "It prints \"Step 1\", then the `ArithmeticException: / by zero` stack trace; \"Step 2\" is never printed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "With no handler, the JVM creates `new ArithmeticException(\"/ by zero\")`, and the default exception handler prints the exception and stack trace and ends the program. Control never reaches the \"Step 2\" line, so the JVM does not skip the bad line and carry on. `b` is a variable, so the compiler cannot flag anything here.",
+      "source": "code: Demo.java, notes p2",
+      "reference": "https://www.tpointtech.com/default-exception-in-java"
+    },
+    {
+      "id": "d43_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "finally",
+      "question": "This is the lecture's Demo3 (a `try` with `finally` but no `catch`). What is the behaviour?",
+      "codeSnippet": "public class Demo3 {\n    public static void main(String[] args) {\n        System.out.println(\"Step 1\");\n\n        try {\n            int a = 5;\n            int b = 0;\n            System.out.println(a / b);\n        }\n        finally {\n            System.out.println(\"Heyyyy\");\n        }\n\n        System.out.println(\"Step 2\");\n    }\n}",
+      "options": [
+        "It prints \"Step 1\", \"Heyyyy\", \"Step 2\", because `finally` handles the exception",
+        "It prints \"Step 1\", then the stack trace; \"Heyyyy\" is skipped because there is no catch",
+        "It prints \"Step 1\" and \"Heyyyy\", then the `ArithmeticException` stack trace; \"Step 2\" is never printed",
+        "It does not compile, because every `try` must have at least one `catch`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`finally` always runs, but it does not handle the exception. After printing \"Heyyyy\", the ArithmeticException keeps propagating out of `main`, and the default handler terminates the program. `try` with only `finally` is legal Java; a `try` just needs a `catch` or a `finally` (or to be try-with-resources).",
+      "source": "code: Demo3.java",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-14.html#jls-14.20.2"
+    },
+    {
+      "id": "d43_q4",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "try-catch",
+      "question": "A batch job processes 1,000 rows in a `for` loop. Row 37 triggers an `ArithmeticException`, and the whole job stops, so rows 38-1000 are never processed. The goal from the notes is \"when an exception occurs, don't crash; handle it and continue.\" Where should the try-catch go?",
+      "codeSnippet": null,
+      "options": [
+        "Inside the loop, around the processing of a single row, so a failure is reported for that row and the loop moves on to the next one",
+        "Around the entire `for` loop, so the job catches the exception once and then resumes from row 38",
+        "In a `finally` block after the loop, so that skipped rows get processed later",
+        "Around the `main` method declaration, so the JVM retries the failed row"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Once an exception leaves the try block, control jumps to the catch and never returns to the point of the throw. A try around the whole loop therefore ends the loop at row 37. Putting the try-catch inside the loop body contains each failure to its own row. Java has no automatic resume or retry.",
+      "source": "notes p3, code: Demo4.java",
+      "reference": "https://howtodoinjava.com/java/exception-handling/try-catch-finally"
+    },
+    {
+      "id": "d43_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Default exception handling & stack trace",
+      "question": "In Demo2, `main()` calls `methodA()`, which calls `methodB()`, which computes `a / b` with `b = 0`, and nobody has a try-catch. What exactly does the JVM do?",
+      "codeSnippet": null,
+      "options": [
+        "It returns 0 from `methodB`, logs a warning and lets `main` continue",
+        "It creates an `ArithmeticException` object in `methodB` and looks back up the call stack (methodB, methodA, main) for a matching handler; finding none, the default exception handler prints the exception with its stack trace and terminates the thread",
+        "It restarts `methodB` with `b` reset to 1, so the division can succeed",
+        "It terminates the program immediately without creating any exception object or printing anything"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When nothing handles the exception, the JVM decides everything: it builds an exception object describing the problem, unwinds the call stack frame by frame looking for a handler, and if none exists, the default handler prints the stack trace and ends the thread (here the main thread, so the program ends). The detailed trace is what makes debugging possible, which is why \"nothing printed\" is wrong.",
+      "source": "notes p2, code: Demo2.java",
+      "reference": "https://javamex.com/tutorials/exceptions/exceptions_uncaught_handler.shtml"
+    },
+    {
+      "id": "d43_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Default exception handling & stack trace",
+      "question": "When Demo2 crashes, which method appears on the first \"at ...\" line (the top frame) of the printed stack trace?",
+      "codeSnippet": null,
+      "options": [
+        "`Demo2.main`, because the program started there",
+        "`Demo2.methodA`, because it passed the bad argument along",
+        "`java.lang.ArithmeticException.<init>`, because the constructor runs first",
+        "`Demo2.methodB`, because that is where the exception was thrown; `methodA` and then `main` appear below it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "A stack trace lists frames from the most recent call (where the exception occurred) down to the entry point. So the order is methodB, then methodA, then main, mirroring the call-stack picture in the notes. `main` is at the bottom, not the top.",
+      "source": "notes p2 (Stack Trace), code: Demo2.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html"
+    },
+    {
+      "id": "d43_q7",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "finally",
+      "question": "Your method opens a file, reads it and parses numbers, and parsing may throw. Whether parsing succeeds, fails and is caught, or fails and is not caught, the file must be closed and a \"done\" log line written. Where does that code belong?",
+      "codeSnippet": null,
+      "options": [
+        "In a `finally` block, because it runs whether the try block completes normally or exits with an exception",
+        "At the end of the `try` block, because the try block always runs to completion",
+        "In the `catch` block only, because cleanup is needed only when something goes wrong",
+        "After the whole try-catch statement, because code there always runs even if an exception escapes"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The code comments in the lecture list exactly this as `finally`'s job: cleanup, closing resources and logging. The end of the try block is skipped when an exception occurs. Code after the try statement does not run if an uncaught exception escapes, as Demo3's missing \"Step 2\" shows.",
+      "source": "code: Demo3.java (comments)",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-14.html#jls-14.20.2"
+    },
+    {
+      "id": "d43_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Exception propagation through a chain of methods",
+      "question": "This time the handler is in `methodA`, not where the exception happens. What is the output?",
+      "codeSnippet": "public class Chain {\n    public static void main(String[] args) {\n        System.out.println(\"Start\");\n        methodA(5, 0);\n        System.out.println(\"End\");\n    }\n\n    static void methodA(int a, int b) {\n        try {\n            methodB(a, b);\n            System.out.println(\"A after B\");\n        } catch (ArithmeticException e) {\n            System.out.println(\"Caught in A: \" + e.getMessage());\n        }\n        System.out.println(\"A done\");\n    }\n\n    static void methodB(int a, int b) {\n        System.out.println(a / b);\n        System.out.println(\"B done\");\n    }\n}",
+      "options": [
+        "Start\nCaught in A: / by zero\nB done\nA done\nEnd",
+        "Start\nCaught in A: / by zero\nA after B\nA done\nEnd",
+        "Start\nCaught in A: / by zero\nA done\nEnd",
+        "Start\nCaught in A: / by zero\nA done"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The exception aborts `methodB` immediately, so \"B done\" never prints. It propagates to `methodA`, where the rest of the try block (\"A after B\") is skipped and the catch runs. After the catch, normal flow resumes: \"A done\" prints and control returns to `main`, which prints \"End\".",
+      "source": "code: Demo4.java (chain of methods)",
+      "reference": "https://howtodoinjava.com/java/exception-handling/try-catch-finally"
+    },
+    {
+      "id": "d43_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "try-catch",
+      "question": "A teammate wraps `System.out.println(a / b);` in `try { ... } catch (NullPointerException e) { System.out.println(\"handled\"); } finally { System.out.println(\"cleanup\"); }` and believes the program is now crash-proof. What actually happens when `b` is 0?",
+      "codeSnippet": null,
+      "options": [
+        "It prints \"handled\" and \"cleanup\", because any catch block handles any exception",
+        "It prints \"cleanup\", and then the ArithmeticException propagates and crashes the program, because the catch only matches `NullPointerException`",
+        "It prints only \"handled\", because `finally` is skipped once a catch block exists",
+        "It does not compile, because an `ArithmeticException` can only be caught by a catch clause for that exact type"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A catch block runs only if the thrown exception's type matches its parameter type. `ArithmeticException` is not a `NullPointerException`, so the handler is skipped. `finally` still runs (\"cleanup\"), and then the exception continues up the stack to the default handler. The code compiles fine; there is simply no matching handler.",
+      "source": "notes p3, code: Demo3.java, Demo4.java",
+      "reference": "https://open-exam-prep.com/study-guides/oracle-java-se17/exception-handling-and-assertions/try-catch-finally-multi-catch"
+    },
+    {
+      "id": "d43_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Why exception handling",
+      "question": "The lecture's classic exception is `int a = 5, b = 0; a / b` throwing `ArithmeticException(\"/ by zero\")`. If the same values are stored in `double x = 5, y = 0;`, what does `x / y` do, and why?",
+      "codeSnippet": null,
+      "options": [
+        "It evaluates to `Infinity` without throwing, because floating-point arithmetic (IEEE 754) has a representation for infinity, whereas `int` has none, so integer division by zero must throw",
+        "It also throws `ArithmeticException(\"/ by zero\")`, because any division by zero is illegal in Java",
+        "It evaluates to 0.0, because the JVM silently replaces invalid double results with zero",
+        "It throws `ArithmeticException`, but only when assertions are enabled with `-ea`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Java's floating-point types follow IEEE 754, so 5.0 / 0.0 is `Infinity` (and 0.0 / 0.0 is `NaN`), and no exception is created. Integer types have no infinity value, so the JVM signals the abnormal condition by creating an ArithmeticException. Assuming that every division by zero throws is a common misconception.",
+      "source": "notes p1-p2 (divide by zero), code: Demo.java",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-15.html#jls-15.17.2"
+    }
+  ]
+}

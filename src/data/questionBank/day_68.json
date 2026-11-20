@@ -1,0 +1,205 @@
+{
+  "day": 68,
+  "title": "Spring Lecture #11: Spring Boot CRUD Project from Scratch",
+  "sources": [
+    "Notes.pdf (22 pages)",
+    "Ecalidraw-Notes.pdf (2 pages)",
+    "code/crudSpringBootDemo/pom.xml",
+    "code/crudSpringBootDemo/.../CrudSpringBootDemoApplication.java",
+    "code/crudSpringBootDemo/.../controller/StudentController.java",
+    "code/crudSpringBootDemo/.../service/StudentService.java",
+    "code/crudSpringBootDemo/.../repository/StudentRepository.java",
+    "code/crudSpringBootDemo/.../entity/Student.java"
+  ],
+  "topics": [
+    "CRUD to HTTP mapping",
+    "Layered architecture",
+    "Entity role",
+    "Auto-configuration from dependencies",
+    "Package structure & component scanning",
+    "MySQL setup",
+    "Request body binding"
+  ],
+  "questions": [
+    {
+      "id": "d68_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "CRUD to HTTP mapping",
+      "question": "In the Student Management API, the admin wants to replace the details (name, email, course, age) of the student with id 1. Which HTTP method does the lecture map to this operation?",
+      "codeSnippet": null,
+      "options": [
+        "POST, because new data is being sent in the request body",
+        "GET, because the student must first be read by id",
+        "PUT, the method used for updating/replacing an existing resource",
+        "DELETE followed by POST, because updates are a delete plus a create"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The lecture's CRUD table maps Create to POST, Read to GET, Update to PUT and Delete to DELETE, so updating student 1 is `PUT /api/students/1` (the code uses `/update`). POST also carries a body, but it is reserved for creating a new student, not modifying an existing one.",
+      "source": "notes p2-p3; Excalidraw p1-p2",
+      "reference": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/PUT"
+    },
+    {
+      "id": "d68_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Layered architecture",
+      "question": "In the Controller -> Service -> Repository design, which layer should own rules such as \"hide deleted students\" and \"what to do if the student ID does not exist\"?",
+      "codeSnippet": null,
+      "options": [
+        "The service layer, because it contains the business logic",
+        "The controller layer, because it is the first class to receive the request",
+        "The repository layer, because it is closest to the data",
+        "The entity class, because it holds the student's fields"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes give exactly these as examples of business rules that belong in the service. The controller is the entry gate (receive request, call service, return response), and the repository only performs database operations; putting rules there mixes responsibilities.",
+      "source": "notes p6-p9; Excalidraw p2",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html"
+    },
+    {
+      "id": "d68_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "MySQL setup",
+      "question": "You open MySQL Workbench and try to connect to `localhost:3306` as root, but the connection is refused. Based on the lecture's explanation of the MySQL pieces, what is the most likely problem?",
+      "codeSnippet": null,
+      "options": [
+        "Workbench is outdated and must be reinstalled before it can store data",
+        "Spring Boot is not running, and Workbench connects through the Spring Boot app",
+        "The `students` table has not been created yet",
+        "The MySQL Server service is not running; Workbench is only a GUI client for it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "MySQL Server is the actual database engine; the command-line client and Workbench only connect to it. If the server service (e.g. `MySQL80`, started with `net start MySQL80` or `brew services start mysql`) is stopped, nothing listens on port 3306. A missing table would not refuse the connection, and Workbench does not go through Spring Boot.",
+      "source": "notes p16-p22",
+      "reference": "https://dev.mysql.com/doc/refman/8.0/en/windows-start-service.html"
+    },
+    {
+      "id": "d68_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Layered architecture",
+      "question": "Postman calls `POST /api/students/create` on the lecture's first version of the project. In what order do the console lines appear?",
+      "codeSnippet": "// StudentController\npublic ResponseEntity<Student> createStudent(@RequestBody Student student) {\n    System.out.println(\"Inside Student Controller\");\n    Student createdStudent = studentService.createStudent(student);\n    System.out.println(\"Exiting Student Controller\");\n    return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);\n}\n\n// StudentService\npublic Student createStudent(Student studentReq) {\n    System.out.println(\"Inside Student Service\");\n    Student studentResp = studentRepository.saveStudent(studentReq);\n    System.out.println(\"Exiting Student Service\");\n    return studentResp;\n}\n\n// StudentRepository\npublic Student saveStudent(Student studentReq) {\n    System.out.println(\"Inside Student Repository\");\n    System.out.println(\"Exiting Student Repository\");\n    // ... builds and returns s1\n}",
+      "options": [
+        "Inside Controller, Exiting Controller, Inside Service, Exiting Service, Inside Repository, Exiting Repository",
+        "Inside Controller, Inside Service, Inside Repository, Exiting Repository, Exiting Service, Exiting Controller",
+        "Inside Repository, Exiting Repository, Inside Service, Exiting Service, Inside Controller, Exiting Controller",
+        "Inside Controller, Inside Service, Inside Repository, Exiting Controller, Exiting Service, Exiting Repository"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Each layer prints its \"Inside\" line, then calls the next layer synchronously and prints \"Exiting\" only after that call returns, so the calls nest like a stack: request travels down, response travels back up. The first option would require the controller to finish before calling the service, which it cannot since it needs the service's return value.",
+      "source": "code: StudentController.java, StudentService.java, StudentRepository.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html"
+    },
+    {
+      "id": "d68_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Layered architecture",
+      "question": "With the same first version (repository not yet connected to MySQL), Postman sends `{\"name\":\"Rahul Sharma\",\"age\":22,\"rollNo\":101}` to `POST /api/students/create`. What does Postman show?",
+      "codeSnippet": "// StudentRepository (stub)\npublic Student saveStudent(Student studentReq) {\n    Student s1 = new Student();\n    s1.setName(\"Aditya\");\n    s1.setAge(28);\n    s1.setEmail(\"aditya@gmail.com\");\n    s1.setRollNo(101);\n    s1.setSubject(\"Spring Framework\");\n    return s1;\n}\n\n// StudentController returns\nreturn ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);",
+      "options": [
+        "Status 200 OK with name \"Rahul Sharma\" and age 22",
+        "Status 201 Created with name \"Rahul Sharma\" and age 22",
+        "Status 201 Created with name \"Aditya\" and age 28",
+        "Status 200 OK with an empty body, because nothing was saved"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The stub ignores `studentReq` and returns a newly built `s1`, which flows back through the service to the controller, so the body contains Aditya's data. The status is set explicitly with `HttpStatus.CREATED`, i.e. 201. Expecting Rahul's data is the trap: the request object is never used by the stub.",
+      "source": "code: StudentRepository.java, StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html"
+    },
+    {
+      "id": "d68_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Auto-configuration from dependencies",
+      "question": "You create the project with Spring Web, Spring Data JPA and MySQL Driver, write only a hello-world, and run it. Startup fails with `Failed to configure a DataSource: 'url' attribute is not specified`. Why?",
+      "codeSnippet": null,
+      "options": [
+        "JPA and the MySQL driver on the classpath make auto-configuration try to build a DataSource, but no `spring.datasource.url`/username/password was provided",
+        "The `students` table does not exist yet, so Hibernate cannot start",
+        "Embedded Tomcat could not bind to port 8080 because MySQL is using it",
+        "No class is annotated with `@Entity`, and JPA requires at least one entity to start"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Spring Boot auto-configures beans based on the JARs present: seeing JPA and a MySQL driver, it tries to create a DataSource and EntityManagerFactory, and fails without connection details. The error is about the missing URL, not about tables; MySQL listens on 3306, not Tomcat's 8080.",
+      "source": "notes p12-p13",
+      "reference": "https://www.baeldung.com/spring-boot-failed-to-configure-data-source"
+    },
+    {
+      "id": "d68_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Entity role",
+      "question": "The architecture diagram draws Controller -> Service -> Repository -> Database, with `Student` drawn above all three. How does the lecture describe the role of the `Student` entity?",
+      "codeSnippet": null,
+      "options": [
+        "It is a fourth processing layer that runs after the repository",
+        "It replaces the repository, because an entity can save itself to the database",
+        "It is only a JSON template used by Postman and is not used in Java code",
+        "It is not a flow layer but the object that travels between layers and that JPA maps to a table row"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The controller receives a `Student`, the service works with it, the repository saves it, and JPA converts that object into a row of the students table. It is data passed between layers, not a step in the call chain, and saving is still the repository's job.",
+      "source": "notes p9-p10; Excalidraw p2",
+      "reference": null
+    },
+    {
+      "id": "d68_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Package structure & component scanning",
+      "question": "The main class is in `in.strikes.crudSpringBootDemo`. A teammate moves `StudentService` (still annotated `@Service`) to a new package `in.strikes.service`. On startup the app fails: `StudentController` requires a bean of type `StudentService` that could not be found. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`@Service` classes must always be in a package literally named `service` under the controller",
+        "`@SpringBootApplication` scans only its own package and sub-packages, and `in.strikes.service` is a sibling, so the service is never registered",
+        "Constructor injection only works when both classes are in the same package",
+        "Spring scans packages alphabetically and `service` is reached after `controller` needs it"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@SpringBootApplication` includes component scanning rooted at the main class's package, which is why the lecture keeps the main class in the root package and puts `controller`, `service`, `repository`, `entity` under it. `in.strikes.service` is outside `in.strikes.crudSpringBootDemo`, so the bean is missing. Bean creation order is resolved by dependencies, not alphabetically.",
+      "source": "notes p13-p15",
+      "reference": "https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html"
+    },
+    {
+      "id": "d68_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Request body binding",
+      "question": "A teammate forgets `@RequestBody`. Postman sends `POST /api/students/create` with JSON body `{\"name\":\"Rahul Sharma\",\"age\":22}` and header `Content-Type: application/json`, and no query parameters. What is printed?",
+      "codeSnippet": "@PostMapping(\"/create\")\npublic ResponseEntity<Student> createStudent(Student student) {\n    System.out.println(student.getName() + \" \" + student.getAge());\n    Student createdStudent = studentService.createStudent(student);\n    return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);\n}",
+      "options": [
+        "Rahul Sharma 22, because Spring always reads JSON into object parameters",
+        "Nothing; the request fails with 415 Unsupported Media Type before the method runs",
+        "null 0, because the object is treated as a model attribute bound from request parameters, not from the JSON body",
+        "A NullPointerException, because the `student` parameter itself is null"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Without an annotation, a non-simple parameter is resolved as `@ModelAttribute`: Spring creates a new `Student` and binds request parameters (query/form fields) onto it, ignoring the JSON body. With no parameters, `name` stays null and the `int` age stays 0. The object is created, so it is not null, and only `@RequestBody` makes Jackson read the JSON body.",
+      "source": "code: StudentController.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html"
+    },
+    {
+      "id": "d68_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Auto-configuration from dependencies",
+      "question": "Last lecture's app (only `spring-boot-starter`) printed its output from a runner and then the JVM exited. This CRUD app, started the same way via `SpringApplication.run`, keeps running and waits for Postman. What explains the difference?",
+      "codeSnippet": null,
+      "options": [
+        "The web MVC starter makes auto-configuration start an embedded Tomcat server on port 8080, whose threads keep the application alive to serve requests",
+        "`@RestController` contains an infinite loop that blocks `main()` until the app is stopped",
+        "The MySQL driver keeps the JVM alive by holding an open connection, so without a database the app would exit",
+        "`@RequestMapping` tells `SpringApplication.run` to call `Thread.sleep` forever"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes state: Spring Web present -> start embedded Tomcat on port 8080. The server's non-daemon threads keep listening for HTTP requests, so the process keeps running; without a web server, the app finishes startup, runs the runners, and exits. The database driver is not what keeps the JVM alive: a web app without JPA still keeps running.",
+      "source": "notes p11-p13",
+      "reference": "https://docs.spring.io/spring-boot/reference/web/servlet.html"
+    }
+  ]
+}

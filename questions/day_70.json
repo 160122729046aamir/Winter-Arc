@@ -3,15 +3,17 @@
   "title": "Spring Lecture #13: Spring Boot CRUD Project with Soft Delete",
   "topic": "Spring Framework & Spring Boot",
   "totalQuestions": 25,
+  "codeFilesFound": 6,
+  "pdfNotesAnalyzed": true,
   "topicsCovered": [
-    "Core architecture of Spring Boot CRUD Project with Soft Delete",
-    "Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete",
-    "Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete",
-    "Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete",
-    "Edge case handling and validation for Spring Boot CRUD Project with Soft Delete",
-    "Design patterns and best practices in Spring Boot CRUD Project with Soft Delete",
-    "Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete",
-    "Performance optimization and testing of Spring Boot CRUD Project with Soft Delete"
+    "Syntax & rules of Spring Boot CRUD Project with Soft Delete",
+    "Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete",
+    "Design & architectural pattern of Spring Boot CRUD Project with Soft Delete",
+    "Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete",
+    "Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete",
+    "Exception handling & failure states in Spring Boot CRUD Project with Soft Delete",
+    "Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete",
+    "Testing & verification of Spring Boot CRUD Project with Soft Delete"
   ],
   "questions": {
     "easy": [
@@ -21,18 +23,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Core architecture of Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
-        "codeSnippet": null,
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Syntax & rules of Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
+        "codeSnippet": "package in.strikes.crudSpringBootDemo;\n\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\nimport org.springfra\n...",
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for core architecture of spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Core architecture of Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Core architecture of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Syntax & rules of Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Syntax & rules of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_2",
@@ -40,18 +42,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_3",
@@ -59,18 +61,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Design & architectural pattern of Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for memory and execution lifecycle of spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Design & architectural pattern of Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Design & architectural pattern of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_4",
@@ -78,18 +80,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for exception handling and defensive coding in spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_5",
@@ -97,18 +99,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Edge case handling and validation for Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for edge case handling and validation for spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Edge case handling and validation for Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Edge case handling and validation for Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_6",
@@ -116,18 +118,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Design patterns and best practices in Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Exception handling & failure states in Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for design patterns and best practices in spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Design patterns and best practices in Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Design patterns and best practices in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Exception handling & failure states in Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Exception handling & failure states in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_7",
@@ -135,18 +137,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for thread-safety and concurrency considerations in spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_8",
@@ -154,18 +156,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Performance optimization and testing of Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Testing & verification of Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for performance optimization and testing of spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Performance optimization and testing of Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Performance optimization and testing of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Testing & verification of Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Testing & verification of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_9",
@@ -173,18 +175,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Core architecture of Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Syntax & rules of Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for core architecture of spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Core architecture of Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Core architecture of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Syntax & rules of Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Syntax & rules of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_e_10",
@@ -192,18 +194,18 @@
         "difficulty": "easy",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Which statement accurately describes 'Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete' as explained in Lecture #70?",
+        "question": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, what is the primary role of 'Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete' (demonstrated in CrudSpringBootDemoApplication)?",
         "codeSnippet": null,
         "options": [
-          "It is a core Java/Spring feature providing standard language guarantees for syntax and declaration rules for spring boot crud project with soft delete.",
-          "It is a deprecated C-style macro that triggers an unhandled segmentation fault at runtime.",
-          "It operates solely by converting all instructions into unmanaged static global variables.",
-          "It is an optional third-party library that cannot run on standard JVM installations."
+          "It defines standard, compile-time verified semantics ensuring clean execution of Spring Boot CRUD Project with Soft Delete.",
+          "It is an obsolete construct that leads to unhandled hardware faults.",
+          "It converts all variables to global unmanaged primitives.",
+          "It bypasses class loading and executes purely as C binary code."
         ],
         "correctAnswer": 0,
-        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, 'Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete' is introduced as a foundational building block ensuring clean compile-time syntax and predictable runtime behavior.",
-        "concept": "Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "In Spring Lecture #13: Spring Boot CRUD Project with Soft Delete, understanding 'Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete' is essential for mastering the core rules and syntax of Spring Boot CRUD Project with Soft Delete.",
+        "concept": "Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       }
     ],
     "medium": [
@@ -213,18 +215,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete' in production backend execution?",
-        "codeSnippet": null,
+        "question": "During the execution of 'Design & architectural pattern of Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
+        "codeSnippet": "package in.strikes.crudSpringBootDemo.controller;\n\nimport in.strikes.crudSpringBootDemo.entity.Student;\nimport in.strikes.crudSpringBootDemo.service.StudentService;\nimport org.spri\n...",
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_2",
@@ -232,18 +234,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_3",
@@ -251,18 +253,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Edge case handling and validation for Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Edge case handling and validation for Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Edge case handling and validation for Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_4",
@@ -270,18 +272,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Design patterns and best practices in Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Exception handling & failure states in Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Design patterns and best practices in Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Design patterns and best practices in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Exception handling & failure states in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_5",
@@ -289,18 +291,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_6",
@@ -308,18 +310,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Performance optimization and testing of Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Testing & verification of Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Performance optimization and testing of Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Performance optimization and testing of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Testing & verification of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_7",
@@ -327,18 +329,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Core architecture of Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Syntax & rules of Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Core architecture of Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Core architecture of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Syntax & rules of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_8",
@@ -346,18 +348,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Syntax and declaration rules for Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Memory & stack/heap execution in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_9",
@@ -365,18 +367,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Design & architectural pattern of Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Memory and execution lifecycle of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Design & architectural pattern of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_m_10",
@@ -384,18 +386,18 @@
         "difficulty": "medium",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "Under the hood, what occurs during 'Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete' in production backend execution?",
+        "question": "During the execution of 'Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete' within main(), how does the runtime manage memory and object references?",
         "codeSnippet": null,
         "options": [
-          "The JVM / container allocates required heap/stack frames, applies type/security verification, and optimizes execution.",
-          "The thread locks the entire system memory bus indefinitely until a manual hardware interrupt occurs.",
-          "All local variables are promoted to global system properties bypassing garbage collection.",
-          "The operation is silently converted into an asynchronous unmonitored background daemon."
+          "By maintaining distinct stack frames for method calls and allocating objects on the heap with proper reference management.",
+          "By permanently locking CPU cache lines and preventing any garbage collection pass.",
+          "By converting local variables into ThreadLocal singletons without lifecycle bounds.",
+          "By discarding return values and relying strictly on system standard out."
         ],
         "correctAnswer": 0,
-        "explanation": "Understanding the runtime internals of 'Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete' ensures high performance, proper memory utilization, and thread safety in backend services.",
-        "concept": "Exception handling and defensive coding in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Runtime execution for Spring Boot CRUD Project with Soft Delete relies on structured heap allocation, stack frames, and clean object scoping.",
+        "concept": "Code implementation demonstrated in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       }
     ],
     "hard": [
@@ -405,18 +407,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Edge case handling and validation for Spring Boot CRUD Project with Soft Delete'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Edge case handling and validation for Spring Boot CRUD Project with Soft Delete'.",
-        "concept": "Edge case handling and validation for Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Boundary conditions & defensive checks in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_h_2",
@@ -424,18 +426,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Design patterns and best practices in Spring Boot CRUD Project with Soft Delete'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Exception handling & failure states in Spring Boot CRUD Project with Soft Delete' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Design patterns and best practices in Spring Boot CRUD Project with Soft Delete'.",
-        "concept": "Design patterns and best practices in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Exception handling & failure states in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_h_3",
@@ -443,18 +445,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete'.",
-        "concept": "Thread-safety and concurrency considerations in Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Thread-safety & concurrency in Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_h_4",
@@ -462,18 +464,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Performance optimization and testing of Spring Boot CRUD Project with Soft Delete'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Testing & verification of Spring Boot CRUD Project with Soft Delete' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Performance optimization and testing of Spring Boot CRUD Project with Soft Delete'.",
-        "concept": "Performance optimization and testing of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Testing & verification of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       },
       {
         "id": "d70_h_5",
@@ -481,18 +483,18 @@
         "difficulty": "hard",
         "type": "mcq",
         "topic": "Spring Framework & Spring Boot",
-        "question": "In a mission-critical system processing 50,000 req/sec, what is the key architectural challenge with 'Core architecture of Spring Boot CRUD Project with Soft Delete'?",
+        "question": "Under extreme production load (50,000 requests/sec), how should 'Syntax & rules of Spring Boot CRUD Project with Soft Delete' be designed to avoid bottlenecks?",
         "codeSnippet": null,
         "options": [
-          "Managing memory allocation overhead, avoiding lock contention, and handling edge-case failure propagation gracefully.",
-          "Forcing all requests through a single synchronized monitor lock to prevent any multithreading.",
-          "Disabling all runtime assertions and ignoring validation exceptions to maximize throughput.",
-          "Storing sensitive state in unencrypted static variables accessible across tenant boundaries."
+          "By minimizing object allocations, avoiding lock contention, and implementing bounded resource pools with defensive timeouts.",
+          "By placing synchronized monitor locks across all public methods in the application.",
+          "By disabling all database connection pooling and creating new sockets per request.",
+          "By ignoring all exceptions and returning null values to prevent thread delays."
         ],
         "correctAnswer": 0,
-        "explanation": "High-scale engineering requires defensive memory management, lock-free or properly bounded concurrency, and resilient error recovery for 'Core architecture of Spring Boot CRUD Project with Soft Delete'.",
-        "concept": "Core architecture of Spring Boot CRUD Project with Soft Delete",
-        "reference": "https://docs.spring.io/spring-framework/reference/"
+        "explanation": "Scalable backend architectures must balance memory allocation overhead, lock-free/low-contention concurrency, and resilient failure isolation.",
+        "concept": "Syntax & rules of Spring Boot CRUD Project with Soft Delete",
+        "reference": "https://github.com/adityatandon15/Spring-Framework-Full-Course/tree/main/Lecture%2013"
       }
     ]
   }

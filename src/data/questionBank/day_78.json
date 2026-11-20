@@ -1,0 +1,203 @@
+{
+  "day": 78,
+  "title": "Spring Lecture #21: Spring Boot Interceptors",
+  "sources": [
+    "notes/Notes.pdf (36 pages)",
+    "notes/Excalidraw-Notes.pdf (2 pages)",
+    "code/interceptorDemo/config/WebConfig.java",
+    "code/interceptorDemo/interceptor/AuthenticationInterceptor.java",
+    "code/interceptorDemo/interceptor/AuthorizationInterceptor.java",
+    "code/interceptorDemo/interceptor/LoggingInterceptor.java",
+    "code/interceptorDemo/controller/StudentController.java"
+  ],
+  "topics": [
+    "Interceptor lifecycle (preHandle/postHandle/afterCompletion)",
+    "Registering interceptors with WebMvcConfigurer",
+    "Interceptor ordering",
+    "HandlerMethod inspection",
+    "Request-scoped data in singleton interceptors",
+    "Filter vs Interceptor"
+  ],
+  "questions": [
+    {
+      "id": "d78_q1",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Registering interceptors with WebMvcConfigurer",
+      "question": "You write `@Component public class LoggingInterceptor implements HandlerInterceptor` with a `preHandle()` that prints the URI. The app starts fine, but nothing is ever printed for `/api/students`. What is missing?",
+      "codeSnippet": null,
+      "options": [
+        "The class must extend `OncePerRequestFilter` instead of implementing `HandlerInterceptor`",
+        "The interceptor must be added to the MVC chain with `registry.addInterceptor(...)` in a `WebMvcConfigurer`'s `addInterceptors()` method",
+        "`preHandle()` only runs after `postHandle()` has been overridden as well",
+        "The class must be annotated with `@Order(1)`, otherwise Spring MVC ignores it"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@Component` only creates the bean. An interceptor joins the handler execution chain only when it is registered through `InterceptorRegistry.addInterceptor()` in a `WebMvcConfigurer`. `HandlerInterceptor` has default methods, so overriding only `preHandle()` is fine, and `@Order` does not register anything.",
+      "source": "notes p11-12, p35 (Mistake 1); code: WebConfig.java",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/handlermapping-interceptor.html"
+    },
+    {
+      "id": "d78_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Filter vs Interceptor",
+      "question": "You need to log, for every request, the name of the controller class and the controller method that will handle it. Why is an interceptor a better fit than a servlet Filter here?",
+      "codeSnippet": null,
+      "options": [
+        "Filters run after the controller, so they cannot log anything before the method executes",
+        "Interceptors run before the DispatcherServlet, so they see the request earlier than filters",
+        "Filters cannot read request headers or the request URI, but interceptors can",
+        "An interceptor runs after HandlerMapping has selected the handler, so its `handler` argument (a `HandlerMethod`) exposes the bean type and method"
+      ],
+      "correctAnswer": 3,
+      "explanation": "An interceptor runs inside Spring MVC after a handler is chosen, and `HandlerMethod.getBeanType()`/`getMethod()` reveal the controller and method. A Filter works at the servlet layer around the DispatcherServlet and normally doesn't know which controller method will be picked. Interceptors run after filters, not before the DispatcherServlet, and filters can certainly read headers and URIs.",
+      "source": "notes p2-3, p6-7, p31",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html"
+    },
+    {
+      "id": "d78_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Interceptor lifecycle (preHandle/postHandle/afterCompletion)",
+      "question": "This interceptor from the lecture code is registered for `/api/**`. Three clients call `POST /api/students`: (i) with no `x-api-key` header, (ii) with `x-api-key: secret123`, (iii) with `x-api-key: wrong`. What happens?",
+      "codeSnippet": "@Component\npublic class AuthenticationInterceptor implements HandlerInterceptor {\n    @Override\n    public boolean preHandle(HttpServletRequest request,\n                             HttpServletResponse response,\n                             Object handler) {\n        String apiKey = request.getHeader(\"x-api-key\");\n        if (apiKey != null && !apiKey.equals(\"secret123\")) {\n            return false;\n        }\n        return true;\n    }\n}",
+      "options": [
+        "(i) and (ii) reach the controller; (iii) is stopped, but since nothing was written, the client gets an empty body with the default 200 status",
+        "Only (ii) reaches the controller; (i) and (iii) automatically receive 401 Unauthorized",
+        "(i) throws a `NullPointerException`; (ii) reaches the controller; (iii) gets 401",
+        "Only (ii) reaches the controller; (i) and (iii) receive 403 Forbidden from Spring MVC"
+      ],
+      "correctAnswer": 0,
+      "explanation": "For (i), `apiKey != null` is false, so `&&` short-circuits and the method returns true: a missing key is let through (a logic bug). For (iii), it returns false, but Spring does not invent a 401 or 403. It assumes the interceptor has handled the response, so the client gets an empty response with the default status. The notes stress writing a status and body before returning false.",
+      "source": "code: AuthenticationInterceptor.java; notes p8, p35 (Mistake 2)",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html"
+    },
+    {
+      "id": "d78_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Interceptor ordering",
+      "question": "Interceptors `A` and `B` are registered in that order (A first). Each prints its name and the callback in all three methods, and every `preHandle` returns true. The controller prints `controller`. What is printed for a successful request?",
+      "codeSnippet": "registry.addInterceptor(a);   // prints \"A.pre\", \"A.post\", \"A.after\"\nregistry.addInterceptor(b);   // prints \"B.pre\", \"B.post\", \"B.after\"",
+      "options": [
+        "A.pre, B.pre, controller, A.post, B.post, A.after, B.after",
+        "A.pre, A.post, A.after, B.pre, B.post, B.after, controller",
+        "A.pre, B.pre, controller, B.post, A.post, B.after, A.after",
+        "A.pre, B.pre, controller, B.post, B.after, A.post, A.after"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`preHandle` runs in registration order, while `postHandle` and `afterCompletion` both run in reverse order, like nested calls (A opens, B opens, controller, B closes, A closes). All `postHandle` calls happen before rendering, and all `afterCompletion` calls happen after it, so the two are not interleaved per interceptor.",
+      "source": "notes p27-29",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html"
+    },
+    {
+      "id": "d78_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Request-scoped data in singleton interceptors",
+      "question": "A timing interceptor stores `startTime = System.currentTimeMillis()` in a `private long startTime` field in `preHandle()` and computes the duration in `afterCompletion()`. Under load, some requests report impossibly small or even negative durations. What is the cause and fix?",
+      "codeSnippet": null,
+      "options": [
+        "`currentTimeMillis()` has too little precision; replacing it with `nanoTime()` while keeping the field fixes it",
+        "The interceptor is a singleton shared by concurrent requests, so another request overwrites the field; store the start time in a request attribute instead",
+        "`afterCompletion()` runs before `preHandle()` for concurrent requests; move the calculation to `postHandle()`",
+        "Spring creates a new interceptor for each request, so the field is always reset; make the field `static`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Interceptor beans are singletons, so one `startTime` field is shared by every in-flight request. Request B can overwrite A's start time before A finishes. Each request has its own `HttpServletRequest`, so `request.setAttribute(\"requestStartTime\", System.nanoTime())` keeps the value per request. Switching to `nanoTime()` is a good idea for elapsed time, but it doesn't fix the race, and a `static` field makes sharing worse.",
+      "source": "notes p20-23",
+      "reference": null
+    },
+    {
+      "id": "d78_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Interceptor lifecycle (preHandle/postHandle/afterCompletion)",
+      "question": "For a `@RestController` method returning `ResponseEntity<Student>`, a developer tries to add a response header and wrap the JSON body inside `postHandle()`. Why does this not work reliably?",
+      "codeSnippet": null,
+      "options": [
+        "The response body has already been written (and typically committed) by the HandlerAdapter before `postHandle()` runs, and `modelAndView` is `null`; `ResponseBodyAdvice` is the right tool",
+        "`postHandle()` is called before the controller method executes, so the body does not exist yet",
+        "`postHandle()` is only called when `preHandle()` returns false",
+        "`postHandle()` is invoked only for requests that ended with an exception"
+      ],
+      "correctAnswer": 0,
+      "explanation": "For `@ResponseBody`/`ResponseEntity` methods, Spring writes and commits the response inside the HandlerAdapter, so it is too late in `postHandle()` to change headers or the body. `modelAndView` is null because no view is rendered. `postHandle()` does run after the controller and only on success, so the other options misdescribe it. Use `ResponseBodyAdvice` (or a filter wrapper) instead.",
+      "source": "notes p14-16, p35 (Mistake 5)",
+      "reference": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/handlermapping-interceptor.html"
+    },
+    {
+      "id": "d78_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Interceptor ordering",
+      "question": "With the lecture's configuration below, a client sends `POST /api/students` with headers `x-api-key: secret123` and `x-user-role: USER`. AuthenticationInterceptor allows a correct key; AuthorizationInterceptor writes a 403 JSON body and returns false for a non-null role other than `ADMIN`; LoggingInterceptor prints the request details in `preHandle()` and returns true. What is the outcome?",
+      "codeSnippet": "@Override\npublic void addInterceptors(InterceptorRegistry registry) {\n    registry.addInterceptor(authenticationInterceptor)\n            .addPathPatterns(\"/api/**\")\n            .excludePathPatterns(\"/api/auth/login\")\n            .order(1);\n\n    registry.addInterceptor(loggingInterceptor)\n            .order(3);\n\n    registry.addInterceptor(authorizationInterceptor)\n            .order(2);\n}",
+      "options": [
+        "LoggingInterceptor prints the request details (it is registered second), then the client gets 403",
+        "The controller prints `controller called`, and then the client gets 403",
+        "The client gets 401, because AuthenticationInterceptor runs first and rejects the request",
+        "The client gets 403 with the JSON message; LoggingInterceptor's `preHandle()` never runs and the controller is not called"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`order()` values decide execution order, not the sequence of `addInterceptor` calls: authentication (1), then authorization (2), then logging (3). The key is correct, so authentication returns true. Authorization sees role USER, writes 403 and returns false, which stops the chain before LoggingInterceptor and the controller.",
+      "source": "code: WebConfig.java, AuthorizationInterceptor.java, LoggingInterceptor.java; notes p29",
+      "reference": null
+    },
+    {
+      "id": "d78_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Interceptor lifecycle (preHandle/postHandle/afterCompletion)",
+      "question": "Three interceptors are ordered A, B, C. Each prints in every callback. A's `preHandle` returns true, B's `preHandle` returns false (after writing a 401), and C's would return true. What is printed?",
+      "codeSnippet": "// A.preHandle -> print \"A.pre\";  return true;\n// B.preHandle -> print \"B.pre\";  write 401; return false;\n// C.preHandle -> print \"C.pre\";  return true;\n// every postHandle prints \"X.post\", every afterCompletion prints \"X.after\"",
+      "options": [
+        "A.pre, B.pre, C.pre, C.after, B.after, A.after",
+        "A.pre, B.pre, B.after, A.after",
+        "A.pre, B.pre, A.after",
+        "A.pre, B.pre, A.post, A.after"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Once B returns false the chain stops: C and the controller never run, and no `postHandle` is called. Spring then triggers `afterCompletion` only for interceptors whose `preHandle` completed and returned true, which is just A. B's `afterCompletion` is not called because its own `preHandle` returned false.",
+      "source": "notes p29 (only interceptors that participated get completion callbacks)",
+      "reference": "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html"
+    },
+    {
+      "id": "d78_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Interceptor lifecycle (preHandle/postHandle/afterCompletion)",
+      "question": "A monitoring interceptor logs \"SUCCESS\" in `afterCompletion()` whenever `ex == null`. A controller throws `StudentNotFoundException`, which a `@RestControllerAdvice` turns into a 404 JSON response. The dashboard still counts the request as SUCCESS. Why, and what should the interceptor do?",
+      "codeSnippet": null,
+      "options": [
+        "`afterCompletion()` is skipped entirely when an exception occurs, so the SUCCESS comes from `postHandle()`; move the check there",
+        "The exception was resolved by the exception handler, so `ex` can be null even though the request failed; also inspect `response.getStatus()`",
+        "`ex` is only non-null for checked exceptions; make `StudentNotFoundException` extend `Exception`",
+        "The advice runs after `afterCompletion()`, so the interceptor sees the request before it fails; register the interceptor with a higher order"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When an `@ExceptionHandler`/`@RestControllerAdvice` resolves the exception into a valid response, the interceptor's `ex` argument may be null. `ex == null` therefore does not prove success, and the final `response.getStatus()` (404 here) must be checked. `afterCompletion()` still runs (it behaves like a finally block), and whether the exception is checked has nothing to do with it.",
+      "source": "notes p17-18, p35 (Mistake 7)",
+      "reference": null
+    },
+    {
+      "id": "d78_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Filter vs Interceptor",
+      "question": "Filter F prints `F-before`/`F-after` around `chain.doFilter()`. Interceptor I prints `I-pre`, `I-post`, `I-after` in its three callbacks. For a successful REST request, which sequence is correct?",
+      "codeSnippet": null,
+      "options": [
+        "F-before, I-pre, controller, I-post, I-after, F-after",
+        "I-pre, F-before, controller, F-after, I-post, I-after",
+        "F-before, I-pre, controller, I-post, F-after, I-after",
+        "F-before, I-pre, controller, F-after, I-post, I-after"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A Filter wraps the whole DispatcherServlet, and an interceptor wraps only the selected handler inside it. So all interceptor callbacks, including `afterCompletion()`, finish inside the DispatcherServlet before control returns to the code after `chain.doFilter()`. Interceptors can never run before filters, because they need the DispatcherServlet and a selected handler.",
+      "source": "notes p29-30",
+      "reference": null
+    }
+  ]
+}

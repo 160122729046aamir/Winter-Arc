@@ -1,0 +1,201 @@
+{
+  "day": 91,
+  "title": "Spring Lecture #34: Transactional Propagation & Isolation",
+  "sources": [
+    "notes/Notes.pdf (25 pages)",
+    "notes/Excalidraw-Notes.pdf (6 pages)",
+    "code/transactionDemo (Order, PaymentAudit, OrderService, PaymentAuditService)"
+  ],
+  "topics": [
+    "@Transactional defaults",
+    "Rollback rules",
+    "REQUIRED & rollback-only",
+    "REQUIRES_NEW & suspension",
+    "NESTED & savepoints",
+    "Proxy-based interception",
+    "Concurrency anomalies",
+    "Isolation levels"
+  ],
+  "questions": [
+    {
+      "id": "d91_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "@Transactional defaults",
+      "question": "Which set of values does a plain `@Transactional` (Spring's `org.springframework.transaction.annotation.Transactional`, no attributes) use by default?",
+      "codeSnippet": null,
+      "options": [
+        "Propagation `REQUIRES_NEW`, isolation `READ_COMMITTED`, rollback on any `Exception`",
+        "Propagation `REQUIRED`, isolation `DEFAULT` (the database's level), rollback on `RuntimeException` and `Error`",
+        "Propagation `REQUIRED`, isolation `SERIALIZABLE`, rollback on checked exceptions only",
+        "Propagation `SUPPORTS`, isolation `DEFAULT`, read-only, rollback on `RuntimeException` only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The defaults are REQUIRED propagation, `Isolation.DEFAULT` (use the underlying database's level, e.g. REPEATABLE READ on MySQL InnoDB), read-write, the infrastructure's default timeout, and rollback for `RuntimeException` and `Error`. Checked exceptions do not trigger rollback unless configured with `rollbackFor`.",
+      "source": "notes p1-3 (Default @Transactional behaviour)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html"
+    },
+    {
+      "id": "d91_q2",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Concurrency anomalies",
+      "question": "T1 updates Account A's balance from ₹10,000 to ₹2,000 but has not committed. T2 reads ₹2,000 and uses it to reject a loan. T1 then rolls back, so the balance is ₹10,000 again. Which anomaly happened, and what is the weakest isolation level that prevents it?",
+      "codeSnippet": null,
+      "options": [
+        "Non-repeatable read; prevented by `REPEATABLE_READ`",
+        "Phantom read; prevented by `SERIALIZABLE`",
+        "Lost update; prevented by `READ_UNCOMMITTED`",
+        "Dirty read; prevented by `READ_COMMITTED`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "T2 used a value that was never committed: a dirty read. `READ_COMMITTED` is the weakest level that stops a transaction from reading another transaction's uncommitted changes. A non-repeatable read involves two different committed values for the same row, which is not what happened here.",
+      "source": "notes p18, p21-22 (Dirty read, READ_COMMITTED)",
+      "reference": null
+    },
+    {
+      "id": "d91_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "REQUIRED & rollback-only",
+      "question": "Based on the lecture's `OrderService`/`PaymentAuditService` (Spring's `@Transactional`, default transaction manager settings). Under which isolation level do the SQL statements in `audit()` run when it is called from `placeOrder()`?",
+      "codeSnippet": "// OrderService\n@Transactional(isolation = Isolation.READ_COMMITTED)\npublic void placeOrder(Order order) {\n    orderRepository.save(order);\n    paymentAuditService.audit(order);\n}\n\n// PaymentAuditService\n@Transactional(\n        propagation = Propagation.REQUIRED,\n        isolation = Isolation.REPEATABLE_READ\n)\npublic void audit(Order order) {\n    paymentAuditRepository.save(\n        new PaymentAudit(order.getAmount(), order.getId(), true));\n}",
+      "options": [
+        "`READ_COMMITTED`, because `audit()` joins the outer physical transaction and its own isolation setting is ignored",
+        "`REPEATABLE_READ`, because the inner method's setting overrides the outer one",
+        "`REPEATABLE_READ`, because Spring starts a second transaction when isolation levels differ",
+        "Neither; Spring throws an exception at startup because the two isolation levels conflict"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With REQUIRED, `audit()` participates in the transaction already started by `placeOrder()`, and a participating scope cannot change the physical transaction's characteristics. By default Spring silently ignores the inner isolation (only `validateExistingTransaction = true` would make it reject the mismatch). A new transaction would require `REQUIRES_NEW`.",
+      "source": "code: PaymentAuditService.audit, OrderService.placeOrder; notes p8 (Inner transaction settings)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+    },
+    {
+      "id": "d91_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Rollback rules",
+      "question": "`PaymentException` is declared as `public class PaymentException extends Exception {}`. What is stored in the `orders` table after `placeOrder` throws?",
+      "codeSnippet": "@Transactional\npublic void placeOrder(Order order) throws PaymentException {\n    orderRepository.save(order);\n    if (order.getAmount().compareTo(new BigDecimal(\"50000\")) > 0) {\n        throw new PaymentException();\n    }\n}\n// called with an order whose amount is 60000",
+      "options": [
+        "No row: any exception leaving a `@Transactional` method rolls it back",
+        "No row: `save()` is delayed until the method returns normally",
+        "The order row is committed: a checked exception does not trigger rollback by default; use `@Transactional(rollbackFor = PaymentException.class)`",
+        "The order row is committed only if the controller catches the exception"
+      ],
+      "correctAnswer": 2,
+      "explanation": "60000 > 50000, so the checked `PaymentException` is thrown. Spring's default rollback rule matches only `RuntimeException` and `Error`, so for a checked exception it proceeds to commit. `rollbackFor` adds the checked type to the rollback rules; whether the caller catches the exception is irrelevant because the commit decision is made at the method's boundary.",
+      "source": "notes p4-5 (Checked exception behaviour, rollbackFor)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html"
+    },
+    {
+      "id": "d91_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "REQUIRES_NEW & suspension",
+      "question": "Compliance requires that every payment attempt is written to `payment_audit` even if the surrounding `placeOrder` transaction later rolls back. `audit()` is in a separate `PaymentAuditService` bean. How should `audit()` be annotated?",
+      "codeSnippet": null,
+      "options": [
+        "`@Transactional(propagation = Propagation.REQUIRED)`, so it shares the order's commit",
+        "`@Transactional(propagation = Propagation.REQUIRES_NEW)`, so it commits in its own physical transaction",
+        "`@Transactional(propagation = Propagation.MANDATORY)`, so it is forced to run inside the order transaction",
+        "`@Transactional(propagation = Propagation.NESTED)`, so it is protected by a savepoint"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`REQUIRES_NEW` suspends the outer transaction and runs the audit in an independent physical transaction that commits on its own, the audit-logging use case from the notes. REQUIRED and MANDATORY join the outer transaction, so the audit would roll back with the order. NESTED uses a savepoint inside the same physical transaction, so an outer rollback still discards it.",
+      "source": "notes p11-15 (REQUIRES_NEW, audit logging)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+    },
+    {
+      "id": "d91_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "REQUIRES_NEW & suspension",
+      "question": "While outer Transaction A is suspended for a `REQUIRES_NEW` call, which statement is true in a typical single-database JPA application?",
+      "codeSnippet": null,
+      "options": [
+        "A is temporarily committed so that the new transaction can see A's inserts",
+        "A is rolled back and replayed after the inner transaction finishes",
+        "The inner transaction reuses A's JDBC connection and persistence context but with a new isolation level",
+        "A is neither committed nor rolled back; the inner transaction uses its own EntityManager and JDBC connection and should not rely on seeing A's uncommitted rows"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Suspension only pauses Spring's association with A; A resumes later and still decides its own outcome. The inner transaction gets separate resources (EntityManager, persistence context, connection), so A's uncommitted insert is generally not visible to it. This is also why REQUIRES_NEW needs an extra pooled connection.",
+      "source": "notes p6, p12-15 (Transaction suspension, separate physical resources, visibility)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+    },
+    {
+      "id": "d91_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "REQUIRED & rollback-only",
+      "question": "`audit()` uses the default `REQUIRED` propagation, saves a `PaymentAudit`, then throws `IllegalStateException`. What is the outcome of calling `placeOrder()`?",
+      "codeSnippet": "// OrderService\n@Transactional\npublic void placeOrder(Order order) {\n    orderRepository.save(order);\n    try {\n        paymentAuditService.audit(order);   // REQUIRED, throws IllegalStateException\n    } catch (RuntimeException e) {\n        System.out.println(\"Audit failed\");\n    }\n    System.out.println(\"Order completed\");\n}",
+      "options": [
+        "Both lines print, then the commit fails with `UnexpectedRollbackException`; neither the order nor the audit is saved",
+        "Both lines print and the order is committed; only the audit is rolled back",
+        "Both lines print and both rows are committed, since the exception was handled",
+        "Only \"Audit failed\" prints, because the transaction is aborted immediately when the inner method fails"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`audit()` joins the same physical transaction; when the RuntimeException passes through its interceptor, the shared transaction is marked rollback-only. Catching the Java exception does not clear that marker, so the outer method finishes normally and prints both lines, but the attempt to commit becomes a rollback signalled by `UnexpectedRollbackException`.",
+      "source": "notes p9-10 (UnexpectedRollbackException)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+    },
+    {
+      "id": "d91_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "REQUIRES_NEW & suspension",
+      "question": "Now `PaymentAuditService.audit()` is `@Transactional(propagation = Propagation.REQUIRES_NEW)` and completes normally. `Order` uses `GenerationType.IDENTITY`. After `placeOrder()` throws, what remains in the database?",
+      "codeSnippet": "// OrderService\n@Transactional\npublic void placeOrder(Order order) {\n    orderRepository.save(order);\n    paymentAuditService.audit(order);   // REQUIRES_NEW: saves PaymentAudit(amount, order.getId(), true)\n    throw new IllegalStateException(\"Payment gateway down\");\n}",
+      "options": [
+        "Nothing, because the outer exception rolls back every transaction started during the call",
+        "Both the order and the audit, because the audit commit also committed the outer work",
+        "Only the audit row; it references an order id whose `orders` row was rolled back",
+        "Only the order row, because the inner transaction is rolled back when the outer one fails"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The audit ran in an independent physical transaction that committed before the exception. The outer transaction then rolls back, removing the order. With IDENTITY the order's INSERT happened at `save()`, so `order.getId()` was already set and the audit stores an id that no longer exists in `orders`, a reminder that REQUIRES_NEW should be used deliberately.",
+      "source": "code: OrderService, PaymentAuditService, PaymentAudit; notes p13 (Inner commits, outer rolls back)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+    },
+    {
+      "id": "d91_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Proxy-based interception",
+      "question": "To save a bean, a developer moves the audit method into `OrderService` itself. The audit is still rolled back whenever `placeOrder()` fails. Why?",
+      "codeSnippet": "@Service\npublic class OrderService {\n\n    @Transactional\n    public void placeOrder(Order order) {\n        orderRepository.save(order);\n        saveAudit(order);\n        throw new IllegalStateException(\"Payment failed\");\n    }\n\n    @Transactional(propagation = Propagation.REQUIRES_NEW)\n    public void saveAudit(Order order) {\n        paymentAuditRepository.save(\n            new PaymentAudit(order.getAmount(), order.getId(), false));\n    }\n}",
+      "options": [
+        "`REQUIRES_NEW` cannot be used in a class that also has a `REQUIRED` method",
+        "`saveAudit()` is called on `this`, not through the Spring proxy, so its `@Transactional` is never applied and it runs inside the outer transaction",
+        "`IllegalStateException` rolls back all transactions on the same thread, including new ones",
+        "`saveAudit()` must be `private` for Spring to treat it as a separate transaction"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@Transactional` works through a Spring-generated proxy, so only calls that come in through the proxy are intercepted. A self-invocation bypasses the proxy, so no new transaction is started and the audit insert belongs to the outer transaction that later rolls back. The lecture keeps the audit in a separate `PaymentAuditService` bean for this reason.",
+      "source": "notes p1 (proxy invocation), p11-12 (recordAttempt invoked through the AuditService proxy); code: PaymentAuditService",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html"
+    },
+    {
+      "id": "d91_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "NESTED & savepoints",
+      "question": "How does `Propagation.NESTED` differ from `Propagation.REQUIRES_NEW` when an outer transaction already exists?",
+      "codeSnippet": null,
+      "options": [
+        "NESTED opens a second connection like REQUIRES_NEW, but commits it only when the outer commits",
+        "NESTED and REQUIRES_NEW both suspend the outer transaction; NESTED just uses a shorter timeout",
+        "NESTED fails with an exception when there is no outer transaction, while REQUIRES_NEW creates one",
+        "NESTED creates a savepoint in the same physical transaction, so its work can be rolled back alone but is still lost if the outer rolls back; REQUIRES_NEW work commits independently"
+      ],
+      "correctAnswer": 3,
+      "explanation": "NESTED does not create a separate physical transaction: it sets a savepoint, can roll back to it, and leaves the final commit or rollback to the outer transaction. REQUIRES_NEW suspends the outer transaction and commits on its own. Without an outer transaction, NESTED behaves like REQUIRED and creates one rather than failing (that is MANDATORY's behaviour).",
+      "source": "notes p16-17 (Propagation.NESTED, Savepoint)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "day": 81,
+  "title": "Spring Lecture #24: Spring AOP Pointcuts & Types of Proxies",
+  "sources": [
+    "notes/Notes.pdf (25 pages)",
+    "PracticeQuestions.pdf (39 pages)",
+    "notes/Excalidraw-Notes.pdf (3 pages)",
+    "code/aopDemo/aspect/ApplicationPointcuts.java",
+    "code/aopDemo/aspect/LoggingAspect.java",
+    "code/aopDemo/service/StudentService.java",
+    "code/aopDemo/service/StudentServiceInterface.java",
+    "code/aopDemo/controller/StudentController.java",
+    "code/aopDemo/application.properties"
+  ],
+  "topics": [
+    "execution() wildcards",
+    "within() & package patterns",
+    "bean() designator",
+    "Combining & named pointcuts",
+    "@within vs @target",
+    "args()",
+    "this() vs target() & proxy types"
+  ],
+  "questions": [
+    {
+      "id": "d81_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "execution() wildcards",
+      "question": "Which pointcut matches `getStudent(Long id)` and `deleteStudent(Long id)`, but NOT `getAllStudents()` or `updateStudent(Long id, Student student)`?",
+      "codeSnippet": null,
+      "options": [
+        "`execution(* *(..))`: any method with any parameters",
+        "`execution(* *())`: methods with an empty parameter list",
+        "`execution(* *(*))`: methods with a single parameter of any type",
+        "`execution(* *(*, ..))`: methods with one or more parameters"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`(*)` means exactly one parameter of any type, so it matches the two single-argument methods only. `(..)` means zero or more parameters (matches everything), `()` means exactly zero, and `(*, ..)` means at least one, so it would also match `updateStudent(Long, Student)`.",
+      "source": "notes p5-7; practice Q7, J2",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    },
+    {
+      "id": "d81_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "within() & package patterns",
+      "question": "Given this package layout, which classes' methods are matched by `execution(* com.coderarmy.student.service.*.*(..))`?",
+      "codeSnippet": "com.coderarmy.student\n├── controller\n│   └── StudentController\n└── service\n    ├── StudentService\n    ├── EmailService\n    └── impl\n        └── PaymentServiceImpl",
+      "options": [
+        "`StudentService` and `EmailService` only",
+        "`StudentService`, `EmailService` and `PaymentServiceImpl`",
+        "Only `PaymentServiceImpl`, because `*.*` means one subpackage level below `service`",
+        "Every class under `com.coderarmy.student`, including `StudentController`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`service.*` matches types placed directly inside the `service` package, and the final `.*(..)` is any method with any parameters. Subpackages such as `service.impl` need `service..*`, where `..` means zero or more package segments. The controller package is never matched by a `service` prefix.",
+      "source": "notes p7-9; practice Q12-13",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    },
+    {
+      "id": "d81_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "execution() wildcards",
+      "question": "Which of these methods are matched by `execution(* *Student(..))`?",
+      "codeSnippet": "public Student getStudent(Long id)\npublic Student getStudentById(Long id)\npublic void createStudentAccount(Student s)\npublic boolean studentExists(String email)\npublic void deleteStudent(Long id)",
+      "options": [
+        "All five, because each name contains \"Student\" or \"student\"",
+        "`getStudent`, `getStudentById` and `deleteStudent`",
+        "`getStudent`, `createStudentAccount`, `studentExists` and `deleteStudent`",
+        "`getStudent` and `deleteStudent` only"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`*Student` matches method names that END with `Student`, which is true only for `getStudent` and `deleteStudent`. `getStudentById` and `createStudentAccount` contain it in the middle (that would need `*Student*`), and name matching is case-sensitive, so `studentExists` doesn't match either.",
+      "source": "notes p6; practice Q4-5",
+      "reference": null
+    },
+    {
+      "id": "d81_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@within vs @target",
+      "question": "`@TrackExecution @Service public class StudentService extends BaseService {}`, where the unannotated `BaseService` declares `public void save()`. When `studentService.save()` is called through the proxy, which pointcut matches?",
+      "codeSnippet": null,
+      "options": [
+        "Both `@within(TrackExecution)` and `@target(TrackExecution)`, because the bean's class is annotated",
+        "Only `@target(TrackExecution)`, because it checks the runtime target's class, while `@within` checks the type that DECLARES `save()`",
+        "Only `@within(TrackExecution)`, because it checks the class the bean was created from",
+        "Neither, because annotations on a subclass are never visible to pointcuts"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`@within` looks at the declaring type of the executing method. `save()` is declared in the unannotated `BaseService`, so it does not match. `@target` looks at the class of the actual target object, which is the annotated `StudentService`, so it matches. The two often look identical and differ only in inheritance cases like this.",
+      "source": "notes p17-18",
+      "reference": null
+    },
+    {
+      "id": "d81_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "bean() designator",
+      "question": "An aspect uses `@Before(\"bean(*Service)\")`. It fires for `EmailService` but never for `@Service public class StudentServiceImpl implements StudentOperations`. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`bean()` only matches classes that do not implement an interface",
+        "`bean()` matches the simple class name, and `StudentServiceImpl` is compared without its `Impl` suffix only in XML configuration",
+        "`bean()` matches Spring bean NAMES; the default name here is `studentServiceImpl`, which does not end with `Service`",
+        "`bean(*Service)` matches only beans declared with `@Bean` methods, not component-scanned ones"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`bean()` is a Spring-specific designator that matches on the bean name, not the Java type. A component-scanned class gets a decapitalised default name (`studentServiceImpl`), which does not match `*Service`. Fixes include `bean(*Service*)`, naming the bean `@Service(\"studentService\")`, or a `within()`-based pointcut.",
+      "source": "notes p12-13; practice D-E",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    },
+    {
+      "id": "d81_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Combining & named pointcuts",
+      "question": "You want logging on every service-layer method except any method named `clearCache`. You write `within(com.coderarmy.student.service..*) && !execution(* clearCache())`. Later someone adds `clearCache(String region)`, and its calls are now being logged. What is the fix?",
+      "codeSnippet": null,
+      "options": [
+        "Use `!execution(* clearCache(..))`, because `()` excluded only the zero-parameter overload",
+        "Replace `&&` with `||`, since `!` binds more loosely than `&&`",
+        "Move `!execution(...)` before `within(...)`, because exclusions must come first",
+        "Use `!within(* clearCache(..))`, because `execution()` cannot be negated"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`()` means exactly zero parameters, so the negation removed only `clearCache()`, and the new overload still matches the `within` part. `clearCache(..)` excludes every overload. The order of `&&` operands doesn't matter, and `within()` takes type patterns, not method signatures.",
+      "source": "practice Answer A; notes p13-14",
+      "reference": null
+    },
+    {
+      "id": "d81_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "this() vs target() & proxy types",
+      "question": "In the lecture project, `application.properties` contains `spring.aop.proxy-target-class=false`, and `StudentService` implements `StudentServiceInterface`. The controller calls `studentService.getStudent(\"All Student Data\")`. What is printed?",
+      "codeSnippet": "@Service\npublic class StudentService implements StudentServiceInterface {\n    public String getStudent(String s) {\n        System.out.println(s);\n        return s;\n    }\n    // createStudent(...) omitted\n}\n\n@Component @Aspect\npublic class LoggingAspect {\n    @Before(\"this(in.strikes.aopDemo.service.StudentService)\")\n    public void logBeforeMethod4() {\n        System.out.println(\"Method Intercepted\");\n    }\n}",
+      "options": [
+        "Only `All Student Data`: the JDK dynamic proxy implements the interface but is not a `StudentService`, so `this(StudentService)` does not match",
+        "`Method Intercepted` then `All Student Data`, because the target object is a `StudentService`",
+        "`All Student Data` then `Method Intercepted`, because `this()` advice runs after the call",
+        "The application fails to start because `this()` cannot be used when `proxy-target-class=false`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With `proxy-target-class=false` and an interface present, Spring creates a JDK dynamic proxy that implements `StudentServiceInterface` but does not extend `StudentService`. `this()` checks the proxy type, so it doesn't match. `target(StudentService)` would match, and with a CGLIB proxy (the Boot default) `this(StudentService)` would match too, because the proxy subclasses the class.",
+      "source": "code: LoggingAspect.java, application.properties, StudentService.java; notes p19-21",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    },
+    {
+      "id": "d81_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "this() vs target() & proxy types",
+      "question": "With `spring.aop.proxy-target-class=false`, the lecture's controller injects `StudentServiceInterface` and works. A teammate adds a new bean whose constructor takes the concrete `StudentService` class, and the app fails at startup with a 'bean is not of required type' error. Why?",
+      "codeSnippet": null,
+      "options": [
+        "Spring cannot inject the same bean into two different classes",
+        "A class that implements an interface can never be injected by its class type",
+        "The `studentService` bean is an advised JDK dynamic proxy that implements only the interface, so it is not an instance of the concrete `StudentService` class",
+        "`proxy-target-class=false` disables component scanning for `@Service` classes"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The container exposes the proxy under the bean name. A JDK proxy is a generated class implementing the interfaces, not a subclass of `StudentService`, so injecting by the concrete type fails. Either inject the interface or use class-based (CGLIB) proxies (`proxy-target-class=true`, Spring Boot's default), which subclass the target.",
+      "source": "notes p19-21; code: StudentController.java (injects interface)",
+      "reference": null
+    },
+    {
+      "id": "d81_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "args()",
+      "question": "All three methods are in `in.strikes.aopDemo.service.StudentService`, and each call passes a real `Student` object. Which calls print \"Student argument\"?",
+      "codeSnippet": "@Before(\"args(in.strikes.aopDemo.dto.Student) && within(in.strikes.aopDemo.service..*)\")\npublic void onStudentArg() {\n    System.out.println(\"Student argument\");\n}\n\n// service methods\npublic Student createStudent(Student student) { ... }\npublic Student updateStudent(Long id, Student student) { ... }\npublic void audit(Object payload) { ... }\n\n// calls through the proxy\nstudentService.createStudent(s);\nstudentService.updateStudent(1L, s);\nstudentService.audit(s);",
+      "options": [
+        "Only `createStudent(s)`, because `args()` checks the declared parameter types",
+        "`createStudent(s)` and `audit(s)`",
+        "`createStudent(s)` and `updateStudent(1L, s)`",
+        "All three calls, because each passes a `Student` somewhere"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`args(Student)` requires exactly one argument whose RUNTIME type is compatible with `Student`. `audit(Object)` receives a `Student` at runtime, so it matches, unlike `execution(* *(Student))`, which checks the declared signature. `updateStudent` has two arguments; matching it would need `args(.., Student)` or `args(Long, Student)`.",
+      "source": "notes p18-19; practice Answer F",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    },
+    {
+      "id": "d81_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Combining & named pointcuts",
+      "question": "In the lecture's `ApplicationPointcuts` class (no `@Aspect`, no `@Component`), a developer adds `System.out.println(\"service layer matched\")` inside the body of `@Pointcut(\"within(in.strikes.aopDemo.service..*)\") public void serviceLayer() {}`. `LoggingAspect` uses `@Before(\"in.strikes.aopDemo.aspect.ApplicationPointcuts.serviceLayer()\")`. What happens when a service method is called?",
+      "codeSnippet": null,
+      "options": [
+        "\"service layer matched\" is printed before every service method, then the `@Before` advice runs",
+        "Startup fails because `ApplicationPointcuts` is not annotated with `@Aspect`, so its pointcuts cannot be referenced",
+        "The `@Before` advice runs, but the println never executes, because a `@Pointcut` method is only a named declaration of the expression, never invoked as Java code",
+        "The println runs once at startup when Spring parses the expression, and never again"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The `@Pointcut` method just gives an expression a reusable name. Spring resolves `serviceLayer()` as a pointcut reference and never calls the method, so its body should stay empty. A plain class can hold shared named pointcuts that other aspects reference by fully qualified name; this is how the lecture's `ApplicationPointcuts` and Spring's `CommonPointcuts` example work.",
+      "source": "code: ApplicationPointcuts.java; notes p14-16",
+      "reference": "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    }
+  ]
+}

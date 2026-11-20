@@ -1,0 +1,203 @@
+{
+  "day": 86,
+  "title": "Spring Lecture #29: Hibernate Internals",
+  "sources": [
+    "notes/Notes.pdf (31 pages)",
+    "notes/Excalidraw-Notes.pdf (6 pages)",
+    "code/hibernateInternalsDemo/repository/StudentRepository.java",
+    "code/hibernateInternalsDemo/service/StudentService.java",
+    "code/hibernateInternalsDemo/model/Student.java",
+    "code/hibernateInternalsDemo/application.properties"
+  ],
+  "topics": [
+    "Persistence context & EntityManager proxy",
+    "Transactions & @Transactional",
+    "Entity lifecycle (transient/managed/detached/removed)",
+    "Dirty checking & flushing",
+    "First-level cache",
+    "merge()",
+    "Batch processing with flush/clear"
+  ],
+  "questions": [
+    {
+      "id": "d86_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Dirty checking & flushing",
+      "question": "Inside a `@Transactional` method, `entityManager.flush()` runs and the UPDATE appears in the SQL log. A few lines later the method throws a `RuntimeException`. Which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "Flush only sends the pending SQL within the current transaction; the rollback undoes that UPDATE, so the database keeps the old value",
+        "Flush is the same as commit, so the UPDATE is permanent even though the method failed",
+        "Flush commits the UPDATE but the rollback re-runs the original INSERT, restoring the row",
+        "After a manual flush, Spring no longer rolls back the transaction for that method"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`flush()` synchronizes the persistence context with the database by executing SQL, but the SQL is still part of the open transaction. Only commit makes it durable. Spring rolls back on a `RuntimeException`, so the flushed UPDATE is undone. 'Flush is commit' is one of the misconceptions listed in the notes.",
+      "source": "notes §15 Flushing (Flush Is Not Commit)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html"
+    },
+    {
+      "id": "d86_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Entity lifecycle (transient/managed/detached/removed)",
+      "question": "The lecture's `StudentRepository` has both `detach(student)` and `remove(student)`. What is the difference?",
+      "codeSnippet": null,
+      "options": [
+        "Both delete the row; `detach()` deletes immediately, while `remove()` waits until commit",
+        "`detach()` deletes the row but keeps the Java object usable; `remove()` deletes both",
+        "`detach()` only stops the persistence context from managing that object (the row stays); `remove()` marks a managed entity so its row is deleted at flush",
+        "`remove()` only clears the first-level cache; `detach()` is what issues the DELETE"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A detached entity is simply no longer tracked, so later changes aren't dirty-checked, but its row should remain. A removed entity is still managed by Hibernate, and its deletion is scheduled and synchronized at flush (not necessarily on the line where `remove()` is called).",
+      "source": "notes §10.3-10.4 (Removed vs. Detached)",
+      "reference": null
+    },
+    {
+      "id": "d86_q3",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "First-level cache",
+      "question": "Student 1 exists, `spring.jpa.show-sql=true`, and the persistence context starts empty. What does this method log and print?",
+      "codeSnippet": "@Transactional\npublic void check() {\n    Student a = entityManager.find(Student.class, 1L);\n    Student b = entityManager.find(Student.class, 1L);\n    System.out.println(a == b);\n}",
+      "options": [
+        "Two SELECT statements, then `false`, because each `find()` creates a new object",
+        "Two SELECT statements, then `true`, because Hibernate reuses the object but re-reads the row",
+        "No SELECT at all, then `true`, because the first-level cache is pre-loaded at startup",
+        "One SELECT statement, then `true`: the second `find()` is a first-level cache hit that returns the same managed instance"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The first `find()` misses the persistence context, so it runs a SELECT, builds the entity and manages it under the key (Student, 1). The second `find()` in the same persistence context is answered from that map with no SQL. Because of the identity-map rule, both references point to the same object, so `a == b` is true.",
+      "source": "notes §13 Managed Entity Identity, §18 First-Level Cache",
+      "reference": null
+    },
+    {
+      "id": "d86_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Dirty checking & flushing",
+      "question": "The lecture's `updateStudent` is called for an existing student, and the request's name, age and email all differ from the stored values. With `show-sql=true`, which SQL statements run in this transaction?",
+      "codeSnippet": "@Transactional\npublic void updateStudent(Student studentReq, Long id) {\n    Student student1 = studentRepository.findById(id);   // entityManager.find\n    if (student1 == null) {\n        throw new RuntimeException(\"Student not found\");\n    }\n    student1.setName(studentReq.getName());\n    studentRepository.flush();\n    student1.setAge(studentReq.getAge());\n    studentRepository.flush();\n    student1.setEmail(studentReq.getEmail());\n    studentRepository.flush();\n}",
+      "options": [
+        "1 SELECT, then a single UPDATE at commit, because Hibernate always merges all changes into one statement",
+        "1 SELECT and 3 UPDATEs, one at each `flush()`, because each flush finds the entity dirty again; nothing is left to flush at commit",
+        "No UPDATE at all, because there is no `save()` or `merge()` call",
+        "1 SELECT and 6 UPDATEs: one per setter plus one per flush"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Setters only change the managed Java object, and dirty checking runs at flush time. Each manual `flush()` compares the entity with its last synchronized snapshot, finds one changed field, and executes an UPDATE, so there are three UPDATEs. At commit nothing is dirty anyway. Without the manual flushes, the three changes would have produced a single UPDATE at commit (write-behind).",
+      "source": "code: StudentService.updateStudent(); notes §14-16",
+      "reference": null
+    },
+    {
+      "id": "d86_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Persistence context & EntityManager proxy",
+      "question": "In code review, someone objects: \"`StudentRepository` is a singleton with one `@PersistenceContext EntityManager` field, and `EntityManager` isn't thread-safe, so concurrent requests will corrupt each other.\" What is the accurate response?",
+      "codeSnippet": null,
+      "options": [
+        "Spring injects a shared EntityManager proxy that routes each call to the EntityManager bound to the current transaction, so concurrent requests use separate persistence contexts",
+        "They are right; the repository must be annotated `@Scope(\"prototype\")` to get one EntityManager per request",
+        "They are right; every repository method must be `synchronized` when it uses the EntityManager",
+        "`@PersistenceContext` creates a new physical EntityManager on every method call, even within the same transaction"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The injected field is a stable shared proxy, not one physical `EntityManager`. On each call it delegates to the transaction-associated `EntityManager`, so Request A and Request B work with different persistence contexts. Within one transaction, calls share the same context, which is how the first-level cache and dirty checking work across repository calls.",
+      "source": "notes §4 @PersistenceContext in Spring",
+      "reference": null
+    },
+    {
+      "id": "d86_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Transactions & @Transactional",
+      "question": "`enrollStudent()` calls `enrollmentRepository.create(...)` and then `paymentRepository.recordPayment(...)`. Each repository method is annotated `@Transactional`, but the service method is not. The payment insert fails. What is the state of the database, and where should the boundary be?",
+      "codeSnippet": null,
+      "options": [
+        "Both inserts are rolled back automatically, because repository transactions are nested inside each other",
+        "Neither insert ran, because Hibernate validates the whole service method before executing any SQL",
+        "The enrollment is committed in its own transaction while the payment is rolled back; `@Transactional` belongs on the service method that represents the whole use case",
+        "The enrollment is rolled back, but only if the payment repository is called first"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Without a surrounding transaction, each repository call opens and commits its own transaction, so the enrollment is already durable when the payment fails. Putting `@Transactional` on the service method makes both calls join one transaction (and one persistence context), so they succeed or fail together. The notes call this the reason transactions usually belong in the service layer.",
+      "source": "notes §8 Why Transactions Usually Belong in the Service Layer",
+      "reference": null
+    },
+    {
+      "id": "d86_q7",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "merge()",
+      "question": "`d` is a DETACHED student loaded in an earlier transaction: id 5, name \"Rahul\", age 20 (the database row has the same values). What is printed, and what is in row 5 after this method commits?",
+      "codeSnippet": "@Transactional\npublic void reattach(Student d) {\n    Student managed = entityManager.merge(d);\n    d.setName(\"Changed\");\n    managed.setAge(30);\n    System.out.println(d == managed);\n}",
+      "options": [
+        "`true`; row 5 has name \"Changed\" and age 30, because `merge()` reattaches `d` itself",
+        "`false`; row 5 has name \"Rahul\" and age 30, because only the returned managed copy is tracked",
+        "`false`; row 5 has name \"Changed\" and age 20, because `merge()` keeps watching the original object",
+        "`true`; row 5 is unchanged, because changes after `merge()` require another `merge()` call"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`merge()` copies the detached object's state (name \"Rahul\", age 20) into a managed instance and RETURNS that instance; `d` stays detached. Changing `d` afterwards is ignored, while the change on `managed` is dirty-checked and flushed at commit. So the row ends up as Rahul/30, and `d == managed` is false. This is why the notes say to always use the object returned by `merge()`.",
+      "source": "notes §11 Important Rule About merge(); code: StudentRepository.attachAgain()",
+      "reference": null
+    },
+    {
+      "id": "d86_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Entity lifecycle (transient/managed/detached/removed)",
+      "question": "Student 1 is stored with name \"Rahul\". What is the name in the database after this method commits?",
+      "codeSnippet": "@Transactional\npublic void rename() {\n    Student s = entityManager.find(Student.class, 1L);\n    entityManager.detach(s);\n    s.setName(\"Rohan\");\n\n    Student again = entityManager.find(Student.class, 1L);\n    again.setAge(again.getAge() + 1);\n    System.out.println(s == again);\n}",
+      "options": [
+        "\"Rohan\", because the second `find()` returns the same object `s` with its new name",
+        "\"Rohan\", because `detach()` only pauses tracking until the next `find()`",
+        "The method fails, because `find()` cannot load an entity that was detached in the same transaction",
+        "\"Rahul\": after `detach()`, changes to `s` are not tracked; the second `find()` loads a new managed instance (so `s == again` prints false), and only its age change is flushed"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`detach(s)` removes the entity from the persistence context, so the later `setName` is not dirty-checked. Because (Student, 1) is no longer in the context, the second `find()` runs a new SELECT and returns a different, managed object (false is printed). At commit only that object is dirty, so the age is incremented and the name stays \"Rahul\".",
+      "source": "notes §10.3, §14 (Dirty Checking Applies Only to Managed Entities), §19; code: StudentRepository.detach()",
+      "reference": null
+    },
+    {
+      "id": "d86_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Transactions & @Transactional",
+      "question": "A service method annotated with Spring's `@org.springframework.transaction.annotation.Transactional` persists 50 students from a CSV file and then throws `java.io.IOException(\"file corrupt\")` (declared with `throws IOException`). Afterwards, all 50 students are in the database. Why, and how do you make it roll back?",
+      "codeSnippet": null,
+      "options": [
+        "By default Spring rolls back only for unchecked exceptions (`RuntimeException`/`Error`); `IOException` is checked, so the transaction commits. Use `@Transactional(rollbackFor = IOException.class)` (or wrap it in a runtime exception)",
+        "Hibernate had already flushed the inserts, and flushed SQL can never be rolled back; call `flush()` only at the very end",
+        "IDENTITY ids make inserts auto-commit; switch to `GenerationType.SEQUENCE` to get rollback",
+        "The proxy was bypassed because the exception was declared in the method signature; remove `throws IOException` and the rollback will happen"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Spring's default rollback rules cover `RuntimeException` and `Error` only; a checked exception lets the transaction commit. `rollbackFor` adds checked types to the rollback rules. Flushed or IDENTITY-triggered SQL is still inside the open transaction and can be rolled back. (The lecture's service uses `jakarta.transaction.Transactional`, whose equivalent attribute is `rollbackOn`.)",
+      "source": "notes §5 Spring Transaction (rollback rules)",
+      "reference": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html"
+    },
+    {
+      "id": "d86_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Batch processing with flush/clear",
+      "question": "A `@Transactional` service method calls the lecture's `saveAll(students)` with a list of 250 NEW students (see snippet), then runs `students.get(0).setName(\"First\"); students.get(249).setName(\"Last\");` before returning. Which of those two name changes reach the database at commit?",
+      "codeSnippet": "public void saveAll(List<Student> students) {\n    int counter = 0;\n    for (Student student : students) {\n        entityManager.persist(student);\n        counter++;\n        if (counter % 100 == 0) {\n            entityManager.flush();\n            entityManager.clear();\n        }\n    }\n}",
+      "options": [
+        "Both, because every persisted student stays managed until the transaction ends",
+        "Neither, because `clear()` detaches every entity created in the transaction, including later ones",
+        "Only \"Last\": student #1 was detached by the `clear()` at counter 100, while student #250 was persisted after the last clear (at 200) and is still managed",
+        "Only \"First\", because the first batch is flushed while the last 50 are never inserted"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`clear()` detaches everything managed AT THAT MOMENT. Students 1-100 are detached at counter 100 and 101-200 at counter 200. Students 201-250 are persisted afterwards and remain managed, so dirty checking picks up the change to #250 (and their inserts are synchronized by commit at the latest), while the change to the detached #1 is ignored. flush + clear keeps the persistence context small in batch jobs.",
+      "source": "code: StudentRepository.saveAll(); notes §17 flush() and clear() in Batch Processing",
+      "reference": null
+    }
+  ]
+}

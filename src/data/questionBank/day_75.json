@@ -1,0 +1,207 @@
+{
+  "day": 75,
+  "title": "Spring Lecture #18: Spring Boot Profiles & YAML Explained",
+  "sources": [
+    "Notes.pdf (46 pages)",
+    "Excalidraw-Notes.pdf (2 pages)",
+    "code/profileDemo/.../DemoController.java",
+    "code/profileDemo/.../NotificationController.java",
+    "code/profileDemo/.../NotificationService.java",
+    "code/profileDemo/.../NotificationServiceImpl.java",
+    "code/profileDemo/.../DummyNotificationServiceImpl.java",
+    "code/profileDemo/src/main/resources/application.properties",
+    "code/profileDemo/src/main/resources/application-dev.properties",
+    "code/profileDemo/src/main/resources/application-prod.properties",
+    "code/profileDemo/src/main/resources/application-staging.properties"
+  ],
+  "topics": [
+    "YAML structure",
+    "Profile-specific files",
+    "Activating profiles",
+    "@Profile conditional beans",
+    "Reading lists with @Value",
+    "Configuration precedence"
+  ],
+  "questions": [
+    {
+      "id": "d75_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Profile-specific files",
+      "question": "The app is started with `--spring.profiles.active=staging`. Which configuration files from `src/main/resources` does Spring Boot use?",
+      "codeSnippet": null,
+      "options": [
+        "Only `application-staging.properties`; the common file is ignored once a profile is active",
+        "`application.properties` plus `application-staging.properties`, with staging values overriding common ones",
+        "Only `application.properties`, because profile files must be activated with `@Profile`",
+        "All profile files (`-dev`, `-prod`, `-staging`), applied in alphabetical order"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Profile files follow the `application-{profile}.properties` pattern and are loaded in addition to the common file: shared values come from `application.properties`, and the active profile's file overrides keys it redefines. The notes stress that Spring Boot does not ignore the common file. Files of inactive profiles are not loaded.",
+      "source": "notes p23-p26; code: application-*.properties",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d75_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "YAML structure",
+      "question": "`application.yml` contains the nested block below. How do you read the email in Java with `@Value`?",
+      "codeSnippet": "# application.yml\napp:\n  support:\n    email: support@studentapp.com",
+      "options": [
+        "`@Value(\"${app:support:email}\")`",
+        "`@Value(\"${support.email}\")`, because only the last two levels are used",
+        "`@Value(\"#{app.support.email}\")`, a SpEL expression instead of a placeholder",
+        "`@Value(\"${app.support.email}\")`, because YAML is flattened into dotted keys"
+      ],
+      "correctAnswer": 3,
+      "explanation": "YAML is just a nested way of writing the same keys: `app:` / `support:` / `email:` becomes `app.support.email` internally, so you still use dot notation. A colon inside `${...}` means \"default value follows\", so `${app:support:email}` would look up the key `app` instead.",
+      "source": "notes p7-p9, p16-p17",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d75_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Activating profiles",
+      "question": "Your team builds one JAR and deploys it to dev and prod servers. Someone suggests putting `spring.profiles.active=prod` inside the packaged `application.properties` before each prod build. What does the lecture recommend instead?",
+      "codeSnippet": null,
+      "options": [
+        "Keep one JAR and pass the profile from outside, e.g. `SPRING_PROFILES_ACTIVE=prod` or `--spring.profiles.active=prod`",
+        "Build two separate JARs, one per environment, with different `application.properties`",
+        "Comment and uncomment the prod settings in the common file before each deployment",
+        "Hardcode `prod` values in Java constants so they cannot be changed by mistake"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The notes call hardcoding the prod profile inside the JAR a common mistake: the artifact should be reusable, and the environment (command line, environment variable, Docker/Kubernetes config) decides the profile. Commenting and uncommenting settings is the risky approach that profiles replace.",
+      "source": "notes p20-p21, p34-p37, p44",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d75_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Profile-specific files",
+      "question": "The lecture's project is started with `java -jar profileDemo.jar --spring.profiles.active=dev`. Which port does it use and what does `GET /api/demo/greet` return?",
+      "codeSnippet": "# application.properties\napp.welcome.message=LOCAL: Hello, welcome to my application\napp.welcome.code=200\napp.welcome.users=Aditya,Rohit,Rohan,Sohan\n\n# application-dev.properties\nserver.port=9090\napp.welcome.message=DEV: Hello, welcome to my application\n\n// DemoController\n@Value(\"${app.welcome.message}\") private String message;\n@Value(\"${app.welcome.code}\") private Integer code;\n\n@GetMapping(\"/greet\")\npublic ResponseEntity<String> greet() {\n    return ResponseEntity.ok(message + \" : \" + code);\n}",
+      "options": [
+        "Port 8080; `LOCAL: Hello, welcome to my application : 200`",
+        "Port 9090; startup fails because `app.welcome.code` is missing from the dev file",
+        "Port 9090; `DEV: Hello, welcome to my application : 200`",
+        "Port 9090; `DEV: Hello, welcome to my application : null`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "With `dev` active, Boot loads the common file plus `application-dev.properties`: the dev file overrides `app.welcome.message` and sets port 9090, while `app.welcome.code=200` still comes from the common file. A key does not need to be repeated in the profile file to be available.",
+      "source": "code: application.properties, application-dev.properties, DemoController.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    },
+    {
+      "id": "d75_q5",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "@Profile conditional beans",
+      "question": "The project is started with no active profile (the `spring.profiles.active` line is commented out). What does `POST /api/notification` return?",
+      "codeSnippet": "@Service\n@Profile({\"dev\", \"default\", \"staging\"})\npublic class DummyNotificationServiceImpl implements NotificationService {\n    public String send() { return \"Here is a dummy notification\"; }\n}\n\n@Service\n@Profile(\"prod\")\npublic class NotificationServiceImpl implements NotificationService {\n    public String send() { return \"Here is a notification\"; }\n}\n\n// NotificationController injects NotificationService via its constructor\n// and returns ResponseEntity.ok(notificationService.send())",
+      "options": [
+        "The app fails to start, because no profile is active so no `NotificationService` bean exists",
+        "`Here is a dummy notification`, because with no active profile the `default` profile applies",
+        "`Here is a notification`, because the prod bean is the fallback",
+        "The app fails to start, because both beans are created and the injection is ambiguous"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When no profile is explicitly activated, Spring treats the `default` profile as active. `DummyNotificationServiceImpl` lists `default`, so it is the only `NotificationService` bean and gets injected; the `prod` bean is skipped. That is exactly why the lecture added \"default\" to the dummy implementation's `@Profile`.",
+      "source": "code: DummyNotificationServiceImpl.java, NotificationServiceImpl.java, NotificationController.java",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/profiles.html"
+    },
+    {
+      "id": "d75_q6",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "@Profile conditional beans",
+      "question": "In dev you want a `DummyPaymentService` that never charges cards; in prod a `RealPaymentService`. Separately, the payment gateway URL differs between dev and prod. Which tools does the lecture recommend for each need?",
+      "codeSnippet": null,
+      "options": [
+        "Profile-specific files for both: put the class name to instantiate in `application-dev.properties`",
+        "`@Profile` for both: annotate a constant holding the URL with `@Profile(\"dev\")`",
+        "`@Value` with a default for the implementation, and `@Profile` for the URL",
+        "`@Profile` on the two service classes (different implementations), and profile-specific files for the URL (different values)"
+      ],
+      "correctAnswer": 3,
+      "explanation": "The notes' rule: profile-specific files change values (ports, URLs, credentials, messages), while `@Profile` changes which beans/classes are created. Choosing between two implementations is a bean decision, so it uses `@Profile`; a URL is just a value, so it belongs in `application-dev`/`application-prod` files.",
+      "source": "notes p40-p44",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/profiles.html"
+    },
+    {
+      "id": "d75_q7",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Reading lists with @Value",
+      "question": "In the lecture's `DemoController`, what does `System.out.println(names)` print when `/api/demo/greet` is called?",
+      "codeSnippet": "# application.properties\napp.welcome.users=Aditya,Rohit,Rohan,Sohan\n\n// DemoController\n@Value(\"${app.welcome.users}\")\nprivate List<String> names;\n\n@GetMapping(\"/greet\")\npublic ResponseEntity<String> greet() {\n    System.out.println(names);\n    return ResponseEntity.ok(message + \" : \" + code);\n}",
+      "options": [
+        "A four-element list: [Aditya, Rohit, Rohan, Sohan]",
+        "A one-element list whose only item is the whole string",
+        "Nothing: startup fails because a `List` can only be injected with the SpEL `split(',')` expression",
+        "null, because `@Value` cannot inject collections"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Spring Boot's conversion service converts a comma-separated property value into a `List<String>` with four elements, and `List.toString()` prints them with \", \" separators. The SpEL `#{'${...}'.split(',')}` form shown in the notes also works, but the lecture's code shows it is not required for this simple case.",
+      "source": "code: DemoController.java, application.properties; notes p17-p18",
+      "reference": null
+    },
+    {
+      "id": "d75_q8",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "@Profile conditional beans",
+      "question": "A tester runs the lecture's project with `--spring.profiles.active=test`. There is no `application-test.properties`, and the two `NotificationService` implementations are annotated `@Profile({\"dev\", \"default\", \"staging\"})` and `@Profile(\"prod\")`. What happens?",
+      "codeSnippet": null,
+      "options": [
+        "It starts with the dummy service, because `default` is always active as a fallback",
+        "It starts with both services, because unknown profiles disable `@Profile` checks",
+        "Startup fails: `NotificationController` needs a `NotificationService`, but no implementation is active for `test`",
+        "It starts normally, but `POST /api/notification` returns 404"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`default` applies only when no profile is active; activating `test` replaces it. Neither implementation matches `test`, so no `NotificationService` bean exists and the controller's constructor injection fails during startup. A missing `application-test.properties` is harmless on its own; the missing bean is the problem.",
+      "source": "code: DummyNotificationServiceImpl.java, NotificationServiceImpl.java, NotificationController.java; notes p40-p42",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/profiles.html"
+    },
+    {
+      "id": "d75_q9",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Configuration precedence",
+      "question": "A developer uncomments `spring.profiles.active=dev` in the packaged `application.properties`. Operations then start that JAR with `java -jar profileDemo.jar --spring.profiles.active=prod`. Which profile is active and which port is used?",
+      "codeSnippet": null,
+      "options": [
+        "`dev` on port 9090, because the value inside the JAR is read first",
+        "`prod` on port 8191, because command-line arguments take precedence over values in configuration files",
+        "Both `dev` and `prod`, with dev's port 9090 because `dev` is listed first",
+        "Neither; conflicting values make Spring fall back to the `default` profile on port 8080"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`spring.profiles.active` is an ordinary property, and command-line arguments outrank file-based sources, so `prod` wins and `application-prod.properties` sets port 8191. This is why passing the profile from outside works even if a default is baked into the file. Values are overridden, not merged as two active profiles.",
+      "source": "notes p33-p37; code: application.properties, application-prod.properties",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/profiles.html"
+    },
+    {
+      "id": "d75_q10",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "YAML structure",
+      "question": "Ignoring the lecture's advice, a project has both `application.properties` (`server.port=8080`) and `application.yml` (`server:` / `port: 9090`) in `src/main/resources`. Which port is used, and what is the lesson?",
+      "codeSnippet": null,
+      "options": [
+        "9090, because YAML is the newer format and always wins",
+        "The app fails to start, because Spring Boot forbids two config formats",
+        "8080, because when both formats are in the same location `.properties` takes precedence, which is exactly the hidden confusion the lecture warns about",
+        "A random one of the two, depending on file-system order"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Spring Boot loads both, but the docs state that if `.properties` and YAML files exist in the same location, `.properties` takes precedence. The app starts fine, so nothing tells you the YAML value is being ignored, which is why the notes say to stick to one format per project.",
+      "source": "notes p9-p10, p44",
+      "reference": "https://docs.spring.io/spring-boot/reference/features/external-config.html"
+    }
+  ]
+}

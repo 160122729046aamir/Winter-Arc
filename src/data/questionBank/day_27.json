@@ -1,0 +1,205 @@
+{
+  "day": 27,
+  "title": "Lecture #27: Java Generics Deep Dive",
+  "sources": [
+    "notes.pdf (3 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java",
+    "code/Demo4.java",
+    "code/Demo5.java",
+    "code/Demo6.java",
+    "code/Demo7.java"
+  ],
+  "topics": [
+    "Why generics",
+    "Generic classes",
+    "Limitations of Object as a universal type",
+    "Upcasting and downcasting",
+    "Bounded type parameters",
+    "Generic methods",
+    "Multiple bounds"
+  ],
+  "questions": [
+    {
+      "id": "d27_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Why generics",
+      "question": "What is the main problem that generics solve, according to the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "They make programs run faster by avoiding objects on the heap",
+        "They move type errors from runtime (for example a `ClassCastException`) to compile time, and remove the need for casts when reading values",
+        "They let one variable hold values of any type without any checks",
+        "They allow primitive types like `int` to be stored directly in collections"
+      ],
+      "correctAnswer": 1,
+      "explanation": "With an `Object`-based `Box`, the type information is lost: anything can be inserted, reading requires a cast, and mistakes only show up at runtime. A generic `Box<Integer>` lets the compiler check every use, so wrong types are rejected before the program runs and no cast is needed. Generics still work only with reference types such as `Integer`.",
+      "source": "notes p3 (limitations of Object as universal type, compile time vs runtime)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/why.html"
+    },
+    {
+      "id": "d27_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Generic classes",
+      "question": "What does `Demo3.java` print?",
+      "codeSnippet": "class Box<T> {\n    private T value;\n\n    Box(T value) {\n        this.value = value;\n    }\n\n    public T getValue() {\n        return this.value;\n    }\n}\n\npublic class Demo3 {\n    public static void main(String[] args) {\n        Box<Integer> b1 = new Box<>(10);\n        Box<String> b2 = new Box<>(\"Hello\");\n        Box<Boolean> b3 = new Box<>(false);\n\n        System.out.println(b1.getValue() + 5);\n        System.out.println(b2.getValue());\n        System.out.println(b3.getValue());\n    }\n}",
+      "options": [
+        "`105`, `Hello`, `false`",
+        "It does not compile: `getValue()` returns `Object` and needs a cast before `+ 5`",
+        "`15`, `Hello`, `false`",
+        "`15`, `Hello`, `true`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Because `b1` is a `Box<Integer>`, `getValue()` returns an `Integer`, so `b1.getValue() + 5` is numeric addition (after unboxing): 15. No cast is needed since the type parameter `T` is replaced by `Integer` for this box. The other two boxes simply return \"Hello\" and `false`.",
+      "source": "code: Demo3.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/why.html"
+    },
+    {
+      "id": "d27_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "Limitations of Object as a universal type",
+      "question": "Your codebase has a non-generic `Box` that stores an `Object`. Someone writes `String s = (String) b1.getValue();` where `b1` holds `10`. The code compiles, but the app crashes in production. What happened, and what prevents this?",
+      "codeSnippet": null,
+      "options": [
+        "The cast fails at runtime with `ClassCastException` because the value is an `Integer`; a generic `Box<Integer>` would make the wrong cast a compile-time error",
+        "The JVM converted `10` to `\"10\"` but ran out of memory; increasing the heap fixes it",
+        "`getValue()` returned `null` because `Object` fields cannot hold numbers; initialise the field first",
+        "Casting is not allowed on method results; store the value in a variable before casting"
+      ],
+      "correctAnswer": 0,
+      "explanation": "With `Object`, the compiler cannot know what is inside the box, so it accepts the cast and the error appears only when the line runs (`Integer cannot be cast to String`). That is the \"errors shift to runtime\" limitation in the notes. With `Box<Integer>`, the compiler knows `getValue()` returns `Integer` and rejects the cast to `String` outright.",
+      "source": "code: Demo2.java, Demo3.java; notes p3",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/why.html"
+    },
+    {
+      "id": "d27_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Upcasting and downcasting",
+      "question": "What happens when `Demo.java` runs?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        String s = \"Hello\";\n        Object obj = s;            // upcasting\n\n        Object obj2 = \"Aditya\";\n        String s2 = (String) obj2; // downcasting\n        System.out.println(s2);\n\n        Object obj3 = 10;\n        String s3 = (String) obj3;\n        System.out.println(s3);\n    }\n}",
+      "options": [
+        "It prints `Aditya` then `10`",
+        "It does not compile, because an `Object` can never be cast to `String`",
+        "It does not compile, because `Object obj3 = 10;` mixes a primitive with an object",
+        "It prints `Aditya`, then throws `ClassCastException` at `(String) obj3`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`obj2` really refers to a `String`, so downcasting it to `String` succeeds and `Aditya` is printed. `obj3` holds an autoboxed `Integer`; the compiler allows the cast from `Object` to `String` because it might be valid, but at runtime the object is not a `String`, so a `ClassCastException` is thrown. `Object obj3 = 10;` itself is fine thanks to autoboxing.",
+      "source": "code: Demo.java; notes p2 (downcasting)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/why.html"
+    },
+    {
+      "id": "d27_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Upcasting and downcasting",
+      "question": "Given `String s = \"Hello\";` and `Object obj = \"Hello\";`, which assignment requires an explicit cast to compile?",
+      "codeSnippet": null,
+      "options": [
+        "`Object o = s;`",
+        "`String t = obj;`",
+        "`Object o2 = new String(\"Hi\");`",
+        "`CharSequence c = s;`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Going from a specific type to a more general one (upcasting, e.g. `String` to `Object` or to the `CharSequence` interface it implements) is always safe, so it happens implicitly. Going from general to specific (downcasting) might fail, so the compiler demands an explicit `(String) obj`, and the check is repeated at runtime. The notes mark `String s = obj;` as a compiler error for this reason.",
+      "source": "notes p2 (upcasting: specific -> general, no casting; downcasting: compiler error without cast)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/why.html"
+    },
+    {
+      "id": "d27_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Bounded type parameters",
+      "question": "You need a generic `Box<T>` whose `printDouble()` method calls `value.doubleValue()`. It should accept `Integer`, `Double` and `Float`, but `Box<String>` must not compile. How do you declare it?",
+      "codeSnippet": null,
+      "options": [
+        "`class Box<T> { ... }` and cast `value` to `Number` inside `printDouble()`",
+        "`class Box<Number> { ... }`",
+        "`class Box<T extends Number> { ... }`",
+        "`class Box<T super Number> { ... }`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "An upper bound `T extends Number` limits the type argument to `Number` or its subclasses (`Integer`, `Double`, `Float`, ...), and because every `T` is a `Number`, the compiler lets you call `doubleValue()` on `value` without a cast. `Box<Number>` would just declare a type parameter named `Number`, and an unbounded `T` with a cast would still accept `String` and fail at runtime. `super` cannot be used in a type parameter declaration.",
+      "source": "code: Demo6.java; notes p3 (Number: Integer, Double, Float allowed; String, Boolean, Student not)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/bounded.html"
+    },
+    {
+      "id": "d27_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Generic methods",
+      "question": "In `public static <T, U> void printPair(T first, U second)`, what is the role of `<T, U>` placed before the return type?",
+      "codeSnippet": null,
+      "options": [
+        "It declares two type parameters for this method only, so the compiler can infer `T` and `U` from each call's arguments",
+        "It says the method returns a `Pair<T, U>`",
+        "It refers to the type parameters of the enclosing class, which must also be named `T` and `U`",
+        "It restricts `first` and `second` to be the same type"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A generic method declares its own type parameters in angle brackets just before the return type. On a call like `printPair(11, 23)`, the compiler infers `T` and `U` (here both `Integer`) from the arguments, which the lecture calls type inference. The class `Demo5` itself is not generic, and `T` and `U` may be different types.",
+      "source": "code: Demo5.java (generic methods, type inference)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/methods.html"
+    },
+    {
+      "id": "d27_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Multiple bounds",
+      "question": "With the bound `T extends Animal & Swimmable`, which marked line fails to compile?",
+      "codeSnippet": "class Animal {\n    void display() { System.out.println(\"Displaying Animal\"); }\n}\n\ninterface Swimmable {\n    void swim();\n}\n\nclass Dog extends Animal { }\n\nclass Fish extends Animal implements Swimmable {\n    public void swim() { System.out.println(\"Fish is swimming\"); }\n}\n\nclass Box<T extends Animal & Swimmable> {\n    T value;\n\n    void test() {\n        value.display();   // Line C\n        value.swim();      // Line D\n    }\n}\n\npublic class Demo7 {\n    public static void main(String[] args) {\n        Box<Fish> b1 = new Box<>();   // Line A\n        Box<Dog> b2 = new Box<>();    // Line B\n    }\n}",
+      "options": [
+        "Line A",
+        "Line B",
+        "Line C",
+        "Line D"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A type argument must satisfy every bound: it must be an `Animal` and also implement `Swimmable`. `Fish` satisfies both (Line A is fine), but `Dog` is an `Animal` that is not `Swimmable`, so Line B is a compile error. Inside `Box`, `T` is known to be both, so `value.display()` and `value.swim()` (Lines C and D) compile without casts.",
+      "source": "code: Demo7.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/bounded.html"
+    },
+    {
+      "id": "d27_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Multiple bounds",
+      "question": "Which type parameter declaration is valid Java, given `class Animal`, `class Dog extends Animal` and `interface Swimmable`?",
+      "codeSnippet": null,
+      "options": [
+        "`class Box<T extends Swimmable & Animal>`",
+        "`class Box<T implements Swimmable extends Animal>`",
+        "`class Box<T extends Animal & Dog>`",
+        "`class Box<T extends Animal & Swimmable>`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Multiple bounds are written with `extends` and `&`, and if one bound is a class it must come first, followed by interfaces. Putting the interface first is a compile error, `implements` is never used in a type parameter, and at most one bound can be a class (Java has single class inheritance), so `Animal & Dog` is invalid.",
+      "source": "code: Demo7.java",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/bounded.html"
+    },
+    {
+      "id": "d27_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Generic methods",
+      "question": "A teammate uses the lecture's `public static <T> T getResult(T x) { return x; }` and writes `Integer y = getResult(\"23\");`, expecting the string to be converted to a number. What actually happens?",
+      "codeSnippet": null,
+      "options": [
+        "It compiles and `y` becomes `23`, because `T` is inferred as `Integer` from the target type",
+        "It compiles but throws `ClassCastException` at runtime when the result is assigned",
+        "It does not compile: `T` is inferred from the argument as `String`, and a `String` result cannot be assigned to `Integer`",
+        "It compiles and `y` is `null`, because the conversion fails silently"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Generic methods do not convert values; they only carry the type through. The argument forces `T` to be (a supertype of) `String`, while the target `Integer` requires `T` to be an `Integer`, and no type satisfies both, so the compiler reports incompatible types. This is the compile-time safety generics provide; real conversion needs `Integer.parseInt(\"23\")`.",
+      "source": "code: Demo5.java (getResult, type inference)",
+      "reference": "https://docs.oracle.com/javase/tutorial/java/generics/methods.html"
+    }
+  ]
+}

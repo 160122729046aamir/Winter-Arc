@@ -1,0 +1,202 @@
+{
+  "day": 25,
+  "title": "Lecture #25: Java Strings",
+  "sources": [
+    "notes.pdf (5 pages)",
+    "code/Demo.java",
+    "code/Demo2.java",
+    "code/Demo3.java"
+  ],
+  "topics": [
+    "String pool and literals",
+    "Literal vs new String",
+    "String immutability",
+    "Compile-time vs runtime concatenation",
+    "Cost of concatenation in loops",
+    "String internals (compact strings)",
+    "Why String is immutable",
+    "String hash caching"
+  ],
+  "questions": [
+    {
+      "id": "d25_q1",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "String pool and literals",
+      "question": "Why does `\"Hello\" == \"Hello\"` style code, as in `String s1 = \"Hello\"; String s2 = \"Hello\"; s1 == s2`, print `true`?",
+      "codeSnippet": null,
+      "options": [
+        "Because `==` compares the characters of two strings",
+        "Because string literals are stored in the String pool, and both variables point to the same pooled object",
+        "Because the compiler replaces both variables with one variable",
+        "Because `String` overrides the `==` operator to call `equals()`"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When a literal is used, the JVM checks the String pool; if \"Hello\" is already there, it reuses that object instead of creating a new one. So `s1` and `s2` hold the same reference and `==` (which always compares references for objects) is true. Java does not let classes override `==`.",
+      "source": "notes p2; code: Demo.java",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d25_q2",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "Literal vs new String",
+      "question": "What does the lecture's `Demo.java` print?",
+      "codeSnippet": "public class Demo {\n    public static void main(String[] args) {\n        String s1 = \"Hello\";\n        String s2 = \"Hello\";\n        System.out.println(s1 == s2);\n\n        String s3 = new String(\"Aditya\");\n        String s4 = new String(\"Aditya\");\n        System.out.println(s3 == s4);\n    }\n}",
+      "options": [
+        "`true` then `true`",
+        "`false` then `false`",
+        "`false` then `true`",
+        "`true` then `false`"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Both literals `\"Hello\"` refer to the same object in the String pool, so `s1 == s2` is true. Each `new String(\"Aditya\")` forces a brand-new object on the heap, so `s3` and `s4` are different references and `s3 == s4` is false, even though `s3.equals(s4)` would be true.",
+      "source": "code: Demo.java; notes p2",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d25_q3",
+      "difficulty": "easy",
+      "kind": "scenario",
+      "topic": "String immutability",
+      "question": "A teammate writes `String s8 = \"Hello\"; s8 = \"World\";` and says: \"See, the String changed, so Strings are mutable.\" What is the correct reply?",
+      "codeSnippet": null,
+      "options": [
+        "The \"Hello\" object never changed; `s8` was simply re-pointed to a different object, \"World\"",
+        "They are right: assigning a new literal overwrites the characters inside the old String",
+        "They are right only for literals; Strings created with `new` are immutable",
+        "The code does not compile, because a String variable can be assigned only once"
+      ],
+      "correctAnswer": 0,
+      "explanation": "`String` is immutable: once an object is created its characters can never change. Reassignment only changes which object the reference variable points to, as the notes' stack/heap drawing shows with `s` moving from \"Hello\" to \"World\". The old \"Hello\" object still exists unchanged in the pool.",
+      "source": "code: Demo2.java (s8); notes p3",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d25_q4",
+      "difficulty": "medium",
+      "kind": "coding",
+      "topic": "Compile-time vs runtime concatenation",
+      "question": "Based on `Demo2.java`, which three values does this program print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        String s1 = \"Ja\" + \"va\";\n        String s2 = \"Java\";\n        String s3 = \"Ja\";\n        String s4 = s3 + \"va\";\n\n        System.out.println(s1 == s2);\n        System.out.println(s2 == s4);\n        System.out.println(s2.equals(s4));\n    }\n}",
+      "options": [
+        "`true`, `true`, `true`",
+        "`false`, `false`, `true`",
+        "`true`, `false`, `true`",
+        "`true`, `false`, `false`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`\"Ja\" + \"va\"` uses only literals, so the compiler folds it to `\"Java\"` and it refers to the pooled object: `s1 == s2` is true. `s3 + \"va\"` involves a variable, so it is computed at runtime and produces a new heap object: `s2 == s4` is false. `equals()` compares characters, so the last line is true.",
+      "source": "code: Demo2.java; notes p2-p3 (golden rule)",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-15.html#jls-15.29"
+    },
+    {
+      "id": "d25_q5",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Literal vs new String",
+      "question": "In a fresh program, `String s = new String(\"Hello\");` is the first line that mentions \"Hello\". How many `String` objects does it lead to?",
+      "codeSnippet": null,
+      "options": [
+        "One, in the String pool only",
+        "Two: the literal \"Hello\" in the String pool, plus a separate object on the heap created by `new`",
+        "One, on the heap only; `new` bypasses the pool completely",
+        "Two, both inside the String pool"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The literal `\"Hello\"` in the source is placed in the String pool, and `new String(...)` then creates another object on the normal heap, which is what `s` references. That is why, in the notes, a later `String s2 = \"Hello\";` points to the pooled copy while `s` points to the heap copy, and `s == s2` is false.",
+      "source": "notes p3 (new String(\"Hello\") diagram); code: Demo2.java (s9, s10)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d25_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Cost of concatenation in loops",
+      "question": "A report builder runs `s += i;` inside a loop 100,000 times (like `Demo3.java`, but much larger) and becomes very slow and memory-hungry. What is the underlying reason?",
+      "codeSnippet": null,
+      "options": [
+        "`+=` on a String is not allowed inside loops, so Java switches to a slow fallback",
+        "The String pool fills up and the JVM has to search it linearly on every iteration",
+        "Integers cannot be appended to Strings directly, so each step throws and catches an exception",
+        "Strings are immutable, so every `+=` builds a brand-new String and copies all previous characters, leaving the old ones as garbage"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Because a String can never change, `s = s + i` must create a new object containing the old text plus the new part (\"0\", \"01\", \"012\", ...). Over many iterations this means repeated copying and a pile of short-lived objects, which is the \"problem of immutability\" noted in `Demo3.java`. These runtime-created strings go to the heap, not the pool.",
+      "source": "code: Demo3.java; notes p4",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d25_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "String internals (compact strings)",
+      "question": "Since Java 9, how does the `String` class store the text `\"java\"` internally, according to the lecture?",
+      "codeSnippet": null,
+      "options": [
+        "In a `byte[] value` of 4 bytes with `coder = 0` (Latin-1), using one byte per character",
+        "In a `char[] value` of 4 chars, using 8 bytes in total",
+        "In a `byte[] value` of 8 bytes with `coder = 1` (UTF-16), since all Java characters are Unicode",
+        "As a linked list of `Character` objects, one per letter"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Compact strings (JEP 254, Java 9) replaced the old `char[]` with a `byte[]` plus a `coder` flag. If every character fits in Latin-1, as in \"java\" (74, 97, 118, 97), each takes one byte and `coder` is 0, saving about 50% compared to the 8 bytes a `char[]` needed. Only strings containing characters outside Latin-1, like Hindi text, switch to UTF-16 with two bytes per character (`coder = 1`).",
+      "source": "notes p4-p5 (byte[] value, coder, Latin1/UTF16)",
+      "reference": "https://openjdk.org/jeps/254"
+    },
+    {
+      "id": "d25_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "Compile-time vs runtime concatenation",
+      "question": "Here `a` is declared `final` but `b` is not. What does the program print?",
+      "codeSnippet": "public class Main {\n    public static void main(String[] args) {\n        final String a = \"Ja\";\n        String b = \"Ja\";\n\n        String s1 = a + \"va\";\n        String s2 = b + \"va\";\n        String t = \"Java\";\n\n        System.out.println((s1 == t) + \" \" + (s2 == t));\n    }\n}",
+      "options": [
+        "`true true`",
+        "`false false`",
+        "`true false`",
+        "`false true`"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A `final` local `String` initialised with a literal is a compile-time constant, so `a + \"va\"` is folded into the literal `\"Java\"` and refers to the pooled object: `s1 == t` is true. `b` is not final, so `b + \"va\"` is computed at runtime and creates a new heap object: `s2 == t` is false. This is the lecture's golden rule: only compile-time constants go to the pool automatically.",
+      "source": "notes p2 (golden rule: only compile-time constants go to the pool)",
+      "reference": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-15.html#jls-15.29"
+    },
+    {
+      "id": "d25_q9",
+      "difficulty": "hard",
+      "kind": "conceptual",
+      "topic": "Why String is immutable",
+      "question": "The String pool lets many variables share one object, e.g. `s1` and `s2` both point to the pooled \"Hello\". Why does this sharing depend on `String` being immutable?",
+      "codeSnippet": null,
+      "options": [
+        "Because only immutable objects can be stored on the heap",
+        "Because the pool is cleared whenever any String changes, which would be slow",
+        "Because mutable objects cannot be compared with `==`",
+        "Because if a String could change, modifying it through `s1` would silently change the value seen through `s2` and every other variable sharing it"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Sharing one object between unrelated variables is only safe if nobody can change it. If `String` were mutable, code in one place could alter a pooled literal and break every other part of the program using the same literal. Immutability also protects values such as passwords, URLs and map keys from being changed after they are checked or hashed, which the notes list as reasons.",
+      "source": "notes p1 (immutable: passwords/URLs/hashes), p5 (string optimisation relies on immutability)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    },
+    {
+      "id": "d25_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "String hash caching",
+      "question": "A service looks up the same `String` key in a `HashMap` millions of times. Profiling shows `hashCode()` for that key does real work only on the first call. What makes this possible and safe?",
+      "codeSnippet": null,
+      "options": [
+        "The `HashMap` stores the key's hash in the String pool and reuses it",
+        "`String` keeps a private `hash` field that caches the result after the first computation; because the characters can never change, the cached value can never go stale",
+        "`String.hashCode()` simply returns the memory address, which never changes",
+        "The JIT compiler replaces `hashCode()` with a constant for any literal"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The lecture shows `String` with `private int hash`, used to cache the hash code: it is computed from the characters once and then returned directly. This is one of the String optimisations that only works because Strings are immutable; a mutable object's cached hash could become wrong after a change. The hash is derived from the content, not from the memory address.",
+      "source": "notes p4 (private int hash), p5 (caching the hash values)",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    }
+  ]
+}

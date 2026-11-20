@@ -1,0 +1,200 @@
+{
+  "day": 54,
+  "title": "Lecture #54: Lock-Free Concurrency in Java",
+  "sources": [
+    "notes/Notes.pdf (21 pages)",
+    "notes/slides.pdf (5 pages)",
+    "code/Demo.java",
+    "code/Demo2.java"
+  ],
+  "topics": [
+    "Lock-free & progress guarantees",
+    "AtomicInteger methods",
+    "Functional atomic updates",
+    "AtomicBoolean state transitions",
+    "Atomic compound-operation pitfalls",
+    "AtomicReference & reference equality"
+  ],
+  "questions": [
+    {
+      "id": "d54_q1",
+      "difficulty": "easy",
+      "kind": "coding",
+      "topic": "AtomicInteger methods",
+      "question": "What does this code print?",
+      "codeSnippet": "AtomicInteger c = new AtomicInteger(5);\nint a = c.getAndIncrement();\nint b = c.incrementAndGet();\nint d = c.getAndAdd(10);\nSystem.out.println(a + \" \" + b + \" \" + d + \" \" + c.get());",
+      "options": [
+        "6 7 17 17",
+        "5 6 7 17",
+        "5 7 7 17",
+        "5 7 17 17"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`getAndIncrement()` returns the old value 5, and the value becomes 6. `incrementAndGet()` adds 1 first and returns the new value 7. `getAndAdd(10)` returns the old value 7, and the value becomes 17. The rule: `getAndX` returns the value before the update, like `value++`; `XAndGet` returns the value after it, like `++value`.",
+      "source": "notes p7-9",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html"
+    },
+    {
+      "id": "d54_q2",
+      "difficulty": "easy",
+      "kind": "conceptual",
+      "topic": "Lock-free & progress guarantees",
+      "question": "In a typical lock-free update, as with atomic classes, what does a thread do?",
+      "codeSnippet": null,
+      "options": [
+        "Reads the current value, computes a new one, tries an atomic compare-and-set, and retries with fresh data if another thread changed the value first",
+        "Acquires a lightweight lock that the JVM hides, updates the value, and releases the lock",
+        "Writes its value without checking, and the last writer wins, which is acceptable for counters",
+        "Waits until no other thread is running, then updates the value"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Lock-free code uses a read, compute, compare-and-set, retry loop. No thread owns a lock that all the others must wait for. If the CAS fails, the thread just re-reads and tries again. Lock-free does not mean there is no contention or that it is always faster. The 'last writer wins' option is exactly the lost-update bug that atomics prevent.",
+      "source": "notes p3-4",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    },
+    {
+      "id": "d54_q3",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Atomic compound-operation pitfalls",
+      "question": "There is 1 item in stock (`stock` is an `AtomicInteger` with value 1). Two checkout threads run this at the same time. Which final stock values are possible?",
+      "codeSnippet": "if (stock.get() > 0) {\n    stock.decrementAndGet();\n    shipOrder();\n}",
+      "options": [
+        "Only 0, because `AtomicInteger` makes the whole block atomic",
+        "Only 0 or 1, because a decrement can be lost",
+        "Only -1, because both threads always pass the check",
+        "0 or -1: both threads can pass the check before either one decrements, so two orders may ship"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Each method call on the atomic is atomic on its own, but the check-then-act sequence is not. If both threads read 1 before either decrements, both decrement, the stock reaches -1, and two orders ship. If they don't overlap, the result is 0. A decrement is never lost, so 1 is impossible. A fix is a CAS retry loop that only decrements while the value is positive, or a lock.",
+      "source": "notes p15",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html#compareAndSet(int,int)"
+    },
+    {
+      "id": "d54_q4",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "Lock-free & progress guarantees",
+      "question": "What is the difference between 'lock-free' and 'wait-free' progress?",
+      "codeSnippet": null,
+      "options": [
+        "Lock-free means no thread ever retries; wait-free means threads may retry forever",
+        "Lock-free guarantees that at least one competing thread makes progress, though a single thread may keep losing; wait-free guarantees every thread finishes within a bounded number of steps",
+        "They are the same; 'wait-free' is just the older name",
+        "Wait-free means the algorithm uses no CPU while waiting; lock-free means it spins"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Lock-free is a system-wide guarantee: the whole system always makes progress, because when one thread's CAS fails it is because another thread's succeeded. A particular unlucky thread could still keep retrying. Wait-free is stronger: every thread is guaranteed to complete within a bounded number of steps. Wait-free algorithms are much harder to design.",
+      "source": "notes p4-5",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    },
+    {
+      "id": "d54_q5",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "Functional atomic updates",
+      "question": "A teammate writes `points.updateAndGet(p -> { emailService.send(\"Points updated\"); return p + 10; });`. Under heavy contention, some users get two or three emails for a single update. Why?",
+      "codeSnippet": null,
+      "options": [
+        "`updateAndGet` runs the function on several threads in parallel to speed it up",
+        "`updateAndGet` is not atomic, so the 10 points are also added more than once",
+        "When the internal CAS fails because of contention, the function is re-run, so its side effect can happen several times even though the update is applied once",
+        "`emailService.send` is not thread-safe, so it duplicates messages by itself"
+      ],
+      "correctAnswer": 2,
+      "explanation": "`updateAndGet` loops: it reads the value, applies the function, and tries a CAS, retrying on failure. The final update is applied exactly once, but the function may run several times. So it must be side-effect-free, deterministic and cheap. Send the email after the update instead. The points are not added more than once, which rules out the second option.",
+      "source": "notes p10-11",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html#updateAndGet(java.util.function.IntUnaryOperator)"
+    },
+    {
+      "id": "d54_q6",
+      "difficulty": "medium",
+      "kind": "scenario",
+      "topic": "AtomicBoolean state transitions",
+      "question": "Many threads may call `initialize()`, but the expensive setup must run only once. Which implementation guarantees that?",
+      "codeSnippet": null,
+      "options": [
+        "`if (!initialized.compareAndSet(false, true)) return; doSetup();` with `AtomicBoolean initialized`",
+        "`if (!initialized) { initialized = true; doSetup(); }` with `volatile boolean initialized`",
+        "`if (!initialized.get()) { initialized.set(true); doSetup(); }` with `AtomicBoolean initialized`",
+        "`if (!initialized) { doSetup(); initialized = true; }` with `volatile boolean initialized`"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Only one caller can succeed at atomically changing false to true with `compareAndSet`. Every other caller's CAS fails, and they return without running the setup. The other options all check the flag and then set it in two separate steps. `volatile` and separate `get()`/`set()` calls make the flag visible, but several threads can still pass the check before any of them sets it.",
+      "source": "notes p12-14",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicBoolean.html#compareAndSet(boolean,boolean)"
+    },
+    {
+      "id": "d54_q7",
+      "difficulty": "medium",
+      "kind": "conceptual",
+      "topic": "AtomicReference & reference equality",
+      "question": "A class holds `AtomicReference<List<String>> ref = new AtomicReference<>(new ArrayList<>());`, and several threads call `ref.get().add(item)`. Which statement is correct?",
+      "codeSnippet": null,
+      "options": [
+        "It is safe: `AtomicReference` makes every method of the referenced object atomic",
+        "It is safe as long as the list is never replaced with `set()`",
+        "It is unsafe only because `get()` may return a stale reference",
+        "It is unsafe: `AtomicReference` only makes reading and replacing the reference atomic, and the shared `ArrayList` itself is still mutated without synchronization"
+      ],
+      "correctAnswer": 3,
+      "explanation": "`AtomicReference` protects the reference slot: `get`, `set`, `getAndSet` and `compareAndSet`. It does nothing for the internal state of the object it points to. Every thread gets the same `ArrayList` and calls `add()` on it at the same time, which is a data race. A safe lock-free approach is to swap in a new immutable list with CAS, or to use a concurrent collection.",
+      "source": "notes p15-16",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicReference.html"
+    },
+    {
+      "id": "d54_q8",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "AtomicReference & reference equality",
+      "question": "Records get a value-based `equals()`. What does this code print?",
+      "codeSnippet": "record User(String name) {}\n\nAtomicReference<User> ref = new AtomicReference<>(new User(\"Aditya\"));\nboolean r1 = ref.compareAndSet(new User(\"Aditya\"), new User(\"Rohit\"));\nUser current = ref.get();\nboolean r2 = ref.compareAndSet(current, new User(\"Rohit\"));\nSystem.out.println(r1 + \" \" + r2 + \" \" + ref.get().name());",
+      "options": [
+        "true false Rohit",
+        "false true Rohit",
+        "true true Rohit",
+        "false false Aditya"
+      ],
+      "correctAnswer": 1,
+      "explanation": "`AtomicReference.compareAndSet` compares references with `==`, not `equals()`. The first call passes a new `User(\"Aditya\")`, which is equal by record `equals()` but is a different object, so it fails (false). The second call passes the exact reference returned by `get()`, so it succeeds (true) and the stored user becomes Rohit.",
+      "source": "notes p18-19",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicReference.html#compareAndSet(V,V)"
+    },
+    {
+      "id": "d54_q9",
+      "difficulty": "hard",
+      "kind": "coding",
+      "topic": "AtomicReference & reference equality",
+      "question": "This is `Demo2`'s `SeatBooking`, but the seat is initialised with `new String(\"EMPTY\")` (the commented-out idea in the lecture code). Two threads call `bookSeat(\"Aditya\")` and `bookSeat(\"Rohit\")`, and both have finished before main prints `seat.get()`. What is the result?",
+      "codeSnippet": "class SeatBooking {\n    AtomicReference<String> seat = new AtomicReference<>(new String(\"EMPTY\"));\n\n    boolean bookSeat(String name) {\n        String currentValue = seat.get();\n        if (!currentValue.equals(\"EMPTY\")) {\n            return false;\n        }\n        return seat.compareAndSet(\"EMPTY\", name);\n    }\n}",
+      "options": [
+        "Both calls return false and the seat stays \"EMPTY\", because the literal \"EMPTY\" is a different object from the `new String` stored in the reference",
+        "Exactly one call returns true, and the seat holds that person's name",
+        "Both calls return true, and the seat holds whichever name was written last",
+        "It throws `IllegalArgumentException`, because `compareAndSet` rejects String literals"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The `equals()` check passes for both threads, because the contents are \"EMPTY\". But `compareAndSet(\"EMPTY\", name)` compares by identity: the literal \"EMPTY\" is the interned pool object, while the stored value is a separate `new String`. Both CAS calls fail, so both return false and the seat never changes. In the real `Demo2`, the initial value is the literal itself, so exactly one thread wins.",
+      "source": "code: Demo2.java; notes p17-19",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicReference.html#compareAndSet(V,V)"
+    },
+    {
+      "id": "d54_q10",
+      "difficulty": "hard",
+      "kind": "scenario",
+      "topic": "Atomic compound-operation pitfalls",
+      "question": "A wallet service stores each account's balance in its own `AtomicLong`. `transfer(a, b, amt)` does `a.addAndGet(-amt); b.addAndGet(amt);`. An auditor thread that sums all balances sometimes sees money missing from the total. What is the right conclusion?",
+      "codeSnippet": null,
+      "options": [
+        "`AtomicLong` loses updates under contention, so switch to `LongAdder`",
+        "Make both `AtomicLong` fields `volatile` so the auditor sees the latest values",
+        "Each update is atomic, but the two-step transfer is not; another thread can see the in-between state, so the transfer and the audit need a lock (or a single atomically replaced immutable state)",
+        "Do the credit before the debit, which removes the inconsistency"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Atomic classes make single-value operations atomic. They do not combine several variables into one invariant. Between the debit and the credit, the money is briefly missing, and the auditor can see that partial state. Changes to several fields that must stay consistent need a lock, or one immutable state object swapped with a single CAS. Reversing the order only makes extra money appear instead.",
+      "source": "notes p14-15",
+      "reference": "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    }
+  ]
+}
