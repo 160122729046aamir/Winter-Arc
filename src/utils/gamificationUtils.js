@@ -11,7 +11,8 @@ export const XP_VALUES = {
   QUIZ_BASIC_CORRECT: 10,
   QUIZ_MEDIUM_CORRECT: 15,
   QUIZ_HARD_CORRECT: 25,
-  QUIZ_DAILY_COMPLETION_BONUS: 50
+  QUIZ_DAILY_COMPLETION_BONUS: 50,
+  PROJECT_COMPLETE: 250
 };
 
 const countTrue = (obj) => Object.values(obj || {}).filter(Boolean).length;
@@ -48,6 +49,10 @@ export function computeXP(state) {
   (state.studySessions || []).forEach((s) => {
     const mins = Number(s.durationMinutes) || 0;
     if (mins > 0) xp += Math.round(mins * 0.75) + XP_VALUES.POMODORO_SESSION;
+  });
+
+  Object.values(state.completedProjects || {}).forEach((done) => {
+    if (done) xp += XP_VALUES.PROJECT_COMPLETE;
   });
 
   const unlocked = new Set(state.unlockedBadges || []);

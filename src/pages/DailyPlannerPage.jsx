@@ -19,7 +19,8 @@ import {
   HelpCircle,
   PauseCircle,
   PlaySquare,
-  ArrowRight
+  ArrowRight,
+  Server
 } from 'lucide-react';
 import { usePlanner } from '../context/PlannerContext';
 import { formatDate, formatDateWithDay, formatMinutesHuman } from '../utils/dateUtils';
@@ -29,6 +30,8 @@ import PauseModal from '../components/common/PauseModal';
 import DailyQuizWidget from '../components/quiz/DailyQuizWidget';
 import { confirmAction, toast } from '../utils/alerts';
 import { QUESTION_BANK_BY_DAY } from '../data/questionBankData';
+import { SYSTEM_PROJECTS } from '../data/projectsData';
+import { getProjectWorkForDay } from '../utils/projectSchedule';
 
 export default function DailyPlannerPage() {
   const {
@@ -371,6 +374,51 @@ export default function DailyPlannerPage() {
       </div>
 
       {/* Missed Day Recovery Banner if this day was missed */}
+      {/* Project work scheduled for this plan day */}
+      {getProjectWorkForDay(SYSTEM_PROJECTS, days, currentDay.day).map(({ project, milestone, kind }) => (
+        <div
+          key={project.id}
+          className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/40 to-cyan-950/30 border border-indigo-500/30 flex flex-col sm:flex-row sm:items-start justify-between gap-3"
+        >
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-300 flex-shrink-0">
+              <Server className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[11px] font-mono uppercase tracking-wider text-indigo-300">
+                {kind === 'start' && 'Project starts today'}
+                {kind === 'ongoing' && 'Project in progress'}
+                {kind === 'end' && 'Project finish day'}
+                {kind === 'next' && 'Capstone starts next study day'}
+              </p>
+              <h4 className="text-sm font-bold text-slate-100">{project.title}</h4>
+              {milestone ? (
+                <>
+                  <p className="text-xs text-cyan-300 font-semibold mt-1">Today: {milestone.title}</p>
+                  <ul className="mt-1 space-y-0.5">
+                    {milestone.tasks.map((t, i) => (
+                      <li key={i} className="text-xs text-slate-300 flex gap-1.5"><span className="text-slate-500">•</span><span>{t}</span></li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p className="text-xs text-slate-400 mt-1">
+                  {kind === 'next'
+                    ? 'After this last lecture, continue with the GateKeeper project videos.'
+                    : 'No new milestone today. Keep building and polish what you have.'}
+                </p>
+              )}
+            </div>
+          </div>
+          <button
+            onClick={() => navigate(`/projects?project=${project.id}`)}
+            className="self-start px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold whitespace-nowrap"
+          >
+            Open project
+          </button>
+        </div>
+      ))}
+
       {isMissed && (
         <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">

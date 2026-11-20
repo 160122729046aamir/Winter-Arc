@@ -113,6 +113,9 @@ export function hydrateState(parsed, defaultState) {
     settings,
     studySessions: Array.isArray(parsed.studySessions) ? parsed.studySessions : [],
     restDates: Array.isArray(parsed.restDates) ? parsed.restDates : [],
+    completedProjects: parsed.completedProjects && typeof parsed.completedProjects === 'object'
+      ? parsed.completedProjects
+      : readLegacyCompletedProjects(),
     quizState: pruneQuizState(parsed.quizState && typeof parsed.quizState === 'object' ? parsed.quizState : {}),
     watchedVideosGlobal: parsed.watchedVideosGlobal && typeof parsed.watchedVideosGlobal === 'object'
       ? parsed.watchedVideosGlobal : {}
@@ -130,6 +133,16 @@ export function hydrateState(parsed, defaultState) {
     };
   }
   return base;
+}
+
+// Older builds kept project completion in its own localStorage key
+function readLegacyCompletedProjects() {
+  try {
+    const raw = localStorage.getItem('winter_arc_completed_projects');
+    return raw ? JSON.parse(raw) || {} : {};
+  } catch {
+    return {};
+  }
 }
 
 export function loadStoredState(defaultState) {

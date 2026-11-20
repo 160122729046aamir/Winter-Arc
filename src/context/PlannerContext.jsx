@@ -66,6 +66,7 @@ const buildInitialState = () => {
       activeDatesList: []
     },
     restDates: [], // dates that never break a streak (skipped days, paused days)
+    completedProjects: {}, // { [projectId]: true }
     journeyStatus: 'active', // 'active' | 'paused'
     pausedAt: null,
     frozenChallengeDay: null,
@@ -689,6 +690,16 @@ export function PlannerProvider({ children }) {
     });
   }, []);
 
+  // ---------------- Projects ----------------
+  const toggleProjectComplete = useCallback((projectId) => {
+    const willComplete = !stateRef.current.completedProjects?.[projectId];
+    setState((prev) => ({
+      ...prev,
+      completedProjects: { ...(prev.completedProjects || {}), [projectId]: !prev.completedProjects?.[projectId] }
+    }));
+    if (willComplete) triggerCelebration('Project completed!', '+250 XP');
+  }, [triggerCelebration]);
+
   // ---------------- Playlists ----------------
   const addCustomVideoToPlaylist = useCallback((playlistKey, videoObj) => {
     setState((prev) => {
@@ -970,6 +981,7 @@ export function PlannerProvider({ children }) {
     streak: { ...state.streak, currentStreak: stats.currentStreak },
     xp,
     unlockedBadges: state.unlockedBadges,
+    completedProjects: state.completedProjects || {},
     settings: state.settings,
     quizState: state.quizState,
     journeyStatus: state.journeyStatus,
@@ -1003,6 +1015,7 @@ export function PlannerProvider({ children }) {
     addCustomVideoToPlaylist,
     editVideoInPlaylist,
     deleteVideoFromPlaylist,
+    toggleProjectComplete,
     updateSettings,
     resetAllProgress,
     exportBackup,
