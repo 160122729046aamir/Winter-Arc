@@ -116,6 +116,7 @@ export function evaluateBadges(stats) {
     } else if (req.type === 'phase_completed') {
       if (req.phase === 'phase-1' && stats.isPhase1Completed) isEarned = true;
       if (req.phase === 'phase-2' && stats.isPhase2Completed) isEarned = true;
+      if (req.phase === 'phase-3' && stats.isPhase3Completed) isEarned = true;
     }
 
     if (isEarned) {
@@ -130,5 +131,5 @@ export function evaluateBadges(stats) {
 export function calculateConsistencyScore(completedDays, elapsedDays) {
   if (!elapsedDays || elapsedDays <= 0) return 100;
   const ratio = (completedDays / elapsedDays) * 100;
-  return Math.min(100, Math.max(10, Math.round(ratio)));
+  return Math.min(100, Math.max(0, Math.round(ratio)));
 }

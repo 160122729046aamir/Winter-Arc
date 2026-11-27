@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "prebuild": "node scripts/build_question_index.mjs",
+    "predev": "node scripts/build_question_index.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

@@ -4,7 +4,7 @@ import { showError, showSuccess, toast } from '../utils/alerts';
 import { INITIAL_ROADMAP_DAYS } from '../data/roadmapData';
 import { PLAYLISTS_DATA } from '../data/playlistsData';
 import { BADGES_CATALOG } from '../data/badgesData';
-import { QUESTION_BANK_BY_DAY } from '../data/questionBankData';
+import { getDayQuestionMeta } from '../data/questionBankData';
 import {
   getTodayDateString,
   addDaysToDate,
@@ -67,6 +67,7 @@ const buildInitialState = () => {
     },
     restDates: [], // dates that never break a streak (skipped days, paused days)
     completedProjects: {}, // { [projectId]: true }
+    revisedDays: {}, // { [dayNumber]: true } (Notes & Revision)
     journeyStatus: 'active', // 'active' | 'paused'
     pausedAt: null,
     frozenChallengeDay: null,
@@ -91,7 +92,7 @@ const buildInitialState = () => {
 // ---------------------------------------------------------------------------
 // Pure helpers (operate on plain state; safe inside setState updaters)
 // ---------------------------------------------------------------------------
-const questionCountForDay = (dayNumber) => QUESTION_BANK_BY_DAY[dayNumber]?.totalQuestions || 0;
+const questionCountForDay = (dayNumber) => getDayQuestionMeta(dayNumber)?.total || 0;
 
 export const getDayTaskProgress = (day) => {
   const videos = day.videos || [];
@@ -700,6 +701,13 @@ export function PlannerProvider({ children }) {
     if (willComplete) triggerCelebration('Project completed!', '+250 XP');
   }, [triggerCelebration]);
 
+  const toggleDayRevised = useCallback((dayNumber) => {
+    setState((prev) => ({
+      ...prev,
+      revisedDays: { ...(prev.revisedDays || {}), [dayNumber]: !prev.revisedDays?.[dayNumber] }
+    }));
+  }, []);
+
   // ---------------- Playlists ----------------
   const addCustomVideoToPlaylist = useCallback((playlistKey, videoObj) => {
     setState((prev) => {
@@ -854,8 +862,10 @@ export function PlannerProvider({ children }) {
     const currentStreak = streakAlive ? (s.currentStreak || 0) : 0;
 
     const studyDaysElapsed = Math.max(1, getStudyDaysDifference(state.settings.startDate, today, true) + 1);
-    const elapsedForConsistency = Math.max(1, Math.min(currentChallengeDay, studyDaysElapsed - (state.totalPausedDays || 0)));
-    const consistencyScore = calculateConsistencyScore(completedDaysCount, elapsedForConsistency);
+    // Consistency = days done on time vs days that have actually come due.
+    // Today only counts once it's done, so the score never drops just because the day isn't over.
+    const dueDays = days.filter((d) => (d.date && d.date < today) || d.completed).length;
+    const consistencyScore = dueDays === 0 ? 100 : calculateConsistencyScore(completedDaysCount, dueDays);
     const levelInfo = calculateLevel(xp);
 
     // Quiz analytics
@@ -982,6 +992,7 @@ export function PlannerProvider({ children }) {
     xp,
     unlockedBadges: state.unlockedBadges,
     completedProjects: state.completedProjects || {},
+    revisedDays: state.revisedDays || {},
     settings: state.settings,
     quizState: state.quizState,
     journeyStatus: state.journeyStatus,
@@ -1016,6 +1027,7 @@ export function PlannerProvider({ children }) {
     editVideoInPlaylist,
     deleteVideoFromPlaylist,
     toggleProjectComplete,
+    toggleDayRevised,
     updateSettings,
     resetAllProgress,
     exportBackup,

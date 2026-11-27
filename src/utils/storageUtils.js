@@ -1,6 +1,6 @@
 // LocalStorage manager with versioned migration and JSON export/import support
 import { addStudyDays, setStudyWeekdays } from './dateUtils';
-import { QUESTION_BANK_BY_DAY, QUESTION_IDS } from '../data/questionBankData';
+import { getDayQuestionMeta, QUESTION_IDS } from '../data/questionBankData';
 
 /**
  * Keep only quiz answers/bookmarks that refer to questions that exist in the current bank
@@ -19,7 +19,7 @@ export function pruneQuizState(quizState) {
     const markedForReview = (q.markedForReview || []).filter((id) => QUESTION_IDS.has(id));
     const answered = Object.keys(answers).length;
     if (answered === 0 && bookmarked.length === 0 && markedForReview.length === 0) return;
-    const total = QUESTION_BANK_BY_DAY[dayStr]?.totalQuestions || Infinity;
+    const total = getDayQuestionMeta(dayStr)?.total || Infinity;
     const complete = answered >= total;
     out[dayStr] = {
       ...q,
@@ -116,6 +116,9 @@ export function hydrateState(parsed, defaultState) {
     completedProjects: parsed.completedProjects && typeof parsed.completedProjects === 'object'
       ? parsed.completedProjects
       : readLegacyCompletedProjects(),
+    revisedDays: parsed.revisedDays && typeof parsed.revisedDays === 'object'
+      ? parsed.revisedDays
+      : readLegacyJson('winter_arc_revised_topics'),
     quizState: pruneQuizState(parsed.quizState && typeof parsed.quizState === 'object' ? parsed.quizState : {}),
     watchedVideosGlobal: parsed.watchedVideosGlobal && typeof parsed.watchedVideosGlobal === 'object'
       ? parsed.watchedVideosGlobal : {}
@@ -133,6 +136,15 @@ export function hydrateState(parsed, defaultState) {
     };
   }
   return base;
+}
+
+function readLegacyJson(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) || {} : {};
+  } catch {
+    return {};
+  }
 }
 
 // Older builds kept project completion in its own localStorage key

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BookOpen,
   Search,
@@ -7,66 +8,71 @@ import {
   Trash2,
   Save,
   HelpCircle,
-  Sparkles,
   ChevronDown,
   ChevronUp,
-  Tag
+  Tag,
+  X,
+  ArrowRight,
+  StickyNote
 } from 'lucide-react';
 import { usePlanner } from '../context/PlannerContext';
 import { TOP_INTERVIEW_QUESTIONS } from '../data/interviewQuestionsData';
-import { formatDate } from '../utils/dateUtils';
+import { getDayQuestionMeta } from '../data/questionBankData';
+import { formatShortDate } from '../utils/dateUtils';
 import { confirmAction, toast } from '../utils/alerts';
 
+const FILTERS = [
+  { id: 'studied', label: 'Studied so far' },
+  { id: 'notes', label: 'My notes' },
+  { id: 'todo', label: 'To revise' },
+  { id: 'all', label: 'All days' }
+];
+
 export default function NotesRevisionPage() {
-  const { days, updateDayNotes } = usePlanner();
+  const { days, updateDayNotes, currentChallengeDay, revisedDays, toggleDayRevised } = usePlanner();
 
   const [activeTab, setActiveTab] = useState('notes'); // 'notes' or 'interview'
   const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState('studied');
   const [selectedDayToEdit, setSelectedDayToEdit] = useState(null);
   const [editingText, setEditingText] = useState('');
-
-  // Revised status tracked in localStorage
-  const [revisedTopics, setRevisedTopics] = useState(() => {
-    try {
-      const stored = localStorage.getItem('winter_arc_revised_topics');
-      return stored ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
-  });
-
-  // Expanded interview questions
   const [expandedQuestions, setExpandedQuestions] = useState({ 1: true });
-
-  const toggleTopicRevised = (dayNumber) => {
-    setRevisedTopics((prev) => {
-      const next = { ...prev, [dayNumber]: !prev[dayNumber] };
-      localStorage.setItem('winter_arc_revised_topics', JSON.stringify(next));
-      return next;
-    });
-  };
 
   const toggleQuestionExpanded = (id) => {
     setExpandedQuestions((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Days with notes or topics
-  const daysWithNotes = useMemo(() => {
-    return days.filter((d) => {
-      const hasContent = Boolean(d.notes && d.notes.trim()) || Boolean(d.revision && d.revision.length);
-      if (!hasContent) return false;
+  // Real lecture topics (from the quiz files); fall back to the plan's revision list
+  const topicsFor = (d) => {
+    const t = getDayQuestionMeta(d.day)?.topics;
+    return t && t.length ? t : d.revision || [];
+  };
 
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesDay = String(d.day).includes(q);
-        const matchesTitle = d.title.toLowerCase().includes(q);
-        const matchesNotes = (d.notes || '').toLowerCase().includes(q);
-        const matchesRevision = (d.revision || []).some((r) => r.toLowerCase().includes(q));
-        return matchesDay || matchesTitle || matchesNotes || matchesRevision;
-      }
-      return true;
+  const studied = (d) => d.completed || d.day <= currentChallengeDay;
+  const hasNotes = (d) => Boolean(d.notes && d.notes.trim());
+
+  const counts = useMemo(() => ({
+    studied: days.filter(studied).length,
+    notes: days.filter(hasNotes).length,
+    todo: days.filter((d) => studied(d) && !revisedDays[d.day]).length,
+    all: days.length
+  }), [days, currentChallengeDay, revisedDays]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const visibleDays = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return days.filter((d) => {
+      if (filter === 'studied' && !studied(d)) return false;
+      if (filter === 'notes' && !hasNotes(d)) return false;
+      if (filter === 'todo' && !(studied(d) && !revisedDays[d.day])) return false;
+      if (!q) return true;
+      return (
+        String(d.day) === q ||
+        d.title.toLowerCase().includes(q) ||
+        (d.notes || '').toLowerCase().includes(q) ||
+        topicsFor(d).some((t) => t.toLowerCase().includes(q))
+      );
     });
-  }, [days, searchQuery]);
+  }, [days, filter, searchQuery, currentChallengeDay, revisedDays]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleStartEdit = (day) => {
     setSelectedDayToEdit(day.day);
@@ -76,6 +82,7 @@ export default function NotesRevisionPage() {
   const handleSaveEdit = (dayNumber) => {
     updateDayNotes(dayNumber, editingText);
     setSelectedDayToEdit(null);
+    toast('Notes saved');
   };
 
   const handleDeleteNotes = async (dayNumber) => {
@@ -84,7 +91,7 @@ export default function NotesRevisionPage() {
       text: "Your personal notes for this day will be deleted. This can't be undone.",
       confirmText: 'Clear Notes',
       icon: 'warning',
-      danger: true,
+      danger: true
     });
     if (ok) {
       updateDayNotes(dayNumber, '');
@@ -92,7 +99,6 @@ export default function NotesRevisionPage() {
     }
   };
 
-  // Filtered interview questions
   const filteredQuestions = useMemo(() => {
     if (!searchQuery.trim()) return TOP_INTERVIEW_QUESTIONS;
     const q = searchQuery.toLowerCase();
@@ -105,169 +111,181 @@ export default function NotesRevisionPage() {
     );
   }, [searchQuery]);
 
-  const revisedCount = Object.values(revisedTopics).filter(Boolean).length;
+  const revisedCount = days.filter((d) => revisedDays[d.day]).length;
+  const revisedPct = days.length ? Math.round((revisedCount / days.length) * 100) : 0;
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-16">
+    <div className="space-y-6 pb-16">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight flex items-center gap-2.5">
             <BookOpen className="w-8 h-8 text-indigo-400" />
-            Notes & Revision Center
+            Notes & Revision
           </h1>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            Topic checklists, personal study takeaways, and technical interview flashcards.
+            Each day's key topics and your own notes in one place. Tick a day once you've revised it.
           </p>
         </div>
-
-        <div className="flex items-center gap-2">
-          <div className="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-emerald-400">
-            {revisedCount} / 60 Topics Revised
+        <div className="glass-ultra rounded-2xl px-4 py-3 border border-white/10 min-w-[220px]">
+          <div className="flex items-center justify-between text-xs font-mono">
+            <span className="text-slate-400">Revised</span>
+            <span className="text-emerald-300 font-bold">{revisedCount} / {days.length}</span>
+          </div>
+          <div className="mt-2 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+            <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-700" style={{ width: `${revisedPct}%` }} />
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-        <button
-          onClick={() => setActiveTab('notes')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
-            activeTab === 'notes'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          Curriculum Notes & Concept Checklists
-        </button>
-
-        <button
-          onClick={() => setActiveTab('interview')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 ${
-            activeTab === 'interview'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <HelpCircle className="w-3.5 h-3.5" />
-          <span>Top 50 Interview Questions</span>
-        </button>
+      <div className="segmented-control inline-flex items-center gap-1" role="tablist">
+        {[
+          { id: 'notes', label: 'Topics & notes', icon: StickyNote },
+          { id: 'interview', label: `Interview questions (${TOP_INTERVIEW_QUESTIONS.length})`, icon: HelpCircle }
+        ].map((t) => (
+          <button
+            key={t.id}
+            role="tab"
+            aria-selected={activeTab === t.id}
+            onClick={() => {
+              setActiveTab(t.id);
+              setSearchQuery('');
+            }}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors ${
+              activeTab === t.id ? 'bg-white/15 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <t.icon className="w-3.5 h-3.5" />
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* Search Input */}
-      <div className="relative">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={
-            activeTab === 'notes'
-              ? 'Search notes or key concepts (e.g. HashMap, Virtual Threads, AOP, N+1)...'
-              : 'Search interview questions (e.g. JWT, IoC, Metaspace, @Transactional)...'
-          }
-          className="w-full pl-10 pr-4 py-2 bg-slate-900/80 border border-slate-800 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-        />
-      </div>
-
-      {/* Tab 1: Curriculum Notes & Revision Checklists */}
-      {activeTab === 'notes' && (
-        <div className="space-y-4">
-          {daysWithNotes.map((d) => {
-            const isRevised = revisedTopics[d.day];
-            const isEditing = selectedDayToEdit === d.day;
-
-            return (
-              <div
-                key={d.day}
-                className={`arc-card p-5 transition-all ${
-                  isRevised ? 'border-emerald-500/30 bg-emerald-950/5' : 'border-slate-800'
+      {/* Search + filters */}
+      <div className="sticky top-[4.5rem] z-20 glass-thin rounded-2xl p-3 flex flex-col lg:flex-row gap-3 lg:items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search"
+            placeholder={
+              activeTab === 'notes'
+                ? 'Search topics, notes or a day number (e.g. HashMap, N+1, 42)…'
+                : 'Search interview questions (e.g. JWT, IoC, @Transactional)…'
+            }
+            className="w-full pl-10 pr-9 py-2 bg-black/25 border border-white/10 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-400/70 focus:ring-2 focus:ring-indigo-500/20"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-100">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+        {activeTab === 'notes' && (
+          <div className="segmented-control flex flex-wrap items-center gap-1" role="group" aria-label="Filter days">
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setFilter(f.id)}
+                aria-pressed={filter === f.id}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                  filter === f.id ? 'bg-white/15 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="px-2.5 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-cyan-400 font-mono font-bold text-xs">
-                      Day {d.day}
-                    </span>
-                    <h3 className="text-sm font-bold text-slate-100">
-                      {d.title}
-                    </h3>
+                {f.label} <span className="opacity-60 font-mono">{counts[f.id]}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Tab 1: topics & notes */}
+      {activeTab === 'notes' && (
+        <div className="space-y-3">
+          {visibleDays.map((d) => {
+            const isRevised = Boolean(revisedDays[d.day]);
+            const isEditing = selectedDayToEdit === d.day;
+            const isToday = d.day === currentChallengeDay;
+            const topics = topicsFor(d);
+            const title = d.title.replace(/^(Spring )?Lecture #\d+:\s*/, '');
+            return (
+              <div key={d.day} className={`glass-card !rounded-2xl p-4 sm:p-5 ${isRevised ? 'ring-1 ring-emerald-400/30' : ''}`}>
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <span className={`px-2 py-0.5 rounded-md font-mono font-bold text-[11px] border ${isToday ? 'bg-cyan-500/15 text-cyan-300 border-cyan-400/40' : 'bg-white/[0.04] text-cyan-400 border-white/10'}`}>
+                        {isToday ? `Today · Day ${d.day}` : `Day ${d.day}`}
+                      </span>
+                      {d.date && <span className="text-[11px] font-mono text-slate-500">{formatShortDate(d.date)}</span>}
+                      {d.completed && <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300">done</span>}
+                    </div>
+                    <h3 className="text-sm sm:text-base font-bold text-slate-100 leading-snug">{title}</h3>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button
-                      onClick={() => toggleTopicRevised(d.day)}
-                      className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                      onClick={() => toggleDayRevised(d.day)}
+                      aria-pressed={isRevised}
+                      className={`apple-press px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                         isRevised
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                          : 'bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200'
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40'
+                          : 'glass-ultra text-slate-300 border border-white/10 hover:text-white'
                       }`}
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{isRevised ? 'Marked Revised' : 'Mark as Revised'}</span>
+                      {isRevised ? 'Revised' : 'Mark revised'}
                     </button>
-
-                    <button
-                      onClick={() => handleStartEdit(d)}
-                      className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-                      title="Edit notes"
-                    >
+                    <button onClick={() => handleStartEdit(d)} className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06]" title="Edit notes" aria-label={`Edit Day ${d.day} notes`}>
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
-
-                    {d.notes && (
-                      <button
-                        onClick={() => handleDeleteNotes(d.day)}
-                        className="p-1.5 rounded-md text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                        title="Clear notes"
-                      >
+                    {hasNotes(d) && (
+                      <button onClick={() => handleDeleteNotes(d.day)} className="p-2 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-white/[0.06]" title="Clear notes" aria-label={`Clear Day ${d.day} notes`}>
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     )}
+                    <Link to={`/daily-planner?day=${d.day}`} className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06]" title="Open day" aria-label={`Open Day ${d.day}`}>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
                 </div>
 
-                {/* Key Revision Concepts Tags */}
-                {d.revision && d.revision.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-1.5 mb-3">
-                    {d.revision.map((item, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-800 text-slate-300 font-mono"
-                      >
-                        • {item}
-                      </span>
+                {topics.length > 0 && (
+                  <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+                    {topics.map((t, i) => (
+                      <li key={i} className="text-xs text-slate-300 flex gap-2 leading-relaxed">
+                        <span className={isRevised ? 'text-emerald-400' : 'text-slate-500'}>•</span>
+                        <span>{t}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 )}
 
-                {/* Personal Notes Content or Edit Box */}
                 {isEditing ? (
-                  <div className="space-y-2 mt-2">
+                  <div className="space-y-2 mt-3">
                     <textarea
                       value={editingText}
                       onChange={(e) => setEditingText(e.target.value)}
                       rows={4}
-                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-100 font-mono resize-none focus:outline-none focus:border-indigo-500"
+                      autoFocus
+                      aria-label={`Day ${d.day} notes`}
+                      placeholder="Key takeaways, gotchas, code snippets…"
+                      className="w-full p-3 bg-black/30 border border-white/10 rounded-xl text-xs text-slate-100 font-mono resize-y focus:outline-none focus:border-indigo-400/70"
                     />
                     <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => setSelectedDayToEdit(null)}
-                        className="px-3 py-1 rounded-md bg-slate-800 text-slate-300 text-xs"
-                      >
+                      <button onClick={() => setSelectedDayToEdit(null)} className="px-3 py-1.5 rounded-lg glass-ultra border border-white/10 text-slate-300 text-xs">
                         Cancel
                       </button>
-                      <button
-                        onClick={() => handleSaveEdit(d.day)}
-                        className="px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1"
-                      >
+                      <button onClick={() => handleSaveEdit(d.day)} className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1">
                         <Save className="w-3 h-3" /> Save
                       </button>
                     </div>
                   </div>
                 ) : (
-                  d.notes && (
-                    <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-800/80 text-xs text-slate-300 font-mono whitespace-pre-wrap leading-relaxed mt-2">
+                  hasNotes(d) && (
+                    <div className="p-3 rounded-xl bg-black/25 border border-white/[0.06] text-xs text-slate-300 font-mono whitespace-pre-wrap leading-relaxed mt-3">
                       {d.notes}
                     </div>
                   )
@@ -276,9 +294,14 @@ export default function NotesRevisionPage() {
             );
           })}
 
-          {daysWithNotes.length === 0 && (
-            <div className="arc-card p-12 text-center">
-              <p className="text-slate-400 text-sm">No notes or revision concepts found matching your search.</p>
+          {visibleDays.length === 0 && (
+            <div className="glass-panel rounded-2xl p-10 text-center space-y-2">
+              <p className="text-sm text-slate-300 font-semibold">
+                {filter === 'notes' && !searchQuery ? "You haven't written any notes yet." : filter === 'todo' && !searchQuery ? 'Everything you have studied is revised.' : 'Nothing matches.'}
+              </p>
+              <button onClick={() => { setSearchQuery(''); setFilter('all'); }} className="text-xs text-cyan-400 hover:underline">
+                Show all days
+              </button>
             </div>
           )}
         </div>
@@ -288,7 +311,7 @@ export default function NotesRevisionPage() {
       {activeTab === 'interview' && (
         <div className="space-y-4">
           <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300">
-            <strong>Day 59 Interview Prep:</strong> High-frequency technical questions asked at Top Tech Companies for Core Java and Spring Boot roles. Test your recall before opening answers!
+            Common Core Java and Spring Boot interview questions. Try to answer out loud before opening each one.
           </div>
 
           {filteredQuestions.map((q) => {

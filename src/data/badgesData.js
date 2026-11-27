@@ -2,7 +2,7 @@ export const BADGES_CATALOG = [
   {
     id: 'first_step',
     name: 'Day 1 Commenced',
-    description: 'Completed your very first task in the Winter Arc challenge',
+    description: 'Completed your first full day of the Winter Arc',
     icon: 'Footprints',
     category: 'Milestone',
     xpReward: 50,
@@ -20,7 +20,7 @@ export const BADGES_CATALOG = [
   {
     id: 'day_15_milestone',
     name: 'Quarter Arc Master',
-    description: 'Conquered 15 days of deep OOP and Collections',
+    description: 'Completed 15 days: Java basics, arrays and OOP foundations',
     icon: 'Award',
     category: 'Milestone',
     xpReward: 250,
@@ -29,7 +29,7 @@ export const BADGES_CATALOG = [
   {
     id: 'java_champion',
     name: 'Core Java Virtuoso',
-    description: 'Successfully finished Phase 1 (Days 1–25) and all 57 Java videos',
+    description: 'Finished Phase 1 (Days 1–57): every Core Java lecture',
     icon: 'Coffee',
     category: 'Phase',
     xpReward: 500,
@@ -38,7 +38,7 @@ export const BADGES_CATALOG = [
   {
     id: 'day_30_halftime',
     name: 'Halfway Spartan',
-    description: 'Reached Day 30! Entered the Spring Boot battleground',
+    description: 'Completed 30 days: generics and the Collections framework',
     icon: 'Shield',
     category: 'Milestone',
     xpReward: 400,
@@ -47,7 +47,7 @@ export const BADGES_CATALOG = [
   {
     id: 'day_45_architect',
     name: 'Backend Architect',
-    description: 'Mastered 45 days including JPA, Hibernate & Spring MVC',
+    description: 'Completed 45 days: streams, exceptions and JVM memory',
     icon: 'Cpu',
     category: 'Milestone',
     xpReward: 600,
@@ -56,20 +56,29 @@ export const BADGES_CATALOG = [
   {
     id: 'spring_master',
     name: 'Spring Boot Maestro',
-    description: 'Finished Phase 2 (Days 26–55) including Spring Security & JWT',
+    description: 'Finished Phase 2 (Days 58–75): Spring core, REST, MVC, validation and profiles',
     icon: 'Leaf',
     category: 'Phase',
     xpReward: 800,
     requirement: { type: 'phase_completed', phase: 'phase-2' }
   },
   {
+    id: 'phase_3_complete',
+    name: 'Persistence & Security Pro',
+    description: 'Finished Phase 3 (Days 76–97): AOP, JDBC, JPA, transactions, security and testing',
+    icon: 'Shield',
+    category: 'Phase',
+    xpReward: 800,
+    requirement: { type: 'phase_completed', phase: 'phase-3' }
+  },
+  {
     id: 'winter_arc_legend',
     name: 'Winter Arc Legend',
-    description: 'Completed all 90 days of Backend Engineering challenge!',
+    description: 'Completed all 97 days of the Winter Arc!',
     icon: 'Crown',
     category: 'Ultimate',
     xpReward: 2000,
-    requirement: { type: 'days_completed', count: 90 }
+    requirement: { type: 'days_completed', count: 97 }
   },
   {
     id: 'streak_3',

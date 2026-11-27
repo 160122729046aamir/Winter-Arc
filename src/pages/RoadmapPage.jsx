@@ -20,12 +20,19 @@ import ProgressBar from '../components/common/ProgressBar';
 import { confirmAction, toast } from '../utils/alerts';
 
 export default function RoadmapPage() {
-  const { days, currentChallengeDay, markDayComplete, markDayIncomplete, moveDayToToday } = usePlanner();
+  const { days, currentChallengeDay, stats, markDayComplete, markDayIncomplete, moveDayToToday } = usePlanner();
   const navigate = useNavigate();
 
   const [phaseFilter, setPhaseFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Missed = same rule the dashboard uses (respects auto-reschedule, skipped and recovered days)
+  const missedSet = useMemo(() => new Set((stats.missedDays || []).map((d) => d.day)), [stats.missedDays]);
+  const phaseRange = (id) => {
+    const list = days.filter((d) => d.phaseId === id);
+    return list.length ? `Days ${list[0].day}–${list[list.length - 1].day}` : '';
+  };
 
   const filteredDays = useMemo(() => {
     return days.filter((d) => {
@@ -36,7 +43,7 @@ export default function RoadmapPage() {
       // Status filter
       if (statusFilter === 'completed' && !d.completed) return false;
       if (statusFilter === 'pending' && d.completed) return false;
-      if (statusFilter === 'missed' && !(d.day < currentChallengeDay && !d.completed && !d.recovered)) return false;
+      if (statusFilter === 'missed' && !missedSet.has(d.day)) return false;
 
       // Search query
       if (searchQuery.trim()) {
@@ -57,7 +64,7 @@ export default function RoadmapPage() {
 
       return true;
     });
-  }, [days, phaseFilter, statusFilter, searchQuery, currentChallengeDay]);
+  }, [days, phaseFilter, statusFilter, searchQuery, missedSet]);
 
   const completedCount = filteredDays.filter((d) => d.completed).length;
   const filteredPercent =
@@ -69,7 +76,7 @@ export default function RoadmapPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
-            My 90-Day Backend Roadmap
+            My {days.length}-Day Backend Roadmap
           </h1>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
             Structured daily curriculum with exactly 1 YouTube video and 25 topic questions per day across 90 focused days.
@@ -118,7 +125,7 @@ export default function RoadmapPage() {
                   : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
               }`}
             >
-              Phase 1: Core Java (Days 1–50)
+              Phase 1: Core Java ({phaseRange('phase-1')})
             </button>
             <button
               onClick={() => setPhaseFilter('phase-2')}
@@ -128,7 +135,7 @@ export default function RoadmapPage() {
                   : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
               }`}
             >
-              Phase 2: Spring Boot (Days 51–72)
+              Phase 2: Spring Boot ({phaseRange('phase-2')})
             </button>
             <button
               onClick={() => setPhaseFilter('phase-3')}
@@ -138,7 +145,7 @@ export default function RoadmapPage() {
                   : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
               }`}
             >
-              Phase 3: Security & Capstone (Days 73–90)
+              Phase 3: Persistence & Security ({phaseRange('phase-3')})
             </button>
           </div>
         </div>
@@ -213,7 +220,7 @@ export default function RoadmapPage() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <span className="text-[10px] font-bold font-mono uppercase px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
-                        {dayItem.phaseId === 'phase-1' ? 'Core Java' : dayItem.phaseId === 'phase-2' ? 'Spring Boot' : 'Capstone'}
+                        {dayItem.phaseId === 'phase-1' ? 'Core Java' : dayItem.phaseId === 'phase-2' ? 'Spring Boot' : 'Persistence & Security'}
                       </span>
                       <span className="text-xs text-slate-400 font-mono font-medium">
                         {formatDateWithDay(dayItem.date)}
