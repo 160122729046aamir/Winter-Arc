@@ -19,8 +19,7 @@ export default defineConfig({
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-charts': ['recharts'],
           'vendor-icons': ['lucide-react'],
-          'vendor-confetti': ['canvas-confetti'],
-          'data-questions': ['./src/data/questionBankData.js']
+          'vendor-confetti': ['canvas-confetti']
         }
       }
     },

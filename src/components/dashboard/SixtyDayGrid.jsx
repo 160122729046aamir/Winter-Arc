@@ -47,7 +47,7 @@ export default function SixtyDayGrid() {
         </div>
       </div>
 
-      {/* Grid of 90 Days: Responsive 6 to 15 columns */}
+      {/* Day grid: responsive 6 to 15 columns */}
       <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-15 gap-2 sm:gap-2.5">
         {days.map((d) => {
           const isToday = d.day === currentChallengeDay;
@@ -99,31 +99,27 @@ export default function SixtyDayGrid() {
         })}
       </div>
 
-      {/* Phase Roadmap Footer Summary */}
+      {/* Phase Roadmap Footer Summary (ranges come from the plan) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6 pt-5 border-t border-slate-800/80">
-        <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-800">
-          <div className="flex justify-between items-center text-xs mb-1">
-            <span className="font-semibold text-slate-300">Phase 1: Core Java</span>
-            <span className="font-mono text-cyan-400">Days 1–25 ({stats.javaCompletionPercent}%)</span>
-          </div>
-          <p className="text-[11px] text-slate-500">57 Deep-dive lectures: OOP, Collections, Concurrency</p>
-        </div>
-
-        <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-800">
-          <div className="flex justify-between items-center text-xs mb-1">
-            <span className="font-semibold text-slate-300">Phase 2: Spring Boot</span>
-            <span className="font-mono text-indigo-400">Days 26–55 ({stats.springCompletionPercent}%)</span>
-          </div>
-          <p className="text-[11px] text-slate-500">45 Lectures: IoC, JPA, Security, API Gateway project</p>
-        </div>
-
-        <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-800">
-          <div className="flex justify-between items-center text-xs mb-1">
-            <span className="font-semibold text-slate-300">Phase 3: Revision & Projects</span>
-            <span className="font-mono text-emerald-400">Days 56–60 ({stats.revCompletionPercent}%)</span>
-          </div>
-          <p className="text-[11px] text-slate-500">Capstone project, Top 50 Interview prep & Graduation</p>
-        </div>
+        {[
+          { id: 'phase-1', name: 'Phase 1: Core Java', pct: stats.javaCompletionPercent, color: 'text-cyan-400', blurb: 'Java fundamentals, OOP, collections, streams, JVM memory and concurrency' },
+          { id: 'phase-2', name: 'Phase 2: Spring Boot & Web', pct: stats.springCompletionPercent, color: 'text-indigo-400', blurb: 'Spring core, DI/IoC, REST CRUD, MVC, DTOs, validation and profiles' },
+          { id: 'phase-3', name: 'Phase 3: Persistence & Security', pct: stats.revCompletionPercent, color: 'text-emerald-400', blurb: 'Filters, AOP, JDBC, Hibernate/JPA, transactions, security and testing' }
+        ].map((ph) => {
+          const list = days.filter((d) => d.phaseId === ph.id);
+          if (list.length === 0) return null;
+          const first = list[0].day;
+          const last = list[list.length - 1].day;
+          return (
+            <div key={ph.id} className="p-3 rounded-lg bg-slate-900/50 border border-slate-800">
+              <div className="flex justify-between items-center gap-2 text-xs mb-1">
+                <span className="font-semibold text-slate-300">{ph.name}</span>
+                <span className={`font-mono ${ph.color} whitespace-nowrap`}>Days {first}–{last} ({ph.pct}%)</span>
+              </div>
+              <p className="text-[11px] text-slate-500">{list.length} lectures: {ph.blurb}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

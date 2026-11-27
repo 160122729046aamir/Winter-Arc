@@ -190,7 +190,7 @@ export default function AnalyticsPage() {
           <div>
             <h3 className="text-sm font-bold text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
               <Calendar className="w-4 h-4 text-cyan-400" />
-              90-Day Journey Timeline & Schedule Control
+              Journey Timeline & Schedule Control
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
               Tracks active learning days vs calendar days elapsed and pause cycles

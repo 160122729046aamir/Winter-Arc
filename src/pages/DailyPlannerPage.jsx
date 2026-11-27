@@ -29,7 +29,7 @@ import Modal from '../components/common/Modal';
 import PauseModal from '../components/common/PauseModal';
 import DailyQuizWidget from '../components/quiz/DailyQuizWidget';
 import { confirmAction, toast } from '../utils/alerts';
-import { QUESTION_BANK_BY_DAY } from '../data/questionBankData';
+import { getDayQuestionMeta } from '../data/questionBankData';
 import { SYSTEM_PROJECTS } from '../data/projectsData';
 import { getProjectWorkForDay } from '../utils/projectSchedule';
 
@@ -162,10 +162,10 @@ export default function DailyPlannerPage() {
   // Day Quiz status
   const dayQuiz = quizState?.[currentDay.day] || { status: 'not_started', answers: {} };
   const quizAnswersCount = Object.keys(dayQuiz.answers || {}).length;
-  const dayBank = QUESTION_BANK_BY_DAY[currentDay.day];
-  const dayQuestionCount = dayBank?.totalQuestions || 0;
+  const dayBank = getDayQuestionMeta(currentDay.day);
+  const dayQuestionCount = dayBank?.total || 0;
   const dayQuestionMix = dayBank
-    ? `${dayBank.basic.length} easy • ${dayBank.medium.length} medium • ${dayBank.hard.length} hard`
+    ? `${dayBank.easy} easy • ${dayBank.medium} medium • ${dayBank.hard} hard`
     : '';
 
   return (
@@ -174,25 +174,27 @@ export default function DailyPlannerPage() {
       <div className="arc-card p-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Day Selector and arrows */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0 w-full md:w-auto">
             <button
               onClick={handlePrevDay}
               disabled={activeDayNumber <= 1}
-              className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              aria-label="Previous day"
+              className="flex-shrink-0 p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
                 <select
                   value={activeDayNumber}
                   onChange={handleSelectDay}
-                  className="bg-slate-900 border border-slate-800 rounded-lg px-3 py-1 text-sm font-bold font-mono text-cyan-400 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                  aria-label="Choose a day"
+                  className="w-full sm:w-auto max-w-full min-w-0 truncate bg-slate-900 border border-slate-800 rounded-lg px-3 py-1 text-sm font-bold font-mono text-cyan-400 focus:outline-none focus:border-indigo-500 cursor-pointer"
                 >
                   {days.map((d) => (
                     <option key={d.day} value={d.day}>
-                      Day {d.day}: {d.title.slice(0, 32)}...
+                      Day {d.day}: {d.title.length > 34 ? `${d.title.slice(0, 34)}…` : d.title}
                     </option>
                   ))}
                 </select>
@@ -221,7 +223,8 @@ export default function DailyPlannerPage() {
             <button
               onClick={handleNextDay}
               disabled={activeDayNumber >= totalDaysCount}
-              className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              aria-label="Next day"
+              className="flex-shrink-0 p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -323,7 +326,7 @@ export default function DailyPlannerPage() {
           </div>
         </div>
 
-        {/* Navigation Tabs between Learning Tasks and 25-Question Daily Quiz */}
+        {/* Navigation Tabs between Learning Tasks and the Daily Quiz */}
         <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-800/80">
           <button
             onClick={() => setActivePlannerTab('tasks')}
@@ -441,7 +444,7 @@ export default function DailyPlannerPage() {
         </div>
       )}
 
-      {/* VIEW 1: 25-Question Daily Question Bank */}
+      {/* VIEW 1: Daily Quiz */}
       {activePlannerTab === 'quiz' ? (
         <DailyQuizWidget
           key={currentDay.day}

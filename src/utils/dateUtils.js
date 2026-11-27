@@ -1,4 +1,4 @@
-// Date utilities for 90-Day Winter Arc Planner with Sunday Exclusion
+// Date utilities for the Winter Arc planner (study days skip rest weekdays)
 
 // Parse YYYY-MM-DD safely into local Date without UTC midnight timezone offset bugs
 export function parseLocalDate(dateStr) {

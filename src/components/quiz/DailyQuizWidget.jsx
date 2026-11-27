@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   HelpCircle,
   CheckCircle2,
@@ -18,7 +18,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import { usePlanner } from '../../context/PlannerContext';
-import { QUESTION_BANK_BY_DAY } from '../../data/questionBankData';
+import { loadDayQuestions } from '../../data/questionBankData';
 import ProgressBar from '../common/ProgressBar';
 import { confirmAction, toast } from '../../utils/alerts';
 
@@ -74,7 +74,7 @@ function referenceLabel(url) {
   }
 }
 
-export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
+function QuizBody({ dayQuestions, dayNumber, onGoToNotes }) {
   const {
     quizState,
     submitQuizAnswer,
@@ -91,7 +91,7 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
   const [showCodeSolution, setShowCodeSolution] = useState(false);
   const [filterMode, setFilterMode] = useState('all'); // 'all' | 'incorrect' | 'bookmarked' | 'review'
 
-  const dayQuestionsData = QUESTION_BANK_BY_DAY[dayNumber] || {
+  const dayQuestionsData = dayQuestions || {
     all: [],
     basic: [],
     medium: [],
@@ -688,3 +688,48 @@ export default function DailyQuizWidget({ dayNumber, onGoToNotes }) {
   );
 }
 
+
+// Downloads the day's questions when the quiz opens (keeps the initial app load small).
+export default function DailyQuizWidget(props) {
+  const { dayNumber } = props;
+  const [state, setState] = useState({ day: null, data: null, error: null });
+
+  useEffect(() => {
+    let alive = true;
+    setState({ day: null, data: null, error: null });
+    loadDayQuestions(dayNumber)
+      .then((data) => { if (alive) setState({ day: dayNumber, data, error: null }); })
+      .catch((error) => { if (alive) setState({ day: dayNumber, data: null, error }); });
+    return () => { alive = false; };
+  }, [dayNumber]);
+
+  if (state.error) {
+    return (
+      <div className="arc-card p-10 text-center space-y-3">
+        <p className="text-sm text-slate-300">Couldn't load the quiz. Check your connection and try again.</p>
+        <button
+          onClick={() => setState({ day: null, data: null, error: null }) || loadDayQuestions(dayNumber)
+            .then((data) => setState({ day: dayNumber, data, error: null }))
+            .catch((error) => setState({ day: dayNumber, data: null, error }))}
+          className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (state.day !== dayNumber) {
+    return (
+      <div className="arc-card p-6 space-y-4" aria-busy="true" aria-label="Loading quiz">
+        <div className="h-5 w-48 rounded bg-slate-800/80 animate-pulse" />
+        <div className="h-16 rounded-xl bg-slate-800/60 animate-pulse" />
+        <div className="space-y-2">
+          {[0, 1, 2, 3].map((i) => <div key={i} className="h-11 rounded-xl bg-slate-800/50 animate-pulse" />)}
+        </div>
+      </div>
+    );
+  }
+
+  return <QuizBody {...props} dayQuestions={state.data} />;
+}

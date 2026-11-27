@@ -28,7 +28,7 @@ import PausedBanner from '../components/dashboard/PausedBanner';
 import PauseModal from '../components/common/PauseModal';
 import ProgressBar from '../components/common/ProgressBar';
 import { formatDate, formatDateWithDay } from '../utils/dateUtils';
-import { QUESTION_BANK_BY_DAY, TOTAL_QUESTIONS } from '../data/questionBankData';
+import { getDayQuestionMeta, TOTAL_QUESTIONS } from '../data/questionBankData';
 
 export default function Dashboard() {
   const {
@@ -380,7 +380,7 @@ export default function Dashboard() {
                     <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-2 font-mono">
                       <span>{upDay.videos?.length || 0} video</span>
                       <span>•</span>
-                      <span>{QUESTION_BANK_BY_DAY[upDay.day]?.totalQuestions || 0} question quiz</span>
+                      <span>{getDayQuestionMeta(upDay.day)?.total || 0} question quiz</span>
                     </div>
                   </div>
                 );
@@ -406,7 +406,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Large 90-Day Progress Grid */}
+      {/* Large Progress Grid */}
       <SixtyDayGrid />
 
       {/* Pause Confirmation Modal */}

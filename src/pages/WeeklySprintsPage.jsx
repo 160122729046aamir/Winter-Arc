@@ -27,7 +27,7 @@ const SPRINTS_METADATA = [
       'Master JVM internal architecture, JDK vs JRE, and bytecode execution flow',
       'Understand 2s complement, memory representations, and data type casting rules',
       'Build solid foundation in operators, conditional statements, and loops',
-      'Complete 1 single video and 25 questions each day'
+      'Complete 1 video and its 10-question quiz each day'
     ],
     codingGoals: 'Write 10+ algorithms manipulating types, bits, conditionals, and loops'
   },
@@ -98,29 +98,29 @@ const SPRINTS_METADATA = [
   },
   {
     week: 7,
-    title: 'Sprint 7: Memory Management, GC & Multithreading',
+    title: 'Sprint 7: Exceptions, JVM Memory & Threads',
     daysRange: [43, 50],
     phase: 'Phase 1: Core Java',
     objectives: [
-      'Exception hierarchy: checked vs unchecked and custom domain exceptions',
-      'JVM Memory model: Stack, Heap, Metaspace, and Garbage Collection algorithms',
-      'Multithreading fundamentals: Process vs Thread, Thread lifecycle',
-      'Monitor locks, synchronized keyword, wait()/notify(), and atomic CAS variables'
+      'Exceptions vs errors, try/catch/finally and how exceptions propagate',
+      'Checked vs unchecked exceptions, throw vs throws and custom exceptions',
+      'JVM memory: stack, heap, method area, and how garbage collection works',
+      'Multithreading basics: process vs thread, thread lifecycle, thread methods and race conditions'
     ],
-    codingGoals: 'Simulate Producer-Consumer threads and analyze thread dumps for race conditions'
+    codingGoals: 'Write a custom exception hierarchy, then reproduce a race condition with two threads and explain it'
   },
   {
     week: 8,
-    title: 'Sprint 8: Spring Ecosystem, Maven & IoC Container',
+    title: 'Sprint 8: Locks, Lock-Free Concurrency & Executors',
     daysRange: [51, 57],
-    phase: 'Phase 2: Spring Boot',
+    phase: 'Phase 1: Core Java',
     objectives: [
-      'Spring Framework architecture, Inversion of Control, and loose coupling',
-      'Build first Spring Boot application and master Apache Maven lifecycle',
-      'Spring IoC container: @Component, @Service, @Autowired, and explicit @Bean methods',
-      'Bean scopes (Singleton vs Prototype) and resolving circular dependencies'
+      'Monitor locks and synchronized (instance vs static locks)',
+      'wait(), notify() and notifyAll() for inter-thread communication',
+      'ReentrantLock, ReadWriteLock, StampedLock, Semaphore, atomic variables and CAS',
+      'Executor framework, thread pools, Future/Callable and CompletableFuture'
     ],
-    codingGoals: 'Bootstrap production Spring Boot services and test IoC dependency injection'
+    codingGoals: 'Build a producer-consumer with wait/notify, then rewrite it with a BlockingQueue and an ExecutorService'
   },
   {
     week: 9,
@@ -137,55 +137,56 @@ const SPRINTS_METADATA = [
   },
   {
     week: 10,
-    title: 'Sprint 10: Spring MVC, DTOs & Aspect-Oriented Programming',
+    title: 'Sprint 10: Spring Boot Core & CRUD with MySQL',
     daysRange: [65, 71],
     phase: 'Phase 2: Spring Boot',
     objectives: [
-      'Servlets, Embedded Tomcat, and DispatcherServlet request flow',
-      'DTO Pattern and Jakarta Bean Validation guards',
-      'Global exception handling via @RestControllerAdvice and RFC 7807',
-      'Filters vs Interceptors and Spring AOP cross-cutting proxies'
+      'Spring XML configuration vs annotations',
+      '@SpringBootApplication and auto-configuration',
+      'application.properties, @Value and CommandLineRunner/ApplicationRunner',
+      'Layered CRUD API with MySQL, Spring Data JPA methods and soft delete',
+      'How Java web apps work: servlets, Tomcat and WAR files'
     ],
-    codingGoals: 'Implement custom AOP execution logging annotations and validated DTO payloads'
+    codingGoals: 'Build the Employee Directory project: layered CRUD with MySQL and soft delete'
   },
   {
     week: 11,
-    title: 'Sprint 11: Spring MVC, DTOs & Aspect-Oriented Programming',
+    title: 'Sprint 11: Spring MVC, DTOs, Validation & Filters',
     daysRange: [72, 78],
-    phase: 'Phase 2: Spring Boot',
+    phase: 'Phase 2 → 3: Web Layer',
     objectives: [
-      'Servlets, Embedded Tomcat, and DispatcherServlet request flow',
-      'DTO Pattern and Jakarta Bean Validation guards',
-      'Global exception handling via @RestControllerAdvice and RFC 7807',
-      'Filters vs Interceptors and Spring AOP cross-cutting proxies'
+      'Spring MVC request flow: DispatcherServlet, HandlerMapping and message converters',
+      'DTOs and Jakarta Bean Validation',
+      'Global exception handling with @RestControllerAdvice and correct status codes',
+      'Profiles and YAML; filters (FilterChain) and interceptors (preHandle/postHandle/afterCompletion)'
     ],
-    codingGoals: 'Implement custom AOP execution logging annotations and validated DTO payloads'
+    codingGoals: 'Finish the Employee Directory project: DTOs, validation, error handling and profiles'
   },
   {
     week: 12,
-    title: 'Sprint 12: Database Persistence, JDBC, Hibernate & JPA',
+    title: 'Sprint 12: Spring AOP, JDBC & Hibernate',
     daysRange: [79, 85],
-    phase: 'Phase 2: Spring Boot',
+    phase: 'Phase 3: Persistence',
     objectives: [
-      'Spring AOP Pointcuts and Proxy types in production',
-      'Core JDBC vs Spring JdbcTemplate implementation',
-      'Hibernate ORM first-level cache and dirty checking',
-      'JPA entity relationships (@OneToMany, @ManyToMany), cascading, and N+1 prevention'
+      'Spring AOP: advice types, pointcuts, proxies and custom annotations',
+      'Plain JDBC: connections, PreparedStatement and SQL injection',
+      'Spring JDBC: JdbcTemplate, DataSource and HikariCP connection pooling',
+      'Hibernate fundamentals: entities and mapping'
     ],
-    codingGoals: 'Design normalized database schemas and implement transactional persistence'
+    codingGoals: 'Add a custom @LogExecutionTime aspect to a service, then rewrite one repository with JdbcTemplate'
   },
   {
     week: 13,
-    title: 'Sprint 13: Spring Data JPA, Transactions & Isolation Levels',
+    title: 'Sprint 13: Hibernate Internals, JPA & Transactions',
     daysRange: [86, 91],
-    phase: 'Phase 2: Spring Boot',
+    phase: 'Phase 3: Persistence',
     objectives: [
-      'Master Spring Data JPA: custom JPQL queries, pagination, and sorting',
-      'Spring Transactions: ACID compliance, @Transactional commit & rollback',
-      '@Transactional Propagation: REQUIRED vs REQUIRES_NEW in nested service calls',
-      'Isolation Levels: READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE and dirty read prevention'
+      'Persistence context, first-level cache, dirty checking and flush',
+      'JPA relationships, cascading, lazy loading and the N+1 problem',
+      'Spring Data JPA: derived queries, JPQL and pagination',
+      '@Transactional: commit, rollback, propagation and isolation levels'
     ],
-    codingGoals: 'Implement robust transaction boundaries and evaluate propagation failure recovery'
+    codingGoals: 'Build the Link Shortener project with correct transaction boundaries'
   },
   {
     week: 14,
